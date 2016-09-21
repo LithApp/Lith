@@ -56,6 +56,7 @@ public slots:
     void onMessageReceived(QByteArray &data);
 
     void input(pointer_t ptr, const QString &data);
+    void fetchLines(pointer_t ptr, int count);
 
 private:
     QSslSocket *m_connection { nullptr };
@@ -126,13 +127,17 @@ public:
     //BufferLine *getLine(pointer_t ptr);
     void appendLine(BufferLine *line);
 
+    bool isAfterInitialFetch();
+
     LineModel *lines();
 
 public slots:
     void input(const QString &data);
+    void fetchMoreLines();
 private:
     LineModel *m_lines { nullptr };
     pointer_t m_ptr;
+    bool m_afterInitialFetch { false };
 };
 
 class BufferLine : public QObject {
@@ -160,12 +165,13 @@ public:
     LineModel(Buffer *parent);
 
     QHash<int, QByteArray> roleNames() const override;
-    int rowCount(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
 
     void appendLine(BufferLine *line);
 private:
     QList<BufferLine*> m_lines;
+    QSet<pointer_t> m_ptrs;
 };
 
 

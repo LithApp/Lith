@@ -156,6 +156,12 @@ void Weechat::input(pointer_t ptr, const QString &data) {
     m_connection->write(line.toUtf8());
 }
 
+void Weechat::fetchLines(pointer_t ptr, int count) {
+    QString line = QString("hdata buffer:0x%1/lines/last_line(-%2)/data\n").arg(ptr, 0, 16).arg(count);
+    qCritical() << "WRITING:" << line;
+    m_connection->write(line.toUtf8());
+}
+
 QDataStream &W::operator>>(QDataStream &s, W::Char &r) {
     s.readRawData(&r.d, 1);
     return s;
@@ -446,6 +452,8 @@ void StuffManager::setSelectedIndex(int o) {
     if (m_selectedIndex != o) {
         m_selectedIndex = o;
         emit selectedChanged();
+        if (!selectedBuffer()->isAfterInitialFetch())
+            selectedBuffer()->fetchMoreLines();
     }
 }
 
@@ -489,6 +497,7 @@ QVariant LineModel::data(const QModelIndex &index, int role) const {
 }
 
 void LineModel::appendLine(BufferLine *line) {
+
     if (!line->dateGet().isValid()) {
         beginInsertRows(QModelIndex(), m_lines.count(), m_lines.count());
         m_lines.append(line);
@@ -534,12 +543,21 @@ void Buffer::appendLine(BufferLine *line) {
     m_lines->appendLine(line);
 }
 
+bool Buffer::isAfterInitialFetch() {
+    return m_afterInitialFetch;
+}
+
 LineModel *Buffer::lines() {
     return m_lines;
 }
 
 void Buffer::input(const QString &data) {
     Weechat::instance()->input(m_ptr, data);
+}
+
+void Buffer::fetchMoreLines() {
+    m_afterInitialFetch = true;
+    Weechat::instance()->fetchLines(m_ptr, m_lines->rowCount() + 25);
 }
 
 /*
@@ -562,6 +580,8 @@ QObject *BufferLine::bufferGet() {
 
 void BufferLine::bufferSet(QObject *o) {
     Buffer *buffer = qobject_cast<Buffer*>(o);
+    if (qobject_cast<Buffer*>(parent()) != nullptr)
+        return;
 
     if (parent() != o) {
         setParent(o);

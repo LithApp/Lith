@@ -55,8 +55,14 @@ ApplicationWindow {
                     left: parent.left
                     right: parent.right
                 }
-                Text {
-                    text: stuff.selected ? stuff.selected.name + ": " + stuff.selected.title : "(No buffer selected)"
+                RowLayout {
+                    Button {
+                        text: "Gimme backlog"
+                        onClicked: stuff.selected.fetchMoreLines()
+                    }
+                    Text {
+                        text: stuff.selected ? stuff.selected.name + ": " + stuff.selected.title : "(No buffer selected)"
+                    }
                 }
             }
             ScrollView {
