@@ -128,7 +128,7 @@ void Weechat::onConnected() {
     qDebug() << "Connected!";
     m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
-    m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-10)/data\n");
+    m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-3)/data\n");
     //m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
 }
