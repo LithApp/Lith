@@ -35,30 +35,28 @@ ApplicationWindow {
         ColumnLayout {
             spacing: 0
             Button {
+                implicitWidth: 200
                 Layout.fillWidth: true
                 text: "Lith"
                 onClicked: settings.open()
             }
-            ScrollView {
+            ListView {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                ListView {
+                model: stuff
+                delegate: Rectangle {
+                    color: mouse.containsPress ? "gray" : mouse.containsMouse ? Qt.lighter("gray") : index == stuff.selectedIndex ? Qt.darker("light gray") : "light gray"
+                    Behavior on color { ColorAnimation { duration: 60 } }
                     width: parent.width
-                    model: stuff
-                    delegate: Rectangle {
-                        color: mouse.containsPress ? "gray" : mouse.containsMouse ? Qt.lighter("gray") : index == stuff.selectedIndex ? Qt.darker("light gray") : "light gray"
-                        Behavior on color { ColorAnimation { duration: 60 } }
-                        width: parent.width
-                        height: childrenRect.height
-                        Text {
-                            text: buffer.name.split(".")[buffer.name.split(".").length - 1]
-                        }
-                        MouseArea {
-                            id: mouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: stuff.selectedIndex = index
-                        }
+                    height: childrenRect.height
+                    Text {
+                        text: buffer.name.split(".")[buffer.name.split(".").length - 1]
+                    }
+                    MouseArea {
+                        id: mouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: stuff.selectedIndex = index
                     }
                 }
             }
@@ -81,42 +79,55 @@ ApplicationWindow {
                     }
                 }
             }
-            ScrollView {
+            ListView {
+                id: messageListView
                 anchors {
                     top: chatTitle.bottom
                     bottom: chatInput.top
                     left: parent.left
                     right: parent.right
                 }
-                ListView {
 
-                    clip: true
-                    spacing: 3
+                clip: true
+                spacing: 3
 
-                    model: stuff.selected.lines
+                onCountChanged: {
+                    currentIndex = count - 1
+                }
+                onWidthChanged: {
+                    positionViewAtEnd()
+                }
+                onHeightChanged: {
+                    positionViewAtEnd()
+                }
 
-                    onCountChanged:  {
-                        currentIndex = count - 1
-                        // TODO
-                        if (currentItem == itemAt(0, height - 1))
-                            positionViewAtEnd()
+                snapMode: ListView.SnapToItem
+                highlightRangeMode: ListView.ApplyRange
+                highlightMoveDuration: 100
+                highlightFollowsCurrentItem: true
+                highlightResizeDuration: 100
+                preferredHighlightBegin: height - highlightItem.height
+                preferredHighlightEnd: height - highlightItem.height
+                highlight: Rectangle {
+                    color: "#88ff0000"
+                }
+
+                model: stuff.selected.lines
+
+                delegate: RowLayout {
+                    width: parent.width
+                    spacing: 0
+                    Text {
+                        font.family: "Consolas"
+                        Layout.alignment: Qt.AlignTop | Qt.AlignRight
+                        color: "gray"
+                        text: Qt.formatTime(line.date, Qt.DefaultLocaleShortDate) + " " + line.prefix + " "
                     }
-
-                    delegate: RowLayout {
-                        width: parent.width
-                        spacing: 0
-                        Text {
-                            font.family: "Consolas"
-                            Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                            color: "gray"
-                            text: Qt.formatTime(line.date, Qt.DefaultLocaleShortDate) + " " + line.prefix + " "
-                        }
-                        Text {
-                            font.family: "Consolas"
-                            Layout.fillWidth: true
-                            text: line.message
-                            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                        }
+                    Text {
+                        font.family: "Consolas"
+                        Layout.fillWidth: true
+                        text: line.message
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     }
                 }
             }
