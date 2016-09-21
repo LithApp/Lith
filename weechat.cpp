@@ -9,6 +9,14 @@ Weechat *Weechat::instance() {
     return _self;
 }
 
+int Weechat::fetchFrom() {
+    return m_fetchBuffer.count();
+}
+
+int Weechat::fetchTo() {
+    return m_fetchBuffer.count() + m_bytesRemaining;
+}
+
 Weechat::Weechat(QObject *parent)
     : QObject(parent)
     , m_settings("Lith")
@@ -95,32 +103,35 @@ void Weechat::onSettingsChanged() {
 }
 
 void Weechat::onReadyRead() {
-    static QByteArray buffer;
-    static uint32_t remaining = 0;
     static bool compressed = false;
-    qCritical() << "Reading" << buffer.count() << "of" << buffer.count() + remaining;
+    qCritical() << "Reading" << m_fetchBuffer.count() << "of" << m_fetchBuffer.count() + m_bytesRemaining;
 
     QByteArray tmp;
 
-    if (remaining > 0) {
-        tmp = m_connection->read(remaining);
-        remaining -= tmp.length();
-        buffer.append(tmp);
+    if (m_bytesRemaining > 0) {
+        tmp = m_connection->read(m_bytesRemaining);
+        m_bytesRemaining -= tmp.length();
+        m_fetchBuffer.append(tmp);
+        emit fetchFromChanged();
     }
     else {
         tmp = m_connection->readAll();
         QDataStream s(&tmp, QIODevice::ReadOnly);
-        s >> remaining >> compressed;
-        remaining -= tmp.length();
-        buffer = tmp.mid(5);
+        s >> m_bytesRemaining >> compressed;
+        m_bytesRemaining -= tmp.length();
+        m_fetchBuffer = tmp.mid(5);
+        emit fetchFromChanged();
+        emit fetchToChanged();
     }
 
-    if (remaining == 0) {
+    if (m_bytesRemaining == 0) {
         if (compressed) {
             // TODO decompress
         }
-        onMessageReceived(buffer);
-        buffer.clear();
+        onMessageReceived(m_fetchBuffer);
+        m_fetchBuffer.clear();
+        emit fetchToChanged();
+        emit fetchFromChanged();
     }
 }
 

@@ -4,13 +4,29 @@ import QtQuick.Layouts 1.0
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    width: 800
+    height: 600
     title: "Lith"
 
     statusBar: StatusBar {
-        Text {
-            text: qsTr(stuff.bufferCount + " buffers")
+        RowLayout {
+            anchors.fill: parent
+            Text {
+                text: qsTr(stuff.bufferCount + " buffers")
+            }
+            Item {
+                height: 1
+                Layout.fillWidth: true
+            }
+            Text {
+                visible: weechat.fetchTo !== 0
+                text: "Syncing"
+            }
+            ProgressBar {
+                visible: weechat.fetchTo !== 0
+                minimumValue: 0
+                value: weechat.fetchFrom.toFixed(1) / weechat.fetchTo.toFixed(1)
+            }
         }
     }
     SplitView {
