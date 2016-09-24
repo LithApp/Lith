@@ -49,6 +49,7 @@ ApplicationWindow {
             }
         }
         Rectangle {
+            Layout.fillWidth: true
             StatusBar {
                 id: chatTitle
                 anchors {
@@ -116,6 +117,9 @@ ApplicationWindow {
                     chatInput.text = ""
                 }
             }
+        }
+        NickList {
+            implicitWidth: 200
         }
     }
 
