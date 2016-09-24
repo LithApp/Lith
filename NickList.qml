@@ -3,6 +3,8 @@ import QtQuick 2.0
 import "Default"
 
 ListView {
+    id: root
+
     ListModel {
         id: fakeNickListModel
         ListElement { name: "me"; visible: false; level: 0; group: true }
@@ -13,7 +15,32 @@ ListView {
         ListElement { name: "Yet"; visible: true; color: "orange"; level: 1; group: false }
     }
     model: fakeNickListModel
-    delegate: NickListItem {
+    delegate: NickListItem { }
 
+    property int lastWidth: implicitWidth
+    property bool open: true
+    onOpenChanged: {
+        if (open) {
+            nickListShowAnimation.start()
+        }
+        else {
+            if (!nickListShowAnimation.running)
+                root.lastWidth = root.width
+            nickListHideAnimation.start()
+        }
+    }
+
+    NumberAnimation on width {
+        running: false
+        id: nickListHideAnimation
+        to: 0
+        onStarted: root.lastWidth = root.width
+        easing.type: Easing.OutCubic
+    }
+    NumberAnimation on width {
+        running: false
+        id: nickListShowAnimation
+        to: root.lastWidth
+        easing.type: Easing.InCubic
     }
 }

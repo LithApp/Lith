@@ -59,6 +59,7 @@ ApplicationWindow {
                     right: parent.right
                 }
                 RowLayout {
+                    width: parent.width
                     Button {
                         text: "Gimme backlog"
                         onClicked: stuff.selected.fetchMoreLines()
@@ -66,6 +67,13 @@ ApplicationWindow {
                     Text {
                         font.family: "Consolas"
                         text: stuff.selected ? stuff.selected.name + ": " + stuff.selected.title : "(No buffer selected)"
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    Button {
+                        text: nickList.open ? ">>" : "<< Nicklist"
+                        onClicked: nickList.open = !nickList.open
                     }
                 }
             }
@@ -121,6 +129,7 @@ ApplicationWindow {
             }
         }
         NickList {
+            id: nickList
             implicitWidth: 200
         }
     }
