@@ -2,8 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>Settings.qml</file>
+        <file>BufferList.qml</file>
         <file>Default/Line.qml</file>
-        <file>Default/BufferList.qml</file>
         <file>Default/BufferListItem.qml</file>
     </qresource>
 </RCC>
