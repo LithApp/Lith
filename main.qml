@@ -48,7 +48,8 @@ ApplicationWindow {
                 Layout.fillHeight: true
             }
         }
-        Rectangle {
+        Item {
+            clip: true
             Layout.fillWidth: true
             StatusBar {
                 id: chatTitle
@@ -63,6 +64,7 @@ ApplicationWindow {
                         onClicked: stuff.selected.fetchMoreLines()
                     }
                     Text {
+                        font.family: "Consolas"
                         text: stuff.selected ? stuff.selected.name + ": " + stuff.selected.title : "(No buffer selected)"
                     }
                 }

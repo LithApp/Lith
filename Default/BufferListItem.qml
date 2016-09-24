@@ -6,6 +6,7 @@ Rectangle {
     width: parent.width
     height: childrenRect.height
     Text {
+        font.family: "Consolas"
         text: buffer.name.split(".")[buffer.name.split(".").length - 1]
     }
     MouseArea {
