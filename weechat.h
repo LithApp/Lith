@@ -12,6 +12,7 @@
 
 #include <QSettings>
 
+class Buffer;
 class BufferLine;
 class LineModel;
 
@@ -62,6 +63,7 @@ public slots:
     void onReadyRead();
     void onConnected();
     void onError(QAbstractSocket::SocketError e);
+    void onSslErrors(const QList<QSslError> errors);
     void onMessageReceived(QByteArray &data);
 
     void input(pointer_t ptr, const QString &data);
@@ -125,6 +127,23 @@ public: \
 #define ALIAS(type, orig, alias) \
     Q_PROPERTY(type alias READ orig ## Get WRITE orig ## Set NOTIFY orig ## Changed)
 
+
+class Nick : public QObject {
+    Q_OBJECT
+    PROPERTY(char, visible)
+    PROPERTY(char, group)
+    PROPERTY(int, level)
+    PROPERTY(QString, name)
+    PROPERTY(QString, color)
+    PROPERTY(QString, prefix)
+    PROPERTY(QString, prefix_color)
+
+    PROPERTY(pointer_t, ptr)
+public:
+    Nick(Buffer *parent = nullptr);
+
+};
+
 class Buffer : public QObject {
     Q_OBJECT
     PROPERTY(int, number)
@@ -134,6 +153,7 @@ class Buffer : public QObject {
     PROPERTY(QStringList, local_variables)
 
     Q_PROPERTY(LineModel *lines READ lines CONSTANT)
+    Q_PROPERTY(QList<QObject*> nicks READ nicks NOTIFY nicksChanged)
 public:
     Buffer(QObject *parent, pointer_t pointer);
     //BufferLine *getLine(pointer_t ptr);
@@ -142,12 +162,19 @@ public:
     bool isAfterInitialFetch();
 
     LineModel *lines();
+    QList<QObject*> nicks();
+    Nick *getNick(pointer_t ptr);
 
 public slots:
     void input(const QString &data);
     void fetchMoreLines();
+
+signals:
+    void nicksChanged();
+
 private:
     LineModel *m_lines { nullptr };
+    QList<QObject*> m_nicks {};
     pointer_t m_ptr;
     bool m_afterInitialFetch { false };
 };
@@ -184,13 +211,6 @@ public:
 private:
     QList<BufferLine*> m_lines;
     QSet<pointer_t> m_ptrs;
-};
-
-
-class Nick : public QObject {
-    Q_OBJECT
-    PROPERTY(QString, name)
-    PROPERTY(QString, color)
 };
 
 class StuffManager : public QAbstractListModel {

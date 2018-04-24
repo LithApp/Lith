@@ -14,7 +14,7 @@ ListView {
         ListElement { name: "Implemented"; visible: true; color: "green"; level: 1; group: false }
         ListElement { name: "Yet"; visible: true; color: "orange"; level: 1; group: false }
     }
-    model: fakeNickListModel
+    //model: fakeNickListModel
     delegate: NickListItem { }
 
     property int lastWidth: implicitWidth

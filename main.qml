@@ -51,13 +51,15 @@ ApplicationWindow {
         Item {
             clip: true
             Layout.fillWidth: true
-            StatusBar {
+
+            Item {
                 id: chatTitle
                 anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
                 }
+                height: childrenRect.height
                 RowLayout {
                     width: parent.width
                     Button {
@@ -77,42 +79,68 @@ ApplicationWindow {
                     }
                 }
             }
-            ListView {
-                id: messageListView
+
+            Rectangle {
+                anchors.fill: messageScrollView
+                color: "white"
+            }
+
+            ScrollView {
+                id: messageScrollView
                 anchors {
                     top: chatTitle.bottom
                     bottom: chatInput.top
                     left: parent.left
                     right: parent.right
                 }
+                horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
-                clip: true
-                spacing: 3
+                ListView {
+                    id: messageListView
+                    width: parent.width
+                    interactive: false
 
-                onCountChanged: {
-                    currentIndex = count - 1
+                    clip: true
+                    spacing: 3
+
+                    onCountChanged: {
+                        currentIndex = count - 1
+                    }
+                    onWidthChanged: {
+                        positionViewAtEnd()
+                    }
+                    onHeightChanged: {
+                        positionViewAtEnd()
+                    }
+
+                    snapMode: ListView.SnapToItem
+                    highlightRangeMode: ListView.ApplyRange
+                    highlightMoveDuration: 100
+                    highlightFollowsCurrentItem: true
+                    highlightResizeDuration: 100
+                    preferredHighlightBegin: height - (highlightItem ? highlightItem.height : 0)
+                    preferredHighlightEnd: height - (highlightItem ? highlightItem.height : 0)
+                    highlight: Rectangle {
+                        color: "#88ff0000"
+                    }
+
+                    addDisplaced: Transition {
+                        NumberAnimation {
+                            property: "y"
+                        }
+                    }
+
+                    add: Transition {
+                        NumberAnimation {
+                            property: "y"
+                            from: height
+                        }
+                    }
+
+                    model: stuff.selected.lines
+
+                    delegate: Line {}
                 }
-                onWidthChanged: {
-                    positionViewAtEnd()
-                }
-                onHeightChanged: {
-                    positionViewAtEnd()
-                }
-
-                snapMode: ListView.SnapToItem
-                highlightRangeMode: ListView.ApplyRange
-                highlightMoveDuration: 100
-                highlightFollowsCurrentItem: true
-                highlightResizeDuration: 100
-                preferredHighlightBegin: height - highlightItem.height
-                preferredHighlightEnd: height - highlightItem.height
-                highlight: Rectangle {
-                    color: "#88ff0000"
-                }
-
-                model: stuff.selected.lines
-
-                delegate: Line {}
             }
 
             TextField {
@@ -130,6 +158,8 @@ ApplicationWindow {
         }
         NickList {
             id: nickList
+            clip: true
+            model: stuff.selected.nicks
             implicitWidth: 200
         }
     }

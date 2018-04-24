@@ -49,8 +49,10 @@ void Weechat::start() {
     if (m_connection)
         m_connection->deleteLater();
     m_connection = new QSslSocket(this);
+    m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
 
     connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &Weechat::onError);
+    connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Weechat::onSslErrors);
     connect(m_connection, &QSslSocket::readyRead, this, &Weechat::onReadyRead);
     connect(m_connection, &QSslSocket::connected, this, &Weechat::onConnected);
 
@@ -142,10 +144,18 @@ void Weechat::onConnected() {
     m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-3)/data\n");
     //m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
+    m_connection->write("nicklist\n");
 }
 
 void Weechat::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
+}
+
+void Weechat::onSslErrors(const QList<QSslError> errors) {
+    m_connection->ignoreSslErrors(errors);
+    for (auto i : errors) {
+        qWarning() << "SSL Error!" << i.errorString();
+    }
 }
 
 void Weechat::onMessageReceived(QByteArray &data) {
@@ -275,14 +285,18 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
 
         pointer_t bufferPtr = 0;
         pointer_t linePtr = 0;
+        pointer_t nickPtr = 0;
         for (int i = 0; i < pathElems.count(); i++) { // TODO
             W::Pointer ptr;
             s >> ptr;
             if (pathElems[i] == "buffer") {
                 bufferPtr = ptr.d;
             }
-            if (pathElems[i] == "line_data") {
+            else if (pathElems[i] == "line_data") {
                 linePtr = ptr.d;
+            }
+            else if (pathElems[i] == "nicklist_item"){
+                nickPtr = ptr.d;
             }
             if (i == 2 && hpath.d != "buffer/lines/line/line_data") {
                 qCritical() << "OMG got three stuff path";
@@ -294,6 +308,10 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
         }
         else if (bufferPtr != 0) {
             stuffPtr = bufferPtr;
+        }
+        if (nickPtr != 0) {
+            stuffPtr = nickPtr;
+            parentPtr = bufferPtr;
         }
         for (auto i : arguments) {
             QStringList argument = i.split(":");
@@ -311,6 +329,21 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::String str;
                 s >> str;
                 qDebug () << name << ":" << str.d;
+                if (name == "message") {
+                    QRegExp re("(?:(?:https?|ftp|file):\\/\\/|www\\.|ftp\\.)(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[-A-Z0-9+&@#\\/%=~_|$?!:,.])*(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[A-Z0-9+&@#\\/%=~_|$])", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+                    int idx = re.indexIn(str.d);
+                    if (idx >= 0) {
+                        qCritical() << "CAP" << re.cap();
+                        QUrl url(re.cap());
+                        if (0 && QStringList({".jpg", ".png"}).indexOf(url.fileName())) {
+                            qCritical() << "IT'S AN IMAGE";
+                            str.d.replace(re.cap(), QString("<img src=\"%1\"/ width=320 height=320>").arg(re.cap()));
+                        }
+                        else {
+                            str.d.replace(re.cap(), QString("<a href=\"%1\">LINK HERE</a>").arg(re.cap()));
+                        }
+                    }
+                }
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff)
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(str.d));
@@ -428,8 +461,13 @@ QObject *StuffManager::getStuff(pointer_t ptr, const QString &type, pointer_t pa
         }
         */
     }
+    else if (type == "nicklist_item") {
+        if (m_bufferMap.contains(parent)) {
+            return m_bufferMap[parent]->getNick(ptr);
+        }
+    }
     else {
-        //qCritical() << "Unknown type of new stuff requested:" << type;
+        qCritical() << "Unknown type of new stuff requested:" << type;
     }
     return nullptr;
 }
@@ -508,7 +546,6 @@ QVariant LineModel::data(const QModelIndex &index, int role) const {
 }
 
 void LineModel::appendLine(BufferLine *line) {
-
     if (!line->dateGet().isValid()) {
         beginInsertRows(QModelIndex(), m_lines.count(), m_lines.count());
         m_lines.append(line);
@@ -562,6 +599,24 @@ LineModel *Buffer::lines() {
     return m_lines;
 }
 
+QList<QObject *> Buffer::nicks() {
+    return m_nicks;
+}
+
+Nick *Buffer::getNick(pointer_t ptr) {
+    for (auto i : m_nicks) {
+        auto n = qobject_cast<Nick*>(i);
+        if (n->ptrGet() == ptr)
+            return n;
+    }
+
+    auto nick = new Nick(this);
+    m_nicks.append(nick);
+    nick->ptrSet(ptr);
+    emit nicksChanged();
+    return nick;
+}
+
 void Buffer::input(const QString &data) {
     Weechat::instance()->input(m_ptr, data);
 }
@@ -600,4 +655,10 @@ void BufferLine::bufferSet(QObject *o) {
     }
 
     buffer->appendLine(this);
+}
+
+Nick::Nick(Buffer *parent)
+    : QObject(parent)
+{
+
 }
