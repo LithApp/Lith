@@ -97,6 +97,7 @@ ApplicationWindow {
 
                 ListView {
                     id: messageListView
+                    rotation: 0
                     width: parent.width
                     interactive: false
 
@@ -112,34 +113,18 @@ ApplicationWindow {
                     onHeightChanged: {
                         positionViewAtEnd()
                     }
-
                     snapMode: ListView.SnapToItem
-                    highlightRangeMode: ListView.ApplyRange
-                    highlightMoveDuration: 100
-                    highlightFollowsCurrentItem: true
-                    highlightResizeDuration: 100
-                    preferredHighlightBegin: height - (highlightItem ? highlightItem.height : 0)
-                    preferredHighlightEnd: height - (highlightItem ? highlightItem.height : 0)
-                    highlight: Rectangle {
-                        color: "#88ff0000"
-                    }
-
-                    addDisplaced: Transition {
-                        NumberAnimation {
-                            property: "y"
-                        }
-                    }
-
-                    add: Transition {
-                        NumberAnimation {
-                            property: "y"
-                            from: height
-                        }
-                    }
 
                     model: stuff.selected.lines
+                    section.property: "sender"
+                    section.delegate: Text {
+                        text: section
+                        height: 0
+                        color: "gray"
+                        font.family: "Consolas"
+                    }
 
-                    delegate: Line {}
+                    delegate: Line { }
                 }
             }
 

@@ -188,9 +188,12 @@ class BufferLine : public QObject {
     PROPERTY(QString, prefix)
     PROPERTY(QString, message)
 
+    Q_PROPERTY(bool isPrivMsg READ isPrivMsg NOTIFY tags_arrayChanged)
     Q_PROPERTY(QObject *buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)
 public:
     BufferLine(QObject *parent) : QObject(parent) { }
+
+    bool isPrivMsg();
 
     QObject *bufferGet();
     void bufferSet(QObject *o);

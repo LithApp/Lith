@@ -351,15 +351,20 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             else if (type == "arr") {
                 char type[4] = { 0 };
                 s.readRawData(type, 3);
+                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (strcmp(type, "int") == 0) {
                     W::ArrayInt a;
                     s >> a;
                     qDebug() << name << ":" << a.d;
+                    if (stuff)
+                        stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
                 }
                 if (strcmp(type, "str") == 0) {
                     W::ArrayStr a;
                     s >> a;
                     qDebug() << name << ":" << a.d;
+                    if (stuff)
+                        stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
                 }
             }
             else if (type == "tim") {
@@ -534,7 +539,7 @@ LineModel::LineModel(Buffer *parent) {
 }
 
 QHash<int, QByteArray> LineModel::roleNames() const {
-    return { { Qt::UserRole, "line" } };
+    return { { Qt::UserRole, "line" }, { Qt::UserRole + 1, "sender" } };
 }
 
 int LineModel::rowCount(const QModelIndex &parent) const {
@@ -542,7 +547,10 @@ int LineModel::rowCount(const QModelIndex &parent) const {
 }
 
 QVariant LineModel::data(const QModelIndex &index, int role) const {
-    return QVariant::fromValue(m_lines[index.row()]);
+    if (role == Qt::UserRole)
+        return QVariant::fromValue(m_lines[index.row()]);
+    else
+        return QVariant::fromValue(m_lines[index.row()]->prefixGet());
 }
 
 void LineModel::appendLine(BufferLine *line) {
@@ -639,6 +647,11 @@ void BufferLine::setBuffer(Buffer *o) {
     o->appendLine(this);
 }
 */
+
+bool BufferLine::isPrivMsg() {
+    qCritical() << m_tags_array;
+    return m_tags_array.contains("irc_privmsg");
+}
 
 QObject *BufferLine::bufferGet() {
     return parent();
