@@ -163,7 +163,7 @@ public:
 
     LineModel *lines();
     QList<QObject*> nicks();
-    Nick *getNick(pointer_t ptr);
+    Q_INVOKABLE Nick *getNick(pointer_t ptr);
 
 public slots:
     void input(const QString &data);

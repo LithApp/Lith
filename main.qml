@@ -139,6 +139,47 @@ ApplicationWindow {
                     stuff.selected.input(chatInput.text)
                     chatInput.text = ""
                 }
+                property string lookingFor: ""
+                property string lastTried: ""
+                property bool ignoreThisOne: false
+                Keys.onTabPressed: {
+                    event.accepted = true
+                    var i = 0
+                    var arr = stuff.selected.nicks
+                    if (lastTried.length > 0) {
+                        for (i = 0; i < arr.length; i++) {
+                            if (arr[i].name === lastTried) {
+                                break
+                            }
+                        }
+                        i++
+                    }
+                    for (; i < arr.length; i++) {
+                        if (arr[i].name.toLowerCase().startsWith(lookingFor.toLowerCase())) {
+                            ignoreThisOne = true
+                            text = arr[i].name + ": "
+                            lastTried = arr[i].name
+                            return
+                        }
+                    }
+
+                    for (i = 0; i < arr.length; i++) {
+                        if (arr[i].name.toLowerCase().startsWith(lookingFor.toLowerCase())) {
+                            ignoreThisOne = true
+                            text = arr[i].name + ": "
+                            lastTried = arr[i].name
+                            return
+                        }
+                    }
+                }
+                onTextChanged: {
+                    if (ignoreThisOne)
+                        ignoreThisOne = false
+                    else {
+                        lookingFor = text
+                        lastTried = ""
+                    }
+                }
             }
         }
         NickList {
