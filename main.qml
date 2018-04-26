@@ -115,7 +115,7 @@ ApplicationWindow {
                     }
                     snapMode: ListView.SnapToItem
 
-                    model: stuff.selected.lines
+                    model: stuff.selected ? stuff.selected.lines : null
                     section.property: "sender"
                     section.delegate: Text {
                         text: section
@@ -204,7 +204,7 @@ ApplicationWindow {
         NickList {
             id: nickList
             clip: true
-            model: stuff.selected.nicks
+            model: stuff.selected ? stuff.selected.nicks : null
             implicitWidth: 200
         }
     }
