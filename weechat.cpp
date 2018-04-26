@@ -106,6 +106,10 @@ void Weechat::onSettingsChanged() {
     }
 }
 
+void Weechat::requestHotlist() {
+    m_connection->write("hdata hotlist:gui_hotlist(*)\n");
+}
+
 void Weechat::onReadyRead() {
     static bool compressed = false;
 
@@ -146,6 +150,12 @@ void Weechat::onConnected() {
     m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
     m_connection->write("nicklist\n");
+
+
+    connect(&m_hotlistTimer, SIGNAL(timeout()), this, SLOT(requestHotlist()));
+    m_hotlistTimer.setInterval(1000);
+    m_hotlistTimer.setSingleShot(false);
+    m_hotlistTimer.start();
 }
 
 void Weechat::onError(QAbstractSocket::SocketError e) {

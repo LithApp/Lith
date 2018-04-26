@@ -47,6 +47,7 @@ signals:
 
 private slots:
     void onSettingsChanged();
+    void requestHotlist();
 
 public slots:
     void start();
@@ -82,6 +83,8 @@ private:
     bool m_useEncryption { true };
 
     QSettings m_settings;
+
+    QTimer m_hotlistTimer;
 };
 
 
