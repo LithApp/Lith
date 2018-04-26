@@ -117,7 +117,7 @@ private: \
     type m_ ## name { }; \
 public: \
     type name ## Get () const { return m_ ## name; } \
-    void name ## Set (const type &o) { \
+    void name ## Set (type &o) { \
         if (m_ ## name != o) { \
             m_ ## name = o; \
             emit name ## Changed(); \
@@ -152,6 +152,9 @@ class Buffer : public QObject {
     ALIAS(QString, name, full_name)
     PROPERTY(QString, title)
     PROPERTY(QStringList, local_variables)
+
+    PROPERTY(int, unreadMessages)
+    PROPERTY(int, hotMessages)
 
     Q_PROPERTY(LineModel *lines READ lines CONSTANT)
     Q_PROPERTY(QList<QObject*> nicks READ nicks NOTIFY nicksChanged)
@@ -217,6 +220,17 @@ private:
     QSet<pointer_t> m_ptrs;
 };
 
+class HotListItem : public QObject {
+    Q_OBJECT
+    PROPERTY(QList<int>, count)
+    PROPERTY(Buffer*, buffer)
+public:
+    HotListItem(QObject *parent = nullptr);
+
+private slots:
+    void onCountChanged();
+};
+
 class StuffManager : public QAbstractListModel {
     Q_OBJECT
     Q_PROPERTY(int bufferCount READ bufferCount NOTIFY buffersChanged)
@@ -251,6 +265,7 @@ private:
     QList<Buffer*> m_buffers;
 
     QMap<pointer_t, BufferLine*> m_lineMap;
+    QMap<pointer_t, HotListItem*> m_hotList;
 };
 
 class ClipboardProxy : public QObject {

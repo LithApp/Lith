@@ -143,7 +143,7 @@ void Weechat::onConnected() {
     m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
     m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-3)/data\n");
-    //m_connection->write("hdata hotlist:gui_hotlist(*)\n");
+    m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
     m_connection->write("nicklist\n");
 }
@@ -289,6 +289,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
         pointer_t bufferPtr = 0;
         pointer_t linePtr = 0;
         pointer_t nickPtr = 0;
+        pointer_t hotListPtr = 0;
         for (int i = 0; i < pathElems.count(); i++) { // TODO
             W::Pointer ptr;
             s >> ptr;
@@ -301,12 +302,18 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             else if (pathElems[i] == "nicklist_item"){
                 nickPtr = ptr.d;
             }
+            else if (pathElems[i] == "hotlist") {
+                hotListPtr = ptr.d;
+            }
             if (i == 2 && hpath.d != "buffer/lines/line/line_data") {
                 qCritical() << "OMG got three stuff path";
                 exit(1);
             }
         }
-        if (linePtr != 0) {
+        if (hotListPtr != 0) {
+            stuffPtr = hotListPtr;
+        }
+        else if (linePtr != 0) {
             stuffPtr = linePtr;
         }
         else if (bufferPtr != 0) {
@@ -320,6 +327,9 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             QStringList argument = i.split(":");
             QString name = argument[0];
             QString type = argument[1];
+            if (pathElems.last() == "hotlist") {
+                qCritical() << pathElems << arguments;
+            }
             if (type == "int") {
                 W::Integer i;
                 s >> i;
@@ -327,6 +337,14 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff)
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(i.d));
+            }
+            else if (type == "lon") {
+                W::LongInteger l;
+                s >> l;
+                qDebug() << name << ":" << l.d;
+                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                if (stuff)
+                    stuff->setProperty(qPrintable(name), QVariant::fromValue(l.d));
             }
             else if (type == "str") {
                 W::String str;
@@ -353,10 +371,11 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 char type[4] = { 0 };
                 s.readRawData(type, 3);
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                qDebug() << name << ":" << QString(type);
                 if (strcmp(type, "int") == 0) {
                     W::ArrayInt a;
                     s >> a;
-                    qDebug() << name << ":" << a.d;
+                    qCritical() << name << ":" << a.d;
                     if (stuff)
                         stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
                 }
@@ -471,6 +490,12 @@ QObject *StuffManager::getStuff(pointer_t ptr, const QString &type, pointer_t pa
         if (m_bufferMap.contains(parent)) {
             return m_bufferMap[parent]->getNick(ptr);
         }
+    }
+    else if (type == "hotlist") {
+        qCritical() << ptr;
+        if (!m_hotList.contains(ptr))
+            m_hotList.insert(ptr, new HotListItem(this));
+        return m_hotList[ptr];
     }
     else {
         qCritical() << "Unknown type of new stuff requested:" << type;
@@ -688,4 +713,20 @@ bool ClipboardProxy::hasImage() {
 
 QString ClipboardProxy::text() {
     return m_clipboard->text();
+}
+
+HotListItem::HotListItem(QObject *parent)
+    : QObject(parent)
+{
+    connect(this, &HotListItem::countChanged, this, &HotListItem::onCountChanged);
+    connect(this, &HotListItem::bufferChanged, [this](){
+        onCountChanged();
+    });
+}
+
+void HotListItem::onCountChanged() {
+    if (bufferGet()) {
+        bufferGet()->hotMessagesSet(countGet()[2]);
+        bufferGet()->unreadMessagesSet(countGet()[1]);
+    }
 }

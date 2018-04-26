@@ -9,6 +9,12 @@ Rectangle {
         font.family: "Consolas"
         text: buffer.name.split(".")[buffer.name.split(".").length - 1]
     }
+    Text {
+        anchors.right: parent.right
+        text: buffer.hotMessages ? buffer.hotMessages :
+              buffer.unreadMessages ? buffer.unreadMessages : ""
+        color: buffer.hotMessages ? "red" : "white"
+    }
     MouseArea {
         id: mouse
         anchors.fill: parent
