@@ -107,7 +107,6 @@ void Weechat::onSettingsChanged() {
 
 void Weechat::onReadyRead() {
     static bool compressed = false;
-    qCritical() << "Reading" << m_fetchBuffer.count() << "of" << m_fetchBuffer.count() + m_bytesRemaining;
 
     QByteArray tmp;
 
@@ -208,9 +207,11 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
     uint32_t len;
     r.d.clear();
     s >> len;
-    if (len == 0)
+    if (len == -1)
+        r.d = QString();
+    else if (len == 0)
         r.d = "";
-    if (len > 0) {
+    else if (len > 0) {
         QByteArray buf(len + 1, 0);
         s.readRawData(buf.data(), len);
         int i;
@@ -334,10 +335,8 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                     QRegExp re("(?:(?:https?|ftp|file):\\/\\/|www\\.|ftp\\.)(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[-A-Z0-9+&@#\\/%=~_|$?!:,.])*(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[A-Z0-9+&@#\\/%=~_|$])", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
                     int idx = re.indexIn(str.d);
                     if (idx >= 0) {
-                        qCritical() << "CAP" << re.cap();
                         QUrl url(re.cap());
                         if (0 && QStringList({".jpg", ".png"}).indexOf(url.fileName())) {
-                            qCritical() << "IT'S AN IMAGE";
                             str.d.replace(re.cap(), QString("<img src=\"%1\"/ width=320 height=320>").arg(re.cap()));
                         }
                         else {
@@ -650,7 +649,6 @@ void BufferLine::setBuffer(Buffer *o) {
 */
 
 bool BufferLine::isPrivMsg() {
-    qCritical() << m_tags_array;
     return m_tags_array.contains("irc_privmsg");
 }
 
