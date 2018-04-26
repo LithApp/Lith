@@ -22,8 +22,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
             Text {
-                visible: weechat.fetchTo !== 0
-                text: "Syncing"
+                text: weechat.status + (weechat.fetchTo !== 0 ? " (Syncing)" : "")
             }
             ProgressBar {
                 visible: weechat.fetchTo !== 0

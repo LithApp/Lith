@@ -19,6 +19,24 @@ class LineModel;
 
 typedef uint64_t pointer_t;
 
+#define PROPERTY(type, name) \
+private: \
+    Q_PROPERTY(type name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \
+    type m_ ## name { }; \
+public: \
+    type name ## Get () const { return m_ ## name; } \
+    void name ## Set (type o) { \
+        if (m_ ## name != o) { \
+            m_ ## name = o; \
+            emit name ## Changed(); \
+        } \
+    } \
+    Q_SIGNAL void name ## Changed();
+
+#define ALIAS(type, orig, alias) \
+    Q_PROPERTY(type alias READ orig ## Get WRITE orig ## Set NOTIFY orig ## Changed)
+
+
 class Weechat : public QObject
 {
     Q_OBJECT
@@ -28,6 +46,7 @@ class Weechat : public QObject
 
     Q_PROPERTY(int fetchFrom READ fetchFrom NOTIFY fetchFromChanged)
     Q_PROPERTY(int fetchTo READ fetchTo NOTIFY fetchToChanged)
+    PROPERTY(QString, status)
 public:
     static Weechat *_self;
     static Weechat *instance();
@@ -64,6 +83,7 @@ signals:
 public slots:
     void onReadyRead();
     void onConnected();
+    void onDisconnected();
     void onError(QAbstractSocket::SocketError e);
     void onSslErrors(const QList<QSslError> errors);
     void onMessageReceived(QByteArray &data);
@@ -85,6 +105,7 @@ private:
     QSettings m_settings;
 
     QTimer m_hotlistTimer;
+    QTimer m_reconnectTimer;
 };
 
 
@@ -113,23 +134,6 @@ namespace W {
     QDataStream &operator>>(QDataStream &s, ArrayInt &r);
     QDataStream &operator>>(QDataStream &s, ArrayStr &r);
 };
-
-#define PROPERTY(type, name) \
-private: \
-    Q_PROPERTY(type name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \
-    type m_ ## name { }; \
-public: \
-    type name ## Get () const { return m_ ## name; } \
-    void name ## Set (type &o) { \
-        if (m_ ## name != o) { \
-            m_ ## name = o; \
-            emit name ## Changed(); \
-        } \
-    } \
-    Q_SIGNAL void name ## Changed();
-
-#define ALIAS(type, orig, alias) \
-    Q_PROPERTY(type alias READ orig ## Get WRITE orig ## Set NOTIFY orig ## Changed)
 
 
 class Nick : public QObject {
