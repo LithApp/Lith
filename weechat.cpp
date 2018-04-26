@@ -2,6 +2,7 @@
 
 #include <QDataStream>
 #include <QApplication>
+#include <QImage>
 
 Weechat *Weechat::_self = nullptr;
 Weechat *Weechat::instance() {
@@ -682,12 +683,7 @@ ClipboardProxy::ClipboardProxy(QObject *parent)
 }
 
 bool ClipboardProxy::hasImage() {
-    if (m_clipboard->mimeData()) {
-        for (QString i : m_clipboard->mimeData()->formats())
-            if (i.startsWith("image/"))
-                return true;
-    }
-    return false;
+    return !m_clipboard->image().isNull();
 }
 
 QString ClipboardProxy::text() {
