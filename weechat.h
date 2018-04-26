@@ -11,6 +11,7 @@
 #include <QtQml>
 
 #include <QSettings>
+#include <QClipboard>
 
 class Buffer;
 class BufferLine;
@@ -252,5 +253,17 @@ private:
     QMap<pointer_t, BufferLine*> m_lineMap;
 };
 
+class ClipboardProxy : public QObject {
+    Q_OBJECT
+public:
+    ClipboardProxy(QObject *parent = nullptr);
+
+    Q_INVOKABLE bool hasImage();
+
+    Q_INVOKABLE QString text();
+
+private:
+    QClipboard *m_clipboard;
+};
 
 #endif // WEECHAT_H

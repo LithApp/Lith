@@ -172,6 +172,25 @@ ApplicationWindow {
                         }
                     }
                 }
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_V && event.modifiers & Qt.ControlModifier) {
+                        var leftPart = text.substr(0, selectionStart)
+                        var insertedPart
+                        var rightPart = text.substr(selectionEnd)
+                        if (clipboard.hasImage()) {
+                            insertedPart = "<unsupported>"
+                        }
+                        else {
+                            insertedPart = clipboard.text()
+                        }
+                        text = leftPart + insertedPart + rightPart
+                        cursorPosition = (leftPart + insertedPart).length
+                        event.accepted = true
+                    }
+                    else {
+                        event.accepted = false
+                    }
+                }
                 onTextChanged: {
                     if (ignoreThisOne)
                         ignoreThisOne = false

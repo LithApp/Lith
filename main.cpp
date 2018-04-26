@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("stuff", StuffManager::instance());
     engine.rootContext()->setContextProperty("weechat", Weechat::instance());
+    engine.rootContext()->setContextProperty("clipboard", new ClipboardProxy());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();

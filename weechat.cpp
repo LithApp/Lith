@@ -1,6 +1,7 @@
 #include "weechat.h"
 
 #include <QDataStream>
+#include <QApplication>
 
 Weechat *Weechat::_self = nullptr;
 Weechat *Weechat::instance() {
@@ -674,4 +675,23 @@ Nick::Nick(Buffer *parent)
     : QObject(parent)
 {
 
+}
+
+ClipboardProxy::ClipboardProxy(QObject *parent)
+    : QObject(parent)
+    , m_clipboard(QApplication::clipboard())
+{
+}
+
+bool ClipboardProxy::hasImage() {
+    if (m_clipboard->mimeData()) {
+        for (QString i : m_clipboard->mimeData()->formats())
+            if (i.startsWith("image/"))
+                return true;
+    }
+    return false;
+}
+
+QString ClipboardProxy::text() {
+    return m_clipboard->text();
 }
