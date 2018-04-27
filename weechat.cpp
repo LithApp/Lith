@@ -170,7 +170,7 @@ void Weechat::onConnected() {
 void Weechat::onDisconnected() {
     statusSet("Disconnected");
 
-    if (m_reconnectTimer.interval() < 16 * 60 * 1000);
+    if (m_reconnectTimer.interval() < 16 * 60 * 1000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
     m_reconnectTimer.start();
 }
@@ -179,7 +179,7 @@ void Weechat::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
     statusSet(QString("Connection failed: %1").arg(m_connection->errorString()));
 
-    if (m_reconnectTimer.interval() < 16 * 60 * 1000);
+    if (m_reconnectTimer.interval() < 16 * 60 * 1000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
     m_reconnectTimer.start();
 }
@@ -240,7 +240,7 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
     uint32_t len;
     r.d.clear();
     s >> len;
-    if (len == -1)
+    if (len == uint32_t(-1))
         r.d = QString();
     else if (len == 0)
         r.d = "";
@@ -455,7 +455,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
 QDataStream &W::operator>>(QDataStream &s, W::ArrayInt &r) {
     uint32_t len;
     s >> len;
-    for (int i = 0; i < len; i++) {
+    for (uint32_t i = 0; i < len; i++) {
         W::Integer num;
         s >> num;
         r.d.append(num.d);
@@ -466,7 +466,7 @@ QDataStream &W::operator>>(QDataStream &s, W::ArrayInt &r) {
 QDataStream &W::operator>>(QDataStream &s, W::ArrayStr &r) {
     uint32_t len;
     s >> len;
-    for (int i = 0; i < len; i++) {
+    for (uint32_t i = 0; i < len; i++) {
         W::String str;
         s >> str;
         r.d.append(str.d);
@@ -574,10 +574,12 @@ QHash<int, QByteArray> StuffManager::roleNames() const {
 }
 
 int StuffManager::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return m_buffers.count();
 }
 
 QVariant StuffManager::data(const QModelIndex &index, int role) const {
+    Q_UNUSED(role);
     return QVariant::fromValue(m_buffers[index.row()]);
 }
 
@@ -592,7 +594,9 @@ void StuffManager::reset() {
 StuffManager::StuffManager() : QAbstractListModel() {
 }
 
-LineModel::LineModel(Buffer *parent) {
+LineModel::LineModel(Buffer *parent)
+    : QAbstractListModel(parent)
+{
 
 }
 
@@ -601,6 +605,7 @@ QHash<int, QByteArray> LineModel::roleNames() const {
 }
 
 int LineModel::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return m_lines.count();
 }
 
@@ -754,6 +759,13 @@ HotListItem::HotListItem(QObject *parent)
     connect(this, &HotListItem::bufferChanged, [this](){
         onCountChanged();
     });
+}
+
+void HotListItem::bufferSet(Buffer *o) {
+    if (m_buffer != o) {
+        m_buffer = o;
+        emit bufferChanged();
+    }
 }
 
 void HotListItem::onCountChanged() {

@@ -19,19 +19,23 @@ class LineModel;
 
 typedef uint64_t pointer_t;
 
+#define PROPERTY_NOSETTER(type, name) \
+    private: \
+        Q_PROPERTY(type name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \
+        type m_ ## name { }; \
+    public: \
+        type name ## Get () const { return m_ ## name; } \
+        Q_SIGNAL void name ## Changed();
+
 #define PROPERTY(type, name) \
-private: \
-    Q_PROPERTY(type name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \
-    type m_ ## name { }; \
-public: \
-    type name ## Get () const { return m_ ## name; } \
-    void name ## Set (type o) { \
-        if (m_ ## name != o) { \
-            m_ ## name = o; \
-            emit name ## Changed(); \
-        } \
-    } \
-    Q_SIGNAL void name ## Changed();
+    PROPERTY_NOSETTER(type, name) \
+    public: \
+        void name ## Set (const type &o) { \
+            if (m_ ## name != o) { \
+                m_ ## name = o; \
+                emit name ## Changed(); \
+            } \
+        }
 
 #define ALIAS(type, orig, alias) \
     Q_PROPERTY(type alias READ orig ## Get WRITE orig ## Set NOTIFY orig ## Changed)
@@ -230,9 +234,11 @@ private:
 class HotListItem : public QObject {
     Q_OBJECT
     PROPERTY(QList<int>, count)
-    PROPERTY(Buffer*, buffer)
+    PROPERTY_NOSETTER(Buffer*, buffer)
 public:
     HotListItem(QObject *parent = nullptr);
+
+    void bufferSet(Buffer *o);
 
 private slots:
     void onCountChanged();
