@@ -24,6 +24,7 @@ Dialog {
             id: hostField
             placeholderText: "URL"
             text: weechat.host
+            inputMethodHints: Qt.ImnNoPredictiveText
         }
         Text {
             text: "Port"
@@ -31,6 +32,7 @@ Dialog {
         TextField {
             id: portField
             text: weechat.port
+            inputMethodHints: Qt.ImhDigitsOnly
             validator: IntValidator {
                 bottom: 1
                 top: 65535
