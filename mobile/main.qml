@@ -13,23 +13,55 @@ ApplicationWindow {
         width: 0.66 * parent.width
         height: parent.height
 
-        Rectangle {
+        ColumnLayout {
             anchors.fill: parent
-            color: "red"
-        }
 
-        ListView {
-            anchors.fill: parent
-            model: stuff
-            delegate: Text {
-                text: buffer.name
+            Item {
+                height: 1
+            }
+            Text {
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
+                text: "Open Buffers"
                 font.family: "monospace"
-                font.pointSize: 18
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        stuff.selectedIndex = index
-                        bufferDrawer.visible = false
+                font.pointSize: 24
+            }
+            Rectangle {
+                height: 1
+                Layout.fillWidth: true
+                color: "dark gray"
+            }
+
+
+            ListView {
+                clip: true
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                model: stuff
+                delegate: Rectangle {
+                    width: ListView.view.width
+                    height: childrenRect.height + 12
+                    color: bufferMouse.pressed ? "gray" : "white"
+                    Behavior on color {
+                        ColorAnimation {
+
+                        }
+                    }
+
+                    Text {
+                        x: 3
+                        y: 6
+                        text: buffer.name
+                        font.family: "monospace"
+                        font.pointSize: 20
+                        MouseArea {
+                            id: bufferMouse
+                            anchors.fill: parent
+                            onClicked: {
+                                stuff.selectedIndex = index
+                                bufferDrawer.visible = false
+                            }
+                        }
                     }
                 }
             }
