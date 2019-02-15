@@ -389,19 +389,6 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::String str;
                 s >> str;
                 qDebug () << name << ":" << str.d;
-                if (name == "message") {
-                    QRegExp re("(?:(?:https?|ftp|file):\\/\\/|www\\.|ftp\\.)(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[-A-Z0-9+&@#\\/%=~_|$?!:,.])*(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[A-Z0-9+&@#\\/%=~_|$])", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
-                    int idx = re.indexIn(str.d);
-                    if (idx >= 0) {
-                        QUrl url(re.cap());
-                        if (0 && QStringList({".jpg", ".png"}).indexOf(url.fileName())) {
-                            str.d.replace(re.cap(), QString("<img src=\"%1\"/ width=320 height=320>").arg(re.cap()));
-                        }
-                        else {
-                            str.d.replace(re.cap(), QString("<a href=\"%1\">LINK HERE</a>").arg(re.cap()));
-                        }
-                    }
-                }
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(str.d));
@@ -718,6 +705,12 @@ void BufferLine::setBuffer(Buffer *o) {
 }
 */
 
+BufferLine::BufferLine(QObject *parent)
+    : QObject(parent)
+{
+    connect(this, &BufferLine::messageChanged, this, &BufferLine::onMessageChanged);
+}
+
 bool BufferLine::isPrivMsg() {
     return m_tags_array.contains("irc_privmsg");
 }
@@ -737,6 +730,26 @@ void BufferLine::bufferSet(QObject *o) {
     }
 
     buffer->appendLine(this);
+}
+
+QList<QObject *> BufferLine::segments() {
+    return m_segments;
+}
+
+void BufferLine::onMessageChanged() {
+    QRegExp re("(?:(?:https?|ftp|file):\\/\\/|www\\.|ftp\\.)(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[-A-Z0-9+&@#\\/%=~_|$?!:,.])*(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[A-Z0-9+&@#\\/%=~_|$])", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+    int lastIdx = 0;
+    int idx = -1;
+    if ((idx = re.indexIn(messageGet())) >= 0) {
+        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx, idx)));
+        m_segments.append(new BufferLineSegment(this, re.cap(), BufferLineSegment::LINK));
+
+        lastIdx = idx + 1;
+    }
+    else {
+        m_segments.append(new BufferLineSegment(this, messageGet()));
+    }
+    emit segmentsChanged();
 }
 
 Nick::Nick(Buffer *parent)
@@ -780,4 +793,12 @@ void HotListItem::onCountChanged() {
         bufferGet()->hotMessagesSet(countGet()[2]);
         bufferGet()->unreadMessagesSet(countGet()[1]);
     }
+}
+
+BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, BufferLineSegment::Type type)
+    : QObject(parent)
+    , m_type(type)
+    , m_plainText(text)
+{
+
 }

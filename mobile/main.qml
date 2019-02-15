@@ -75,7 +75,74 @@ ApplicationWindow {
             Layout.fillHeight: true
             model: stuff.selected ? stuff.selected.lines : null
             rotation: 180
-            delegate: Text {
+            delegate: ColumnLayout {
+                width: ListView.view.width
+                rotation: 180
+                RowLayout {
+                    Layout.fillWidth: true
+                    Text {
+                        Layout.alignment: Qt.AlignTop
+                        font.bold: true
+                        text: sender
+                        font.family: "monospace"
+                        font.pointSize: 16
+                    }
+
+                    Repeater {
+                        model: line.segments
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Text {
+                                Layout.fillHeight: true
+                                Layout.alignment: Qt.AlignTop
+                                verticalAlignment: Text.AlignTop
+                                text: modelData.type == 0 ? modelData.plainText : "🔗"
+                                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                font.family: "monospace"
+                                font.pointSize: 16
+                            }
+                            Button {
+                                text: "⤶"
+                                rotation: 180
+                                visible: modelData.type != 0
+                                font.pointSize: 20
+                                Layout.preferredWidth: height
+                            }
+                            Button {
+                                text: "🎨"
+                                visible: modelData.type == 1
+                                font.family: "monospace"
+                                font.pointSize: 18
+                                Layout.preferredWidth: height
+                                onClicked: {
+                                    if (!delegateImageWrapper.visible) {
+                                        delegateImage.source = modelData.plainText
+                                        delegateImageWrapper.visible = true
+                                    }
+                                    else
+                                        delegateImageWrapper.visible = false
+                                }
+                            }
+                        }
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+                Item {
+                    id: delegateImageWrapper
+                    Layout.fillWidth: true
+                    height: childrenRect.height
+                    Layout.preferredHeight: childrenRect.height
+                    visible: false
+                    Image {
+                        fillMode: Image.PreserveAspectFit
+                        width: parent.width
+                        id: delegateImage
+                    }
+                }
+            }
+                /*Text {
                 width: ListView.view.width
                 rotation: 180
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -83,7 +150,7 @@ ApplicationWindow {
                 font.family: "monospace"
                 font.pointSize: 16
                 text: line.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat) + " " + sender + ": " + line.message
-            }
+                */
         }
         RowLayout {
             Layout.fillWidth: true

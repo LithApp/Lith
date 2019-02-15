@@ -197,6 +197,21 @@ private:
     bool m_afterInitialFetch { false };
 };
 
+class BufferLineSegment : public QObject {
+    Q_OBJECT
+public:
+    enum Type {
+        PLAIN,
+        LINK,
+        IMAGE
+    }; Q_ENUMS(Type)
+    PROPERTY(Type, type)
+    PROPERTY(QString, plainText)
+public:
+    BufferLineSegment(BufferLine *parent = nullptr, const QString &text = QString(), Type type = PLAIN);
+
+};
+
 class BufferLine : public QObject {
     Q_OBJECT
     PROPERTY(QDateTime, date)
@@ -208,15 +223,26 @@ class BufferLine : public QObject {
 
     Q_PROPERTY(bool isPrivMsg READ isPrivMsg NOTIFY tags_arrayChanged)
     Q_PROPERTY(QObject *buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)
+    Q_PROPERTY(QList<QObject*> segments READ segments NOTIFY segmentsChanged)
 public:
-    BufferLine(QObject *parent) : QObject(parent) { }
+    BufferLine(QObject *parent);
 
     bool isPrivMsg();
 
     QObject *bufferGet();
     void bufferSet(QObject *o);
+
+    QList<QObject*> segments();
+
 signals:
     void bufferChanged();
+    void segmentsChanged();
+
+private slots:
+    void onMessageChanged();
+
+private:
+    QList<QObject*> m_segments;
 };
 
 class LineModel : public QAbstractListModel {
