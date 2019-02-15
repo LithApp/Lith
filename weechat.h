@@ -47,6 +47,7 @@ class Weechat : public QObject
     Q_PROPERTY(QString host READ host WRITE setHost NOTIFY settingsChanged)
     Q_PROPERTY(int port READ port WRITE setPort NOTIFY settingsChanged)
     Q_PROPERTY(bool encrypted READ encrypted WRITE setEncrypted NOTIFY settingsChanged)
+    Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
 
     Q_PROPERTY(int fetchFrom READ fetchFrom NOTIFY fetchFromChanged)
     Q_PROPERTY(int fetchTo READ fetchTo NOTIFY fetchToChanged)
@@ -64,9 +65,11 @@ private:
     QString host() const;
     int port() const;
     bool encrypted() const;
+    bool hasPassphrase() const;
 
 signals:
     void settingsChanged();
+    void hasPassphraseChanged();
 
 private slots:
     void onSettingsChanged();

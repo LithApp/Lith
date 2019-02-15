@@ -6,12 +6,20 @@ import QtQuick.Dialogs 1.2
 Dialog {
     title: "Configuration"
 
+    standardButtons: Dialog.Ok | Dialog.Cancel
+
     onAccepted: {
         weechat.host = hostField.text
         weechat.port = portField.text
         weechat.encrypted = encryptedCheckbox.checked
         if (passphraseField.text.length > 0)
             weechat.setPassphrase(passphraseField.text)
+        passphraseField.text = ""
+    }
+    onRejected: {
+        hostField.text = weechat.host
+        portField.text = weechat.port
+        encryptedCheckbox.checked = weechat.encrypted
         passphraseField.text = ""
     }
 
@@ -50,6 +58,7 @@ Dialog {
         }
         TextField {
             id: passphraseField
+            placeholderText: weechat.hasPassphrase ? "*****" : "";
             echoMode: TextInput.Password
         }
     }

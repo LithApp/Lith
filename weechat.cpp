@@ -52,6 +52,10 @@ bool Weechat::encrypted() const {
     return m_useEncryption;
 }
 
+bool Weechat::hasPassphrase() const {
+    return !m_passphrase.isEmpty();
+}
+
 void Weechat::start() {
     if (m_connection)
         m_connection->deleteLater();
@@ -101,6 +105,7 @@ void Weechat::setPassphrase(const QString &value) {
         m_passphrase = value;
         m_settings.setValue("passphrase", m_passphrase);
         emit settingsChanged();
+        emit hasPassphraseChanged();
     }
 }
 
@@ -367,7 +372,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 s >> i;
                 qDebug() << name << ":" << i.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff)
+                if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(i.d));
             }
             else if (type == "lon") {
@@ -375,7 +380,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 s >> l;
                 qDebug() << name << ":" << l.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff)
+                if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(l.d));
             }
             else if (type == "str") {
@@ -396,7 +401,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                     }
                 }
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff)
+                if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(str.d));
             }
             else if (type == "arr") {
@@ -408,14 +413,14 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                     W::ArrayInt a;
                     s >> a;
                     qCritical() << name << ":" << a.d;
-                    if (stuff)
+                    if (stuff && stuff->property(qPrintable(name)).isValid())
                         stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
                 }
                 if (strcmp(type, "str") == 0) {
                     W::ArrayStr a;
                     s >> a;
                     qDebug() << name << ":" << a.d;
-                    if (stuff)
+                    if (stuff && stuff->property(qPrintable(name)).isValid())
                         stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
                 }
             }
@@ -424,7 +429,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 s >> t;
                 qDebug() << name << ":" << t.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff)
+                if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.d.toLongLong() * 1000)));
             }
             else if (type == "ptr") {
@@ -433,7 +438,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 qDebug() << name << ":" << p.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 QObject *otherStuff = StuffManager::instance()->getStuff(p.d, "");
-                if (stuff)
+                if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(otherStuff));
             }
             else if (type == "chr") {
@@ -441,7 +446,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 s >> c;
                 qDebug() << name << ":" << c.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff)
+                if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(c.d));
             }
             else {
