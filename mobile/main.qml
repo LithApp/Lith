@@ -23,7 +23,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
                 text: "Open Buffers"
-                font.family: "monospace"
+                font.family: "Menlo"
                 font.pointSize: 24
             }
             Rectangle {
@@ -52,7 +52,7 @@ ApplicationWindow {
                         x: 3
                         y: 6
                         text: buffer.name
-                        font.family: "monospace"
+                        font.family: "Menlo"
                         font.pointSize: 20
                         MouseArea {
                             id: bufferMouse
@@ -117,7 +117,7 @@ ApplicationWindow {
                         Layout.alignment: Qt.AlignTop
                         font.bold: true
                         text: sender
-                        font.family: "monospace"
+                        font.family: "Menlo"
                         font.pointSize: 16
                     }
 
@@ -126,12 +126,13 @@ ApplicationWindow {
                         RowLayout {
                             Layout.fillWidth: true
                             Text {
+                                Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 Layout.alignment: Qt.AlignTop
                                 verticalAlignment: Text.AlignTop
                                 text: modelData.type == 0 ? modelData.plainText : "🔗"
                                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                                font.family: "monospace"
+                                font.family: "Menlo"
                                 font.pointSize: 16
                             }
                             Button {
@@ -144,7 +145,7 @@ ApplicationWindow {
                             Button {
                                 text: "🎨"
                                 visible: modelData.type == 1
-                                font.family: "monospace"
+                                font.family: "Menlo"
                                 font.pointSize: 18
                                 Layout.preferredWidth: height
                                 onClicked: {
@@ -180,7 +181,7 @@ ApplicationWindow {
                 rotation: 180
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                font.family: "monospace"
+                font.family: "Menlo"
                 font.pointSize: 16
                 text: line.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat) + " " + sender + ": " + line.message
                 */
@@ -234,7 +235,6 @@ ApplicationWindow {
     Dialog {
         id: settingsDialog
         anchors.centerIn: parent
-        visible: true
         title: "Settings"
         modal: true
         focus: true
