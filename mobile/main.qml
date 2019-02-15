@@ -121,40 +121,43 @@ ApplicationWindow {
                         font.pointSize: 16
                     }
 
-                    Repeater {
-                        model: line.segments
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Text {
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Repeater {
+                            model: line.segments
+                            RowLayout {
                                 Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                Layout.alignment: Qt.AlignTop
-                                verticalAlignment: Text.AlignTop
-                                text: modelData.type == 0 ? modelData.plainText : "🔗"
-                                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                                font.family: "Menlo"
-                                font.pointSize: 16
-                            }
-                            Button {
-                                text: "⤶"
-                                rotation: 180
-                                visible: modelData.type != 0
-                                font.pointSize: 20
-                                Layout.preferredWidth: height
-                            }
-                            Button {
-                                text: "🎨"
-                                visible: modelData.type == 1
-                                font.family: "Menlo"
-                                font.pointSize: 18
-                                Layout.preferredWidth: height
-                                onClicked: {
-                                    if (!delegateImageWrapper.visible) {
-                                        delegateImage.source = modelData.plainText
-                                        delegateImageWrapper.visible = true
+                                Text {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    Layout.alignment: Qt.AlignTop
+                                    verticalAlignment: Text.AlignTop
+                                    text: modelData.type == 0 ? modelData.plainText : "🔗"
+                                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                    font.family: "Menlo"
+                                    font.pointSize: 16
+                                }
+                                Button {
+                                    text: "⤶"
+                                    rotation: 180
+                                    visible: modelData.type != 0
+                                    font.pointSize: 20
+                                    Layout.preferredWidth: height
+                                }
+                                Button {
+                                    text: "🎨"
+                                    visible: modelData.type == 1
+                                    font.family: "Menlo"
+                                    font.pointSize: 18
+                                    Layout.preferredWidth: height
+                                    onClicked: {
+                                        if (!delegateImageWrapper.visible) {
+                                            delegateImage.source = modelData.plainText
+                                            delegateImageWrapper.visible = true
+                                        }
+                                        else
+                                            delegateImageWrapper.visible = false
                                     }
-                                    else
-                                        delegateImageWrapper.visible = false
                                 }
                             }
                         }

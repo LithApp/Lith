@@ -740,15 +740,16 @@ void BufferLine::onMessageChanged() {
     QRegExp re("(?:(?:https?|ftp|file):\\/\\/|www\\.|ftp\\.)(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[-A-Z0-9+&@#\\/%=~_|$?!:,.])*(?:\\([-A-Z0-9+&@#\\/%=~_|$?!:,.]*\\)|[A-Z0-9+&@#\\/%=~_|$])", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     int lastIdx = 0;
     int idx = -1;
-    if ((idx = re.indexIn(messageGet())) >= 0) {
-        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx, idx)));
+    if (lastIdx < messageGet().length() && (idx = re.indexIn(messageGet(), lastIdx)) >= 0) {
+        int length = idx - lastIdx;
+        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx, length)));
         m_segments.append(new BufferLineSegment(this, re.cap(), BufferLineSegment::LINK));
 
-        lastIdx = idx + 1;
+        lastIdx = idx + re.matchedLength();
     }
-    else {
-        m_segments.append(new BufferLineSegment(this, messageGet()));
-    }
+    if (lastIdx < messageGet().length())
+        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx)));
+
     emit segmentsChanged();
 }
 
