@@ -57,8 +57,10 @@ bool Weechat::hasPassphrase() const {
 }
 
 void Weechat::start() {
-    if (m_connection)
+    if (m_connection) {
         m_connection->deleteLater();
+        m_connection = nullptr;
+    }
 
     statusSet("Connecting");
     m_connection = new QSslSocket(this);
