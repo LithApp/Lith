@@ -74,13 +74,15 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: stuff.selected ? stuff.selected.lines : null
+            rotation: 180
             delegate: Text {
                 width: ListView.view.width
+                rotation: 180
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
                 font.family: "monospace"
                 font.pointSize: 16
-                text: sender + ": " + line.message
+                text: line.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat) + " " + sender + ": " + line.message
             }
         }
         RowLayout {

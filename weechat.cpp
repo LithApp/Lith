@@ -618,14 +618,14 @@ int LineModel::rowCount(const QModelIndex &parent) const {
 
 QVariant LineModel::data(const QModelIndex &index, int role) const {
     if (role == Qt::UserRole)
-        return QVariant::fromValue(m_lines[index.row()]);
+        return QVariant::fromValue(m_lines[m_lines.count() - 1 - index.row()]);
     else
-        return QVariant::fromValue(m_lines[index.row()]->prefixGet());
+        return QVariant::fromValue(m_lines[m_lines.count() - 1 - index.row()]->prefixGet());
 }
 
 void LineModel::appendLine(BufferLine *line) {
     if (!line->dateGet().isValid()) {
-        beginInsertRows(QModelIndex(), m_lines.count(), m_lines.count());
+        beginInsertRows(QModelIndex(), 0, 0);
         m_lines.append(line);
         endInsertRows();
     }
@@ -639,7 +639,7 @@ void LineModel::appendLine(BufferLine *line) {
             }
             pos++;
         }
-        beginInsertRows(QModelIndex(), pos, pos);
+        beginInsertRows(QModelIndex(), m_lines.count() - pos, m_lines.count() - pos);
         m_lines.insert(iterator, line);
         endInsertRows();
     }
