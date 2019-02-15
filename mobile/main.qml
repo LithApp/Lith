@@ -38,7 +38,39 @@ ApplicationWindow {
 
     ColumnLayout {
         anchors.fill: parent
+        Frame {
+            Layout.fillWidth: true
+            RowLayout {
+                width: parent.width
+                Button {
+                    Layout.preferredWidth: height
+                    font.pointSize: 20
+                    text: "☰"
+                    onClicked: bufferDrawer.visible = !bufferDrawer.visible
+                }
+                Text {
+                    clip: true
+                    height: 1
+                    Layout.fillWidth: true
+                    horizontalAlignment: Label.AlignHCenter
+                    font.pointSize: 16
+                    text: stuff.selected ? stuff.selected.name : ""
+                }
+                Button {
+                    Layout.preferredWidth: height
+                    font.pointSize: 20
+                    text: "⚙"
+                }
+                Button {
+                    Layout.preferredWidth: height
+                    font.pointSize: 20
+                    text: "👨"
+                    onClicked: nickDrawer.visible = !nickDrawer.visible
+                }
+            }
+        }
         ListView {
+            clip: true
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: stuff.selected ? stuff.selected.lines : null
@@ -51,13 +83,28 @@ ApplicationWindow {
                 text: sender + ": " + line.message
             }
         }
-        TextField {
+        RowLayout {
             Layout.fillWidth: true
-            onAccepted: {
-                if (text.length > 0) {
-                    stuff.selected.input(text)
-                    text = ""
+            spacing: 0
+            Button {
+                Layout.preferredWidth: height
+                text: "⇥"
+                font.pointSize: 14
+            }
+            TextField {
+                Layout.fillWidth: true
+                font.pointSize: 16
+                onAccepted: {
+                    if (text.length > 0) {
+                        stuff.selected.input(text)
+                        text = ""
+                    }
                 }
+            }
+            Button {
+                Layout.preferredWidth: height
+                text: "📷"
+                font.pointSize: 15
             }
         }
     }
