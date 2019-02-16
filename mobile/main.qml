@@ -17,59 +17,71 @@ ApplicationWindow {
         width: 0.66 * parent.width
         height: parent.height
 
-        ColumnLayout {
+        Rectangle {
             anchors.fill: parent
+            color: palette.base
 
-            Item {
-                height: 1
-            }
-            Text {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                text: "Open Buffers"
-                font.family: "Menlo"
-                font.pointSize: 24
-            }
-            Rectangle {
-                height: 1
-                Layout.fillWidth: true
-                color: "dark gray"
-            }
+            ColumnLayout {
+                anchors.fill: parent
+
+                Item {
+                    height: 1
+                }
+                Text {
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
+                    text: "Open Buffers"
+                    font.family: "Menlo"
+                    font.pointSize: 24
+                    color: palette.text
+                }
+                Rectangle {
+                    height: 1
+                    Layout.fillWidth: true
+                    color: "dark gray"
+                }
 
 
-            ListView {
-                clip: true
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                model: stuff
-                delegate: Rectangle {
-                    width: ListView.view.width
-                    height: childrenRect.height + 12
-                    color: bufferMouse.pressed ? "gray" : "white"
-                    Behavior on color {
-                        ColorAnimation {
+                ListView {
+                    clip: true
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    model: stuff
+                    delegate: Rectangle {
+                        width: ListView.view.width
+                        height: childrenRect.height + 12
+                        color: bufferMouse.pressed ? "gray" : palette.base
+                        Behavior on color {
+                            ColorAnimation {
 
+                            }
                         }
-                    }
 
-                    Text {
-                        x: 3
-                        y: 6
-                        text: buffer.name
-                        font.family: "Menlo"
-                        font.pointSize: 20
-                        MouseArea {
-                            id: bufferMouse
-                            anchors.fill: parent
-                            onClicked: {
-                                stuff.selectedIndex = index
-                                bufferDrawer.visible = false
+                        Text {
+                            x: 3
+                            y: 6
+                            text: buffer.name
+                            font.family: "Menlo"
+                            font.pointSize: 20
+                            color: palette.text
+                            MouseArea {
+                                id: bufferMouse
+                                anchors.fill: parent
+                                onClicked: {
+                                    stuff.selectedIndex = index
+                                    bufferDrawer.visible = false
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: palette.base
     }
 
     ColumnLayout {
@@ -87,6 +99,7 @@ ApplicationWindow {
                 Text {
                     clip: true
                     height: 1
+                    color: palette.text
                     Layout.fillWidth: true
                     horizontalAlignment: Label.AlignHCenter
                     font.pointSize: 16
@@ -123,6 +136,7 @@ ApplicationWindow {
                         text: sender
                         font.family: "Menlo"
                         font.pointSize: 16
+                        color: palette.text
                     }
 
                     ColumnLayout {
@@ -137,7 +151,7 @@ ApplicationWindow {
                                     Layout.alignment: Qt.AlignTop
                                     verticalAlignment: Text.AlignTop
                                     text: modelData.type == 0 ? modelData.plainText : modelData.summary
-                                    color: modelData.type == 0 ? palette.buttonText : palette.highlight
+                                    color: modelData.type == 0 ? palette.text : palette.highlight
                                     font.underline: modelData.type != 0
                                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                     font.family: "Menlo"
@@ -212,6 +226,10 @@ ApplicationWindow {
                         text = ""
                     }
                 }
+                background: Rectangle {
+                    color: palette.base
+                }
+                color: palette.text
             }
             Button {
                 Layout.preferredWidth: height
@@ -250,6 +268,21 @@ ApplicationWindow {
         closePolicy: Popup.CloseOnEscape
         standardButtons: Dialog.Ok | Dialog.Cancel
 
+        header: Rectangle {
+            color: palette.base
+            height: 48
+            width: settingsDialog.width
+            Text {
+                anchors.centerIn: parent
+                text: "Settings"
+                color: palette.text
+            }
+        }
+
+        background: Rectangle {
+            color: palette.base
+        }
+
         onAccepted: {
             weechat.host = hostField.text
             weechat.port = portField.text
@@ -269,6 +302,7 @@ ApplicationWindow {
             columns: 2
             Text {
                 text: "Hostname"
+                color: palette.text
             }
             TextField {
                 id: hostField
@@ -277,6 +311,7 @@ ApplicationWindow {
             }
             Text {
                 text: "Port"
+                color: palette.text
             }
             TextField {
                 id: portField
@@ -289,6 +324,7 @@ ApplicationWindow {
             }
             Text {
                 text: "SSL"
+                color: palette.text
             }
             CheckBox {
                 id: encryptedCheckbox
@@ -297,6 +333,7 @@ ApplicationWindow {
             }
             Text {
                 text: "Password"
+                color: palette.text
             }
             TextField {
                 id: passphraseField
