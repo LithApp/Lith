@@ -207,6 +207,7 @@ public:
     }; Q_ENUMS(Type)
     PROPERTY(Type, type)
     PROPERTY(QString, plainText)
+    PROPERTY(QString, summary)
 public:
     BufferLineSegment(BufferLine *parent = nullptr, const QString &text = QString(), Type type = PLAIN);
 

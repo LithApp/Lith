@@ -801,5 +801,8 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
     , m_type(type)
     , m_plainText(text)
 {
-
+    QUrl url(plainTextGet());
+    if (url.isValid()) {
+        m_summary = url.host() + "-" + url.fileName();
+    }
 }

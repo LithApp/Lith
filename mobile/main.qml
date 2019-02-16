@@ -8,6 +8,10 @@ ApplicationWindow {
     height: 800
     title: "Lith"
 
+    SystemPalette {
+        id: palette
+    }
+
     Drawer {
         id: bufferDrawer
         width: 0.66 * parent.width
@@ -132,7 +136,9 @@ ApplicationWindow {
                                     Layout.fillHeight: true
                                     Layout.alignment: Qt.AlignTop
                                     verticalAlignment: Text.AlignTop
-                                    text: modelData.type == 0 ? modelData.plainText : "🔗"
+                                    text: modelData.type == 0 ? modelData.plainText : modelData.summary
+                                    color: modelData.type == 0 ? palette.buttonText : palette.highlight
+                                    font.underline: modelData.type != 0
                                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                     font.family: "Menlo"
                                     font.pointSize: 16
