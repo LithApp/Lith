@@ -167,21 +167,21 @@ ApplicationWindow {
                                 }
                             }
                         }
+                        Item {
+                            id: delegateImageWrapper
+                            Layout.fillWidth: true
+                            height: childrenRect.height
+                            Layout.preferredHeight: childrenRect.height
+                            visible: false
+                            Image {
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width
+                                id: delegateImage
+                            }
+                        }
                     }
                     Item {
                         Layout.fillWidth: true
-                    }
-                }
-                Item {
-                    id: delegateImageWrapper
-                    Layout.fillWidth: true
-                    height: childrenRect.height
-                    Layout.preferredHeight: childrenRect.height
-                    visible: false
-                    Image {
-                        fillMode: Image.PreserveAspectFit
-                        width: parent.width
-                        id: delegateImage
                     }
                 }
             }
