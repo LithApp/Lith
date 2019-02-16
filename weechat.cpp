@@ -742,13 +742,13 @@ void BufferLine::onMessageChanged() {
     int idx = -1;
     if (lastIdx < messageGet().length() && (idx = re.indexIn(messageGet(), lastIdx)) >= 0) {
         int length = idx - lastIdx;
-        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx, length)));
-        m_segments.append(new BufferLineSegment(this, re.cap(), BufferLineSegment::LINK));
+        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx, length).trimmed()));
+        m_segments.append(new BufferLineSegment(this, re.cap().trimmed(), BufferLineSegment::LINK));
 
         lastIdx = idx + re.matchedLength();
     }
     if (lastIdx < messageGet().length())
-        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx)));
+        m_segments.append(new BufferLineSegment(this, messageGet().mid(lastIdx).trimmed()));
 
     emit segmentsChanged();
 }
