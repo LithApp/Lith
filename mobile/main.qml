@@ -24,7 +24,7 @@ ApplicationWindow {
 
         Rectangle {
             anchors.fill: parent
-            color: palette.base
+            color: palette.window
 
             ColumnLayout {
                 anchors.fill: parent
@@ -38,7 +38,7 @@ ApplicationWindow {
                     text: "Open Buffers"
                     font.family: "Menlo"
                     font.pointSize: 24
-                    color: palette.text
+                    color: palette.windowText
                 }
                 Rectangle {
                     height: 1
@@ -68,7 +68,7 @@ ApplicationWindow {
                             text: buffer.name
                             font.family: "Menlo"
                             font.pointSize: 20
-                            color: palette.text
+                            color: palette.windowText
                             MouseArea {
                                 id: bufferMouse
                                 anchors.fill: parent
@@ -93,6 +93,10 @@ ApplicationWindow {
         anchors.fill: parent
         Frame {
             Layout.fillWidth: true
+            background: Rectangle {
+                color: palette.window
+            }
+
             RowLayout {
                 width: parent.width
                 Button {
@@ -104,7 +108,7 @@ ApplicationWindow {
                 Text {
                     clip: true
                     height: 1
-                    color: palette.text
+                    color: palette.windowText
                     Layout.fillWidth: true
                     horizontalAlignment: Label.AlignHCenter
                     font.pointSize: 16
