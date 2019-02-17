@@ -44,6 +44,16 @@ typedef uint64_t pointer_t;
 class Weechat : public QObject
 {
     Q_OBJECT
+public:
+    enum Status {
+        UNCONFIGURED,
+        CONNECTING,
+        CONNECTED,
+        DISCONNECTED,
+        ERROR
+    }; Q_ENUMS(Status)
+    PROPERTY(Status, status)
+    PROPERTY(QString, errorString)
     Q_PROPERTY(QString host READ host WRITE setHost NOTIFY settingsChanged)
     Q_PROPERTY(int port READ port WRITE setPort NOTIFY settingsChanged)
     Q_PROPERTY(bool encrypted READ encrypted WRITE setEncrypted NOTIFY settingsChanged)
@@ -51,7 +61,6 @@ class Weechat : public QObject
 
     Q_PROPERTY(int fetchFrom READ fetchFrom NOTIFY fetchFromChanged)
     Q_PROPERTY(int fetchTo READ fetchTo NOTIFY fetchToChanged)
-    PROPERTY(QString, status)
 public:
     static Weechat *_self;
     static Weechat *instance();

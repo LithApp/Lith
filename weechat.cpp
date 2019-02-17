@@ -23,7 +23,7 @@ Weechat::Weechat(QObject *parent)
     : QObject(parent)
     , m_settings("Lith")
 {
-    statusSet(QString("Initialized"));
+    statusSet(UNCONFIGURED);
     connect(this, &Weechat::settingsChanged, this, &Weechat::onSettingsChanged);
 
     m_host = m_settings.value("host", QString()).toString();
@@ -62,7 +62,7 @@ void Weechat::start() {
         m_connection = nullptr;
     }
 
-    statusSet("Connecting");
+    statusSet(CONNECTING);
     m_connection = new QSslSocket(this);
     m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
 
@@ -159,7 +159,7 @@ void Weechat::onReadyRead() {
 
 void Weechat::onConnected() {
     qDebug() << "Connected!";
-    statusSet(QString("Connected"));
+    statusSet(CONNECTED);
     m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
     m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-3)/data\n");
@@ -175,7 +175,7 @@ void Weechat::onConnected() {
 }
 
 void Weechat::onDisconnected() {
-    statusSet("Disconnected");
+    statusSet(DISCONNECTED);
 
     if (m_reconnectTimer.interval() < 16 * 60 * 1000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
@@ -184,7 +184,8 @@ void Weechat::onDisconnected() {
 
 void Weechat::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
-    statusSet(QString("Connection failed: %1").arg(m_connection->errorString()));
+    statusSet(ERROR);
+    errorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
 
     if (m_reconnectTimer.interval() < 16 * 60 * 1000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
@@ -545,7 +546,7 @@ int StuffManager::bufferCount() {
 }
 
 Buffer *StuffManager::selectedBuffer() {
-    if (m_buffers.count() > 4)
+    if (m_selectedIndex >=0 && m_buffers.count() > 4)
         return m_buffers[m_selectedIndex];
     return nullptr;
 }
@@ -558,7 +559,7 @@ void StuffManager::setSelectedIndex(int o) {
     if (m_selectedIndex != o) {
         m_selectedIndex = o;
         emit selectedChanged();
-        if (!selectedBuffer()->isAfterInitialFetch())
+        if (selectedBuffer() && !selectedBuffer()->isAfterInitialFetch())
             selectedBuffer()->fetchMoreLines();
     }
 }

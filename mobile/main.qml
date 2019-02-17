@@ -39,6 +39,13 @@ ApplicationWindow {
                     font.family: "Menlo"
                     font.pointSize: 24
                     color: palette.windowText
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            stuff.selectedIndex = -1
+                            bufferDrawer.close()
+                        }
+                    }
                 }
                 Rectangle {
                     height: 1
@@ -123,12 +130,28 @@ ApplicationWindow {
                 Button {
                     Layout.preferredWidth: height
                     font.pointSize: 20
-                    text: "👨"
+                    visible: weechat.status !== Weechat.UNCONFIGURED
+                    text: weechat.status === Weechat.CONNECTING ? "🤔" :
+                                             Weechat.CONNECTED ? "🙂" :
+                                             Weechat.DISCONNECTED ? "😴" :
+                                             Weechat.ERROR ? "☠" :
+                                                             "😱"
                     onClicked: nickDrawer.visible = !nickDrawer.visible
                 }
             }
         }
+        Text {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            visible: !stuff.selected
+            text: "Welcome to Lith\nCurrent error status: " + (weechat.errorString.length > 0 ? weechat.errorString : "None")
+            color: palette.text
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+
         ListView {
+            visible: stuff.selected
             clip: true
             Layout.fillWidth: true
             Layout.fillHeight: true
