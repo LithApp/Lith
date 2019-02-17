@@ -803,11 +803,11 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
 {
     QUrl url(plainTextGet());
     if (plainTextGet().startsWith("http") && url.isValid()) {
-        if (!url.fileName().isEmpty() && !url.host().isEmpty())
+        QString extension = url.fileName().split(".").last().toLower();
+        if (!url.fileName().isEmpty() && !url.host().isEmpty() && !extension.isEmpty())
             m_summary = url.host() + "-" + url.fileName();
         else
             m_summary = plainTextGet();
-        QString extension = url.fileName().split(".").last().toLower();
         if (QStringList{"png", "jpg", "gif"}.indexOf(extension) != -1)
             m_type = IMAGE;
         else if (QStringList{"avi", "mov", "mp4", "webm"}.indexOf(extension) != -1)
