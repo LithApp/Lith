@@ -805,7 +805,9 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
     QUrl url(plainTextGet());
     if (plainTextGet().startsWith("http") && url.isValid()) {
         QString extension = url.fileName().split(".").last().toLower();
-        if (!url.fileName().isEmpty() && !url.host().isEmpty() && !extension.isEmpty())
+        QString host = url.host();
+        QString file = url.fileName();
+        if (!file.isEmpty() && !host.isEmpty() && !extension.isEmpty())
             m_summary = url.host() + "-" + url.fileName();
         else
             m_summary = plainTextGet();
@@ -813,6 +815,15 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
             m_type = IMAGE;
         else if (QStringList{"avi", "mov", "mp4", "webm"}.indexOf(extension) != -1)
             m_type = VIDEO;
+        else if (host.contains("youtube.com")) {
+            QRegExp re("[?]v[=]([0-9a-zA-Z-_]+)");
+            if (re.indexIn(plainTextGet()) != -1) {
+                m_embedUrl = "https://www.youtube.com/embed/" + re.cap(1);
+                m_type = EMBED;
+            }
+            else
+                m_type = LINK;
+        }
         else
             m_type = LINK;
         // youtube: "https://www.youtube.com/embed/IDidIDidIDi"

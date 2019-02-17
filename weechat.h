@@ -219,6 +219,7 @@ public:
     PROPERTY(Type, type)
     PROPERTY(QString, plainText)
     PROPERTY(QString, summary)
+    PROPERTY(QString, embedUrl)
 public:
     BufferLineSegment(BufferLine *parent = nullptr, const QString &text = QString(), Type type = PLAIN);
 

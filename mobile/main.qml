@@ -205,12 +205,18 @@ ApplicationWindow {
                                     Layout.preferredWidth: height
                                     onClicked: {
                                         if (!delegateContentWrapper.visible) {
-                                            if (modelData.type === LineSegment.EMBED)
-                                                delegateWeb.url = modelData.plainText
-                                            else if (modelData.type === LineSegment.IMAGE)
+                                            if (modelData.type === LineSegment.EMBED) {
+                                                console.log(modelData.embedUrl)
+                                                delegateWeb.url = modelData.embedUrl
+                                                delegateVideo.visible = false
+                                            }
+                                            else if (modelData.type === LineSegment.IMAGE) {
                                                 delegateImage.source = modelData.plainText
-                                            else if (modelData.type === LineSegment.VIDEO)
+                                            }
+                                            else if (modelData.type === LineSegment.VIDEO) {
                                                 delegateVideo.source = modelData.plainText
+                                                delegateWeb.visible = false
+                                            }
                                             delegateContentWrapper.visible = true
                                         }
                                         else
@@ -247,7 +253,7 @@ ApplicationWindow {
                                 x: 1
                                 y: 1
                                 width: parent.width - 2
-                                height: url.length > 0 ? width: 0
+                                height: width
                             }
                         }
                     }
