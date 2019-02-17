@@ -38,6 +38,10 @@ Weechat::Weechat(QObject *parent)
     m_reconnectTimer.setInterval(1000);
     m_reconnectTimer.setSingleShot(true);
     connect(&m_reconnectTimer, &QTimer::timeout, this, &Weechat::start);
+
+    m_timeoutTimer.setInterval(5000);
+    m_timeoutTimer.setSingleShot(true);
+    connect(&m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout);
 }
 
 QString Weechat::host() const {
@@ -65,6 +69,7 @@ void Weechat::start() {
     statusSet(CONNECTING);
     m_connection = new QSslSocket(this);
     m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
+    m_connection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
     connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &Weechat::onError);
     connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Weechat::onSslErrors);
@@ -127,6 +132,7 @@ void Weechat::requestHotlist() {
 
 void Weechat::onReadyRead() {
     static bool compressed = false;
+    m_timeoutTimer.stop();
 
     QByteArray tmp;
 
@@ -177,7 +183,7 @@ void Weechat::onConnected() {
 void Weechat::onDisconnected() {
     statusSet(DISCONNECTED);
 
-    if (m_reconnectTimer.interval() < 16 * 60 * 1000)
+    if (m_reconnectTimer.interval() < 5000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
     m_reconnectTimer.start();
 }
@@ -187,7 +193,7 @@ void Weechat::onError(QAbstractSocket::SocketError e) {
     statusSet(ERROR);
     errorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
 
-    if (m_reconnectTimer.interval() < 16 * 60 * 1000)
+    if (m_reconnectTimer.interval() < 5000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
     m_reconnectTimer.start();
 }
@@ -221,7 +227,18 @@ void Weechat::input(pointer_t ptr, const QString &data) {
 void Weechat::fetchLines(pointer_t ptr, int count) {
     QString line = QString("hdata buffer:0x%1/lines/last_line(-%2)/data\n").arg(ptr, 0, 16).arg(count);
     //qCritical() << "WRITING:" << line;
-    m_connection->write(line.toUtf8());
+    auto bytes = m_connection->write(line.toUtf8());
+    m_timeoutTimer.start(5000);
+    qCritical() << "Written" << bytes << m_connection->isReadable() << m_connection->isWritable() << m_connection->isOpen();
+    if (bytes != line.toUtf8().count()) {
+        errorStringSet("HOVNO");
+    }
+}
+
+void Weechat::onTimeout() {
+    m_connection->disconnect();
+    statusSet(DISCONNECTED);
+    start();
 }
 
 QDataStream &W::operator>>(QDataStream &s, W::Char &r) {
@@ -559,7 +576,7 @@ void StuffManager::setSelectedIndex(int o) {
     if (m_selectedIndex != o) {
         m_selectedIndex = o;
         emit selectedChanged();
-        if (selectedBuffer() && !selectedBuffer()->isAfterInitialFetch())
+        if (selectedBuffer())
             selectedBuffer()->fetchMoreLines();
     }
 }

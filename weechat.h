@@ -107,6 +107,9 @@ public slots:
     void input(pointer_t ptr, const QString &data);
     void fetchLines(pointer_t ptr, int count);
 
+private slots:
+    void onTimeout();
+
 private:
     QSslSocket *m_connection { nullptr };
 
@@ -122,6 +125,7 @@ private:
 
     QTimer m_hotlistTimer;
     QTimer m_reconnectTimer;
+    QTimer m_timeoutTimer;
 };
 
 

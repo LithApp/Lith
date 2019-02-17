@@ -131,10 +131,11 @@ ApplicationWindow {
                     Layout.preferredWidth: height
                     font.pointSize: 20
                     visible: weechat.status !== Weechat.UNCONFIGURED
+                    enabled: weechat.status === Weechat.CONNECTED
                     text: weechat.status === Weechat.CONNECTING ? "🤔" :
-                                             Weechat.CONNECTED ? "🙂" :
-                                             Weechat.DISCONNECTED ? "😴" :
-                                             Weechat.ERROR ? "☠" :
+                          weechat.status === Weechat.CONNECTED ? "🙂" :
+                          weechat.status === Weechat.DISCONNECTED ? "😴" :
+                          weechat.status === Weechat.ERROR ? "☠" :
                                                              "😱"
                     onClicked: nickDrawer.visible = !nickDrawer.visible
                 }
@@ -144,7 +145,9 @@ ApplicationWindow {
             Layout.fillHeight: true
             Layout.fillWidth: true
             visible: !stuff.selected
-            text: "Welcome to Lith\nCurrent error status: " + (weechat.errorString.length > 0 ? weechat.errorString : "None")
+            text: "Welcome to Lith\n" +
+                  "Weechat status: " + weechat.status + "\n" +
+                  "Current error status: " + (weechat.errorString.length > 0 ? weechat.errorString : "None")
             color: palette.text
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -324,7 +327,7 @@ ApplicationWindow {
 
         Rectangle {
             anchors.fill: parent
-            color: "blue"
+            color: palette.window
         }
 
         ListView {
@@ -332,6 +335,9 @@ ApplicationWindow {
             model: stuff.selected ? stuff.selected.nicks : null
             delegate: Text {
                 text: modelData.name
+                color: palette.windowText
+                font.family: "Menlo"
+                font.pointSize: 16
             }
         }
     }
