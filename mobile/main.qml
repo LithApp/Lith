@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.4
+import QtQuick.Dialogs 1.2 as Dialogs
 import QtQuick.Layouts 1.3
 import QtMultimedia 5.9 as Multimedia
 import QtWebView 1.1
@@ -247,6 +248,7 @@ ApplicationWindow {
                 font.pointSize: 14
             }
             TextField {
+                id: inputField
                 Layout.fillWidth: true
                 font.pointSize: 16
                 onAccepted: {
@@ -261,9 +263,22 @@ ApplicationWindow {
                 color: palette.text
             }
             Button {
+                id: imageButton
                 Layout.preferredWidth: height
-                text: "📷"
+                property bool isBusy: false
+                text: isBusy ? "" : "📷"
+                enabled: !isBusy
                 font.pointSize: 15
+                onClicked: {
+                    fileDialog.open()
+                    isBusy = true
+                }
+                BusyIndicator {
+                    id: busy
+                    visible: parent.isBusy
+                    anchors.fill: parent
+                    scale: 0.7
+                }
             }
         }
     }
@@ -370,6 +385,15 @@ ApplicationWindow {
                 echoMode: TextInput.Password
                 passwordCharacter: "*"
             }
+        }
+    }
+    Dialogs.FileDialog {
+        id: fileDialog
+        folder: shortcuts.pictures
+        nameFilters: [ "Image files (*.jpg *.png)" ]
+        onAccepted: {
+            inputField.text += " " + fileUrl
+            imageButton.isBusy = false
         }
     }
 }
