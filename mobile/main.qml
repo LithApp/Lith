@@ -170,6 +170,7 @@ ApplicationWindow {
                                 }
                                 Button {
                                     text: "🎨"
+                                    Component.onCompleted: console.log(modelData.type)
                                     visible: modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.IMAGE
                                     font.family: "Menlo"
                                     font.pointSize: 18
