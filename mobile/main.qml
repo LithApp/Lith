@@ -196,31 +196,31 @@ ApplicationWindow {
                             id: delegateContentWrapper
                             color: palette.text
                             Layout.fillWidth: true
-                            height: childrenRect.height + 2
+                            height: (Math.max(delegateImage.height, delegateVideo.height, delegateWeb.height)) + 2
                             Layout.preferredHeight: childrenRect.height
                             visible: false
                             Image {
+                                id: delegateImage
                                 x: 1
                                 y: 1
                                 fillMode: Image.PreserveAspectFit
                                 width: parent.width - 2
-                                id: delegateImage
                             }
                             Multimedia.Video {
+                                id: delegateVideo
                                 x: 1
                                 y: 1
                                 autoPlay: true
                                 fillMode: Image.PreserveAspectFit
                                 width: parent.width - 2
                                 height: width
-                                id: delegateVideo
                             }
                             WebView {
+                                id: delegateWeb
                                 x: 1
                                 y: 1
-                                id: delegateWeb
                                 width: parent.width - 2
-                                height: width
+                                height: url.length > 0 ? width: 0
                             }
                         }
                     }
