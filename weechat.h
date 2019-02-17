@@ -102,7 +102,7 @@ private:
     QSslSocket *m_connection { nullptr };
 
     QByteArray m_fetchBuffer;
-    uint32_t m_bytesRemaining { 0 };
+    int32_t m_bytesRemaining { 0 };
 
     QString m_host { };
     int m_port { };
