@@ -203,7 +203,8 @@ public:
     enum Type {
         PLAIN,
         LINK,
-        IMAGE
+        IMAGE,
+        VIDEO
     }; Q_ENUMS(Type)
     PROPERTY(Type, type)
     PROPERTY(QString, plainText)

@@ -1,6 +1,9 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
+import QtMultimedia 5.9 as Multimedia
+
+import lith 1.0
 
 ApplicationWindow {
     visible: true
@@ -150,9 +153,9 @@ ApplicationWindow {
                                     Layout.fillHeight: true
                                     Layout.alignment: Qt.AlignTop
                                     verticalAlignment: Text.AlignTop
-                                    text: modelData.type == 0 ? modelData.plainText : modelData.summary
-                                    color: modelData.type == 0 ? palette.text : palette.highlight
-                                    font.underline: modelData.type != 0
+                                    text: modelData.type === LineSegment.PLAIN ? modelData.plainText : modelData.summary
+                                    color: modelData.type === LineSegment.PLAIN ? palette.text : palette.highlight
+                                    font.underline: modelData.type !== LineSegment.PLAIN
                                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                                     font.family: "Menlo"
                                     font.pointSize: 16
@@ -160,19 +163,21 @@ ApplicationWindow {
                                 Button {
                                     text: "⤶"
                                     rotation: 180
-                                    visible: modelData.type != 0
+                                    visible: modelData.type !== LineSegment.PLAIN
                                     font.pointSize: 20
                                     Layout.preferredWidth: height
+                                    onClicked: Qt.openUrlExternally(modelData.plainText)
                                 }
                                 Button {
                                     text: "🎨"
-                                    visible: modelData.type == 1
+                                    visible: modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.IMAGE
                                     font.family: "Menlo"
                                     font.pointSize: 18
                                     Layout.preferredWidth: height
                                     onClicked: {
                                         if (!delegateImageWrapper.visible) {
                                             delegateImage.source = modelData.plainText
+                                            delegateVideo.source = modelData.plainText
                                             delegateImageWrapper.visible = true
                                         }
                                         else
@@ -181,16 +186,28 @@ ApplicationWindow {
                                 }
                             }
                         }
-                        Item {
+                        Rectangle {
                             id: delegateImageWrapper
+                            color: palette.text
                             Layout.fillWidth: true
-                            height: childrenRect.height
+                            height: childrenRect.height + 2
                             Layout.preferredHeight: childrenRect.height
                             visible: false
                             Image {
+                                x: 1
+                                y: 1
                                 fillMode: Image.PreserveAspectFit
-                                width: parent.width
+                                width: parent.width - 2
                                 id: delegateImage
+                            }
+                            Multimedia.Video {
+                                x: 1
+                                y: 1
+                                autoPlay: true
+                                fillMode: Image.PreserveAspectFit
+                                width: parent.width - 2
+                                height: width
+                                id: delegateVideo
                             }
                         }
                     }
