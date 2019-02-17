@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 import QtMultimedia 5.9 as Multimedia
+import QtWebView 1.1
 
 import lith 1.0
 
@@ -171,24 +172,28 @@ ApplicationWindow {
                                 Button {
                                     text: "🎨"
                                     Component.onCompleted: console.log(modelData.type)
-                                    visible: modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.IMAGE
+                                    visible: modelData.type === LineSegment.EMBED || modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.IMAGE
                                     font.family: "Menlo"
                                     font.pointSize: 18
                                     Layout.preferredWidth: height
                                     onClicked: {
-                                        if (!delegateImageWrapper.visible) {
-                                            delegateImage.source = modelData.plainText
-                                            delegateVideo.source = modelData.plainText
-                                            delegateImageWrapper.visible = true
+                                        if (!delegateContentWrapper.visible) {
+                                            if (modelData.type === LineSegment.EMBED)
+                                                delegateWeb.url = modelData.plainText
+                                            else if (modelData.type === LineSegment.IMAGE)
+                                                delegateImage.source = modelData.plainText
+                                            else if (modelData.type === LineSegment.VIDEO)
+                                                delegateVideo.source = modelData.plainText
+                                            delegateContentWrapper.visible = true
                                         }
                                         else
-                                            delegateImageWrapper.visible = false
+                                            delegateContentWrapper.visible = false
                                     }
                                 }
                             }
                         }
                         Rectangle {
-                            id: delegateImageWrapper
+                            id: delegateContentWrapper
                             color: palette.text
                             Layout.fillWidth: true
                             height: childrenRect.height + 2
@@ -209,6 +214,13 @@ ApplicationWindow {
                                 width: parent.width - 2
                                 height: width
                                 id: delegateVideo
+                            }
+                            WebView {
+                                x: 1
+                                y: 1
+                                id: delegateWeb
+                                width: parent.width - 2
+                                height: width
                             }
                         }
                     }

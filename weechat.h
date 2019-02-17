@@ -203,6 +203,7 @@ public:
     enum Type {
         PLAIN,
         LINK,
+        EMBED,
         IMAGE,
         VIDEO
     }; Q_ENUMS(Type)

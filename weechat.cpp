@@ -814,5 +814,6 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
             m_type = VIDEO;
         else
             m_type = LINK;
+        // youtube: "https://www.youtube.com/embed/IDidIDidIDi"
     }
 }
