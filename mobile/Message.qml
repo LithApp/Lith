@@ -11,10 +11,19 @@ ColumnLayout {
         id: palette
     }
 
-    width: ListView.view.width
+    width: ListView.view.width + timeMetrics.width
     rotation: 180
     RowLayout {
         Layout.fillWidth: true
+        Text {
+            Layout.alignment: Qt.AlignTop
+            Layout.preferredWidth: timeMetrics.width
+            text: line.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+            font.family: "Menlo"
+            font.pointSize: 16
+            color: palette.text
+        }
+
         Text {
             Layout.alignment: Qt.AlignTop
             font.bold: true

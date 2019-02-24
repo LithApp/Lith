@@ -86,10 +86,15 @@ ColumnLayout {
         verticalAlignment: Text.AlignVCenter
     }
 
-    MessageList {
-        visible: stuff.selected
+    Item {
         Layout.fillWidth: true
         Layout.fillHeight: true
+        clip: true
+        MessageList {
+            width: parent.width
+            height: parent.height
+            visible: stuff.selected
+        }
     }
 
     RowLayout {
