@@ -54,19 +54,41 @@ Drawer {
                         }
                     }
 
-                    Text {
+                    RowLayout {
                         x: 3
                         y: 6
-                        text: buffer.name
-                        font.family: "Menlo"
-                        font.pointSize: 20
-                        color: palette.windowText
-                        MouseArea {
-                            id: bufferMouse
-                            anchors.fill: parent
-                            onClicked: {
-                                stuff.selectedIndex = index
-                                bufferDrawer.visible = false
+                        width: parent.width - 6
+                        Text {
+                            id: bufferName
+                            Layout.fillWidth: true
+                            clip: true
+                            text: buffer.name
+                            font.family: "Menlo"
+                            font.pointSize: 20
+                            color: palette.windowText
+                            MouseArea {
+                                id: bufferMouse
+                                anchors.fill: parent
+                                onClicked: {
+                                    stuff.selectedIndex = index
+                                    bufferDrawer.visible = false
+                                }
+                            }
+                        }
+                        Rectangle {
+                            visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
+                            color: modelData.hotMessages ? "red" : palette.alternateBase
+                            border.color: palette.text
+                            border.width: 1
+                            height: bufferName.height + 6
+                            width: height
+                            radius: 2
+                            Text {
+                                text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
+                                font.family: "Menlo"
+                                font.pointSize: 18
+                                anchors.centerIn: parent
+                                color: palette.windowText
                             }
                         }
                     }
