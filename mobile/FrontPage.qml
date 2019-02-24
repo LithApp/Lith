@@ -32,6 +32,7 @@ ColumnLayout {
                     Layout.fillHeight: true
                     clip: true
                     height: 1
+                    font.bold: true
                     font.family: "Menlo"
                     font.pointSize: stuff.selected && stuff.selected.title.length > 0 ? 14 : 18
                     color: palette.windowText

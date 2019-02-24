@@ -51,7 +51,7 @@ ColumnLayout {
                         onClicked: Qt.openUrlExternally(modelData.plainText)
                     }
                     Button {
-                        text: "🎨"
+                        text: "🖼️"
                         visible: modelData.type === LineSegment.EMBED || modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.IMAGE
                         font.family: "Menlo"
                         font.pointSize: 18
