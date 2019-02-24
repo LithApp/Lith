@@ -24,14 +24,34 @@ ColumnLayout {
                 text: "☰"
                 onClicked: bufferDrawer.visible = !bufferDrawer.visible
             }
-            Text {
-                clip: true
-                height: 1
-                color: palette.windowText
+            ColumnLayout {
                 Layout.fillWidth: true
-                horizontalAlignment: Label.AlignHCenter
-                font.pointSize: 16
-                text: stuff.selected ? stuff.selected.name : ""
+                Layout.fillHeight: true
+                Text {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    height: 1
+                    font.family: "Menlo"
+                    font.pointSize: stuff.selected && stuff.selected.title.length > 0 ? 14 : 18
+                    color: palette.windowText
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text: stuff.selected ? stuff.selected.name : ""
+                }
+                Text {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    visible: stuff.selected && stuff.selected.title.length > 0
+                    clip: true
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    text: stuff.selected ? stuff.selected.title : ""
+                    font.family: "Menlo"
+                    font.pointSize: 12
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: palette.windowText
+                }
             }
             Button {
                 Layout.preferredWidth: height
