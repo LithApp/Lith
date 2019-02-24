@@ -6,6 +6,10 @@ import QtQuick.Dialogs 1.2 as Dialogs
 import lith 1.0
 
 ColumnLayout {
+    SystemPalette {
+        id: palette
+    }
+
     Frame {
         Layout.fillWidth: true
         background: Rectangle {

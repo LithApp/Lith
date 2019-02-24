@@ -9,6 +9,10 @@ Dialog {
     closePolicy: Popup.CloseOnEscape
     standardButtons: Dialog.Ok | Dialog.Cancel
 
+    SystemPalette {
+        id: palette
+    }
+
     header: Rectangle {
         color: palette.base
         height: 48
