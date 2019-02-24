@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>BufferList.qml</file>
+        <file>SettingsDialog.qml</file>
+        <file>NickList.qml</file>
+        <file>FrontPage.qml</file>
+        <file>MessageList.qml</file>
+        <file>Message.qml</file>
     </qresource>
 </RCC>
