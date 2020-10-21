@@ -14,6 +14,20 @@ Drawer {
         ColumnLayout {
             anchors.fill: parent
 
+            RowLayout {
+                Layout.fillWidth: true
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    Layout.preferredWidth: height
+                    font.pointSize: 20
+                    text: "⚙"
+                    onClicked: settingsDialog.visible = true
+                }
+            }
+
             Item {
                 height: 1
             }
@@ -22,7 +36,7 @@ Drawer {
                 horizontalAlignment: Text.AlignHCenter
                 text: "Open Buffers"
                 font.family: "Menlo"
-                font.pointSize: 24
+                font.pointSize: 20
                 color: palette.windowText
                 MouseArea {
                     anchors.fill: parent

@@ -3,7 +3,7 @@ import QtQuick 2.11
 ListView {
     TextMetrics {
         id: timeMetrics
-        text: "00:00"
+        text: Qt.formatTime(new Date(), Locale.LongFormat)
         font.family: "Menlo"
         font.pointSize: 16
     }
@@ -16,7 +16,7 @@ ListView {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XAxis
-        drag.maximumX: timeMetrics.width
+        drag.maximumX: timeMetrics.width + 6
         drag.minimumX: 0
     }
 }

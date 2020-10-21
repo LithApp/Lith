@@ -27,6 +27,7 @@ ColumnLayout {
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                spacing: 0
                 Text {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
@@ -47,6 +48,8 @@ ColumnLayout {
                     clip: true
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     text: stuff.selected ? stuff.selected.title : ""
+                    elide: Text.ElideRight
+                    maximumLineCount: 2
                     font.family: "Menlo"
                     font.pointSize: 12
                     horizontalAlignment: Text.AlignHCenter
@@ -54,12 +57,7 @@ ColumnLayout {
                     color: palette.windowText
                 }
             }
-            Button {
-                Layout.preferredWidth: height
-                font.pointSize: 20
-                text: "⚙"
-                onClicked: settingsDialog.visible = true
-            }
+            Item { width: 1 }
             Button {
                 Layout.preferredWidth: height
                 font.pointSize: 20
@@ -103,12 +101,15 @@ ColumnLayout {
         Button {
             Layout.preferredWidth: height
             text: "⇥"
-            font.pointSize: 14
+            font.pointSize: 20
         }
         TextField {
             id: inputField
             Layout.fillWidth: true
+            font.family: "Menlo"
             font.pointSize: 16
+            Layout.alignment: Qt.AlignVCenter
+            verticalAlignment: TextField.AlignVCenter
             onAccepted: {
                 if (text.length > 0) {
                     stuff.selected.input(text)
@@ -126,7 +127,7 @@ ColumnLayout {
             property bool isBusy: false
             text: isBusy ? "" : "📷"
             enabled: !isBusy
-            font.pointSize: 15
+            font.pointSize: 16
             onClicked: {
                 fileDialog.open()
                 isBusy = true

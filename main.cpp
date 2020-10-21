@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QtQml>
 #include <QQmlEngine>
+#include <QQuickStyle>
 
 #include "weechat.h"
 
@@ -11,6 +12,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 
+    QQuickStyle::setStyle("Material");
     QQmlApplicationEngine engine;
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
