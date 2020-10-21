@@ -127,7 +127,10 @@ void Weechat::onSettingsChanged() {
 }
 
 void Weechat::requestHotlist() {
-    m_connection->write("hdata hotlist:gui_hotlist(*)\n");
+    if (m_connection) {
+        m_connection->write("sync\n");
+        m_connection->write("hdata hotlist:gui_hotlist(*)\n");
+    }
 }
 
 void Weechat::onReadyRead() {
@@ -164,11 +167,10 @@ void Weechat::onReadyRead() {
 }
 
 void Weechat::onConnected() {
-    qDebug() << "Connected!";
+    qCritical() << "Connected!";
     statusSet(CONNECTED);
     m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
-    m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-3)/data\n");
     m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
     m_connection->write("nicklist\n");
@@ -206,13 +208,13 @@ void Weechat::onSslErrors(const QList<QSslError> errors) {
 }
 
 void Weechat::onMessageReceived(QByteArray &data) {
-    //qDebug() << "Message!" << data;
+    //qCritical() << "Message!" << data;
     QDataStream s(&data, QIODevice::ReadOnly);
 
     W::String id;
     s >> id;
 
-    //qDebug() << "=== TYPE" << id.d;
+    //qCritical() << "=== TYPE" << id.d;
 
         W::HData hda;
         s >> hda;
@@ -331,12 +333,12 @@ QDataStream &W::operator>>(QDataStream &s, W::HashTable &r) {
 QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
     char type[4] = { 0 };
     s.readRawData(type, 3);
-    //qDebug() << type;
+    //qCritical() << type;
     W::String hpath;
     W::String keys;
     W::Integer count;
     s >> hpath >> keys >> count;
-    //qDebug() << hpath.d << keys.d << count.d;
+    //qCritical() << hpath.d << keys.d << count.d;
     for (int i = 0; i < count.d; i++) {
         QStringList pathElems = hpath.d.split("/");
         QStringList arguments = keys.d.split(",");
@@ -390,7 +392,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             if (type == "int") {
                 W::Integer i;
                 s >> i;
-                //qDebug() << name << ":" << i.d;
+                //qCritical() << name << ":" << i.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(i.d));
@@ -398,7 +400,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             else if (type == "lon") {
                 W::LongInteger l;
                 s >> l;
-                //qDebug() << name << ":" << l.d;
+                //qCritical() << name << ":" << l.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(l.d));
@@ -406,7 +408,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             else if (type == "str") {
                 W::String str;
                 s >> str;
-                //qDebug () << name << ":" << str.d;
+                //qCritical () << name << ":" << str.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(str.d));
@@ -415,7 +417,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 char type[4] = { 0 };
                 s.readRawData(type, 3);
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
-                //qDebug() << name << ":" << QString(type);
+                //qCritical() << name << ":" << QString(type);
                 if (strcmp(type, "int") == 0) {
                     W::ArrayInt a;
                     s >> a;
@@ -426,7 +428,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 if (strcmp(type, "str") == 0) {
                     W::ArrayStr a;
                     s >> a;
-                    //qDebug() << name << ":" << a.d;
+                    //qCritical() << name << ":" << a.d;
                     if (stuff && stuff->property(qPrintable(name)).isValid())
                         stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
                 }
@@ -434,7 +436,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             else if (type == "tim") {
                 W::Time t;
                 s >> t;
-                //qDebug() << name << ":" << t.d;
+                //qCritical() << name << ":" << t.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.d.toLongLong() * 1000)));
@@ -442,7 +444,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             else if (type == "ptr") {
                 W::Pointer p;
                 s >> p;
-                //qDebug() << name << ":" << p.d;
+                //qCritical() << name << ":" << p.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 QObject *otherStuff = StuffManager::instance()->getStuff(p.d, "");
                 if (stuff && stuff->property(qPrintable(name)).isValid())
@@ -451,13 +453,13 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             else if (type == "chr") {
                 W::Char c;
                 s >> c;
-                //qDebug() << name << ":" << c.d;
+                //qCritical() << name << ":" << c.d;
                 QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(c.d));
             }
             else {
-                //qDebug() << "Type was" << type;
+                //qCritical() << "Type was" << type;
             }
         }
     }
@@ -661,7 +663,7 @@ Buffer::Buffer(QObject *parent, pointer_t pointer)
 
 /*
 BufferLine *Buffer::getLine(pointer_t ptr) {
-    qDebug() << "Line added!";
+    qCritical() << "Line added!";
     if (!m_lineMap.contains(ptr)) {
         BufferLine *tmp = new BufferLine(this);
         m_lines->appendLine(tmp);
