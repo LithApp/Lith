@@ -130,17 +130,17 @@ private:
 
 
 namespace W {
-    struct Char { char d; };
-    struct Integer { int32_t d; };
-    struct LongInteger { int64_t d; };
-    struct String { QString d; };
-    struct Buffer { QByteArray d; };
-    struct Pointer { pointer_t d; };
-    struct Time { QString d; };
-    struct HashTable { QMap<QString, QString> d; };
+    struct Char { char d { 0 }; };
+    struct Integer { int32_t d { 0 }; };
+    struct LongInteger { int64_t d { 0 }; };
+    struct String { QString d {}; };
+    struct Buffer { QByteArray d {}; };
+    struct Pointer { pointer_t d { 0 }; };
+    struct Time { QString d {}; };
+    struct HashTable { QMap<QString, QString> d {}; };
     struct HData { };
-    struct ArrayInt { QList<int> d; };
-    struct ArrayStr { QStringList d; };
+    struct ArrayInt { QList<int> d {}; };
+    struct ArrayStr { QStringList d {}; };
 
     QDataStream &operator>>(QDataStream &s, Char &r);
     QDataStream &operator>>(QDataStream &s, Integer &r);
