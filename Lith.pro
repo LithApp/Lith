@@ -4,6 +4,7 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     clipboardproxy.cpp \
+    datamodel.cpp \
     qmlobjectlist.cpp \
     uploader.cpp \
     weechat.cpp
@@ -31,6 +32,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     clipboardproxy.h \
+    datamodel.h \
     qmlobjectlist.h \
     uploader.h \
-    weechat.h
+    weechat.h \
+    common.h

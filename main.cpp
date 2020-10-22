@@ -8,6 +8,7 @@
 #include "weechat.h"
 #include "uploader.h"
 #include "clipboardproxy.h"
+#include "datamodel.h"
 
 int main(int argc, char *argv[])
 {
