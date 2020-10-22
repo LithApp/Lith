@@ -14,14 +14,20 @@ Drawer {
         ColumnLayout {
             anchors.fill: parent
 
-            RowLayout {
+            Row {
                 Layout.fillWidth: true
-                Item {
-                    Layout.fillWidth: true
+
+                Image {
+                    source: "qrc:/assets/icon.png"
+                    height: parent.height
+                    fillMode: Image.PreserveAspectFit
+                }
+                Text {
+                    font.pointSize: 20
+                    text: "Lith"
                 }
 
                 Button {
-                    Layout.preferredWidth: height
                     font.pointSize: 20
                     text: "⚙"
                     onClicked: settingsDialog.visible = true

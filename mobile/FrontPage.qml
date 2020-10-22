@@ -10,6 +10,23 @@ ColumnLayout {
         id: palette
     }
 
+    Connections {
+        target: uploader
+        onSuccess: {
+            console.warn("FINISHED")
+            console.warn(url)
+            inputField.text += " "
+            inputField.text += url
+            inputField.text += " "
+            imageButton.isBusy = false
+        }
+        onError: {
+            console.warn("ERROR")
+            console.warn(message)
+            imageButton.isBusy = false
+        }
+    }
+
     Frame {
         Layout.fillWidth: true
         background: Rectangle {
@@ -130,7 +147,6 @@ ColumnLayout {
             font.pointSize: 16
             onClicked: {
                 fileDialog.open()
-                isBusy = true
             }
             BusyIndicator {
                 id: busy
@@ -146,8 +162,10 @@ ColumnLayout {
         folder: shortcuts.pictures
         nameFilters: [ "Image files (*.jpg *.png)" ]
         onAccepted: {
-            inputField.text += " " + fileUrl
-            imageButton.isBusy = false
+            imageButton.isBusy = true
+            //inputField.text += " " + fileUrl
+            //imageButton.isBusy = false
+            uploader.upload(fileUrl)
         }
     }
 }

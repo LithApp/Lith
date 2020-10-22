@@ -4,10 +4,11 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     qmlobjectlist.cpp \
+    uploader.cpp \
     weechat.cpp
 
 #RESOURCES += qml.qrc
-RESOURCES += mobile/mobile.qrc
+RESOURCES += mobile/mobile.qrc assets.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -29,4 +30,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     qmlobjectlist.h \
+    uploader.h \
     weechat.h

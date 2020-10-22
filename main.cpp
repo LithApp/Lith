@@ -6,6 +6,7 @@
 #include <QQuickStyle>
 
 #include "weechat.h"
+#include "uploader.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,8 +26,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("stuff", StuffManager::instance());
     engine.rootContext()->setContextProperty("weechat", Weechat::instance());
     engine.rootContext()->setContextProperty("clipboard", new ClipboardProxy());
+    engine.rootContext()->setContextProperty("uploader", new Uploader());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
-
 
     return app.exec();
 }
