@@ -86,7 +86,7 @@ Drawer {
                             id: bufferName
                             Layout.fillWidth: true
                             clip: true
-                            text: buffer.name
+                            text: buffer.name.split(".").slice(-1)[0]
                             font.family: "Menlo"
                             font.pointSize: 20
                             color: palette.windowText
