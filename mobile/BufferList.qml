@@ -14,23 +14,27 @@ Drawer {
         ColumnLayout {
             anchors.fill: parent
 
-            Row {
+            RowLayout {
                 Layout.fillWidth: true
 
-                Image {
-                    source: "qrc:/assets/icon.png"
-                    height: parent.height
-                    fillMode: Image.PreserveAspectFit
+                Item {
+                    width: 6
                 }
                 Text {
-                    font.pointSize: 20
+                    font.pointSize: 26
                     text: "Lith"
+                }
+                Item {
+                    Layout.fillWidth: true
                 }
 
                 Button {
                     font.pointSize: 20
                     text: "⚙"
                     onClicked: settingsDialog.visible = true
+                }
+                Item {
+                    width: 6
                 }
             }
 
@@ -42,7 +46,7 @@ Drawer {
                 horizontalAlignment: Text.AlignHCenter
                 text: "Open Buffers"
                 font.family: "Menlo"
-                font.pointSize: 20
+                font.pointSize: 16
                 color: palette.windowText
                 MouseArea {
                     anchors.fill: parent
