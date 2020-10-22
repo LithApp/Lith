@@ -3,6 +3,7 @@ QT += qml quick widgets webview multimedia quickcontrols2
 CONFIG += c++11
 
 SOURCES += main.cpp \
+    clipboardproxy.cpp \
     qmlobjectlist.cpp \
     uploader.cpp \
     weechat.cpp
@@ -29,6 +30,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    clipboardproxy.h \
     qmlobjectlist.h \
     uploader.h \
     weechat.h

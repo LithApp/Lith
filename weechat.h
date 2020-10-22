@@ -327,17 +327,4 @@ private:
     QMap<pointer_t, HotListItem*> m_hotList;
 };
 
-class ClipboardProxy : public QObject {
-    Q_OBJECT
-public:
-    ClipboardProxy(QObject *parent = nullptr);
-
-    Q_INVOKABLE bool hasImage();
-
-    Q_INVOKABLE QString text();
-
-private:
-    QClipboard *m_clipboard;
-};
-
 #endif // WEECHAT_H
