@@ -103,7 +103,6 @@ private:
     QTimer m_timeoutTimer;
 };
 
-
 class StuffManager : public QAbstractListModel {
     Q_OBJECT
     Q_PROPERTY(int bufferCount READ bufferCount NOTIFY buffersChanged)

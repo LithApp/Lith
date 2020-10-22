@@ -1,6 +1,7 @@
 #include "clipboardproxy.h"
 
 #include <QApplication>
+#include <QMimeData>
 #include <QImage>
 
 ClipboardProxy::ClipboardProxy(QObject *parent)
@@ -10,9 +11,13 @@ ClipboardProxy::ClipboardProxy(QObject *parent)
 }
 
 bool ClipboardProxy::hasImage() {
-    return !m_clipboard->image().isNull();
+    return !m_clipboard->mimeData()->hasImage();
 }
 
 QString ClipboardProxy::text() {
     return m_clipboard->text();
+}
+
+QImage ClipboardProxy::image() {
+    return m_clipboard->image();
 }

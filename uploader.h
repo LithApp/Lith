@@ -5,6 +5,7 @@
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QImage>
 
 class Uploader : public QObject
 {
@@ -14,6 +15,7 @@ public:
 
 public slots:
     void upload(const QString &path);
+    void uploadBinary(QImage data);
 signals:
     void error(const QString &message);
     void success(const QString &url);

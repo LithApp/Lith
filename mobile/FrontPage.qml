@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
 import QtQuick.Dialogs 1.2 as Dialogs
@@ -127,16 +127,39 @@ ColumnLayout {
             font.pointSize: 16
             Layout.alignment: Qt.AlignVCenter
             verticalAlignment: TextField.AlignVCenter
-            onAccepted: {
-                if (text.length > 0) {
-                    stuff.selected.input(text)
-                    text = ""
+
+            Action {
+                id: pasteAction
+                text: "&Paste"
+                shortcut: StandardKey.Paste
+                //enabled: inputField.activeFocus
+                onTriggered: {
+                    if (clipboard.hasImage) {
+                        uploader.uploadBinary(clipboard.image())
+                    }
                 }
             }
+
+            Shortcut {
+                sequence: StandardKey.Paste
+                onActivated: {
+                     console.warn("HA")
+                }
+            }
+
+            Keys.onShortcutOverride: event.accepted = true
+            Keys.onPressed: {
+                if (event.key === Qt.Key_V && event.modifiers === Qt.Key_Control) {
+                    console.warn("HA")
+                    event.accepted = true
+                }
+            }
+
             background: Rectangle {
                 color: palette.base
             }
             color: palette.text
+
         }
         Button {
             id: imageButton
