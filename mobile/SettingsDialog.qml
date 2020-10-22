@@ -28,12 +28,16 @@ Dialog {
     }
 
     onAccepted: {
-        weechat.host = hostField.text
-        weechat.port = portField.text
-        weechat.encrypted = encryptedCheckbox.checked
-        if (passphraseField.text.length > 0)
-            weechat.setPassphrase(passphraseField.text)
-        passphraseField.text = ""
+        var newHost = hostField.text
+        var newPort = portField.text
+        var newEncrypted = encryptedCheckbox.checked
+        var newPassphrase = passphraseField.text
+        weechat.host = newHost
+        weechat.port = newPort
+        weechat.encrypted = newEncrypted
+        if (newPassphrase.length > 0)
+            weechat.setPassphrase(newPassphrase)
+        newPassphrase = ""
     }
     onRejected: {
         hostField.text = weechat.host

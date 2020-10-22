@@ -120,6 +120,7 @@ void Weechat::onSettingsChanged() {
     if (!m_host.isEmpty() && !m_passphrase.isEmpty()) {
         if (m_connection) {
             m_connection->deleteLater();
+            m_connection = nullptr;
             StuffManager::instance()->reset();
         }
         QTimer::singleShot(0, this, &Weechat::start);
