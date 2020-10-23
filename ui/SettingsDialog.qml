@@ -42,10 +42,7 @@ Dialog {
             settings.passphrase = newPassphrase
         newPassphrase = ""
 
-        var newShowFullLink = showFullLinkCheckbox.checked
-        settings.showFullLink = newShowFullLink
-
-        settings.showSendButton = showSendButtonCheckbox.checked
+        settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
     }
     onRejected: {
         hostField.text = settings.host
@@ -53,7 +50,7 @@ Dialog {
         encryptedCheckbox.checked = settings.encrypted
         passphraseField.text = ""
 
-        showFullLinkCheckbox.checked = settings.showFullLink
+        shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
         showSendButtonCheckbox.checked = settings.showSendButton
     }
 
@@ -111,11 +108,11 @@ Dialog {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
             Text {
-                text: "Show full URLs"
+                text: "Shorten long URLs"
             }
             CheckBox {
-                id: showFullLinkCheckbox
-                checked: settings.showFullLink
+                id: shortenLongUrlsCheckbox
+                checked: settings.shortenLongUrls
                 Layout.alignment: Qt.AlignLeft
             }
             Text {
