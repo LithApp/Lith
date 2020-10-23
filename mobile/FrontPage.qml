@@ -128,6 +128,13 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             verticalAlignment: TextField.AlignVCenter
 
+            Connections {
+                target: stuff
+                function onSelectedChanged() {
+                    inputField.focus = true
+                }
+            }
+
             Action {
                 id: pasteAction
                 text: "&Paste"
