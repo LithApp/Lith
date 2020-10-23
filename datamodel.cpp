@@ -655,7 +655,10 @@ void Buffer::input(const QString &data) {
 
 void Buffer::fetchMoreLines() {
     m_afterInitialFetch = true;
-    Weechat::instance()->fetchLines(m_ptr, m_lines->rowCount() + 25);
+    if (m_lines->rowCount() >= m_lastRequestedCount) {
+        Weechat::instance()->fetchLines(m_ptr, m_lines->rowCount() + 25);
+        m_lastRequestedCount = m_lines->rowCount() + 25;
+    }
 }
 
 /*

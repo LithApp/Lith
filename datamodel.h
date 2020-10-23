@@ -95,6 +95,7 @@ private:
     QList<QObject*> m_nicks {};
     pointer_t m_ptr;
     bool m_afterInitialFetch { false };
+    int m_lastRequestedCount { 0 };
 };
 
 class BufferLineSegment : public QObject {
