@@ -91,6 +91,8 @@ public:
 public:
     BufferLineSegment(BufferLine *parent = nullptr, const QString &text = QString(), Type type = PLAIN);
 
+private slots:
+    void updateSummary();
 };
 
 class BufferLine : public QObject {

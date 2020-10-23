@@ -28,6 +28,8 @@ class Settings : public QObject {
     SETTING(int, lastOpenBuffer, -1)
     SETTING(qreal, baseFontSize, 10)
     SETTING(bool, shortenLongUrls, true)
+    SETTING(int, shortenLongUrlsThreshold, 50)
+
     SETTING(bool, showSendButton, false)
     SETTING(QString, host)
     SETTING(int, port, 9001)

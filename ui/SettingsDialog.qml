@@ -43,6 +43,7 @@ Dialog {
         newPassphrase = ""
 
         settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
+        settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
     }
     onRejected: {
         hostField.text = settings.host
@@ -51,6 +52,7 @@ Dialog {
         passphraseField.text = ""
 
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
+        shortenLongUrlsThreshold.text = settings.shortenLongUrlsThreshold
         showSendButtonCheckbox.checked = settings.showSendButton
     }
 
@@ -114,6 +116,19 @@ Dialog {
                 id: shortenLongUrlsCheckbox
                 checked: settings.shortenLongUrls
                 Layout.alignment: Qt.AlignLeft
+            }
+            Text {
+                text: "Length threshold"
+                color: palette.text
+            }
+            TextField {
+                id: shortenLongUrlsThreshold
+                enabled: shortenLongUrlsCheckbox.checked
+                text: weechat.shortenLongUrlsThreshold
+                inputMethodHints: Qt.ImhPreferNumbers
+                validator: IntValidator {
+                    bottom: 0
+                }
             }
             Text {
                 text: "Show send button"
