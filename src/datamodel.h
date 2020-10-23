@@ -86,11 +86,16 @@ public:
     }; Q_ENUMS(Type)
     PROPERTY(Type, type)
     PROPERTY(QString, plainText)
-    PROPERTY(QString, summary)
+    Q_PROPERTY(QString summary READ summaryGet NOTIFY summaryChanged)
     PROPERTY(QString, embedUrl)
 public:
     BufferLineSegment(BufferLine *parent = nullptr, const QString &text = QString(), Type type = PLAIN);
 
+signals:
+    void summaryChanged();
+
+private:
+    QString summaryGet();
 };
 
 class BufferLine : public QObject {

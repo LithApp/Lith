@@ -178,17 +178,13 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
     , m_type(type)
     , m_plainText(text)
 {
+    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLineSegment::summaryChanged);
     QUrl url(plainTextGet());
     if (plainTextGet().startsWith("http") && url.isValid()) {
         QString extension = url.fileName().split(".").last().toLower();
         QString host = url.host();
         QString file = url.fileName();
-        const auto maxUnshortenedLinkLength = 50;
-        if (plainTextGet().size() > maxUnshortenedLinkLength && !file.isEmpty() && !host.isEmpty() && !extension.isEmpty())
-            // \u2026 is the ellipsis character
-            m_summary = url.scheme() + "://" + host + "/\u2026/" + file;
-        else
-            m_summary = plainTextGet();
+
         if (QStringList{"png", "jpg", "gif"}.indexOf(extension) != -1)
             m_type = IMAGE;
         else if (QStringList{"avi", "mov", "mp4", "webm"}.indexOf(extension) != -1)
@@ -205,5 +201,19 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
         else
             m_type = LINK;
         // youtube: "https://www.youtube.com/embed/IDidIDidIDi"
+    }
+}
+QString BufferLineSegment::summaryGet()
+{
+    QUrl url(plainTextGet());
+    QString extension = url.fileName().split(".").last().toLower();
+    QString host = url.host();
+    QString file = url.fileName();
+
+    if (plainTextGet().size() > Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet() && !file.isEmpty() && !host.isEmpty() && !extension.isEmpty()) {
+        const auto ellipsis = "/\u2026/";
+        return url.scheme() + "://" + host + ellipsis + file;
+    } else {
+        return plainTextGet();
     }
 }
