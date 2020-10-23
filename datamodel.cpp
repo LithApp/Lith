@@ -722,6 +722,7 @@ void BufferLine::onMessageChanged() {
 
         lastIdx = idx + re.matchedLength();
     }
+
     if (lastIdx < messageGet().length()) {
         auto rest = messageGet().mid(lastIdx).trimmed();
         if (!rest.isEmpty())
