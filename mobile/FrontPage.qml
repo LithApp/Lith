@@ -147,11 +147,10 @@ ColumnLayout {
                 }
             }
 
-            Keys.onShortcutOverride: event.accepted = true
-            Keys.onPressed: {
-                if (event.key === Qt.Key_V && event.modifiers === Qt.Key_Control) {
-                    console.warn("HA")
-                    event.accepted = true
+            onAccepted: {
+                if (text.length > 0) {
+                    stuff.selected.input(text)
+                    text = ""
                 }
             }
 
