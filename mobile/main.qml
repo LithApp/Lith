@@ -1,4 +1,4 @@
-import QtQuick 2.7
+import QtQuick 2.15
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import QtMultimedia 5.9 as Multimedia
@@ -74,6 +74,19 @@ ApplicationWindow {
                     }
                 }
             }
+            /*
+            PinchArea {
+                anchors.fill: parent
+                pinch.target: delegateImage
+                pinch.dragAxis: Pinch.XAndYAxis
+                pinch.minimumX: -imageWrapper.width + 32
+                pinch.maximumX: imageWrapper.width - 32
+                pinch.minimumY: -imageWrapper.height + 32
+                pinch.maximumY: imageWrapper.height - 32
+                pinch.minimumScale: 0.001
+                pinch.maximumScale: 20
+            }*/
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
@@ -98,6 +111,23 @@ ApplicationWindow {
                     }
                 }
             }
+            PinchHandler {
+                target: delegateImage
+            }
+            TapHandler {
+                target: delegateImage
+                onSingleTapped: {
+                    imageWrapper.visible = false
+                    previewDialog.visible = false
+                }
+                onDoubleTapped: {
+                    if (delegateImage.scale != 2.0)
+                        delegateImage.scale = 2.0
+                    else
+                        delegateImage.scale = 1.0
+                }
+            }
+
         }
         /*
         MouseArea {
