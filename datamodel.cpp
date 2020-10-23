@@ -688,6 +688,10 @@ QObject *BufferLine::bufferGet() {
 
 void BufferLine::bufferSet(QObject *o) {
     Buffer *buffer = qobject_cast<Buffer*>(o);
+    if (!buffer) {
+        deleteLater();
+        return;
+    }
     if (qobject_cast<Buffer*>(parent()) != nullptr)
         return;
 
