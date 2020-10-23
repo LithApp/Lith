@@ -27,7 +27,7 @@ class Settings : public QObject {
     Q_OBJECT
     SETTING(int, lastOpenBuffer, -1)
     SETTING(qreal, baseFontSize, 10)
-    SETTING(bool, showFullLink, true)
+    SETTING(bool, shortenLongUrls, true)
     SETTING(bool, showSendButton, false)
     SETTING(QString, host)
     SETTING(int, port, 9001)
