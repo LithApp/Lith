@@ -346,7 +346,7 @@ int StuffManager::selectedIndex() {
 }
 
 void StuffManager::setSelectedIndex(int o) {
-    if (m_selectedIndex != o) {
+    if (m_selectedIndex != o && o < m_buffers.count()) {
         m_selectedIndex = o;
         emit selectedChanged();
         if (selectedBuffer())

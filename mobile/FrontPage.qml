@@ -158,6 +158,17 @@ ColumnLayout {
                 }
             }
 
+            Keys.onPressed: {
+                if (event.modifiers & Qt.AltModifier) {
+                    if (event.key === Qt.Key_Right || event.key === Qt.Key_Down) {
+                        stuff.selectedIndex += 1
+                    }
+                    else if (event.key === Qt.Key_Left || event.key === Qt.Key_Up) {
+                        stuff.selectedIndex -= 1
+                    }
+                }
+            }
+
             onAccepted: {
                 if (text.length > 0) {
                     stuff.selected.input(text)

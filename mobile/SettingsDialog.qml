@@ -68,6 +68,7 @@ Dialog {
                 TextField {
                     id: hostField
                     text: weechat.host
+                    color: palette.text
                     inputMethodHints: Qt.ImhNoPredictiveText
                 }
                 Text {
@@ -77,6 +78,7 @@ Dialog {
                 TextField {
                     id: portField
                     text: weechat.port
+                    color: palette.text
                     inputMethodHints: Qt.ImhPreferNumbers
                     validator: IntValidator {
                         bottom: 0
@@ -98,7 +100,9 @@ Dialog {
                 }
                 TextField {
                     id: passphraseField
-                    placeholderText: weechat.hasPassphrase ? "*****" : ""
+                    color: palette.text
+                    placeholderTextColor: palette.button
+                    placeholderText: weechat.hasPassphrase ? "**********" : ""
                     echoMode: TextInput.Password
                     passwordCharacter: "*"
                 }
