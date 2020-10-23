@@ -34,6 +34,9 @@ public:
     Q_PROPERTY(bool encrypted READ encrypted WRITE setEncrypted NOTIFY settingsChanged)
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
 
+
+    Q_PROPERTY(bool showFullLink READ showFullLink WRITE setShowFullLink NOTIFY settingsChanged)
+
     Q_PROPERTY(int fetchFrom READ fetchFrom NOTIFY fetchFromChanged)
     Q_PROPERTY(int fetchTo READ fetchTo NOTIFY fetchToChanged)
 public:
@@ -50,6 +53,7 @@ private:
     int port() const;
     bool encrypted() const;
     bool hasPassphrase() const;
+    bool showFullLink() const;
 
 signals:
     void settingsChanged();
@@ -66,6 +70,7 @@ public slots:
     void setPort(int value);
     void setEncrypted(bool value);
     void setPassphrase(const QString &value);
+    void setShowFullLink(bool value);
 
 signals:
     void fetchFromChanged();
@@ -95,6 +100,8 @@ private:
     int m_port { };
     QString m_passphrase { };
     bool m_useEncryption { true };
+
+    bool m_showFullLink { true };
 
     QSettings m_settings;
 

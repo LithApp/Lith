@@ -38,12 +38,17 @@ Dialog {
         if (newPassphrase.length > 0)
             weechat.setPassphrase(newPassphrase)
         newPassphrase = ""
+
+        var newShowFullLink = showFullLinkCheckbox.checked
+        weechat.showFullLink = newShowFullLink
     }
     onRejected: {
         hostField.text = weechat.host
         portField.text = weechat.port
         encryptedCheckbox.checked = weechat.encrypted
         passphraseField.text = ""
+
+        showFullLinkCheckbox.checked = weechat.showFullLink
     }
 
     width: parent.width - 12
@@ -102,8 +107,21 @@ Dialog {
                 Layout.fillHeight: true
             }
         }
-        Text {
-            text: "AHOJ"
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Text {
+                text: "AHOJ"
+            }
+            Text {
+                text: "Show full URLs"
+                color: palette.text
+            }
+            CheckBox {
+                id: showFullLinkCheckbox
+                checked: weechat.showFullLink
+                Layout.alignment: Qt.AlignLeft
+            }
         }
+
     }
 }
