@@ -322,7 +322,7 @@ int StuffManager::bufferCount() {
 }
 
 Buffer *StuffManager::selectedBuffer() {
-    if (m_selectedIndex >=0 && m_buffers.count() > 4)
+    if (m_selectedIndex >=0 && m_selectedIndex < m_buffers.count())
         return m_buffers[m_selectedIndex];
     return nullptr;
 }
