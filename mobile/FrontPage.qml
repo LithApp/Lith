@@ -36,6 +36,7 @@ ColumnLayout {
         RowLayout {
             width: parent.width
             Button {
+                focusPolicy: Qt.NoFocus
                 Layout.preferredWidth: height
                 font.pointSize: 20
                 text: "☰"
@@ -76,6 +77,7 @@ ColumnLayout {
             }
             Item { width: 1 }
             Button {
+                focusPolicy: Qt.NoFocus
                 Layout.preferredWidth: height
                 font.pointSize: 20
                 visible: weechat.status !== Weechat.UNCONFIGURED
@@ -119,6 +121,7 @@ ColumnLayout {
             Layout.preferredWidth: height
             text: "⇥"
             font.pointSize: 20
+            focusPolicy: Qt.NoFocus
         }
         TextField {
             id: inputField
@@ -127,6 +130,7 @@ ColumnLayout {
             font.pointSize: 16
             Layout.alignment: Qt.AlignVCenter
             verticalAlignment: TextField.AlignVCenter
+            focus: true
 
             Connections {
                 target: stuff
@@ -168,6 +172,7 @@ ColumnLayout {
 
         }
         Button {
+            focusPolicy: Qt.NoFocus
             id: imageButton
             Layout.preferredWidth: height
             property bool isBusy: false

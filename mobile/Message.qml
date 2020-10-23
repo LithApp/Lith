@@ -52,6 +52,7 @@ ColumnLayout {
                         font.pointSize: 16
                     }
                     Button {
+                        focusPolicy: Qt.NoFocus
                         text: "⤶"
                         rotation: 180
                         visible: modelData.type !== LineSegment.PLAIN
@@ -60,6 +61,7 @@ ColumnLayout {
                         onClicked: Qt.openUrlExternally(modelData.plainText)
                     }
                     Button {
+                        focusPolicy: Qt.NoFocus
                         text: "🖼️"
                         visible: modelData.type === LineSegment.EMBED || modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.IMAGE
                         font.family: "Menlo"
