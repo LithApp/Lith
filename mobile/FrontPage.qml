@@ -12,7 +12,7 @@ ColumnLayout {
 
     Connections {
         target: uploader
-        onSuccess: {
+        function onSuccess(url) {
             console.warn("FINISHED")
             console.warn(url)
             inputField.text += " "
@@ -20,7 +20,7 @@ ColumnLayout {
             inputField.text += " "
             imageButton.isBusy = false
         }
-        onError: {
+        function onError(message) {
             console.warn("ERROR")
             console.warn(message)
             imageButton.isBusy = false
