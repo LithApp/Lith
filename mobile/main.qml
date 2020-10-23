@@ -65,6 +65,13 @@ ApplicationWindow {
                 id: delegateImage
                 x: 1
                 y: 1
+                onVisibleChanged: {
+                    x = 1
+                    y = 1
+                    rotation = 0
+                    scale = 1
+                }
+
                 fillMode: Image.PreserveAspectFit
                 width: parent.width - 2
                 height: parent.height - 2
