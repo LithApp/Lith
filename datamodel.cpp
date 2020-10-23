@@ -766,8 +766,10 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
         QString extension = url.fileName().split(".").last().toLower();
         QString host = url.host();
         QString file = url.fileName();
-        if (!file.isEmpty() && !host.isEmpty() && !extension.isEmpty())
-            m_summary = url.host() + "-" + url.fileName();
+        const auto maxUnshortenedLinkLength = 50;
+        if (plainTextGet().size() > maxUnshortenedLinkLength && !file.isEmpty() && !host.isEmpty() && !extension.isEmpty())
+            // \u2026 is the ellipsis character
+            m_summary = url.scheme() + "://" + host + "/\u2026/" + file;
         else
             m_summary = plainTextGet();
         if (QStringList{"png", "jpg", "gif"}.indexOf(extension) != -1)
