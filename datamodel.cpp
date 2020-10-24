@@ -701,7 +701,7 @@ void HotListItem::bufferSet(Buffer *o) {
 }
 
 void HotListItem::onCountChanged() {
-    if (bufferGet()) {
+    if (bufferGet() && countGet().count() >= 3) {
         bufferGet()->hotMessagesSet(countGet()[2]);
         bufferGet()->unreadMessagesSet(countGet()[1]);
     }
