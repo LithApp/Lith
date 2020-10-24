@@ -208,14 +208,24 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
 void BufferLineSegment::updateSummary()
 {
     QUrl url(plainTextGet());
-    QString extension = url.fileName().split(".").last().toLower();
-    QString host = url.host();
-    QString file = url.fileName();
 
-    if (plainTextGet().size() > Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet() && !file.isEmpty() && !host.isEmpty() && !extension.isEmpty()) {
-        const auto ellipsis = "/\u2026/";
-        m_summary = url.scheme() + "://" + host + ellipsis  + file;
-    } else {
-        m_summary = plainTextGet();
+    if (plainTextGet().startsWith("http") && url.isValid()) { // FIXME: this is copied from ctor, refactor or something
+        QString extension = url.fileName().split(".").last().toLower();
+        QString host = url.host();
+        QString file = url.fileName();
+
+        const auto urlLengthThreshold = Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet();
+
+        if (plainTextGet().size() > urlLengthThreshold && !file.isEmpty() && !host.isEmpty() && !extension.isEmpty()) {
+            const auto ellipsis = "\u2026";
+            QString query = url.query();
+            if (query.size() > urlLengthThreshold) {
+                query = query.left(5) + " " + ellipsis + " " + query.right(5);
+            }
+            QString queryRes = !query.isEmpty() ? "?" + query : "";
+            m_summary = url.scheme() + "://" + host + "/" + ellipsis + "/" + file + queryRes;
+        } else {
+            m_summary = plainTextGet();
+        }
     }
 }
