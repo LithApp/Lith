@@ -418,7 +418,7 @@ bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex &source
     QVariant v = sourceModel()->data(index);
     auto b = qvariant_cast<Buffer*>(v);
     if (b) {
-        return b->nameGet().contains(filterWordGet());
+        return b->nameGet().toLower().contains(filterWordGet().toLower());
     }
     return false;
 }

@@ -95,12 +95,6 @@ Drawer {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 model: weechat.buffers
-                highlightFollowsCurrentItem: true
-                highlight: Rectangle {
-                    color: "red"
-                    width: 10
-                    height: 10
-                }
                 currentIndex: 0
 
                 delegate: Rectangle {
