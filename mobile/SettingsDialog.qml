@@ -8,6 +8,9 @@ Dialog {
     closePolicy: Popup.CloseOnEscape
     standardButtons: Dialog.Ok | Dialog.Cancel
 
+    width: parent.width
+    height: parent.height
+
     SystemPalette {
         id: palette
     }
@@ -50,9 +53,6 @@ Dialog {
 
         showFullLinkCheckbox.checked = weechat.showFullLink
     }
-
-    width: parent.width - 12
-    height: parent.height - 12
 
     StackLayout {
         anchors.fill: parent

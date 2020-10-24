@@ -38,7 +38,6 @@ ApplicationWindow {
 
     SettingsDialog {
         id: settingsDialog
-        anchors.centerIn: parent
     }
 
     Dialog {
