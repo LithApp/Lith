@@ -3,6 +3,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
 Drawer {
+    id: root
     SystemPalette {
         id: palette
     }
@@ -55,6 +56,23 @@ Drawer {
                 font.family: "Menlo"
                 font.pointSize: 16
                 color: palette.windowText
+
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        bufferList.currentIndex--;
+                        event.accepted = true
+                    }
+                    if (event.key === Qt.Key_Down) {
+                        bufferList.currentIndex++;
+                        event.accepted = true
+                    }
+                    if (event.key === Qt.Key_Return || event.key == Qt.Key_Enter) {
+                        stuff.selected = bufferList.currentItem.sourceBuffer
+                        filterField.text = ""
+                        root.close()
+                    }
+                }
+                /*
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
@@ -62,6 +80,7 @@ Drawer {
                         bufferDrawer.close()
                     }
                 }
+                */
             }
             Rectangle {
                 height: 1
@@ -71,14 +90,25 @@ Drawer {
 
 
             ListView {
+                id: bufferList
                 clip: true
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 model: weechat.buffers
+                highlightFollowsCurrentItem: true
+                highlight: Rectangle {
+                    color: "red"
+                    width: 10
+                    height: 10
+                }
+                currentIndex: 0
+
                 delegate: Rectangle {
                     width: ListView.view.width
                     height: childrenRect.height + 12
-                    color: bufferMouse.pressed ? "gray" : palette.base
+                    property var sourceBuffer: buffer
+                    color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : palette.base
+
                     Behavior on color {
                         ColorAnimation {
 
