@@ -162,9 +162,15 @@ ColumnLayout {
                 if (event.modifiers & Qt.AltModifier) {
                     if (event.key === Qt.Key_Right || event.key === Qt.Key_Down) {
                         stuff.selectedIndex += 1
+                        event.accepted = true
                     }
                     else if (event.key === Qt.Key_Left || event.key === Qt.Key_Up) {
                         stuff.selectedIndex -= 1
+                        event.accepted = true
+                    }
+                    else if (event.key === Qt.Key_G) {
+                        bufferDrawer.open()
+                        event.accepted = true
                     }
                 }
                 if (event.modifiers & Qt.ControlModifier) {
@@ -172,6 +178,7 @@ ColumnLayout {
                         var str = inputField.text.replace(/\s+$/, '')
                         var lastIndex = str.lastIndexOf(" ");
                         inputField.text = inputField.text.substring(0, lastIndex + 1);
+                        event.accepted = true
                     }
                 }
             }
