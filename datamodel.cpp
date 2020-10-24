@@ -609,6 +609,17 @@ Nick *Buffer::getNick(pointer_t ptr) {
     return nick;
 }
 
+QStringList Buffer::getVisibleNicks() {
+    QStringList result;
+    for (auto i : m_nicks) {
+        auto nick = qobject_cast<Nick*>(i);
+        if (nick->visibleGet() && nick->levelGet() == 0) {
+            result.append(nick->nameGet());
+        }
+    }
+    return result;
+}
+
 void Buffer::input(const QString &data) {
     Weechat::instance()->input(m_ptr, data);
 }

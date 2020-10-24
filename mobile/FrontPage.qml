@@ -158,6 +158,26 @@ ColumnLayout {
                 }
             }
 
+            function autocomplete() {
+                var i = inputField.text.indexOf(" ");
+                var lastWord
+                if (i >= 0)
+                    lastWord = inputField.text.substring(i+1,-1).trim().toLocaleLowerCase();
+                else {
+                    i = 0
+                    lastWord = inputField.text.trim().toLocaleLowerCase()
+                }
+                var nicks = stuff.selected.getVisibleNicks()
+                for (var i = 0; i < nicks.length; i++) {
+                    console.warn("\"" + lastWord + "\" " + nicks[i])
+                    if (nicks[i].toLocaleLowerCase().startsWith(lastWord)) {
+                        inputField.text = inputField.text.substring(0, i)
+                        inputField.text += nicks[i]
+                        return
+                    }
+                }
+            }
+
             Keys.onPressed: {
                 if (event.modifiers & Qt.AltModifier) {
                     if (event.key === Qt.Key_Right || event.key === Qt.Key_Down) {
@@ -180,6 +200,10 @@ ColumnLayout {
                         inputField.text = inputField.text.substring(0, lastIndex + 1);
                         event.accepted = true
                     }
+                }
+                if (event.key === Qt.Key_Tab) {
+                    autocomplete()
+                    event.accepted = true
                 }
             }
 

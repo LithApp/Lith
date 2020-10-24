@@ -83,6 +83,7 @@ public:
     QmlObjectList *lines();
     QList<QObject*> nicks();
     Q_INVOKABLE Nick *getNick(pointer_t ptr);
+    Q_INVOKABLE QStringList getVisibleNicks();
 
 public slots:
     void input(const QString &data);
