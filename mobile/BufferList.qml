@@ -41,10 +41,12 @@ Drawer {
             Item {
                 height: 1
             }
-            Text {
+            TextField {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                text: "Open Buffers"
+                placeholderText: "Filter buffers"
+                text: weechat.buffers.filterWord
+                onTextChanged: weechat.buffers.filterWord = text
                 font.family: "Menlo"
                 font.pointSize: 16
                 color: palette.windowText
@@ -67,7 +69,7 @@ Drawer {
                 clip: true
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                model: stuff
+                model: weechat.buffers
                 delegate: Rectangle {
                     width: ListView.view.width
                     height: childrenRect.height + 12
@@ -94,7 +96,7 @@ Drawer {
                                 id: bufferMouse
                                 anchors.fill: parent
                                 onClicked: {
-                                    stuff.selectedIndex = index
+                                    stuff.selected = buffer
                                     bufferDrawer.visible = false
                                 }
                             }

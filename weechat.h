@@ -16,6 +16,8 @@
 #include "common.h"
 #include "datamodel.h"
 
+class ProxyBufferList;
+
 class Weechat : public QObject
 {
     Q_OBJECT
@@ -33,7 +35,7 @@ public:
     Q_PROPERTY(int port READ port WRITE setPort NOTIFY settingsChanged)
     Q_PROPERTY(bool encrypted READ encrypted WRITE setEncrypted NOTIFY settingsChanged)
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
-
+    Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
 
     Q_PROPERTY(bool showFullLink READ showFullLink WRITE setShowFullLink NOTIFY settingsChanged)
 
@@ -45,6 +47,8 @@ public:
 
     int fetchFrom();
     int fetchTo();
+
+    ProxyBufferList *buffers();
 
 private:
     explicit Weechat(QObject *parent = 0);
@@ -92,6 +96,7 @@ private slots:
 
 private:
     QSslSocket *m_connection { nullptr };
+    ProxyBufferList *m_proxyBufferList { nullptr };
 
     QByteArray m_fetchBuffer;
     int32_t m_bytesRemaining { 0 };
@@ -110,10 +115,19 @@ private:
     QTimer m_timeoutTimer;
 };
 
+class ProxyBufferList : public QSortFilterProxyModel {
+    Q_OBJECT
+    PROPERTY(QString, filterWord)
+public:
+    ProxyBufferList(QObject *parent = nullptr);
+
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+};
+
 class StuffManager : public QAbstractListModel {
     Q_OBJECT
     Q_PROPERTY(int bufferCount READ bufferCount NOTIFY buffersChanged)
-    Q_PROPERTY(Buffer* selected READ selectedBuffer NOTIFY selectedChanged)
+    Q_PROPERTY(Buffer* selected READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedChanged)
     Q_PROPERTY(int selectedIndex READ selectedIndex WRITE setSelectedIndex NOTIFY selectedChanged)
 public:
     static StuffManager *instance();
@@ -121,6 +135,7 @@ public:
 
     int bufferCount();
     Buffer *selectedBuffer();
+    void selectedBufferSet(Buffer *b);
     int selectedIndex();
     void setSelectedIndex(int o);
 

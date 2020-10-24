@@ -19,8 +19,13 @@ int Weechat::fetchTo() {
     return m_fetchBuffer.count() + m_bytesRemaining;
 }
 
+ProxyBufferList *Weechat::buffers() {
+    return m_proxyBufferList;
+}
+
 Weechat::Weechat(QObject *parent)
     : QObject(parent)
+    , m_proxyBufferList(new ProxyBufferList(this))
     , m_settings("Lith")
 {
     statusSet(UNCONFIGURED);
@@ -349,6 +354,16 @@ Buffer *StuffManager::selectedBuffer() {
     return nullptr;
 }
 
+void StuffManager::selectedBufferSet(Buffer *b) {
+    for (int i = 0; i < m_buffers.count(); i++) {
+        if (m_buffers[i] == b) {
+            setSelectedIndex(i);
+            return;
+        }
+    }
+    setSelectedIndex(-1);
+}
+
 int StuffManager::selectedIndex() {
     return m_selectedIndex;
 }
@@ -387,4 +402,23 @@ void StuffManager::reset() {
 }
 
 StuffManager::StuffManager() : QAbstractListModel() {
+}
+
+ProxyBufferList::ProxyBufferList(QObject *parent)
+    : QSortFilterProxyModel(parent)
+{
+    setSourceModel(StuffManager::instance());
+    connect(this, &ProxyBufferList::filterWordChanged, this, [this](){
+        setFilterFixedString(filterWordGet());
+    });
+}
+
+bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+    auto index = sourceModel()->index(source_row, 0, source_parent);
+    QVariant v = sourceModel()->data(index);
+    auto b = qvariant_cast<Buffer*>(v);
+    if (b) {
+        return b->nameGet().contains(filterWordGet());
+    }
+    return false;
 }
