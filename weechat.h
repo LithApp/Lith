@@ -140,11 +140,11 @@ private:
 
     int m_selectedIndex { 0 };
 
-    QMap<pointer_t, Buffer*> m_bufferMap;
-    QList<Buffer*> m_buffers;
+    QMap<pointer_t, QPointer<Buffer>> m_bufferMap;
+    QList<QPointer<Buffer>> m_buffers;
 
-    QMap<pointer_t, BufferLine*> m_lineMap;
-    QMap<pointer_t, HotListItem*> m_hotList;
+    QMap<pointer_t, QPointer<BufferLine>> m_lineMap;
+    QMap<pointer_t, QPointer<HotListItem>> m_hotList;
 };
 
 #endif // WEECHAT_H

@@ -186,7 +186,7 @@ void Weechat::onConnected() {
     statusSet(CONNECTED);
     m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
-    m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-3)/data\n");
+    //m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-25)/data\n");
     m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
     m_connection->write("nicklist\n");
@@ -365,7 +365,7 @@ int StuffManager::rowCount(const QModelIndex &parent) const {
 
 QVariant StuffManager::data(const QModelIndex &index, int role) const {
     Q_UNUSED(role);
-    return QVariant::fromValue(m_buffers[index.row()]);
+    return QVariant::fromValue(qobject_cast<Buffer*>(m_buffers[index.row()]));
 }
 
 void StuffManager::reset() {

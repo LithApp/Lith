@@ -407,6 +407,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
     s >> hpath >> keys >> count;
     //qCritical() << hpath.d << keys.d << count.d;
     for (int i = 0; i < count.d; i++) {
+        qApp->eventDispatcher()->processEvents(QEventLoop::ExcludeSocketNotifiers);
         QStringList pathElems = hpath.d.split("/");
         QStringList arguments = keys.d.split(",");
         pointer_t parentPtr = 0;
