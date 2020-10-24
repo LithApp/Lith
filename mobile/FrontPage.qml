@@ -167,6 +167,13 @@ ColumnLayout {
                         stuff.selectedIndex -= 1
                     }
                 }
+                if (event.modifiers & Qt.ControlModifier) {
+                    if (event.key === Qt.Key_W) {
+                        var str = inputField.text.replace(/\s+$/, '')
+                        var lastIndex = str.lastIndexOf(" ");
+                        inputField.text = inputField.text.substring(0, lastIndex + 1);
+                    }
+                }
             }
 
             onAccepted: {
