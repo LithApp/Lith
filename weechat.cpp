@@ -122,7 +122,7 @@ void Weechat::setShowFullLink(bool value) {
 
 
 void Weechat::setPassphrase(const QString &value) {
-    if (m_passphrase != value) {
+    if (m_passphrase != value && !value.isEmpty()) {
         m_passphrase = value;
         m_settings.setValue("passphrase", m_passphrase);
         emit settingsChanged();
@@ -369,11 +369,13 @@ QVariant StuffManager::data(const QModelIndex &index, int role) const {
 }
 
 void StuffManager::reset() {
+    beginResetModel();
     for (auto i : m_buffers) {
         i->deleteLater();
     }
     m_buffers.clear();
     m_bufferMap.clear();
+    endResetModel();
 }
 
 StuffManager::StuffManager() : QAbstractListModel() {
