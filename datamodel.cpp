@@ -85,7 +85,7 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
         bool italic = false;
         bool underline = false;
         bool keep = false;
-        auto endTags = [&r, &foreground, &background, &bold, &reverse, &italic, &underline, &keep]() {
+        auto endColors = [&r, &foreground, &background]() {
             if (foreground) {
                 foreground = false;
                 r.d += "</font>";
@@ -94,6 +94,8 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
                 background = false;
                 r.d += "</span>";
             }
+        };
+        auto endAttrs = [&r, &bold, &reverse, &italic, &underline, &keep]() {
             if (bold) {
                 bold = false;
                 r.d += "</b>";
@@ -336,7 +338,7 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
                     loadExt(it);
                 }
                 else if (*it == 0x1C) {
-                    endTags();
+                    endColors();
                 }
                 else {
                     loadStd(it);
@@ -344,10 +346,10 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
             }
             else if (*it == 0x1C) {
                 ++it;
-                endTags();
+                endColors();
+                endAttrs();
             }
             else if (*it == 0x1A) {
-                ++it;
                 loadAttr(it);
             }
             else if (*it == 0x1B) {
@@ -357,7 +359,8 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
                 r.d += getChar(it);
             }
         }
-        endTags();
+        endColors();
+        endAttrs();
     }
     return s;
 }
