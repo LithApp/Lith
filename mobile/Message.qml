@@ -16,7 +16,7 @@ ColumnLayout {
         Text {
             Layout.alignment: Qt.AlignTop
             Layout.preferredWidth: timeMetrics.width
-            text: line.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+            text: modelData.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
             font.family: "Menlo"
             font.pointSize: 16
             color: palette.text
@@ -25,7 +25,7 @@ ColumnLayout {
         Text {
             Layout.alignment: Qt.AlignTop
             font.bold: true
-            text: sender
+            text: modelData.prefix
             font.family: "Menlo"
             font.pointSize: 16
             color: palette.text
@@ -34,7 +34,7 @@ ColumnLayout {
         ColumnLayout {
             Layout.fillWidth: true
             Repeater {
-                model: line.segments
+                model: modelData.segments
                 RowLayout {
                     Layout.fillWidth: true
                     Text {

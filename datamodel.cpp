@@ -555,79 +555,35 @@ QDataStream &W::operator>>(QDataStream &s, W::ArrayStr &r) {
     return s;
 }
 
-LineModel::LineModel(Buffer *parent)
-    : QAbstractListModel(parent)
-{
-
-}
-
-QHash<int, QByteArray> LineModel::roleNames() const {
-    return { { Qt::UserRole, "line" }, { Qt::UserRole + 1, "sender" } };
-}
-
-int LineModel::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
-    return m_lines.count();
-}
-
-QVariant LineModel::data(const QModelIndex &index, int role) const {
-    if (role == Qt::UserRole)
-        return QVariant::fromValue(m_lines[m_lines.count() - 1 - index.row()]);
-    else
-        return QVariant::fromValue(m_lines[m_lines.count() - 1 - index.row()]->prefixGet());
-}
-
-void LineModel::appendLine(BufferLine *line) {
-    if (!line->dateGet().isValid()) {
-        beginInsertRows(QModelIndex(), 0, 0);
-        m_lines.append(line);
-        endInsertRows();
-    }
-    else {
-        int pos = 0;
-        QList<BufferLine*>::iterator iterator = m_lines.begin();
-        for (auto i = m_lines.begin(); i != m_lines.end(); i++) {
-            if ((*i)->dateGet() > line->dateGet()) {
-                iterator = i;
-                break;
-            }
-            pos++;
-        }
-        beginInsertRows(QModelIndex(), m_lines.count() - pos, m_lines.count() - pos);
-        m_lines.insert(iterator, line);
-        endInsertRows();
-    }
-}
-
-
 Buffer::Buffer(QObject *parent, pointer_t pointer)
     : QObject(parent)
-    , m_lines(new LineModel(this))
+    , m_lines(QmlObjectList::create<BufferLine>(this))
     , m_ptr(pointer)
 {
 
 }
 
-/*
-BufferLine *Buffer::getLine(pointer_t ptr) {
-    qCritical() << "Line added!";
-    if (!m_lineMap.contains(ptr)) {
-        BufferLine *tmp = new BufferLine(this);
-        m_lines->appendLine(tmp);
-    }
-    return m_lineMap[ptr];
-}
-*/
-
 void Buffer::appendLine(BufferLine *line) {
-    m_lines->appendLine(line);
+    if (!line->dateGet().isValid()) {
+        m_lines->prepend(line);
+    }
+    else {
+        for (int i = 0; i < m_lines->count(); i++) {
+            auto curr = m_lines->get<BufferLine>(i);
+            if (curr && curr->dateGet() > line->dateGet()) {
+                m_lines->insert(i, line);
+                return;
+            }
+        }
+        m_lines->append(line);
+    }
 }
 
 bool Buffer::isAfterInitialFetch() {
     return m_afterInitialFetch;
 }
 
-LineModel *Buffer::lines() {
+QmlObjectList *Buffer::lines() {
     return m_lines;
 }
 
@@ -655,25 +611,11 @@ void Buffer::input(const QString &data) {
 
 void Buffer::fetchMoreLines() {
     m_afterInitialFetch = true;
-    if (m_lines->rowCount() >= m_lastRequestedCount) {
-        Weechat::instance()->fetchLines(m_ptr, m_lines->rowCount() + 25);
-        m_lastRequestedCount = m_lines->rowCount() + 25;
+    if (m_lines->count() >= m_lastRequestedCount) {
+        Weechat::instance()->fetchLines(m_ptr, m_lines->count() + 25);
+        m_lastRequestedCount = m_lines->count() + 25;
     }
 }
-
-/*
-Buffer *BufferLine::buffer() {
-    return qobject_cast<Buffer*>(parent());
-}
-
-void BufferLine::setBuffer(Buffer *o) {
-    if (parent() != o) {
-        setParent(o);
-        emit bufferChanged();
-    }
-    o->appendLine(this);
-}
-*/
 
 BufferLine::BufferLine(QObject *parent)
     : QObject(parent)

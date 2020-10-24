@@ -57,6 +57,11 @@ public:
         return QVariant::fromValue(mData.at(i));
     }
 
+    template <typename T>
+    inline T *get(const int &i) {
+        return qvariant_cast<T*>(at(i));
+    }
+
 protected:
     QVariant data(const QModelIndex &index, int role) const;
 

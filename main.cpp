@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<Weechat>("lith", 1, 0, "Weechat", "");
     qmlRegisterUncreatableType<Nick>("lith", 1, 0, "Nick", "");
     qmlRegisterUncreatableType<Buffer>("lith", 1, 0, "Buffer", "");
-    qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
+    //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
     qmlRegisterUncreatableType<StuffManager>("lith", 1, 0, "StuffManager", "");
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
     engine.rootContext()->setContextProperty("stuff", StuffManager::instance());

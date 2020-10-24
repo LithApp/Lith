@@ -2,6 +2,7 @@
 #define DATAMODEL_H
 
 #include "common.h"
+#include "qmlobjectlist.h"
 
 #include <QObject>
 #include <QDateTime>
@@ -70,7 +71,7 @@ class Buffer : public QObject {
     PROPERTY(int, unreadMessages)
     PROPERTY(int, hotMessages)
 
-    Q_PROPERTY(LineModel *lines READ lines CONSTANT)
+    Q_PROPERTY(QmlObjectList *lines READ lines CONSTANT)
     Q_PROPERTY(QList<QObject*> nicks READ nicks NOTIFY nicksChanged)
 public:
     Buffer(QObject *parent, pointer_t pointer);
@@ -79,7 +80,7 @@ public:
 
     bool isAfterInitialFetch();
 
-    LineModel *lines();
+    QmlObjectList *lines();
     QList<QObject*> nicks();
     Q_INVOKABLE Nick *getNick(pointer_t ptr);
 
@@ -91,7 +92,7 @@ signals:
     void nicksChanged();
 
 private:
-    LineModel *m_lines { nullptr };
+    QmlObjectList *m_lines { nullptr };
     QList<QObject*> m_nicks {};
     pointer_t m_ptr;
     bool m_afterInitialFetch { false };
@@ -148,21 +149,6 @@ private slots:
 
 private:
     QList<QObject*> m_segments;
-};
-
-class LineModel : public QAbstractListModel {
-    Q_OBJECT
-public:
-    LineModel(Buffer *parent);
-
-    QHash<int, QByteArray> roleNames() const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index, int role) const override;
-
-    void appendLine(BufferLine *line);
-private:
-    QList<BufferLine*> m_lines;
-    QSet<pointer_t> m_ptrs;
 };
 
 class HotListItem : public QObject {
