@@ -473,7 +473,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(l.d));
             }
-            else if (type == "str") {
+            else if (type == "str" || type == "buf") {
                 W::String str;
                 s >> str;
                 //qCritical () << name << ":" << str.d;
