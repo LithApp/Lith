@@ -227,6 +227,14 @@ void Weechat::onMessageReceived(QByteArray &data) {
     //qCritical() << "Message!" << data;
     QDataStream s(&data, QIODevice::ReadOnly);
 
+    // For whatever fucking reason, there sometimes seems to be an extra byte at the start of the message
+    // this of course completely fucks parsing of absolutely everything
+    // reading the extra byte beforehand may slithly help with this
+    char wtf;
+    if ((data[0] || data[1] || data[2]) && *(uint8_t*)data.data() != 0xff) {
+        s.readRawData(&wtf, 1);
+    }
+
     W::String id;
     s >> id;
 
