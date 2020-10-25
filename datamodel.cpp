@@ -707,6 +707,10 @@ HotListItem::HotListItem(QObject *parent)
     });
 }
 
+Buffer *HotListItem::bufferGet() {
+    return m_buffer;
+}
+
 void HotListItem::bufferSet(Buffer *o) {
     if (m_buffer != o) {
         m_buffer = o;
