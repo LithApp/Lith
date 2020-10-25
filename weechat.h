@@ -38,15 +38,9 @@ public:
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
 
     Q_PROPERTY(bool showFullLink READ showFullLink WRITE setShowFullLink NOTIFY settingsChanged)
-
-    Q_PROPERTY(int fetchFrom READ fetchFrom NOTIFY fetchFromChanged)
-    Q_PROPERTY(int fetchTo READ fetchTo NOTIFY fetchToChanged)
 public:
     static Weechat *_self;
     static Weechat *instance();
-
-    int fetchFrom();
-    int fetchTo();
 
     ProxyBufferList *buffers();
 
@@ -75,10 +69,6 @@ public slots:
     void setEncrypted(bool value);
     void setPassphrase(const QString &value);
     void setShowFullLink(bool value);
-
-signals:
-    void fetchFromChanged();
-    void fetchToChanged();
 
 public slots:
     void onReadyRead();

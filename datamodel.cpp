@@ -401,8 +401,6 @@ QDataStream &W::operator>>(QDataStream &s, W::HashTable &r) {
 }
 
 QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
-    char type[4] = { 0 };
-    s.readRawData(type, 3);
     //qCritical() << type;
     W::String hpath;
     W::String keys;

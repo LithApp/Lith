@@ -11,14 +11,6 @@ Weechat *Weechat::instance() {
     return _self;
 }
 
-int Weechat::fetchFrom() {
-    return m_fetchBuffer.count();
-}
-
-int Weechat::fetchTo() {
-    return m_fetchBuffer.count() + m_bytesRemaining;
-}
-
 ProxyBufferList *Weechat::buffers() {
     return m_proxyBufferList;
 }
@@ -154,40 +146,53 @@ void Weechat::requestHotlist() {
 }
 
 void Weechat::onReadyRead() {
-    static bool compressed = false;
     m_timeoutTimer.stop();
-
-    QByteArray tmp;
 
     if (!m_connection) {
         // this shouldn't really happen, yet it seems it probably does
         return;
     }
 
-    if (m_bytesRemaining > 0) {
-        tmp = m_connection->read(m_bytesRemaining);
-        m_bytesRemaining -= tmp.length();
-        m_fetchBuffer.append(tmp);
-        emit fetchFromChanged();
-    }
-    else {
-        tmp = m_connection->readAll();
-        QDataStream s(&tmp, QIODevice::ReadOnly);
+    // In the protocol parser, there's the call to processEvents that could lead to
+    // this slot being called while a message is already being processed
+    // Add a guard that prevents processing of more messages at the same moment
+    static bool guard = false;
+    if (guard)
+        return;
+
+    static bool compressed = false;
+
+
+    // not waiting for the rest of any message, get a new header
+    if (m_bytesRemaining == 0) {
+        QByteArray header = m_connection->read(5);
+        QDataStream s(&header, QIODevice::ReadOnly);
         s >> m_bytesRemaining >> compressed;
-        m_bytesRemaining -= tmp.length();
-        m_fetchBuffer = tmp.mid(5);
-        emit fetchFromChanged();
-        emit fetchToChanged();
+        m_bytesRemaining -= 5;
+        m_fetchBuffer.clear();
     }
 
+    // continue in whatever message came before (be it from a previous readyRead or this one
+    if (m_bytesRemaining > 0) {
+        QByteArray cache = m_connection->read(m_bytesRemaining);
+        m_bytesRemaining -= cache.count();
+        m_fetchBuffer.append(cache);
+    }
+
+    // one message has been received in full, process it
     if (m_bytesRemaining == 0) {
         if (compressed) {
-            // TODO decompress
+            // TODO
         }
+        guard = true;
         onMessageReceived(m_fetchBuffer);
+        guard = false;
         m_fetchBuffer.clear();
-        emit fetchToChanged();
-        emit fetchFromChanged();
+    }
+
+    // if there's still more data left, do one more round
+    if (m_connection->bytesAvailable()) {
+        onReadyRead();
     }
 }
 
@@ -248,10 +253,19 @@ void Weechat::onMessageReceived(QByteArray &data) {
     W::String id;
     s >> id;
 
-    //qCritical() << "=== TYPE" << id.d;
+    //qCritical() << "=== ID" << id.d;
 
+
+    char type[4] = { 0 };
+    s.readRawData(type, 3);
+
+    if (QString(type) == "hda") {
         W::HData hda;
         s >> hda;
+    }
+    else {
+        qCritical() << "onMessageReceived is not handling type: " << type;
+    }
 }
 
 void Weechat::input(pointer_t ptr, const QString &data) {
