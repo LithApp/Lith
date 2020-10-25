@@ -13,7 +13,7 @@ Rectangle {
     Behavior on height {
         NumberAnimation {
             duration: 120
-            easing: Easing.InOutQuart
+            easing.type: Easing.InOutQuart
         }
     }
     RowLayout {
