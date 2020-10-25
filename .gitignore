@@ -1,2 +1,4 @@
 *.pro.user*
 build
+android_openssl
+build_android

@@ -15,6 +15,10 @@ RESOURCES += mobile/mobile.qrc assets.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
+android {
+    include(<path/to/android_openssl/openssl.pri)
+}
+
 ios: {
   QMAKE_INFO_PLIST = Info.plist
   QMAKE_TARGET_BUNDLE_PREFIX=cz.rtinbriza.ma

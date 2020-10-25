@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+  android:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: Cache Qt
+      id: cache-qt
+      uses: actions/cache@v1
+      with:
+        path: ../Qt
+        key: QtCache-5.15.1
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: 5.15.1
+        cached: ${{ steps.cache-qt.outputs.cache-hit }}
+        target: android
+    - name: Get OpenSSL
+      run: |
+        git clone https://github.com/KDAB/android_openssl.git --depth=1
+    - name: Build the Android binary
+      run: |
+        export ANDROID_NDK_ROOT=/usr/local/lib/android/sdk/ndk-bundle
+        export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+        bash ./dist/android/build.sh
+    - name: Upload artifacts to GitHub
+      if: github.event_name != 'release'
+      uses: actions/upload-artifact@v2
+      with:
+        name: android-build-debug.apk
+        path: build_android/android-build//build/outputs/apk/debug/android-build-debug.apk
+    - name: Upload to GitHub
+      if: github.event_name == 'release'
+      run: |
+        TAG_NAME=$(./dist/get-tag-name.sh)
+        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk"
