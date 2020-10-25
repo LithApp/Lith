@@ -19,10 +19,10 @@ QDataStream &W::operator>>(QDataStream &s, W::Integer &r) {
 }
 
 QDataStream &W::operator>>(QDataStream &s, W::LongInteger &r) {
-    Char c;
-    s >> c;
-    QByteArray buf((int) c.d + 1, 0);
-    s.readRawData(buf.data(), c.d);
+    quint8 length;
+    s >> length;
+    QByteArray buf((int) length + 1, 0);
+    s.readRawData(buf.data(), length);
     r.d = buf.toLongLong();
     return s;
 }
@@ -379,19 +379,19 @@ QDataStream &W::operator>>(QDataStream &s, W::Buffer &r) {
 }
 
 QDataStream &W::operator>>(QDataStream &s, W::Pointer &r) {
-    Char c;
-    s >> c;
-    QByteArray buf((int) c.d + 1, 0);
-    s.readRawData(buf.data(), c.d);
+    quint8 length;;
+    s >> length;
+    QByteArray buf((int) length + 1, 0);
+    s.readRawData(buf.data(), length);
     r.d = buf.toULongLong(nullptr, 16);
     return s;
 }
 
 QDataStream &W::operator>>(QDataStream &s, W::Time &r) {
-    Char c;
-    s >> c;
-    QByteArray buf((int) c.d + 1, 0);
-    s.readRawData(buf.data(), c.d);
+    quint8 length;
+    s >> length;
+    QByteArray buf((int) length + 1, 0);
+    s.readRawData(buf.data(), length);
     r.d = buf;
     return s;
 }
