@@ -18,6 +18,7 @@ Drawer {
 
         ColumnLayout {
             anchors.fill: parent
+            anchors.margins: 3
 
             RowLayout {
                 Layout.fillWidth: true
@@ -49,7 +50,6 @@ Drawer {
             TextField {
                 id: filterField
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
                 placeholderText: "Filter buffers"
                 text: weechat.buffers.filterWord
                 onTextChanged: weechat.buffers.filterWord = text
