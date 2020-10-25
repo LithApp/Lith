@@ -14,6 +14,12 @@ Drawer {
     ListView {
         anchors.fill: parent
         model: stuff.selected ? stuff.selected.nicks : null
+        ScrollBar.vertical: ScrollBar {
+            id: scrollBar
+            hoverEnabled: true
+            active: hovered || pressed
+            orientation: Qt.Vertical
+        }
         delegate: Text {
             text: modelData.name
             visible: modelData.visible && modelData.level === 0

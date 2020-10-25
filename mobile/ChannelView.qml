@@ -6,6 +6,7 @@ import QtQuick.Dialogs 1.2 as Dialogs
 import lith 1.0
 
 ColumnLayout {
+    spacing: 0
     SystemPalette {
         id: palette
     }

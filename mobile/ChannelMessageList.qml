@@ -1,23 +1,41 @@
-import QtQuick 2.11
+import QtQuick 2.15
+import QtQuick.Controls 2.12
 
 ListView {
+    id: listView
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
         font.family: "Menlo"
         font.pointSize: 16
     }
+    // TODO breaks time dragging from outside of the screen
+    ScrollBar.vertical: ScrollBar {
+        id: scrollBar
+        hoverEnabled: true
+        active: hovered || pressed
+        rotation: 180
+        orientation: Qt.Vertical
+        parent: listView.parent
+        //size: root.height / root.contentHeight
+        anchors.top: listView.top
+        anchors.right: listView.right
+        anchors.bottom: listView.bottom
+    }
 
-    model: stuff.selected ? stuff.selected.lines : null
     rotation: 180
-    delegate: ChannelMessage {}
+    model: stuff.selected ? stuff.selected.lines : null
+    delegate: ChannelMessage { }
+
     MouseArea {
         z: -1
         anchors.fill: parent
-        drag.target: parent
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+        drag.target: listView
         drag.axis: Drag.XAxis
-        drag.maximumX: timeMetrics.width + 6
-        drag.minimumX: 0
+        drag.maximumX: 0
+        drag.minimumX: timeMetrics.width + 6
     }
     /*
     onContentYChanged: {

@@ -97,6 +97,13 @@ Drawer {
                 model: weechat.buffers
                 currentIndex: 0
 
+                ScrollBar.vertical: ScrollBar {
+                    id: scrollBar
+                    hoverEnabled: true
+                    active: hovered || pressed
+                    orientation: Qt.Vertical
+                }
+
                 delegate: Rectangle {
                     width: ListView.view.width
                     height: childrenRect.height + 12
