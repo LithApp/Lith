@@ -10,7 +10,7 @@ ListView {
 
     model: stuff.selected ? stuff.selected.lines : null
     rotation: 180
-    delegate: Message {}
+    delegate: ChannelMessage {}
     MouseArea {
         z: -1
         anchors.fill: parent

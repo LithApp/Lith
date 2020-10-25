@@ -4,8 +4,13 @@
         <file>BufferList.qml</file>
         <file>SettingsDialog.qml</file>
         <file>NickList.qml</file>
-        <file>FrontPage.qml</file>
-        <file>MessageList.qml</file>
-        <file>Message.qml</file>
+        <file>ChannelView.qml</file>
+        <file>ChannelMessageList.qml</file>
+        <file>ChannelMessage.qml</file>
+        <file>PreviewPopup.qml</file>
+        <file>ErrorMessage.qml</file>
+        <file>ChannelHeader.qml</file>
+        <file>ChannelInputBar.qml</file>
+        <file>ChannelTextInput.qml</file>
     </qresource>
 </RCC>

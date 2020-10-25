@@ -69,8 +69,7 @@ ColumnLayout {
                         Layout.preferredWidth: height
                         onClicked: {
                             if (modelData.type === LineSegment.IMAGE) {
-                                delegateImage.source = modelData.plainText
-                                imageWrapper.visible = !imageWrapper.visible
+                                previewPopup.showImage(modelData.plainText)
                             }
                             /*
                             else if (modelData.type === LineSegment.EMBED) {
@@ -82,7 +81,6 @@ ColumnLayout {
                                 videoWrapper.visible = !videoWrapper.visible
                             }
                             */
-                            previewDialog.visible = true
                         }
                     }
                 }
