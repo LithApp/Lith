@@ -159,6 +159,11 @@ void Weechat::onReadyRead() {
 
     QByteArray tmp;
 
+    if (!m_connection) {
+        // this shouldn't really happen, yet it seems it probably does
+        return;
+    }
+
     if (m_bytesRemaining > 0) {
         tmp = m_connection->read(m_bytesRemaining);
         m_bytesRemaining -= tmp.length();
