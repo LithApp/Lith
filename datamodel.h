@@ -8,6 +8,7 @@
 #include <QDateTime>
 #include <QAbstractListModel>
 #include <QSet>
+#include <QPointer>
 
 class Buffer;
 class BufferLine;
@@ -155,13 +156,20 @@ private:
 class HotListItem : public QObject {
     Q_OBJECT
     PROPERTY(QList<int>, count)
-    PROPERTY_NOSETTER(Buffer*, buffer)
+    Q_PROPERTY(Buffer* buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)
 public:
     HotListItem(QObject *parent = nullptr);
 
+    Buffer *bufferGet();
     void bufferSet(Buffer *o);
+
+signals:
+    void bufferChanged();
 
 private slots:
     void onCountChanged();
+
+private:
+    QPointer<Buffer> m_buffer;
 };
 #endif // DATAMODEL_H
