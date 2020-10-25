@@ -59,6 +59,11 @@ jobs:
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
         bash ./dist/ios/build.sh
+    - name: Upload to GitHub
+      if: github.event_name == 'release'
+      run: |
+        TAG_NAME=$(./dist/get-tag-name.sh)
+        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_ios/Lith.ipa"
 
   android:
     runs-on: ubuntu-20.04
