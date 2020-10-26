@@ -27,7 +27,6 @@ Weechat::Weechat(QObject *parent)
     m_port = m_settings.value("port", 9001).toInt();
     m_useEncryption = m_settings.value("encrypted", true).toBool();
     m_passphrase = m_settings.value("passphrase", QString()).toString();
-    m_showFullLink = m_settings.value("showFullLink", true).toBool();
 
     if (!m_host.isEmpty() && !m_passphrase.isEmpty()) {
         QTimer::singleShot(0, this, &Weechat::start);
@@ -56,10 +55,6 @@ int Weechat::port() const {
 
 bool Weechat::encrypted() const {
     return m_useEncryption;
-}
-
-bool Weechat::showFullLink() const {
-    return m_showFullLink;
 }
 
 bool Weechat::hasPassphrase() const {
@@ -122,15 +117,6 @@ void Weechat::setEncrypted(bool value) {
         emit settingsChanged();
     }
 }
-
-void Weechat::setShowFullLink(bool value) {
-    if (m_showFullLink != value) {
-        m_showFullLink = value;
-        m_settings.setValue("showFullLink", m_showFullLink);
-        emit settingsChanged();
-    }
-}
-
 
 void Weechat::setPassphrase(const QString &value) {
     if (m_passphrase != value && !value.isEmpty()) {
