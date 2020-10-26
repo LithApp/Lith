@@ -10,6 +10,7 @@ TextField {
     font.pointSize: settings.baseFontSize
     verticalAlignment: TextField.AlignVCenter
     focus: true
+    inputMethodHints: Qt.ImhMultiLine
 
     background: Rectangle {
         color: palette.base
