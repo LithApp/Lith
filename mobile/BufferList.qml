@@ -29,6 +29,7 @@ Drawer {
                 Text {
                     font.pointSize: settings.baseFontSize * 1.5
                     text: "Lith"
+                    color: palette.windowText
                 }
                 Item {
                     Layout.fillWidth: true
@@ -50,6 +51,7 @@ Drawer {
             TextField {
                 id: filterField
                 Layout.fillWidth: true
+                placeholderTextColor: palette.alternateBase
                 placeholderText: "Filter buffers"
                 text: weechat.buffers.filterWord
                 onTextChanged: weechat.buffers.filterWord = text

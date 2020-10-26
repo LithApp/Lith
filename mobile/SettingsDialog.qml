@@ -27,7 +27,7 @@ Dialog {
     }
 
     background: Rectangle {
-        color: palette.base
+        color: "#eeeeee"
     }
 
     onAccepted: {
@@ -66,22 +66,18 @@ Dialog {
                 columns: 2
                 Text {
                     text: "Hostname"
-                    color: palette.text
                 }
                 TextField {
                     id: hostField
                     text: weechat.host
-                    color: palette.text
                     inputMethodHints: Qt.ImhNoPredictiveText
                 }
                 Text {
                     text: "Port"
-                    color: palette.text
                 }
                 TextField {
                     id: portField
                     text: weechat.port
-                    color: palette.text
                     inputMethodHints: Qt.ImhPreferNumbers
                     validator: IntValidator {
                         bottom: 0
@@ -90,7 +86,6 @@ Dialog {
                 }
                 Text {
                     text: "SSL"
-                    color: palette.text
                 }
                 CheckBox {
                     id: encryptedCheckbox
@@ -99,12 +94,9 @@ Dialog {
                 }
                 Text {
                     text: "Password"
-                    color: palette.text
                 }
                 TextField {
                     id: passphraseField
-                    color: palette.text
-                    placeholderTextColor: palette.button
                     placeholderText: weechat.hasPassphrase ? "**********" : ""
                     echoMode: TextInput.Password
                     passwordCharacter: "*"
@@ -119,7 +111,6 @@ Dialog {
             columns: 2
             Text {
                 text: "Show full URLs"
-                color: palette.text
             }
             CheckBox {
                 id: showFullLinkCheckbox
@@ -128,7 +119,6 @@ Dialog {
             }
             Text {
                 text: "Show send button"
-                color: palette.text
             }
             CheckBox {
                 id: showSendButtonCheckbox
@@ -137,7 +127,6 @@ Dialog {
             }
             Text {
                 text: "Font size"
-                color: palette.text
             }
             SpinBox {
                 value: settings.baseFontSize
