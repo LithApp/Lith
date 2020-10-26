@@ -21,12 +21,12 @@ ColumnLayout {
             inputField.text += " "
             inputField.text += url
             inputField.text += " "
-            imageButton.isBusy = false
+            //imageButton.isBusy = false
         }
         function onError(message) {
             console.warn("ERROR")
             console.warn(message)
-            imageButton.isBusy = false
+            //imageButton.isBusy = false
         }
     }
 
@@ -69,7 +69,6 @@ ColumnLayout {
         folder: shortcuts.pictures
         nameFilters: [ "Image files (*.jpg *.png)" ]
         onAccepted: {
-            imageButton.isBusy = true
             //inputField.text += " " + fileUrl
             //imageButton.isBusy = false
             uploader.upload(fileUrl)

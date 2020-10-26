@@ -408,7 +408,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
     s >> hpath >> keys >> count;
     //qCritical() << hpath.d << keys.d << count.d;
     for (int i = 0; i < count.d; i++) {
-        qApp->eventDispatcher()->processEvents(QEventLoop::ExcludeSocketNotifiers);
+        qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
         QStringList pathElems = hpath.d.split("/");
         QStringList arguments = keys.d.split(",");
         pointer_t parentPtr = 0;
@@ -452,7 +452,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             parentPtr = bufferPtr;
         }
         for (auto i : arguments) {
-            qApp->eventDispatcher()->processEvents(QEventLoop::ExcludeSocketNotifiers);
+            qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
             QStringList argument = i.split(":");
             QString name = argument[0];
             QString type = argument[1];

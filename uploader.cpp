@@ -6,6 +6,8 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QBuffer>
+#include <QFileInfo>
+
 
 Uploader::Uploader(QObject *parent) : QObject(parent)
 {
@@ -18,8 +20,12 @@ void Uploader::upload(const QString &path) {
     QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
 
     QFile *file;
+    emit error(path);
     if (path.startsWith("file://"))
         file = new QFile(QUrl(path).toLocalFile());
+    else if (path.startsWith("file:assets-library")) {
+        file = new QFile(QUrl(path).toLocalFile());
+    }
     else
         file = new QFile(path);
     if (!file->open(QIODevice::ReadOnly)) {
