@@ -27,7 +27,7 @@ Drawer {
                     width: 6
                 }
                 Text {
-                    font.pointSize: settings.baseFontSize * 1.625
+                    font.pointSize: settings.baseFontSize * 1.5
                     text: "Lith"
                 }
                 Item {
@@ -127,7 +127,7 @@ Drawer {
                             clip: true
                             text: buffer.name.split(".").slice(-1)[0]
                             font.family: "Menlo"
-                            font.pointSize: settings.baseFontSize * 1.25
+                            font.pointSize: settings.baseFontSize * 1.125
                             color: palette.windowText
                             MouseArea {
                                 id: bufferMouse
@@ -149,7 +149,7 @@ Drawer {
                             Text {
                                 text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
                                 font.family: "Menlo"
-                                font.pointSize: settings.baseFontSize * 1.125
+                                font.pointSize: settings.baseFontSize
                                 anchors.centerIn: parent
                                 color: palette.windowText
                             }

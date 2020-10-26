@@ -12,7 +12,7 @@ ColumnLayout {
     }
 
     property bool inputBarHasFocus: inputBar.hasFocus
-    property alias textInput: inputBar.textInputß
+    property alias textInput: inputBar.textInput
 
     ChannelHeader {
         id: channelHeader
