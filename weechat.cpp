@@ -96,6 +96,7 @@ void Weechat::restart() {
         m_connection->connectToHostEncrypted(m_host, m_port);
     else
         m_connection->connectToHost(m_host, m_port);
+    m_reconnectTimer.stop();
 }
 
 void Weechat::setHost(const QString &value) {
