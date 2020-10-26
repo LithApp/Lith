@@ -76,5 +76,16 @@ ApplicationWindow {
     PreviewPopup {
         id: previewPopup
         topMargin: keyboardArea.height
+
+        onVisibleChanged: {
+            if (visible) {
+                Qt.inputMethod.hide()
+            }
+            else {
+                Qt.inputMethod.show()
+                channelView.textInput.forceActiveFocus()
+            }
+        }
+
     }
 }
