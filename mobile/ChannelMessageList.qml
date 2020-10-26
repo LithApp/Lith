@@ -29,6 +29,7 @@ ListView {
 
     MouseArea {
         z: -1
+        enabled: false
         anchors.fill: parent
         anchors.leftMargin: 20
         anchors.rightMargin: 20
@@ -46,12 +47,16 @@ ListView {
         console.warn(contentY + " " + contentHeight + " " +height)
     }
     */
-    property real yPosition: visibleArea.yPosition
-    onYPositionChanged: {
+    function fillTopOfList() {
         if (yPosition + visibleArea.heightRatio > 0.65)
             stuff.selected.fetchMoreLines()
-        console.log(visibleArea.yPosition + " " + visibleArea.heightRatio)
     }
+
+    property real yPosition: visibleArea.yPosition
+    onYPositionChanged: fillTopOfList()
+    onContentHeightChanged: fillTopOfList()
+
+
 
     /*
     onVerticalOvershootChanged: {
