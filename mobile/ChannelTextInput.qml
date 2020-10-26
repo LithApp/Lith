@@ -84,7 +84,7 @@ TextField {
                 event.accepted = true
             }
         }
-        if (event.modifiers & Qt.ControlModifier) {
+        else if (event.modifiers & Qt.ControlModifier) {
             if (event.key === Qt.Key_W) {
                 var str = inputField.text.replace(/\s+$/, '')
                 var lastIndex = str.lastIndexOf(" ");
@@ -92,9 +92,29 @@ TextField {
                 event.accepted = true
             }
         }
-        if (event.key === Qt.Key_Tab) {
-            autocomplete()
-            event.accepted = true
+        else {
+            if (event.key === Qt.Key_Tab) {
+                autocomplete()
+                event.accepted = true
+            }
+            if (event.key === Qt.Key_Up) {
+                channelMessageList.contentY += 30
+            }
+            if (event.key === Qt.Key_Down) {
+                if (channelMessageList.contentY > 30)
+                    channelMessageList.contentY -= 30
+                else
+                    channelMessageList.contentY = 0
+            }
+            if (event.key === Qt.Key_PageUp) {
+                channelMessageList.contentY += channelMessageList.height - 30
+            }
+            if (event.key === Qt.Key_PageDown) {
+                if (channelMessageList.contentY > channelMessageList.height)
+                    channelMessageList.contentY -= channelMessageList.height - 30
+                else
+                    channelMessageList.contentY = 0
+            }
         }
     }
 }

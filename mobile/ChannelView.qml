@@ -50,6 +50,7 @@ ColumnLayout {
         Layout.fillHeight: true
         clip: true
         ChannelMessageList {
+            id: channelMessageList
             width: parent.width
             height: parent.height
             visible: stuff.selected
