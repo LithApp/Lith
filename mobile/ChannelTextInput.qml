@@ -49,24 +49,38 @@ TextField {
         }
     }
 
-    function autocomplete() {
-        var i = inputField.text.indexOf(" ");
+    function autocomplete(lastPos = -1) {
+
+        console.log("lastPos = ", lastPos, "currPos", cursorPosition);
+        // var index = matchedIndex;
+
+        var i = inputField.text.lastIndexOf(" ");
         var lastWord
         if (i >= 0)
-            lastWord = inputField.text.substring(i+1,-1).trim().toLocaleLowerCase();
+            lastWord = inputField.text.substring(i+1, inputField.text.length).trim().toLocaleLowerCase();
         else {
             i = 0
             lastWord = inputField.text.trim().toLocaleLowerCase()
         }
         var nicks = stuff.selected.getVisibleNicks()
-        for (var i = 0; i < nicks.length; i++) {
-            console.warn("\"" + lastWord + "\" " + nicks[i])
-            if (nicks[i].toLocaleLowerCase().startsWith(lastWord)) {
+        // var matched_nicks = [];
+
+        for (var y = 0; y < nicks.length; y++) {
+            console.warn("\"" + lastWord + "\" " + nicks[y])
+            if (nicks[y].toLocaleLowerCase().startsWith(lastWord) && lastWord !== "") {
                 inputField.text = inputField.text.substring(0, i)
-                inputField.text += nicks[i]
-                return
+                if (i !== 0) {
+                    inputField.text += " "
+                }
+                inputField.text += nicks[y] + ": "
+                return;
+                // matchedNicks.push(nicks[y]);
             }
         }
+        console.log("lastPos = ", lastPos, "currPos", cursorPosition);
+
+        //return cursorPosition;
+        //return [cursorPosition, matchedNicks, matchIndex]
     }
 
     Keys.onPressed: {
@@ -94,7 +108,8 @@ TextField {
         }
         else {
             if (event.key === Qt.Key_Tab) {
-                autocomplete()
+                autocomplete();
+                // var last = autocomplete();
                 event.accepted = true
             }
             if (event.key === Qt.Key_Up) {
