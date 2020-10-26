@@ -15,6 +15,9 @@ RowLayout {
         text: "⇥"
         font.pointSize: settings.baseFontSize * 1.25
         focusPolicy: Qt.NoFocus
+        onClicked: {
+            channelTextInput.autocomplete();
+        }
     }
     ChannelTextInput {
         id: channelTextInput
