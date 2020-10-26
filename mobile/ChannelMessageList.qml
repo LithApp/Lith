@@ -7,7 +7,7 @@ ListView {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
         font.family: "Menlo"
-        font.pointSize: 16
+        font.pointSize: settings.baseFontSize
     }
     // TODO breaks time dragging from outside of the screen
     ScrollBar.vertical: ScrollBar {

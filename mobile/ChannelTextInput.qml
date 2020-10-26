@@ -7,7 +7,7 @@ import lith 1.0
 TextField {
     id: inputField
     font.family: "Menlo"
-    font.pointSize: 16
+    font.pointSize: settings.baseFontSize
     verticalAlignment: TextField.AlignVCenter
     focus: true
 

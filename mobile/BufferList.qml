@@ -27,7 +27,7 @@ Drawer {
                     width: 6
                 }
                 Text {
-                    font.pointSize: 26
+                    font.pointSize: settings.baseFontSize * 1.625
                     text: "Lith"
                 }
                 Item {
@@ -35,7 +35,7 @@ Drawer {
                 }
 
                 Button {
-                    font.pointSize: 20
+                    font.pointSize: settings.baseFontSize * 1.25
                     text: "⚙"
                     onClicked: settingsDialog.visible = true
                 }
@@ -54,7 +54,7 @@ Drawer {
                 text: weechat.buffers.filterWord
                 onTextChanged: weechat.buffers.filterWord = text
                 font.family: "Menlo"
-                font.pointSize: 16
+                font.pointSize: settings.baseFontSize
                 color: palette.windowText
 
                 Keys.onPressed: {
@@ -127,7 +127,7 @@ Drawer {
                             clip: true
                             text: buffer.name.split(".").slice(-1)[0]
                             font.family: "Menlo"
-                            font.pointSize: 20
+                            font.pointSize: settings.baseFontSize * 1.25
                             color: palette.windowText
                             MouseArea {
                                 id: bufferMouse
@@ -149,7 +149,7 @@ Drawer {
                             Text {
                                 text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
                                 font.family: "Menlo"
-                                font.pointSize: 18
+                                font.pointSize: settings.baseFontSize * 1.125
                                 anchors.centerIn: parent
                                 color: palette.windowText
                             }

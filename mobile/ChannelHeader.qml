@@ -14,7 +14,7 @@ Frame {
         Button {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
-            font.pointSize: 20
+            font.pointSize: settings.baseFontSize * 1.25
             text: "☰"
             onClicked: bufferDrawer.visible = !bufferDrawer.visible
         }
@@ -29,7 +29,8 @@ Frame {
                 height: 1
                 font.bold: true
                 font.family: "Menlo"
-                font.pointSize: stuff.selected && stuff.selected.title.length > 0 ? 14 : 18
+                font.pointSize: stuff.selected && stuff.selected.title.length > 0 ? settings.baseFontSize * 0.875 :
+                                                                                    settings.baseFontSize * 1.125
                 color: palette.windowText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -45,7 +46,7 @@ Frame {
                 elide: Text.ElideRight
                 maximumLineCount: 2
                 font.family: "Menlo"
-                font.pointSize: 12
+                font.pointSize: settings.baseFontSize * 0.75
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 color: palette.windowText
@@ -55,7 +56,7 @@ Frame {
         Button {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
-            font.pointSize: 20
+            font.pointSize: settings.baseFontSize * 1.25
             visible: weechat.status !== Weechat.UNCONFIGURED
             enabled: weechat.status === Weechat.CONNECTED
             text: weechat.status === Weechat.CONNECTING ? "🤔" :

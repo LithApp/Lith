@@ -26,7 +26,7 @@ Drawer {
             height: visible ? implicitHeight : 0
             color: palette.windowText
             font.family: "Menlo"
-            font.pointSize: 16
+            font.pointSize: settings.baseFontSize * 1.125
         }
     }
 }

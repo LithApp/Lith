@@ -111,11 +111,9 @@ Dialog {
                 Layout.fillHeight: true
             }
         }
-        ColumnLayout {
+        GridLayout {
             Layout.alignment: Qt.AlignHCenter
-            Text {
-                text: "AHOJ"
-            }
+            columns: 2
             Text {
                 text: "Show full URLs"
                 color: palette.text
@@ -124,6 +122,16 @@ Dialog {
                 id: showFullLinkCheckbox
                 checked: weechat.showFullLink
                 Layout.alignment: Qt.AlignLeft
+            }
+            Text {
+                text: "Font size"
+                color: palette.text
+            }
+            SpinBox {
+                value: settings.baseFontSize
+                onValueChanged: settings.baseFontSize = value
+                from: 6
+                to: 32
             }
         }
 

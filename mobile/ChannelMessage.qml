@@ -19,7 +19,7 @@ ColumnLayout {
             Layout.preferredWidth: timeMetrics.width
             text: messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
             font.family: "Menlo"
-            font.pointSize: 16
+            font.pointSize: settings.baseFontSize
             color: palette.text
         }
 
@@ -28,7 +28,7 @@ ColumnLayout {
             font.bold: true
             text: messageModel.prefix
             font.family: "Menlo"
-            font.pointSize: 16
+            font.pointSize: settings.baseFontSize
             color: palette.text
         }
 
@@ -50,14 +50,14 @@ ColumnLayout {
                         font.underline: modelData.type !== LineSegment.PLAIN
                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                         font.family: "Menlo"
-                        font.pointSize: 16
+                        font.pointSize: settings.baseFontSize
                     }
                     Button {
                         focusPolicy: Qt.NoFocus
                         text: "⤶"
                         rotation: 180
                         visible: modelData.type !== LineSegment.PLAIN
-                        font.pointSize: 20
+                        font.pointSize: settings.baseFontSize * 1.25
                         Layout.preferredWidth: height
                         onClicked: Qt.openUrlExternally(modelData.plainText)
                     }
@@ -66,7 +66,7 @@ ColumnLayout {
                         text: "🖼️"
                         visible: modelData.type === LineSegment.IMAGE // || modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.EMBED
                         font.family: "Menlo"
-                        font.pointSize: 18
+                        font.pointSize: settings.baseFontSize * 1.125
                         Layout.preferredWidth: height
                         onClicked: {
                             if (modelData.type === LineSegment.IMAGE) {

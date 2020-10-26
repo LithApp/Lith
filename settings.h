@@ -26,6 +26,7 @@
 class Settings : public QObject {
     Q_OBJECT
     SETTING(int, lastOpenBuffer, -1)
+    SETTING(qreal, baseFontSize, 12)
 public:
     static Settings *instance();
 private:

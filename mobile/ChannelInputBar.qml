@@ -10,7 +10,7 @@ RowLayout {
     Button {
         Layout.preferredWidth: height
         text: "⇥"
-        font.pointSize: 20
+        font.pointSize: settings.baseFontSize * 1.25
         focusPolicy: Qt.NoFocus
     }
     ChannelTextInput {
@@ -25,7 +25,7 @@ RowLayout {
         property bool isBusy: false
         text: isBusy ? "" : "📷"
         enabled: !isBusy
-        font.pointSize: 16
+        font.pointSize: settings.baseFontSize
         onClicked: {
             fileDialog.open()
         }
