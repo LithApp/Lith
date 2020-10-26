@@ -44,7 +44,7 @@ ColumnLayout {
                         Layout.fillHeight: true
                         Layout.alignment: Qt.AlignTop
                         verticalAlignment: Text.AlignTop
-                        text: modelData.type === LineSegment.PLAIN ? modelData.plainText : (weechat.showFullLink ? modelData.plainText : modelData.summary)
+                        text: modelData.type === LineSegment.PLAIN ? modelData.plainText : (settings.showFullLink ? modelData.plainText : modelData.summary)
                         // text: modelData.type ===
                         color: modelData.type === LineSegment.PLAIN ? palette.text : palette.highlight
                         font.underline: modelData.type !== LineSegment.PLAIN

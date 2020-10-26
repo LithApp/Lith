@@ -66,7 +66,7 @@ Drawer {
                         bufferList.currentIndex++;
                         event.accepted = true
                     }
-                    if (event.key === Qt.Key_Return || event.key == Qt.Key_Enter) {
+                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                         stuff.selected = bufferList.currentItem.sourceBuffer
                         filterField.text = ""
                         root.close()

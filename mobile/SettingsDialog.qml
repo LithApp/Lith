@@ -43,7 +43,9 @@ Dialog {
         newPassphrase = ""
 
         var newShowFullLink = showFullLinkCheckbox.checked
-        weechat.showFullLink = newShowFullLink
+        settings.showFullLink = newShowFullLink
+
+        settings.showSendButton = showSendButtonCheckbox.checked
     }
     onRejected: {
         hostField.text = weechat.host
@@ -51,7 +53,8 @@ Dialog {
         encryptedCheckbox.checked = weechat.encrypted
         passphraseField.text = ""
 
-        showFullLinkCheckbox.checked = weechat.showFullLink
+        showFullLinkCheckbox.checked = settings.showFullLink
+        showSendButtonCheckbox.checked = settings.showSendButton
     }
 
     StackLayout {
@@ -120,7 +123,16 @@ Dialog {
             }
             CheckBox {
                 id: showFullLinkCheckbox
-                checked: weechat.showFullLink
+                checked: settings.showFullLink
+                Layout.alignment: Qt.AlignLeft
+            }
+            Text {
+                text: "Show send button"
+                color: palette.text
+            }
+            CheckBox {
+                id: showSendButtonCheckbox
+                checked: settings.showSendButton
                 Layout.alignment: Qt.AlignLeft
             }
             Text {

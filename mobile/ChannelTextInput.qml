@@ -17,6 +17,8 @@ TextField {
     }
     color: palette.text
 
+    property alias inputFieldAlias :inputField
+
     onAccepted: {
         if (text.length > 0) {
             stuff.selected.input(text)

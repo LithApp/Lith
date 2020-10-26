@@ -38,7 +38,6 @@ public:
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
 
-    Q_PROPERTY(bool showFullLink READ showFullLink WRITE setShowFullLink NOTIFY settingsChanged)
 public:
     static Weechat *_self;
     static Weechat *instance();
@@ -52,7 +51,6 @@ private:
     int port() const;
     bool encrypted() const;
     bool hasPassphrase() const;
-    bool showFullLink() const;
 
 signals:
     void settingsChanged();
@@ -70,7 +68,6 @@ public slots:
     void setPort(int value);
     void setEncrypted(bool value);
     void setPassphrase(const QString &value);
-    void setShowFullLink(bool value);
 
 public slots:
     void onReadyRead();
@@ -97,8 +94,6 @@ private:
     int m_port { };
     QString m_passphrase { };
     bool m_useEncryption { true };
-
-    bool m_showFullLink { true };
 
     QSettings m_settings;
 

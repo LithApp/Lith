@@ -27,6 +27,8 @@ class Settings : public QObject {
     Q_OBJECT
     SETTING(int, lastOpenBuffer, -1)
     SETTING(qreal, baseFontSize, 10)
+    SETTING(bool, showFullLink, true)
+    SETTING(bool, showSendButton, false)
 public:
     static Settings *instance();
 private:

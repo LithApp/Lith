@@ -38,4 +38,19 @@ RowLayout {
             scale: 0.7
         }
     }
+
+    Button {
+        focusPolicy: Qt.NoFocus
+        id: sendButton
+        Layout.preferredWidth: height
+        text: "↳"
+        visible: settings.showSendButton
+        font.pointSize: settings.baseFontSize
+        onClicked: {
+            if (channelTextInput.inputFieldAlias.text.length > 0) {
+                stuff.selected.input(channelTextInput.inputFieldAlias.text)
+                channelTextInput.inputFieldAlias.text = ""
+            }
+        }
+    }
 }
