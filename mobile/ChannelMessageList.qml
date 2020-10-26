@@ -56,6 +56,7 @@ ListView {
     property real yPosition: visibleArea.yPosition
     onYPositionChanged: fillTopOfList()
     onContentHeightChanged: fillTopOfList()
+    onModelChanged: fillTopOfList()
 
 
 
