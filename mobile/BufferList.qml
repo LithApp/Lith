@@ -96,6 +96,7 @@ Drawer {
                 Layout.fillWidth: true
                 model: weechat.buffers
                 currentIndex: 0
+                reuseItems: true
 
                 ScrollBar.vertical: ScrollBar {
                     id: scrollBar

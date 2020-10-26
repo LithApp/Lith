@@ -452,6 +452,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             parentPtr = bufferPtr;
         }
         for (auto i : arguments) {
+            qApp->eventDispatcher()->processEvents(QEventLoop::ExcludeSocketNotifiers);
             QStringList argument = i.split(":");
             QString name = argument[0];
             QString type = argument[1];
