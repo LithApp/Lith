@@ -23,7 +23,9 @@ void Uploader::upload(const QString &path) {
     if (path.startsWith("file://"))
         file = new QFile(QUrl(path).toLocalFile());
     else if (path.startsWith("file:assets-library")) {
-        file = new QFile(QUrl(path).toLocalFile());
+        QImage im(QUrl(path).toLocalFile());
+        uploadBinary(im);
+        return;
     }
     else
         file = new QFile(path);
@@ -37,13 +39,14 @@ void Uploader::upload(const QString &path) {
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
     request.setRawHeader("Authorization", "Client-ID a416e89635996b4");
 
+    qCritical() << "FILESIZE:" << file->size();
     auto reply = mgr->post(request, file->readAll());
     file->setParent(reply);
 
     connect(mgr, &QNetworkAccessManager::finished, this, &Uploader::onFinished);
 }
 
-void Uploader::uploadBinary(QImage data) {
+void Uploader::uploadBinary(QImage &data) {
     QUrl url = QUrl("https://api.imgur.com/3/image");
 
     QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
@@ -52,6 +55,11 @@ void Uploader::uploadBinary(QImage data) {
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
     request.setRawHeader("Authorization", "Client-ID a416e89635996b4");
 
+    workingSet(true);
+
+    if (data.size().width() > 2000) {
+        data = data.scaled(data.size() / 4);
+    }
     QByteArray arr;
     QBuffer buffer(&arr);
     buffer.open(QIODevice::WriteOnly);

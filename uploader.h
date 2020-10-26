@@ -16,7 +16,7 @@ public:
 
 public slots:
     void upload(const QString &path);
-    void uploadBinary(QImage data);
+    void uploadBinary(QImage &data);
 signals:
     void error(const QString &message);
     void success(const QString &url);
