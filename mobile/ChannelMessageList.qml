@@ -28,7 +28,7 @@ ListView {
     delegate: ChannelMessage {
         messageModel: modelData
     }
-    reuseItems: true
+    //reuseItems: true
 
     MouseArea {
         z: -1

@@ -224,6 +224,7 @@ void Weechat::onConnected() {
 void Weechat::onDisconnected() {
     statusSet(DISCONNECTED);
 
+    StuffManager::instance()->reset();
     m_hotlistTimer.stop();
     if (m_reconnectTimer.interval() < 5000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
@@ -334,7 +335,7 @@ QObject *StuffManager::getStuff(pointer_t ptr, const QString &type, pointer_t pa
         }
         else if (parent == 0) { */
             if (!m_lineMap.contains(ptr))
-                m_lineMap[ptr] = new BufferLine(this);
+                m_lineMap[ptr] = new BufferLine(nullptr);
             return m_lineMap[ptr];
             /*
         }
@@ -351,7 +352,7 @@ QObject *StuffManager::getStuff(pointer_t ptr, const QString &type, pointer_t pa
     else if (type == "hotlist") {
         //qCritical() << ptr;
         if (!m_hotList.contains(ptr))
-            m_hotList.insert(ptr, new HotListItem(this));
+            m_hotList.insert(ptr, new HotListItem(nullptr));
         return m_hotList[ptr];
     }
     else {
@@ -419,13 +420,32 @@ QVariant StuffManager::data(const QModelIndex &index, int role) const {
 }
 
 void StuffManager::reset() {
+    setSelectedIndex(-1);
     beginResetModel();
     for (auto i : m_buffers) {
         i->deleteLater();
     }
     m_buffers.clear();
     m_bufferMap.clear();
+    emit buffersChanged();
     endResetModel();
+    qCritical() << "=== RESET";
+    int lines = 0;
+    for (auto i : m_lineMap) {
+        if (!i->parent())
+            lines++;
+        i->deleteLater();
+    }
+    m_lineMap.clear();
+    qCritical() << "There is" << m_lineMap.count() << "orphan lines";
+    int hotlist = 0;
+    for (auto i : m_hotList) {
+        if (!i->parent())
+            hotlist++;
+        i->deleteLater();
+    }
+    m_hotList.clear();
+    qCritical() << "There is" << m_hotList.count() << "hotlist items";
 }
 
 StuffManager::StuffManager() : QAbstractListModel() {
