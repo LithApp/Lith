@@ -115,6 +115,9 @@ TextField {
                 else
                     channelMessageList.contentY = 0
             }
+            if (event.key === Qt.Key_End) {
+                channelMessageList.contentY = 0
+            }
         }
     }
 }
