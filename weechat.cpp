@@ -155,7 +155,7 @@ void Weechat::onReadyRead() {
 
     // In the protocol parser, there's the call to processEvents that could lead to
     // this slot being called while a message is already being processed
-    // Add a guard that prevents processing of more messages at the same moment
+    // This is guard that prevents processing of more messages at the same moment
     static bool guard = false;
     if (guard)
         return;
@@ -279,7 +279,6 @@ void Weechat::fetchLines(pointer_t ptr, int count) {
     //qCritical() << "WRITING:" << line;
     auto bytes = m_connection->write(line.toUtf8());
     m_timeoutTimer.start(5000);
-    qCritical() << "Written" << bytes << m_connection->isReadable() << m_connection->isWritable() << m_connection->isOpen();
     if (bytes != line.toUtf8().count()) {
         errorStringSet("HOVNO");
     }
