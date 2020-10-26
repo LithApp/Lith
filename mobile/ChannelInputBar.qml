@@ -7,6 +7,8 @@ import lith 1.0
 
 RowLayout {
     spacing: 0
+    // TODO
+    property alias textInput: channelTextInput
     property bool hasFocus: channelTextInput.activeFocus
     Button {
         Layout.preferredWidth: height

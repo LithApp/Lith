@@ -55,6 +55,12 @@ ColumnLayout {
             //inputField.text += " " + fileUrl
             //imageButton.isBusy = false
             uploader.upload(fileUrl)
+            Qt.inputMethod.hide()
+            inputBar.textInput.forceActiveFocus()
+        }
+        onRejected: {
+            Qt.inputMethod.hide()
+            inputBar.textInput.forceActiveFocus()
         }
     }
 }
