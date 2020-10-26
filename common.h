@@ -1,16 +1,20 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define PROPERTY_NOSETTER(type, name) \
+#include <QObject>
+
+#define STRINGIFY(x) #x
+
+#define PROPERTY_NOSETTER(type, name, ...) \
     private: \
         Q_PROPERTY(type name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \
-        type m_ ## name { }; \
+        type m_ ## name { __VA_ARGS__ }; \
     public: \
         type name ## Get () const { return m_ ## name; } \
         Q_SIGNAL void name ## Changed();
 
-#define PROPERTY(type, name) \
-    PROPERTY_NOSETTER(type, name) \
+#define PROPERTY(type, name, ...) \
+    PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
     public: \
         void name ## Set (const type &o) { \
             if (m_ ## name != o) { \

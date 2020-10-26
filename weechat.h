@@ -15,6 +15,7 @@
 
 #include "common.h"
 #include "datamodel.h"
+#include "settings.h"
 
 class ProxyBufferList;
 

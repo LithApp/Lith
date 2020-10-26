@@ -323,8 +323,11 @@ QObject *StuffManager::getStuff(pointer_t ptr, const QString &type, pointer_t pa
             m_buffers.append(tmp);
             endInsertRows();
             emit buffersChanged();
-            if (m_buffers.count() == 1)
+            if (m_buffers.count() == 1 && Settings::instance()->lastOpenBufferGet() < 0)
                 emit selectedChanged();
+            else if (Settings::instance()->lastOpenBufferGet() == m_buffers.count() - 1) {
+                setSelectedIndex(Settings::instance()->lastOpenBufferGet());
+            }
         }
         return m_bufferMap[ptr];
     }
@@ -402,6 +405,8 @@ void StuffManager::setSelectedIndex(int o) {
         emit selectedChanged();
         if (selectedBuffer())
             selectedBuffer()->fetchMoreLines();
+        if (o >= 0)
+            Settings::instance()->lastOpenBufferSet(o);
     }
 }
 

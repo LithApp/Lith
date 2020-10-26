@@ -6,6 +6,7 @@ SOURCES += main.cpp \
     clipboardproxy.cpp \
     datamodel.cpp \
     qmlobjectlist.cpp \
+    settings.cpp \
     uploader.cpp \
     weechat.cpp
 
@@ -38,6 +39,7 @@ HEADERS += \
     clipboardproxy.h \
     datamodel.h \
     qmlobjectlist.h \
+    settings.h \
     uploader.h \
     weechat.h \
     common.h

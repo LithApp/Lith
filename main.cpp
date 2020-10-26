@@ -9,6 +9,7 @@
 #include "uploader.h"
 #include "clipboardproxy.h"
 #include "datamodel.h"
+#include "settings.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,10 +26,12 @@ int main(int argc, char *argv[])
     //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
     qmlRegisterUncreatableType<StuffManager>("lith", 1, 0, "StuffManager", "");
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
+    qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     engine.rootContext()->setContextProperty("stuff", StuffManager::instance());
     engine.rootContext()->setContextProperty("weechat", Weechat::instance());
     engine.rootContext()->setContextProperty("clipboard", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
+    engine.rootContext()->setContextProperty("settings", Settings::instance());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();
