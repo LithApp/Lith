@@ -8,6 +8,7 @@ ColumnLayout {
     SystemPalette {
         id: palette
     }
+    property var messageModel: null
 
     width: ListView.view.width + timeMetrics.width
     rotation: 180
@@ -16,7 +17,7 @@ ColumnLayout {
         Text {
             Layout.alignment: Qt.AlignTop
             Layout.preferredWidth: timeMetrics.width
-            text: modelData.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+            text: messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
             font.family: "Menlo"
             font.pointSize: 16
             color: palette.text
@@ -25,7 +26,7 @@ ColumnLayout {
         Text {
             Layout.alignment: Qt.AlignTop
             font.bold: true
-            text: modelData.prefix
+            text: messageModel.prefix
             font.family: "Menlo"
             font.pointSize: 16
             color: palette.text
@@ -34,7 +35,7 @@ ColumnLayout {
         ColumnLayout {
             Layout.fillWidth: true
             Repeater {
-                model: modelData.segments
+                model: messageModel.segments
                 RowLayout {
                     Layout.fillWidth: true
                     Text {

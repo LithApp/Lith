@@ -25,7 +25,9 @@ ListView {
 
     rotation: 180
     model: stuff.selected ? stuff.selected.lines : null
-    delegate: ChannelMessage { }
+    delegate: ChannelMessage {
+        messageModel: modelData
+    }
     reuseItems: true
 
     MouseArea {
