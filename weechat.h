@@ -63,6 +63,7 @@ private slots:
 
 public slots:
     void start();
+    void restart();
 
     void setHost(const QString &value);
     void setPort(int value);
@@ -75,7 +76,7 @@ public slots:
     void onConnected();
     void onDisconnected();
     void onError(QAbstractSocket::SocketError e);
-    void onSslErrors(const QList<QSslError> errors);
+    void onSslErrors(const QList<QSslError> &errors);
     void onMessageReceived(QByteArray &data);
 
     void input(pointer_t ptr, const QString &data);

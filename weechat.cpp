@@ -35,11 +35,15 @@ Weechat::Weechat(QObject *parent)
 
     m_reconnectTimer.setInterval(1000);
     m_reconnectTimer.setSingleShot(true);
-    connect(&m_reconnectTimer, &QTimer::timeout, this, &Weechat::start);
+    connect(&m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart);
 
     m_timeoutTimer.setInterval(5000);
     m_timeoutTimer.setSingleShot(true);
     connect(&m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout);
+
+    connect(&m_hotlistTimer, SIGNAL(timeout()), this, SLOT(requestHotlist()));
+    m_hotlistTimer.setInterval(1000);
+    m_hotlistTimer.setSingleShot(false);
 }
 
 QString Weechat::host() const {
@@ -67,18 +71,27 @@ void Weechat::start() {
         m_connection->deleteLater();
         m_connection = nullptr;
     }
+    qCritical() << "Connecting";
 
     statusSet(CONNECTING);
     m_connection = new QSslSocket(this);
     m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
     m_connection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
-    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &Weechat::onError);
+    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &Weechat::onError);
     connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Weechat::onSslErrors);
     connect(m_connection, &QSslSocket::readyRead, this, &Weechat::onReadyRead);
     connect(m_connection, &QSslSocket::connected, this, &Weechat::onConnected);
     connect(m_connection, &QSslSocket::disconnected, this, &Weechat::onDisconnected);
 
+    if (m_useEncryption)
+        m_connection->connectToHostEncrypted(m_host, m_port);
+    else
+        m_connection->connectToHost(m_host, m_port);
+}
+
+void Weechat::restart() {
+    qCritical() << "Reconnecting";
     if (m_useEncryption)
         m_connection->connectToHostEncrypted(m_host, m_port);
     else
@@ -140,7 +153,6 @@ void Weechat::onSettingsChanged() {
 
 void Weechat::requestHotlist() {
     if (m_connection) {
-        m_connection->write("sync\n");
         m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     }
 }
@@ -206,16 +218,13 @@ void Weechat::onConnected() {
     m_connection->write("sync\n");
     m_connection->write("nicklist\n");
 
-
-    connect(&m_hotlistTimer, SIGNAL(timeout()), this, SLOT(requestHotlist()));
-    m_hotlistTimer.setInterval(1000);
-    m_hotlistTimer.setSingleShot(false);
     m_hotlistTimer.start();
 }
 
 void Weechat::onDisconnected() {
     statusSet(DISCONNECTED);
 
+    m_hotlistTimer.stop();
     if (m_reconnectTimer.interval() < 5000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
     m_reconnectTimer.start();
@@ -231,7 +240,7 @@ void Weechat::onError(QAbstractSocket::SocketError e) {
     m_reconnectTimer.start();
 }
 
-void Weechat::onSslErrors(const QList<QSslError> errors) {
+void Weechat::onSslErrors(const QList<QSslError> &errors) {
     m_connection->ignoreSslErrors(errors);
     for (auto i : errors) {
         qWarning() << "SSL Error!" << i.errorString();
