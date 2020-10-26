@@ -20,7 +20,6 @@ void Uploader::upload(const QString &path) {
     QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
 
     QFile *file;
-    emit error(path);
     if (path.startsWith("file://"))
         file = new QFile(QUrl(path).toLocalFile());
     else if (path.startsWith("file:assets-library")) {
@@ -33,6 +32,7 @@ void Uploader::upload(const QString &path) {
         return;
     }
 
+    workingSet(true);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
     request.setRawHeader("Authorization", "Client-ID a416e89635996b4");
@@ -65,6 +65,7 @@ void Uploader::uploadBinary(QImage data) {
 }
 
 void Uploader::onFinished(QNetworkReply *reply) {
+    workingSet(false);
     if (reply->isReadable()) {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
         qCritical() << QString(doc.toJson());

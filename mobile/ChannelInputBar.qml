@@ -24,7 +24,7 @@ RowLayout {
         focusPolicy: Qt.NoFocus
         id: imageButton
         Layout.preferredWidth: height
-        property bool isBusy: false
+        property bool isBusy: uploader.working
         text: isBusy ? "" : "📷"
         enabled: !isBusy
         font.pointSize: settings.baseFontSize
@@ -37,6 +37,22 @@ RowLayout {
             anchors.fill: parent
             scale: 0.7
         }
+        Connections {
+            target: uploader
+            function onSuccess(url) {
+                console.warn("FINISHED")
+                console.warn(url)
+                if (channelTextInput.length !== 0 && !channelTextInput.text.endsWith(" "))
+                    channelTextInput.text += " "
+                channelTextInput.text += url
+                channelTextInput.text += " "
+            }
+            function onError(message) {
+                console.warn("ERROR")
+                console.warn(message)
+            }
+        }
+
     }
 
     Button {

@@ -1,7 +1,7 @@
 #ifndef UPLOADER_H
 #define UPLOADER_H
 
-#include <QObject>
+#include "common.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -10,6 +10,7 @@
 class Uploader : public QObject
 {
     Q_OBJECT
+    PROPERTY(bool, working)
 public:
     explicit Uploader(QObject *parent = nullptr);
 

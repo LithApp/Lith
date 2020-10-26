@@ -13,23 +13,6 @@ ColumnLayout {
 
     property bool inputBarHasFocus: inputBar.hasFocus
 
-    Connections {
-        target: uploader
-        function onSuccess(url) {
-            console.warn("FINISHED")
-            console.warn(url)
-            inputField.text += " "
-            inputField.text += url
-            inputField.text += " "
-            //imageButton.isBusy = false
-        }
-        function onError(message) {
-            console.warn("ERROR")
-            console.warn(message)
-            //imageButton.isBusy = false
-        }
-    }
-
     ChannelHeader {
         id: channelHeader
         Layout.fillWidth: true
