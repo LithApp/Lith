@@ -7,7 +7,9 @@
 #include <QJsonDocument>
 #include <QBuffer>
 #include <QFileInfo>
-
+#include <QImageReader>
+#include <QApplication>
+#include <QAbstractEventDispatcher>
 
 Uploader::Uploader(QObject *parent) : QObject(parent)
 {
@@ -16,6 +18,7 @@ Uploader::Uploader(QObject *parent) : QObject(parent)
 
 void Uploader::upload(const QString &path) {
     QUrl url = QUrl("https://api.imgur.com/3/image");
+    qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
 
     QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
 
@@ -23,7 +26,21 @@ void Uploader::upload(const QString &path) {
     if (path.startsWith("file://"))
         file = new QFile(QUrl(path).toLocalFile());
     else if (path.startsWith("file:assets-library")) {
+        qCritical() << "1";
+        QImageIOHandler::Transformations transformation;
+        {
+            // this needs to be in its own scope
+            // because if it exists when I try to open the image, the whole thing freezes
+            QImageReader imR(QUrl(path).toLocalFile());
+            transformation = imR.transformation();
+        }
         QImage im(QUrl(path).toLocalFile());
+        if (transformation & QImageIOHandler::TransformationRotate90) {
+            QMatrix matrix;
+            matrix.translate(im.size().width() / 2, im.size().height() / 2);
+            matrix.rotate(90);
+            im = im.transformed(matrix);
+        }
         uploadBinary(im);
         return;
     }
