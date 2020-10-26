@@ -7,6 +7,7 @@ import lith 1.0
 
 RowLayout {
     spacing: 0
+    property bool hasFocus: channelTextInput.activeFocus
     Button {
         Layout.preferredWidth: height
         text: "⇥"
@@ -14,6 +15,7 @@ RowLayout {
         focusPolicy: Qt.NoFocus
     }
     ChannelTextInput {
+        id: channelTextInput
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignVCenter
     }

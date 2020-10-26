@@ -11,6 +11,8 @@ ColumnLayout {
         id: palette
     }
 
+    property bool inputBarHasFocus: inputBar.hasFocus
+
     Connections {
         target: uploader
         function onSuccess(url) {
@@ -58,6 +60,7 @@ ColumnLayout {
     }
 
     ChannelInputBar {
+        id: inputBar
         Layout.fillWidth: true
     }
 

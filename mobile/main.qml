@@ -20,8 +20,11 @@ ApplicationWindow {
             top: parent.top
         }
         color: palette.window
-        height: Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible ? Qt.inputMethod.keyboardRectangle.height + errorMessage.height :
-                                                                                               errorMessage.height
+        height: Qt.inputMethod &&
+                Qt.inputMethod.keyboardRectangle &&
+                Qt.inputMethod.visible &&
+                channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height + errorMessage.height :
+                                               errorMessage.height
         Behavior on height {
             NumberAnimation {
                 duration: 200
@@ -56,6 +59,7 @@ ApplicationWindow {
     }
 
     ChannelView {
+        id: channelView
         anchors {
             bottom: parent.bottom
             left: parent.left
