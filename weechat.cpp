@@ -213,7 +213,7 @@ void Weechat::onConnected() {
     statusSet(CONNECTED);
     m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
-    //m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-25)/data\n");
+    m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n");
     m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
     m_connection->write("nicklist\n");
