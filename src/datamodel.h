@@ -29,17 +29,17 @@ namespace W {
     struct ArrayInt { QList<int> d {}; };
     struct ArrayStr { QStringList d {}; };
 
-    QDataStream &operator>>(QDataStream &s, Char &r);
-    QDataStream &operator>>(QDataStream &s, Integer &r);
-    QDataStream &operator>>(QDataStream &s, LongInteger &r);
-    QDataStream &operator>>(QDataStream &s, String &r);
-    QDataStream &operator>>(QDataStream &s, Buffer &r);
-    QDataStream &operator>>(QDataStream &s, Pointer &r);
-    QDataStream &operator>>(QDataStream &s, Time &r);
-    QDataStream &operator>>(QDataStream &s, HashTable &r);
-    QDataStream &operator>>(QDataStream &s, HData &r);
-    QDataStream &operator>>(QDataStream &s, ArrayInt &r);
-    QDataStream &operator>>(QDataStream &s, ArrayStr &r);
+    bool parse(QDataStream &s, Char &r);
+    bool parse(QDataStream &s, Integer &r);
+    bool parse(QDataStream &s, LongInteger &r);
+    bool parse(QDataStream &s, String &r);
+    bool parse(QDataStream &s, Buffer &r);
+    bool parse(QDataStream &s, Pointer &r);
+    bool parse(QDataStream &s, Time &r);
+    bool parse(QDataStream &s, HashTable &r);
+    bool parse(QDataStream &s, HData &r);
+    bool parse(QDataStream &s, ArrayInt &r);
+    bool parse(QDataStream &s, ArrayStr &r);
 };
 
 

@@ -136,7 +136,7 @@ void Lith::onMessageReceived(QByteArray &data) {
     }
 
     W::String id;
-    s >> id;
+    W::parse(s, id);
 
     //qCritical() << "=== ID" << id.d;
 
@@ -146,7 +146,7 @@ void Lith::onMessageReceived(QByteArray &data) {
 
     if (QString(type) == "hda") {
         W::HData hda;
-        s >> hda;
+        W::parse(s, hda);
     }
     else {
         qCritical() << "onMessageReceived is not handling type: " << type;

@@ -7,24 +7,24 @@
 #include <QApplication>
 #include <QAbstractEventDispatcher>
 
-QDataStream &W::operator>>(QDataStream &s, W::Char &r) {
+bool W::parse(QDataStream &s, W::Char &r) {
     s.readRawData(&r.d, 1);
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::Integer &r) {
+bool W::parse(QDataStream &s, W::Integer &r) {
     s.setByteOrder(QDataStream::BigEndian);
     s >> r.d;
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::LongInteger &r) {
+bool W::parse(QDataStream &s, W::LongInteger &r) {
     quint8 length;
     s >> length;
     QByteArray buf((int) length + 1, 0);
     s.readRawData(buf.data(), length);
     r.d = buf.toLongLong();
-    return s;
+    return true;
 }
 
 static const QMap<int, QString> weechatColors {
@@ -47,7 +47,7 @@ static const QMap<int, QString> weechatColors {
     { 16, "white" }
 };
 
-QDataStream &W::operator>>(QDataStream &s, W::String &r) {
+bool W::parse(QDataStream &s, W::String &r) {
     uint32_t len;
     r.d.clear();
     s >> len;
@@ -362,10 +362,10 @@ QDataStream &W::operator>>(QDataStream &s, W::String &r) {
         endColors();
         endAttrs();
     }
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::Buffer &r) {
+bool W::parse(QDataStream &s, W::Buffer &r) {
     uint32_t len;
     r.d.clear();
     s >> len;
@@ -375,37 +375,39 @@ QDataStream &W::operator>>(QDataStream &s, W::Buffer &r) {
         r.d = QByteArray(len, 0);
         s.readRawData(r.d.data(), len);
     }
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::Pointer &r) {
+bool W::parse(QDataStream &s, W::Pointer &r) {
     quint8 length;;
     s >> length;
     QByteArray buf((int) length + 1, 0);
     s.readRawData(buf.data(), length);
     r.d = buf.toULongLong(nullptr, 16);
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::Time &r) {
+bool W::parse(QDataStream &s, W::Time &r) {
     quint8 length;
     s >> length;
     QByteArray buf((int) length + 1, 0);
     s.readRawData(buf.data(), length);
     r.d = buf;
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::HashTable &r) {
-    return s;
+bool W::parse(QDataStream &s, W::HashTable &r) {
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
+bool W::parse(QDataStream &s, W::HData &r) {
     //qCritical() << type;
     W::String hpath;
     W::String keys;
     W::Integer count;
-    s >> hpath >> keys >> count;
+    parse(s, hpath);
+    parse(s, keys);
+    parse(s, count);
     //qCritical() << hpath.d << keys.d << count.d;
     for (int i = 0; i < count.d; i++) {
         qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
@@ -420,7 +422,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
         pointer_t hotListPtr = 0;
         for (int i = 0; i < pathElems.count(); i++) { // TODO
             W::Pointer ptr;
-            s >> ptr;
+            parse(s, ptr);
             if (pathElems[i] == "buffer") {
                 bufferPtr = ptr.d;
             }
@@ -461,7 +463,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             }
             if (type == "int") {
                 W::Integer i;
-                s >> i;
+                parse(s, i);
                 //qCritical() << name << ":" << i.d;
                 QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
@@ -469,7 +471,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             }
             else if (type == "lon") {
                 W::LongInteger l;
-                s >> l;
+                parse(s, l);
                 //qCritical() << name << ":" << l.d;
                 QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
@@ -477,7 +479,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             }
             else if (type == "str" || type == "buf") {
                 W::String str;
-                s >> str;
+                parse(s, str);
                 //qCritical () << name << ":" << str.d;
                 QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
@@ -490,14 +492,14 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 //qCritical() << name << ":" << QString(type);
                 if (strcmp(type, "int") == 0) {
                     W::ArrayInt a;
-                    s >> a;
+                    parse(s, a);
                     //qCritical() << name << ":" << a.d;
                     if (stuff && stuff->property(qPrintable(name)).isValid())
                         stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
                 }
                 if (strcmp(type, "str") == 0) {
                     W::ArrayStr a;
-                    s >> a;
+                    parse(s, a);
                     //qCritical() << name << ":" << a.d;
                     if (stuff && stuff->property(qPrintable(name)).isValid())
                         stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
@@ -505,7 +507,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             }
             else if (type == "tim") {
                 W::Time t;
-                s >> t;
+                parse(s, t);
                 //qCritical() << name << ":" << t.d;
                 QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
@@ -513,7 +515,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             }
             else if (type == "ptr") {
                 W::Pointer p;
-                s >> p;
+                parse(s, p);
                 //qCritical() << name << ":" << p.d;
                 QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 QObject *otherStuff = Lith::instance()->getObject(p.d, "");
@@ -522,7 +524,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             }
             else if (type == "chr") {
                 W::Char c;
-                s >> c;
+                parse(s, c);
                 //qCritical() << name << ":" << c.d;
                 QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
@@ -533,29 +535,29 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
             }
         }
     }
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::ArrayInt &r) {
+bool W::parse(QDataStream &s, W::ArrayInt &r) {
     uint32_t len;
     s >> len;
     for (uint32_t i = 0; i < len; i++) {
         W::Integer num;
-        s >> num;
+        parse(s, num);
         r.d.append(num.d);
     }
-    return s;
+    return true;
 }
 
-QDataStream &W::operator>>(QDataStream &s, W::ArrayStr &r) {
+bool W::parse(QDataStream &s, W::ArrayStr &r) {
     uint32_t len;
     s >> len;
     for (uint32_t i = 0; i < len; i++) {
         W::String str;
-        s >> str;
+        parse(s, str);
         r.d.append(str.d);
     }
-    return s;
+    return true;
 }
 
 Buffer::Buffer(QObject *parent, pointer_t pointer)
