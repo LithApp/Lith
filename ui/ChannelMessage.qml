@@ -66,7 +66,7 @@ ColumnLayout {
                     Button {
                         focusPolicy: Qt.NoFocus
                         text: "🖼️"
-                        visible: modelData.type === LineSegment.IMAGE // || modelData.type === LineSegment.VIDEO || modelData.type === LineSegment.EMBED
+                        visible: modelData.type === LineSegment.IMAGE || modelData.type === LineSegment.VIDEO // || modelData.type === LineSegment.EMBED
                         font.family: "Menlo"
                         font.pointSize: settings.baseFontSize * 1.125
                         Layout.preferredWidth: height
@@ -74,14 +74,13 @@ ColumnLayout {
                             if (modelData.type === LineSegment.IMAGE) {
                                 previewPopup.showImage(modelData.plainText)
                             }
+                            else if (modelData.type === LineSegment.VIDEO) {
+                                previewPopup.showVideo(modelData.plainText)
+                            }
                             /*
                             else if (modelData.type === LineSegment.EMBED) {
                                 delegateWeb.url = modelData.embedUrl
                                 webWrapper.visible = !webWrapper.visible
-                            }
-                            else if (modelData.type === LineSegment.VIDEO) {
-                                delegateVideo.source = modelData.plainText
-                                videoWrapper.visible = !videoWrapper.visible
                             }
                             */
                         }

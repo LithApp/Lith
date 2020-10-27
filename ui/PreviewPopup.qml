@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
-import QtMultimedia 5.9 as Multimedia
+import QtMultimedia 5.15 as Multimedia
 import QtWebView 1.1
 
 Dialog {
@@ -21,8 +21,57 @@ Dialog {
 
     function showImage(url) {
         delegateImage.source = url
-        imageWrapper.visible = !imageWrapper.visible
+        imageWrapper.visible = true
+        videoWrapper.visible = false
         root.open()
+    }
+    function showVideo(url) {
+        delegateVideo.source = url
+        videoWrapper.visible = true
+        imageWrapper.visible = false
+        root.open()
+    }
+
+    Item {
+        id: videoWrapper
+        anchors.fill: parent
+        height: delegateVideo.height + 2
+        visible: false
+        Multimedia.Video {
+            id: delegateVideo
+            x: 1
+            y: 1
+            autoPlay: true
+            fillMode: Image.PreserveAspectFit
+            width: parent.width - 2
+            height: parent.height - 2
+            anchors.centerIn: parent
+        }
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 80
+            font.pixelSize: 64
+            color: "white"
+            text: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "⏸️" : "▶️"
+            Rectangle {
+                z: -1
+                anchors.centerIn: parent
+                width: 56
+                height: 56
+                color: "#33000000"
+                radius: 2
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState)
+                            delegateVideo.pause()
+                        else
+                            delegateVideo.play()
+                    }
+                }
+            }
+        }
     }
 
     Rectangle {
@@ -103,7 +152,6 @@ Dialog {
                     delegateImage.scale = 1.0
             }
         }
-
     }
     /*
     MouseArea {
@@ -116,23 +164,6 @@ Dialog {
     */
 
     /*
-    Rectangle {
-        id: videoWrapper
-        color: palette.text
-        Layout.fillWidth: true
-        height: delegateVideo.height + 2
-        Layout.preferredHeight: delegateVideo.height
-        visible: false
-        Multimedia.Video {
-            id: delegateVideo
-            x: 1
-            y: 1
-            autoPlay: true
-            fillMode: Image.PreserveAspectFit
-            width: parent.width - 2
-            height: width
-        }
-    }
     Rectangle {
         id: webWrapper
         color: palette.text
