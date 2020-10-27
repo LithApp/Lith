@@ -10,8 +10,7 @@ SOURCES += main.cpp \
     uploader.cpp \
     weechat.cpp
 
-#RESOURCES += qml.qrc
-RESOURCES += mobile/mobile.qrc assets/assets.qrc
+RESOURCES += ui/ui.qrc assets/assets.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
