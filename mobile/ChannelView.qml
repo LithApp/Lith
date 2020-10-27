@@ -24,8 +24,8 @@ ColumnLayout {
         Layout.fillWidth: true
         visible: !stuff.selected
         text: "Welcome to Lith\n" +
-              "Weechat status: " + weechat.status + "\n" +
-              "Current error status: " + (weechat.errorString.length > 0 ? weechat.errorString : "None")
+              "Weechat status: " + lith.status + "\n" +
+              "Current error status: " + (lith.errorString.length > 0 ? lith.errorString : "None")
         color: palette.text
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

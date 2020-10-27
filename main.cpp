@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
-    qmlRegisterUncreatableType<Weechat>("lith", 1, 0, "Weechat", "");
+    qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");
     qmlRegisterUncreatableType<Nick>("lith", 1, 0, "Nick", "");
     qmlRegisterUncreatableType<Buffer>("lith", 1, 0, "Buffer", "");
     //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     engine.rootContext()->setContextProperty("stuff", StuffManager::instance());
-    engine.rootContext()->setContextProperty("weechat", Weechat::instance());
+    engine.rootContext()->setContextProperty("lith", Lith::instance());
     engine.rootContext()->setContextProperty("clipboard", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
     engine.rootContext()->setContextProperty("settings", Settings::instance());

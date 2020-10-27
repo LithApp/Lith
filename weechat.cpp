@@ -4,24 +4,24 @@
 #include <QApplication>
 #include <QImage>
 
-Weechat *Weechat::_self = nullptr;
-Weechat *Weechat::instance() {
+Lith *Lith::_self = nullptr;
+Lith *Lith::instance() {
     if (!_self)
-        _self = new Weechat();
+        _self = new Lith();
     return _self;
 }
 
-ProxyBufferList *Weechat::buffers() {
+ProxyBufferList *Lith::buffers() {
     return m_proxyBufferList;
 }
 
-Weechat::Weechat(QObject *parent)
+Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_proxyBufferList(new ProxyBufferList(this))
     , m_settings("Lith")
 {
     statusSet(UNCONFIGURED);
-    connect(this, &Weechat::settingsChanged, this, &Weechat::onSettingsChanged);
+    connect(this, &Lith::settingsChanged, this, &Lith::onSettingsChanged);
 
     m_host = m_settings.value("host", QString()).toString();
     m_port = m_settings.value("port", 9001).toInt();
@@ -29,39 +29,39 @@ Weechat::Weechat(QObject *parent)
     m_passphrase = m_settings.value("passphrase", QString()).toString();
 
     if (!m_host.isEmpty() && !m_passphrase.isEmpty()) {
-        QTimer::singleShot(0, this, &Weechat::start);
+        QTimer::singleShot(0, this, &Lith::start);
     }
 
     m_reconnectTimer.setInterval(1000);
     m_reconnectTimer.setSingleShot(true);
-    connect(&m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart);
+    connect(&m_reconnectTimer, &QTimer::timeout, this, &Lith::restart);
 
     m_timeoutTimer.setInterval(5000);
     m_timeoutTimer.setSingleShot(true);
-    connect(&m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout);
+    connect(&m_timeoutTimer, &QTimer::timeout, this, &Lith::onTimeout);
 
     connect(&m_hotlistTimer, SIGNAL(timeout()), this, SLOT(requestHotlist()));
     m_hotlistTimer.setInterval(1000);
     m_hotlistTimer.setSingleShot(false);
 }
 
-QString Weechat::host() const {
+QString Lith::host() const {
     return m_host;
 }
 
-int Weechat::port() const {
+int Lith::port() const {
     return m_port;
 }
 
-bool Weechat::encrypted() const {
+bool Lith::encrypted() const {
     return m_useEncryption;
 }
 
-bool Weechat::hasPassphrase() const {
+bool Lith::hasPassphrase() const {
     return !m_passphrase.isEmpty();
 }
 
-void Weechat::start() {
+void Lith::start() {
     if (m_connection) {
         m_connection->deleteLater();
         m_connection = nullptr;
@@ -73,11 +73,11 @@ void Weechat::start() {
     m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
     m_connection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
-    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &Weechat::onError);
-    connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Weechat::onSslErrors);
-    connect(m_connection, &QSslSocket::readyRead, this, &Weechat::onReadyRead);
-    connect(m_connection, &QSslSocket::connected, this, &Weechat::onConnected);
-    connect(m_connection, &QSslSocket::disconnected, this, &Weechat::onDisconnected);
+    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &Lith::onError);
+    connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Lith::onSslErrors);
+    connect(m_connection, &QSslSocket::readyRead, this, &Lith::onReadyRead);
+    connect(m_connection, &QSslSocket::connected, this, &Lith::onConnected);
+    connect(m_connection, &QSslSocket::disconnected, this, &Lith::onDisconnected);
 
     if (m_useEncryption)
         m_connection->connectToHostEncrypted(m_host, m_port);
@@ -85,7 +85,7 @@ void Weechat::start() {
         m_connection->connectToHost(m_host, m_port);
 }
 
-void Weechat::restart() {
+void Lith::restart() {
     qCritical() << "Reconnecting";
     if (m_useEncryption)
         m_connection->connectToHostEncrypted(m_host, m_port);
@@ -94,7 +94,7 @@ void Weechat::restart() {
     m_reconnectTimer.stop();
 }
 
-void Weechat::setHost(const QString &value) {
+void Lith::setHost(const QString &value) {
     if (m_host != value) {
         m_host = value;
         m_settings.setValue("host", m_host);
@@ -102,7 +102,7 @@ void Weechat::setHost(const QString &value) {
     }
 }
 
-void Weechat::setPort(int value) {
+void Lith::setPort(int value) {
     if (m_port != value) {
         m_port = value;
         m_settings.setValue("port", m_port);
@@ -110,7 +110,7 @@ void Weechat::setPort(int value) {
     }
 }
 
-void Weechat::setEncrypted(bool value) {
+void Lith::setEncrypted(bool value) {
     if (m_useEncryption != value) {
         m_useEncryption = value;
         m_settings.setValue("encrypted", m_useEncryption);
@@ -118,7 +118,7 @@ void Weechat::setEncrypted(bool value) {
     }
 }
 
-void Weechat::setPassphrase(const QString &value) {
+void Lith::setPassphrase(const QString &value) {
     if (m_passphrase != value && !value.isEmpty()) {
         m_passphrase = value;
         m_settings.setValue("passphrase", m_passphrase);
@@ -127,24 +127,24 @@ void Weechat::setPassphrase(const QString &value) {
     }
 }
 
-void Weechat::onSettingsChanged() {
+void Lith::onSettingsChanged() {
     if (!m_host.isEmpty() && !m_passphrase.isEmpty()) {
         if (m_connection) {
             m_connection->deleteLater();
             m_connection = nullptr;
             StuffManager::instance()->reset();
         }
-        QTimer::singleShot(0, this, &Weechat::start);
+        QTimer::singleShot(0, this, &Lith::start);
     }
 }
 
-void Weechat::requestHotlist() {
+void Lith::requestHotlist() {
     if (m_connection) {
         m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     }
 }
 
-void Weechat::onReadyRead() {
+void Lith::onReadyRead() {
     m_timeoutTimer.stop();
 
     if (!m_connection) {
@@ -195,7 +195,7 @@ void Weechat::onReadyRead() {
     }
 }
 
-void Weechat::onConnected() {
+void Lith::onConnected() {
     qCritical() << "Connected!";
     statusSet(CONNECTED);
     m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
@@ -208,7 +208,7 @@ void Weechat::onConnected() {
     m_hotlistTimer.start();
 }
 
-void Weechat::onDisconnected() {
+void Lith::onDisconnected() {
     statusSet(DISCONNECTED);
 
     StuffManager::instance()->reset();
@@ -218,7 +218,7 @@ void Weechat::onDisconnected() {
     m_reconnectTimer.start();
 }
 
-void Weechat::onError(QAbstractSocket::SocketError e) {
+void Lith::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
     statusSet(ERROR);
     errorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
@@ -228,14 +228,14 @@ void Weechat::onError(QAbstractSocket::SocketError e) {
     m_reconnectTimer.start();
 }
 
-void Weechat::onSslErrors(const QList<QSslError> &errors) {
+void Lith::onSslErrors(const QList<QSslError> &errors) {
     m_connection->ignoreSslErrors(errors);
     for (auto i : errors) {
         qWarning() << "SSL Error!" << i.errorString();
     }
 }
 
-void Weechat::onMessageReceived(QByteArray &data) {
+void Lith::onMessageReceived(QByteArray &data) {
     //qCritical() << "Message!" << data;
     QDataStream s(&data, QIODevice::ReadOnly);
 
@@ -265,13 +265,13 @@ void Weechat::onMessageReceived(QByteArray &data) {
     }
 }
 
-void Weechat::input(pointer_t ptr, const QString &data) {
+void Lith::input(pointer_t ptr, const QString &data) {
     QString line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
     //qCritical() << "WRITING:" << line;
     m_connection->write(line.toUtf8());
 }
 
-void Weechat::fetchLines(pointer_t ptr, int count) {
+void Lith::fetchLines(pointer_t ptr, int count) {
     QString line = QString("hdata buffer:0x%1/lines/last_line(-%2)/data\n").arg(ptr, 0, 16).arg(count);
     //qCritical() << "WRITING:" << line;
     auto bytes = m_connection->write(line.toUtf8());
@@ -281,7 +281,7 @@ void Weechat::fetchLines(pointer_t ptr, int count) {
     }
 }
 
-void Weechat::onTimeout() {
+void Lith::onTimeout() {
     m_connection->disconnect();
     statusSet(DISCONNECTED);
     start();

@@ -53,8 +53,8 @@ Drawer {
                 Layout.fillWidth: true
                 placeholderTextColor: palette.alternateBase
                 placeholderText: "Filter buffers"
-                text: weechat.buffers.filterWord
-                onTextChanged: weechat.buffers.filterWord = text
+                text: lith.buffers.filterWord
+                onTextChanged: lith.buffers.filterWord = text
                 font.family: "Menlo"
                 font.pointSize: settings.baseFontSize
                 color: palette.windowText
@@ -96,7 +96,7 @@ Drawer {
                 clip: true
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                model: weechat.buffers
+                model: lith.buffers
                 currentIndex: 0
                 reuseItems: true
 

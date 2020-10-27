@@ -57,13 +57,13 @@ Frame {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
             font.pointSize: settings.baseFontSize * 1.25
-            visible: weechat.status !== Weechat.UNCONFIGURED
-            enabled: weechat.status === Weechat.CONNECTED
-            text: weechat.status === Weechat.CONNECTING ? "🤔" :
-                  weechat.status === Weechat.CONNECTED ? "🙂" :
-                  weechat.status === Weechat.DISCONNECTED ? "😴" :
-                  weechat.status === Weechat.ERROR ? "☠" :
-                                                     "😱"
+            visible: lith.status !== Lith.UNCONFIGURED
+            enabled: lith.status === Lith.CONNECTED
+            text: lith.status === Lith.CONNECTING   ? "🤔" :
+                  lith.status === Lith.CONNECTED    ? "🙂" :
+                  lith.status === Lith.DISCONNECTED ? "😴" :
+                  lith.status === Lith.ERROR        ? "☠" :
+                                                      "😱"
             onClicked: nickDrawer.visible = !nickDrawer.visible
         }
     }

@@ -25,13 +25,13 @@ Rectangle {
             Layout.fillWidth: true
             verticalAlignment: Text.AlignVCenter
             id: errorText
-            text: weechat.errorString
+            text: lith.errorString
         }
         Button {
             text: "x"
             Layout.preferredWidth: 28
             Layout.preferredHeight: 36
-            onClicked: weechat.errorString = ""
+            onClicked: lith.errorString = ""
         }
     }
 }

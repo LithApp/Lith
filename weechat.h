@@ -19,7 +19,7 @@
 
 class ProxyBufferList;
 
-class Weechat : public QObject
+class Lith : public QObject
 {
     Q_OBJECT
 public:
@@ -39,13 +39,13 @@ public:
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
 
 public:
-    static Weechat *_self;
-    static Weechat *instance();
+    static Lith *_self;
+    static Lith *instance();
 
     ProxyBufferList *buffers();
 
 private:
-    explicit Weechat(QObject *parent = 0);
+    explicit Lith(QObject *parent = 0);
 
     QString host() const;
     int port() const;

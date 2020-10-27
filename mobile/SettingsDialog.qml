@@ -35,11 +35,11 @@ Dialog {
         var newPort = portField.text
         var newEncrypted = encryptedCheckbox.checked
         var newPassphrase = passphraseField.text
-        weechat.host = newHost
-        weechat.port = newPort
-        weechat.encrypted = newEncrypted
+        lith.host = newHost
+        lith.port = newPort
+        lith.encrypted = newEncrypted
         if (newPassphrase.length > 0)
-            weechat.setPassphrase(newPassphrase)
+            lith.setPassphrase(newPassphrase)
         newPassphrase = ""
 
         var newShowFullLink = showFullLinkCheckbox.checked
@@ -48,9 +48,9 @@ Dialog {
         settings.showSendButton = showSendButtonCheckbox.checked
     }
     onRejected: {
-        hostField.text = weechat.host
-        portField.text = weechat.port
-        encryptedCheckbox.checked = weechat.encrypted
+        hostField.text = lith.host
+        portField.text = lith.port
+        encryptedCheckbox.checked = lith.encrypted
         passphraseField.text = ""
 
         showFullLinkCheckbox.checked = settings.showFullLink
@@ -69,7 +69,7 @@ Dialog {
                 }
                 TextField {
                     id: hostField
-                    text: weechat.host
+                    text: lith.host
                     inputMethodHints: Qt.ImhNoPredictiveText
                 }
                 Text {
@@ -77,7 +77,7 @@ Dialog {
                 }
                 TextField {
                     id: portField
-                    text: weechat.port
+                    text: lith.port
                     inputMethodHints: Qt.ImhPreferNumbers
                     validator: IntValidator {
                         bottom: 0
@@ -89,7 +89,7 @@ Dialog {
                 }
                 CheckBox {
                     id: encryptedCheckbox
-                    checked: weechat.encrypted
+                    checked: lith.encrypted
                     Layout.alignment: Qt.AlignLeft
                 }
                 Text {
@@ -97,7 +97,8 @@ Dialog {
                 }
                 TextField {
                     id: passphraseField
-                    placeholderText: weechat.hasPassphrase ? "**********" : ""
+                    color: palette.text
+                    placeholderText: lith.hasPassphrase ? "**********" : ""
                     echoMode: TextInput.Password
                     passwordCharacter: "*"
                 }

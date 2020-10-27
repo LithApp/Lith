@@ -620,13 +620,13 @@ QStringList Buffer::getVisibleNicks() {
 }
 
 void Buffer::input(const QString &data) {
-    Weechat::instance()->input(m_ptr, data);
+    Lith::instance()->input(m_ptr, data);
 }
 
 void Buffer::fetchMoreLines() {
     m_afterInitialFetch = true;
     if (m_lines->count() >= m_lastRequestedCount) {
-        Weechat::instance()->fetchLines(m_ptr, m_lines->count() + 25);
+        Lith::instance()->fetchLines(m_ptr, m_lines->count() + 25);
         m_lastRequestedCount = m_lines->count() + 25;
     }
 }
