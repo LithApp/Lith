@@ -2,13 +2,23 @@ QT += qml quick widgets webview multimedia quickcontrols2
 
 CONFIG += c++11
 
-SOURCES += main.cpp \
-    clipboardproxy.cpp \
-    datamodel.cpp \
-    qmlobjectlist.cpp \
-    settings.cpp \
-    uploader.cpp \
-    weechat.cpp
+HEADERS += \
+    src/clipboardproxy.h \
+    src/datamodel.h \
+    src/qmlobjectlist.h \
+    src/settings.h \
+    src/uploader.h \
+    src/weechat.h \
+    src/common.h
+
+SOURCES += \
+    src/main.cpp \
+    src/clipboardproxy.cpp \
+    src/datamodel.cpp \
+    src/qmlobjectlist.cpp \
+    src/settings.cpp \
+    src/uploader.cpp \
+    src/weechat.cpp
 
 RESOURCES += ui/ui.qrc assets/assets.qrc
 
@@ -34,11 +44,3 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    clipboardproxy.h \
-    datamodel.h \
-    qmlobjectlist.h \
-    settings.h \
-    uploader.h \
-    weechat.h \
-    common.h
