@@ -37,6 +37,7 @@ class Buffer : public QObject {
     Q_OBJECT
     PROPERTY(int, number)
     PROPERTY(QString, name)
+    PROPERTY(QString, short_name)
     ALIAS(QString, name, full_name)
     PROPERTY(QString, title)
     PROPERTY(QStringList, local_variables)
