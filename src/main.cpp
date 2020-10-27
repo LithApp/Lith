@@ -10,6 +10,7 @@
 #include "clipboardproxy.h"
 #include "datamodel.h"
 #include "settings.h"
+#include "lith.h"
 
 int main(int argc, char *argv[])
 {

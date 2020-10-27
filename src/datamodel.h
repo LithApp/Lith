@@ -16,8 +16,6 @@ class LineModel;
 
 #include <cstdint>
 
-typedef uint64_t pointer_t;
-
 namespace W {
     struct Char { char d { 0 }; };
     struct Integer { int32_t d { 0 }; };

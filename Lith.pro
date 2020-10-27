@@ -5,6 +5,7 @@ CONFIG += c++11
 HEADERS += \
     src/clipboardproxy.h \
     src/datamodel.h \
+    src/lith.h \
     src/qmlobjectlist.h \
     src/settings.h \
     src/uploader.h \
@@ -12,6 +13,7 @@ HEADERS += \
     src/common.h
 
 SOURCES += \
+    src/lith.cpp \
     src/main.cpp \
     src/clipboardproxy.cpp \
     src/datamodel.cpp \

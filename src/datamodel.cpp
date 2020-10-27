@@ -1,11 +1,11 @@
 #include "datamodel.h"
 
 #include "weechat.h"
+#include "lith.h"
 
-#include <QDataStream>
 #include <QUrl>
-
-#include <QDebug>
+#include <QApplication>
+#include <QAbstractEventDispatcher>
 
 QDataStream &W::operator>>(QDataStream &s, W::Char &r) {
     s.readRawData(&r.d, 1);

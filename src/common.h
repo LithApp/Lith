@@ -2,6 +2,11 @@
 #define COMMON_H
 
 #include <QObject>
+#include <QDebug>
+
+#include "qmlobjectlist.h"
+
+typedef uint64_t pointer_t;
 
 #define STRINGIFY(x) #x
 
