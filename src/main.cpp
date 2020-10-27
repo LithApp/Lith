@@ -31,10 +31,8 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<Nick>("lith", 1, 0, "Nick", "");
     qmlRegisterUncreatableType<Buffer>("lith", 1, 0, "Buffer", "");
     //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
-    qmlRegisterUncreatableType<StuffManager>("lith", 1, 0, "StuffManager", "");
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
-    engine.rootContext()->setContextProperty("stuff", StuffManager::instance());
     engine.rootContext()->setContextProperty("lith", Lith::instance());
     engine.rootContext()->setContextProperty("clipboard", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());

@@ -69,7 +69,7 @@ Drawer {
                         event.accepted = true
                     }
                     if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                        stuff.selected = bufferList.currentItem.sourceBuffer
+                        lith.selectedBuffer = bufferList.currentItem.buffer
                         filterField.text = ""
                         root.close()
                     }
@@ -78,7 +78,7 @@ Drawer {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        stuff.selectedIndex = -1
+                        lith.selectedBufferIndex = -1
                         bufferDrawer.close()
                     }
                 }
@@ -96,7 +96,7 @@ Drawer {
                 clip: true
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                model: lith.buffers
+                model: lith.unfilteredBuffers
                 currentIndex: 0
                 reuseItems: true
 
@@ -110,7 +110,7 @@ Drawer {
                 delegate: Rectangle {
                     width: ListView.view.width
                     height: childrenRect.height + 12
-                    property var sourceBuffer: buffer
+                    property var buffer: modelData
                     color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : palette.base
 
                     Behavior on color {
@@ -135,7 +135,7 @@ Drawer {
                                 id: bufferMouse
                                 anchors.fill: parent
                                 onClicked: {
-                                    stuff.selected = buffer
+                                    lith.selectedBuffer = buffer
                                     bufferDrawer.visible = false
                                 }
                             }

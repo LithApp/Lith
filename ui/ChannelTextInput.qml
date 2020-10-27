@@ -21,14 +21,14 @@ TextField {
 
     onAccepted: {
         if (text.length > 0) {
-            stuff.selected.input(text)
+            lith.selectedBuffer.input(text)
             text = ""
         }
     }
 
     Connections {
-        target: stuff
-        function onSelectedChanged() {
+        target: lith
+        function onSelectedBufferChanged() {
             inputField.focus = true
         }
     }
@@ -93,7 +93,7 @@ TextField {
             lastWord = inputField.text.trim().toLocaleLowerCase()
         }
 
-        var nicks = stuff.selected.getVisibleNicks()
+        var nicks = lith.selectedBuffer.getVisibleNicks()
 
         for (var y = 0; y < nicks.length; y++) {
             // console.warn("\"" + lastWord + "\" " + nicks[y])
@@ -117,11 +117,11 @@ TextField {
     Keys.onPressed: {
         if (event.modifiers & Qt.AltModifier) {
             if (event.key === Qt.Key_Right || event.key === Qt.Key_Down) {
-                stuff.selectedIndex += 1
+                lith.selectedBufferIndex += 1
                 event.accepted = true
             }
             else if (event.key === Qt.Key_Left || event.key === Qt.Key_Up) {
-                stuff.selectedIndex -= 1
+                lith.selectedBufferIndex -= 1
                 event.accepted = true
             }
             else if (event.key === Qt.Key_G) {

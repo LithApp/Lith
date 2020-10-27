@@ -59,7 +59,7 @@ public:
 
     template <typename T>
     inline T *get(const int &i) {
-        return qvariant_cast<T*>(at(i));
+        return qobject_cast<T*>(mData.at(i).data());
     }
 
 protected:

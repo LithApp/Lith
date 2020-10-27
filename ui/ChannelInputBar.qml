@@ -69,7 +69,7 @@ RowLayout {
         font.pointSize: settings.baseFontSize
         onClicked: {
             if (channelTextInput.inputFieldAlias.text.length > 0) {
-                stuff.selected.input(channelTextInput.inputFieldAlias.text)
+                lith.selectedBuffer.input(channelTextInput.inputFieldAlias.text)
                 channelTextInput.inputFieldAlias.text = ""
             }
         }

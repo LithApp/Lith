@@ -29,20 +29,20 @@ Frame {
                 height: 1
                 font.bold: true
                 font.family: "Menlo"
-                font.pointSize: stuff.selected && stuff.selected.title.length > 0 ? settings.baseFontSize * 0.875 :
+                font.pointSize: lith.selectedBuffer && lith.selectedBuffer.title.length > 0 ? settings.baseFontSize * 0.875 :
                                                                                     settings.baseFontSize * 1.125
                 color: palette.windowText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: stuff.selected ? stuff.selected.name : ""
+                text: lith.selectedBuffer ? lith.selectedBuffer.name : ""
             }
             Text {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: stuff.selected && stuff.selected.title.length > 0
+                visible: lith.selectedBuffer && lith.selectedBuffer.title.length > 0
                 clip: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                text: stuff.selected ? stuff.selected.title : ""
+                text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
                 elide: Text.ElideRight
                 maximumLineCount: 2
                 font.family: "Menlo"

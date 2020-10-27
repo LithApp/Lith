@@ -24,7 +24,7 @@ ListView {
     }
 
     rotation: 180
-    model: stuff.selected ? stuff.selected.lines : null
+    model: lith.selectedBuffer ? lith.selectedBuffer.lines : null
     delegate: ChannelMessage {
         messageModel: modelData
     }
@@ -44,7 +44,7 @@ ListView {
     /*
     onContentYChanged: {
         if (contentY + height - contentHeight < 50)
-            stuff.selected.fetchMoreLines()
+            lith.selectedBuffer.fetchMoreLines()
         else
             console.warn(contentY + height - contentHeight)
         console.warn(contentY + " " + contentHeight + " " +height)
@@ -52,7 +52,7 @@ ListView {
     */
     function fillTopOfList() {
         if (yPosition + visibleArea.heightRatio > 0.65)
-            stuff.selected.fetchMoreLines()
+            lith.selectedBuffer.fetchMoreLines()
     }
 
     property real yPosition: visibleArea.yPosition
@@ -65,7 +65,7 @@ ListView {
     /*
     onVerticalOvershootChanged: {
         if (verticalOvershoot > 30)
-            stuff.selected.fetchMoreLines()
+            lith.selectedBuffer.fetchMoreLines()
         console.warn(verticalOvershoot)
     }
     */

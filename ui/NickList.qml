@@ -17,7 +17,7 @@ Drawer {
         clip: true
         Layout.fillHeight: true
         Layout.fillWidth: true
-        model: stuff.selected ? stuff.selected.nicks : null
+        model: lith.selectedBuffer ? lith.selectedBuffer.nicks : null
 
         delegate: Rectangle {
             width: ListView.view.width

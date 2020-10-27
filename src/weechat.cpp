@@ -15,14 +15,106 @@ ProxyBufferList *Lith::buffers() {
     return m_proxyBufferList;
 }
 
+QmlObjectList *Lith::unfilteredBuffers() {
+    return m_buffers;
+}
+
+Buffer *Lith::selectedBuffer() {
+    if (m_selectedBufferIndex >=0 && m_selectedBufferIndex < m_buffers->count())
+        return m_buffers->get<Buffer>(m_selectedBufferIndex);
+    return nullptr;
+}
+
+void Lith::selectedBufferSet(Buffer *b) {
+    for (int i = 0; i < m_buffers->count(); i++) {
+        auto it = m_buffers->get<Buffer>(i);
+        if (it && it == b) {
+            selectedBufferIndexSet(i);
+            return;
+        }
+    }
+    selectedBufferIndexSet(-1);
+}
+
+int Lith::selectedBufferIndex() {
+    return m_selectedBufferIndex;
+}
+
+void Lith::selectedBufferIndexSet(int index) {
+    if (m_selectedBufferIndex != index && index < m_buffers->count()) {
+        m_selectedBufferIndex = index;
+        emit selectedBufferChanged();
+        if (selectedBuffer())
+            selectedBuffer()->fetchMoreLines();
+        if (index >= 0)
+            settingsGet()->lastOpenBufferSet(index);
+    }
+}
+
+QObject *Lith::getObject(pointer_t ptr, const QString &type, pointer_t parent) {
+    if (type.isEmpty()) {
+        if (m_bufferMap.contains(ptr))
+            return m_bufferMap[ptr];
+        if (m_lineMap.contains(ptr))
+            return m_lineMap[ptr];
+        return nullptr;
+    }
+    else if (type == "buffer") {
+        if (!m_bufferMap.contains(ptr)) {
+            Buffer *tmp = new Buffer(this, ptr);
+            m_bufferMap[ptr] = tmp;
+            m_buffers->append(tmp);
+            auto lastOpenBuffer = settingsGet()->lastOpenBufferGet();
+            if (m_buffers->count() == 1 && lastOpenBuffer < 0)
+                emit selectedBufferChanged();
+            else if (lastOpenBuffer == m_buffers->count() - 1) {
+                selectedBufferIndexSet(lastOpenBuffer);
+            }
+        }
+        return m_bufferMap[ptr];
+    }
+    else if (type == "line_data") {/*
+        if (m_bufferMap.contains(parent)) {
+            //Buffer *buffer = m_bufferMap[parent];
+            //return buffer->getLine(ptr);
+        }
+        else if (parent == 0) { */
+            if (!m_lineMap.contains(ptr))
+                m_lineMap[ptr] = new BufferLine(nullptr);
+            return m_lineMap[ptr];
+            /*
+        }
+        else {
+            qCritical() << "Got line information before the buffer was allocated";
+        }
+        */
+    }
+    else if (type == "nicklist_item") {
+        if (m_bufferMap.contains(parent)) {
+            return m_bufferMap[parent]->getNick(ptr);
+        }
+    }
+    else if (type == "hotlist") {
+        //qCritical() << ptr;
+        if (!m_hotList.contains(ptr))
+            m_hotList.insert(ptr, new HotListItem(nullptr));
+        return m_hotList[ptr];
+    }
+    else {
+        //qCritical() << "Unknown type of new stuff requested:" << type;
+    }
+    return nullptr;
+}
+
 Weechat *Lith::weechat() {
     return m_weechat;
 }
 
 Lith::Lith(QObject *parent)
     : QObject(parent)
-    , m_proxyBufferList(new ProxyBufferList(this))
     , m_weechat(new Weechat(this))
+    , m_buffers(QmlObjectList::create<Buffer>())
+    , m_proxyBufferList(new ProxyBufferList(this))
 {
     connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::hasPassphraseChanged);
 }
@@ -62,141 +154,14 @@ void Lith::onMessageReceived(QByteArray &data) {
     }
 }
 
-StuffManager *StuffManager::_self = nullptr;
-StuffManager *StuffManager::instance() {
-    if (!_self)
-        _self = new StuffManager();
-    return _self;
-}
-
-QObject *StuffManager::getStuff(pointer_t ptr, const QString &type, pointer_t parent) {
-    if (type.isEmpty()) {
-        if (m_bufferMap.contains(ptr))
-            return m_bufferMap[ptr];
-        if (m_lineMap.contains(ptr))
-            return m_lineMap[ptr];
-        return nullptr;
+void Lith::resetData() {
+    selectedBufferIndexSet(-1);
+    for (int i = 0; i < m_buffers->count(); i++) {
+        if (m_buffers->get<Buffer>(i))
+            m_buffers->get<Buffer>(i)->deleteLater();
     }
-    else if (type == "buffer") {
-        if (!m_bufferMap.contains(ptr)) {
-            beginInsertRows(QModelIndex(), m_buffers.count(), m_buffers.count());
-            Buffer *tmp = new Buffer(this, ptr);
-            m_bufferMap[ptr] = tmp;
-            m_buffers.append(tmp);
-            endInsertRows();
-            emit buffersChanged();
-            auto lastOpenBuffer = Lith::instance()->settingsGet()->lastOpenBufferGet();
-            if (m_buffers.count() == 1 && lastOpenBuffer < 0)
-                emit selectedChanged();
-            else if (lastOpenBuffer == m_buffers.count() - 1) {
-                setSelectedIndex(lastOpenBuffer);
-            }
-        }
-        return m_bufferMap[ptr];
-    }
-    else if (type == "line_data") {/*
-        if (m_bufferMap.contains(parent)) {
-            //Buffer *buffer = m_bufferMap[parent];
-            //return buffer->getLine(ptr);
-        }
-        else if (parent == 0) { */
-            if (!m_lineMap.contains(ptr))
-                m_lineMap[ptr] = new BufferLine(nullptr);
-            return m_lineMap[ptr];
-            /*
-        }
-        else {
-            qCritical() << "Got line information before the buffer was allocated";
-        }
-        */
-    }
-    else if (type == "nicklist_item") {
-        if (m_bufferMap.contains(parent)) {
-            return m_bufferMap[parent]->getNick(ptr);
-        }
-    }
-    else if (type == "hotlist") {
-        //qCritical() << ptr;
-        if (!m_hotList.contains(ptr))
-            m_hotList.insert(ptr, new HotListItem(nullptr));
-        return m_hotList[ptr];
-    }
-    else {
-        //qCritical() << "Unknown type of new stuff requested:" << type;
-    }
-    return nullptr;
-}
-
-/*
-QQmlListProperty<QObject> StuffManager::buffers() {
-    static QList<QObject *> ret;
-    ret.clear();
-    for (auto i : m_buffers) {
-        ret.append(i);
-    }
-    return QQmlListProperty<QObject>(this, ret);
-}
-*/
-
-int StuffManager::bufferCount() {
-    return m_buffers.count();
-}
-
-Buffer *StuffManager::selectedBuffer() {
-    if (m_selectedIndex >=0 && m_selectedIndex < m_buffers.count())
-        return m_buffers[m_selectedIndex];
-    return nullptr;
-}
-
-void StuffManager::selectedBufferSet(Buffer *b) {
-    for (int i = 0; i < m_buffers.count(); i++) {
-        if (m_buffers[i] == b) {
-            setSelectedIndex(i);
-            return;
-        }
-    }
-    setSelectedIndex(-1);
-}
-
-int StuffManager::selectedIndex() {
-    return m_selectedIndex;
-}
-
-void StuffManager::setSelectedIndex(int o) {
-    if (m_selectedIndex != o && o < m_buffers.count()) {
-        m_selectedIndex = o;
-        emit selectedChanged();
-        if (selectedBuffer())
-            selectedBuffer()->fetchMoreLines();
-        if (o >= 0)
-            Lith::instance()->settingsGet()->lastOpenBufferSet(o);
-    }
-}
-
-QHash<int, QByteArray> StuffManager::roleNames() const {
-    return { { Qt::UserRole, "buffer" } };
-}
-
-int StuffManager::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
-    return m_buffers.count();
-}
-
-QVariant StuffManager::data(const QModelIndex &index, int role) const {
-    Q_UNUSED(role);
-    return QVariant::fromValue(qobject_cast<Buffer*>(m_buffers[index.row()]));
-}
-
-void StuffManager::reset() {
-    setSelectedIndex(-1);
-    beginResetModel();
-    for (auto i : m_buffers) {
-        i->deleteLater();
-    }
-    m_buffers.clear();
+    m_buffers->clear();
     m_bufferMap.clear();
-    emit buffersChanged();
-    endResetModel();
     qCritical() << "=== RESET";
     int lines = 0;
     for (auto i : m_lineMap) {
@@ -216,18 +181,14 @@ void StuffManager::reset() {
     qCritical() << "There is" << m_hotList.count() << "hotlist items";
 }
 
-StuffManager::StuffManager() : QAbstractListModel() {
-}
-
-ProxyBufferList::ProxyBufferList(QObject *parent)
+ProxyBufferList::ProxyBufferList(QObject *parent, QAbstractListModel *parentModel)
     : QSortFilterProxyModel(parent)
 {
-    setSourceModel(StuffManager::instance());
+    setSourceModel(parentModel);
     connect(this, &ProxyBufferList::filterWordChanged, this, [this](){
         setFilterFixedString(filterWordGet());
     });
 }
-
 bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
     auto index = sourceModel()->index(source_row, 0, source_parent);
     QVariant v = sourceModel()->data(index);
@@ -306,7 +267,6 @@ void Weechat::onConnectionSettingsChanged() {
         if (m_connection) {
             m_connection->deleteLater();
             m_connection = nullptr;
-            StuffManager::instance()->reset();
         }
         QTimer::singleShot(0, this, &Weechat::start);
     }
@@ -334,7 +294,6 @@ void Weechat::onReadyRead() {
         return;
 
     static bool compressed = false;
-
 
     // not waiting for the rest of any message, get a new header
     if (m_bytesRemaining == 0) {
@@ -371,6 +330,8 @@ void Weechat::onReadyRead() {
 
 void Weechat::onConnected() {
     qCritical() << "Connected!";
+    lith()->resetData();
+
     statusSet(CONNECTED);
     auto pass = lith()->settingsGet()->passphraseGet();
     m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
@@ -386,7 +347,6 @@ void Weechat::onConnected() {
 void Weechat::onDisconnected() {
     statusSet(DISCONNECTED);
 
-    StuffManager::instance()->reset();
     m_hotlistTimer.stop();
     if (m_reconnectTimer.interval() < 5000)
         m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);

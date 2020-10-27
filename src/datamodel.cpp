@@ -463,7 +463,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::Integer i;
                 s >> i;
                 //qCritical() << name << ":" << i.d;
-                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(i.d));
             }
@@ -471,7 +471,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::LongInteger l;
                 s >> l;
                 //qCritical() << name << ":" << l.d;
-                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(l.d));
             }
@@ -479,14 +479,14 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::String str;
                 s >> str;
                 //qCritical () << name << ":" << str.d;
-                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(str.d));
             }
             else if (type == "arr") {
                 char type[4] = { 0 };
                 s.readRawData(type, 3);
-                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 //qCritical() << name << ":" << QString(type);
                 if (strcmp(type, "int") == 0) {
                     W::ArrayInt a;
@@ -507,7 +507,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::Time t;
                 s >> t;
                 //qCritical() << name << ":" << t.d;
-                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.d.toLongLong() * 1000)));
             }
@@ -515,8 +515,8 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::Pointer p;
                 s >> p;
                 //qCritical() << name << ":" << p.d;
-                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
-                QObject *otherStuff = StuffManager::instance()->getStuff(p.d, "");
+                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
+                QObject *otherStuff = Lith::instance()->getObject(p.d, "");
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(otherStuff));
             }
@@ -524,7 +524,7 @@ QDataStream &W::operator>>(QDataStream &s, W::HData &r) {
                 W::Char c;
                 s >> c;
                 //qCritical() << name << ":" << c.d;
-                QObject *stuff = StuffManager::instance()->getStuff(stuffPtr, pathElems.last(), parentPtr);
+                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
                 if (stuff && stuff->property(qPrintable(name)).isValid())
                     stuff->setProperty(qPrintable(name), QVariant::fromValue(c.d));
             }
@@ -573,7 +573,7 @@ void Buffer::appendLine(BufferLine *line) {
     else {
         for (int i = 0; i < m_lines->count(); i++) {
             auto curr = m_lines->get<BufferLine>(i);
-            if (curr && curr->dateGet() > line->dateGet()) {
+            if (curr && curr->dateGet() < line->dateGet()) {
                 m_lines->insert(i, line);
                 return;
             }

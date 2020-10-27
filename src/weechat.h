@@ -17,38 +17,59 @@
 #include "datamodel.h"
 #include "settings.h"
 
+#include "qmlobjectlist.h"
+
 class ProxyBufferList;
 class Weechat;
 
-class Lith : public QObject
-{
+class Lith : public QObject {
     Q_OBJECT
-public:
     PROPERTY(QString, errorString)
     PROPERTY(Settings*, settings, new Settings(this))
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
-    Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
     Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
+
+    Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
+    Q_PROPERTY(QmlObjectList* unfilteredBuffers READ unfilteredBuffers CONSTANT)
+    Q_PROPERTY(Buffer* selectedBuffer READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedBufferChanged)
+    Q_PROPERTY(int selectedBufferIndex READ selectedBufferIndex WRITE selectedBufferIndexSet NOTIFY selectedBufferChanged)
 
 public:
     static Lith *_self;
     static Lith *instance();
 
     bool hasPassphrase() const;
-    ProxyBufferList *buffers();
     Weechat *weechat();
+
+    ProxyBufferList *buffers();
+    QmlObjectList *unfilteredBuffers();
+    Buffer *selectedBuffer();
+    void selectedBufferSet(Buffer *b);
+    int selectedBufferIndex();
+    void selectedBufferIndexSet(int index);
+
+    QObject *getObject(pointer_t ptr, const QString &type, pointer_t parent = 0);
 
 public slots:
     void onMessageReceived(QByteArray &data);
 
+    void resetData();
+
 signals:
     void hasPassphraseChanged();
+    void selectedBufferChanged();
 
 private:
     explicit Lith(QObject *parent = 0);
 
-    ProxyBufferList *m_proxyBufferList { nullptr };
     Weechat *m_weechat { nullptr };
+    QmlObjectList *m_buffers { nullptr };
+    ProxyBufferList *m_proxyBufferList { nullptr };
+    int m_selectedBufferIndex { -1 };
+
+    QMap<pointer_t, QPointer<Buffer>> m_bufferMap {};
+    QMap<pointer_t, QPointer<BufferLine>> m_lineMap;
+    QMap<pointer_t, QPointer<HotListItem>> m_hotList;
 };
 
 class Weechat : public QObject {
@@ -101,47 +122,9 @@ class ProxyBufferList : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, filterWord)
 public:
-    ProxyBufferList(QObject *parent = nullptr);
+    ProxyBufferList(QObject *parent = nullptr, QAbstractListModel *parentModel = nullptr);
 
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
-};
-
-class StuffManager : public QAbstractListModel {
-    Q_OBJECT
-    Q_PROPERTY(int bufferCount READ bufferCount NOTIFY buffersChanged)
-    Q_PROPERTY(Buffer* selected READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedChanged)
-    Q_PROPERTY(int selectedIndex READ selectedIndex WRITE setSelectedIndex NOTIFY selectedChanged)
-public:
-    static StuffManager *instance();
-    QObject *getStuff(pointer_t ptr, const QString &type = "", pointer_t parent = 0);
-
-    int bufferCount();
-    Buffer *selectedBuffer();
-    void selectedBufferSet(Buffer *b);
-    int selectedIndex();
-    void setSelectedIndex(int o);
-
-    QHash<int, QByteArray> roleNames() const override;
-    int rowCount(const QModelIndex &parent) const override;
-    QVariant data(const QModelIndex &index, int role) const override;
-
-public slots:
-    void reset();
-
-signals:
-    void buffersChanged();
-    void selectedChanged();
-private:
-    StuffManager();
-    static StuffManager *_self;
-
-    int m_selectedIndex { 0 };
-
-    QMap<pointer_t, QPointer<Buffer>> m_bufferMap;
-    QList<QPointer<Buffer>> m_buffers;
-
-    QMap<pointer_t, QPointer<BufferLine>> m_lineMap;
-    QMap<pointer_t, QPointer<HotListItem>> m_hotList;
 };
 
 #endif // WEECHAT_H

@@ -22,7 +22,7 @@ ColumnLayout {
     Text {
         Layout.fillHeight: true
         Layout.fillWidth: true
-        visible: !stuff.selected
+        visible: !lith.selectedBuffer
         text: "Welcome to Lith\n" +
               "Weechat status: " + lith.status + "\n" +
               "Current error status: " + (lith.errorString.length > 0 ? lith.errorString : "None")
@@ -39,7 +39,7 @@ ColumnLayout {
             id: channelMessageList
             width: parent.width
             height: parent.height
-            visible: stuff.selected
+            visible: lith.selectedBuffer
         }
     }
 
