@@ -39,7 +39,7 @@ Dialog {
         settings.port = newPort
         settings.encrypted = newEncrypted
         if (newPassphrase.length > 0)
-            settings.setPassphrase(newPassphrase)
+            settings.passphrase = newPassphrase
         newPassphrase = ""
 
         var newShowFullLink = showFullLinkCheckbox.checked

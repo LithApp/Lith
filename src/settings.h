@@ -13,8 +13,8 @@
                 m_ ## name = o; \
                 QSettings s; \
                 s.setValue(STRINGIFY(name), o); \
-                emit name ## Changed(); \
                 s.sync(); \
+                emit name ## Changed(); \
             } \
         }
 
