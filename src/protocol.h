@@ -28,6 +28,8 @@ public:
     static bool parse(QDataStream &s, HData &r);
     static bool parse(QDataStream &s, ArrayInt &r);
     static bool parse(QDataStream &s, ArrayStr &r);
+
+    static QString convertColorsToHtml(const QByteArray &data);
 };
 
 #endif // PROTOCOL_H
