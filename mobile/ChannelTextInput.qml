@@ -51,12 +51,39 @@ TextField {
              console.warn("HA")
         }
     }
+    property int lastCursorPos: 0
+    property int matchedNickIndex: 0
+    property variant matchedNicks: []
 
-    function autocomplete(lastPos = -1) {
+    function autocomplete() {
+        // console.log("BEFORE matchedNicks = ", matchedNicks, "LAST=", lastCursorPos, "NOW=", cursorPosition);
 
-        console.log("lastPos = ", lastPos, "currPos", cursorPosition);
-        // var index = matchedIndex;
+        if(matchedNickIndex > matchedNicks.length-1) {
+            matchedNickIndex = 0;
+        }
 
+        if(matchedNicks.length > 1) {
+            if(lastCursorPos == cursorPosition) {
+                inputField.text = inputField.text.substring(0,
+                                                            inputField.text.length -
+                                                            matchedNicks[matchedNickIndex == 0 ? matchedNicks.length-1 : matchedNickIndex - 1].length
+                                                            - 2)
+                inputField.text += matchedNicks[matchedNickIndex] + ": "
+
+                matchedNickIndex += 1
+
+                lastCursorPos = cursorPosition
+                return;
+            }
+            else {
+                // console.warn("ende.")
+                matchedNicks = []
+                matchedNickIndex = 0
+                lastCursorPos = 0
+            }
+        }
+
+        // TODO: refactor this, I want cursorPosition tabbing still :)
         var i = inputField.text.lastIndexOf(" ");
         var lastWord
         if (i >= 0)
@@ -65,25 +92,26 @@ TextField {
             i = 0
             lastWord = inputField.text.trim().toLocaleLowerCase()
         }
+
         var nicks = stuff.selected.getVisibleNicks()
-        // var matched_nicks = [];
 
         for (var y = 0; y < nicks.length; y++) {
-            console.warn("\"" + lastWord + "\" " + nicks[y])
+            // console.warn("\"" + lastWord + "\" " + nicks[y])
             if (nicks[y].toLocaleLowerCase().startsWith(lastWord) && lastWord !== "") {
                 inputField.text = inputField.text.substring(0, i)
                 if (i !== 0) {
                     inputField.text += " "
                 }
                 inputField.text += nicks[y] + ": "
-                return;
-                // matchedNicks.push(nicks[y]);
+                matchedNicks.push(nicks[y])
             }
         }
-        console.log("lastPos = ", lastPos, "currPos", cursorPosition);
 
-        //return cursorPosition;
-        //return [cursorPosition, matchedNicks, matchIndex]
+        if (matchedNicks.length == 1) {
+            matchedNicks = []; // Reset matchedNicks if there's just one match
+        }
+
+        lastCursorPos = cursorPosition
     }
 
     Keys.onPressed: {
