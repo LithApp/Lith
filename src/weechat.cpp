@@ -142,7 +142,7 @@ void Weechat::onConnected() {
     statusSet(CONNECTED);
     auto pass = lith()->settingsGet()->passphraseGet();
     m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
-    m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
+    m_connection->write("hdata buffer:gui_buffers(*) number,name,short_name,hidden,title\n");
     m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n");
     m_connection->write("hdata hotlist:gui_hotlist(*)\n");
     m_connection->write("sync\n");
