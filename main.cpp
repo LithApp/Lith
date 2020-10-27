@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
     qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");
+    qmlRegisterUncreatableType<Weechat>("lith", 1, 0, "Weechat", "");
     qmlRegisterUncreatableType<Nick>("lith", 1, 0, "Nick", "");
     qmlRegisterUncreatableType<Buffer>("lith", 1, 0, "Buffer", "");
     //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");

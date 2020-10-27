@@ -35,11 +35,11 @@ Dialog {
         var newPort = portField.text
         var newEncrypted = encryptedCheckbox.checked
         var newPassphrase = passphraseField.text
-        lith.host = newHost
-        lith.port = newPort
-        lith.encrypted = newEncrypted
+        settings.host = newHost
+        settings.port = newPort
+        settings.encrypted = newEncrypted
         if (newPassphrase.length > 0)
-            lith.setPassphrase(newPassphrase)
+            settings.setPassphrase(newPassphrase)
         newPassphrase = ""
 
         var newShowFullLink = showFullLinkCheckbox.checked
@@ -48,9 +48,9 @@ Dialog {
         settings.showSendButton = showSendButtonCheckbox.checked
     }
     onRejected: {
-        hostField.text = lith.host
-        portField.text = lith.port
-        encryptedCheckbox.checked = lith.encrypted
+        hostField.text = settings.host
+        portField.text = settings.port
+        encryptedCheckbox.checked = settings.encrypted
         passphraseField.text = ""
 
         showFullLinkCheckbox.checked = settings.showFullLink
@@ -69,7 +69,7 @@ Dialog {
                 }
                 TextField {
                     id: hostField
-                    text: lith.host
+                    text: settings.host
                     inputMethodHints: Qt.ImhNoPredictiveText
                 }
                 Text {
@@ -77,7 +77,7 @@ Dialog {
                 }
                 TextField {
                     id: portField
-                    text: lith.port
+                    text: settings.port
                     inputMethodHints: Qt.ImhPreferNumbers
                     validator: IntValidator {
                         bottom: 0
@@ -89,7 +89,7 @@ Dialog {
                 }
                 CheckBox {
                     id: encryptedCheckbox
-                    checked: lith.encrypted
+                    checked: settings.encrypted
                     Layout.alignment: Qt.AlignLeft
                 }
                 Text {

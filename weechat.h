@@ -18,10 +18,40 @@
 #include "settings.h"
 
 class ProxyBufferList;
+class Weechat;
 
 class Lith : public QObject
 {
     Q_OBJECT
+public:
+    PROPERTY(QString, errorString)
+    PROPERTY(Settings*, settings, new Settings(this))
+    Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
+    Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
+    Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
+
+public:
+    static Lith *_self;
+    static Lith *instance();
+
+    bool hasPassphrase() const;
+    ProxyBufferList *buffers();
+    Weechat *weechat();
+
+public slots:
+    void onMessageReceived(QByteArray &data);
+
+signals:
+    void hasPassphraseChanged();
+
+private:
+    explicit Lith(QObject *parent = 0);
+
+    ProxyBufferList *m_proxyBufferList { nullptr };
+    Weechat *m_weechat { nullptr };
+};
+
+class Weechat : public QObject {
 public:
     enum Status {
         UNCONFIGURED,
@@ -30,52 +60,34 @@ public:
         DISCONNECTED,
         ERROR
     }; Q_ENUMS(Status)
+
+    Q_OBJECT
     PROPERTY(Status, status)
-    PROPERTY(QString, errorString)
-    PROPERTY(Settings*, settings, new Settings(this))
-    Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
-    Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
-
 public:
-    static Lith *_self;
-    static Lith *instance();
-
-    ProxyBufferList *buffers();
-
-private:
-    explicit Lith(QObject *parent = 0);
-
-    bool encrypted() const;
-    bool hasPassphrase() const;
-
-signals:
-    void hasPassphraseChanged();
-
-private slots:
-    void onConnectionSettingsChanged();
-    void requestHotlist();
+    Weechat(Lith *lith = nullptr);
+    Lith *lith();
 
 public slots:
     void start();
     void restart();
 
-public slots:
-    void onReadyRead();
-    void onConnected();
-    void onDisconnected();
-    void onError(QAbstractSocket::SocketError e);
-    void onSslErrors(const QList<QSslError> &errors);
-    void onMessageReceived(QByteArray &data);
-
     void input(pointer_t ptr, const QString &data);
     void fetchLines(pointer_t ptr, int count);
 
 private slots:
+    void requestHotlist();
     void onTimeout();
+
+    void onConnectionSettingsChanged();
+
+    void onConnected();
+    void onDisconnected();
+    void onReadyRead();
+    void onError(QAbstractSocket::SocketError e);
+    void onSslErrors(const QList<QSslError> &errors);
 
 private:
     QSslSocket *m_connection { nullptr };
-    ProxyBufferList *m_proxyBufferList { nullptr };
 
     QByteArray m_fetchBuffer;
     int32_t m_bytesRemaining { 0 };
