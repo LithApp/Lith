@@ -43,7 +43,11 @@ void Weechat::start() {
     m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
     m_connection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &Weechat::onError);
+#else
+    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &Weechat::onError);
+#endif
     connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Weechat::onSslErrors);
     connect(m_connection, &QSslSocket::readyRead, this, &Weechat::onReadyRead);
     connect(m_connection, &QSslSocket::connected, this, &Weechat::onConnected);
