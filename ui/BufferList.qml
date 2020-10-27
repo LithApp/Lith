@@ -96,7 +96,7 @@ Drawer {
                 clip: true
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                model: lith.unfilteredBuffers
+                model: lith.buffers
                 currentIndex: 0
                 reuseItems: true
 

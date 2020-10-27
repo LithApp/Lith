@@ -24,7 +24,6 @@ Weechat::Weechat(Lith *lith)
     connect(lith->settingsGet(), &Settings::portChanged, this, &Weechat::onConnectionSettingsChanged);
     connect(lith->settingsGet(), &Settings::encryptedChanged, this, &Weechat::onConnectionSettingsChanged);
     QTimer::singleShot(0, this, &Weechat::onConnectionSettingsChanged);
-
 }
 
 Lith *Weechat::lith() {

@@ -114,7 +114,7 @@ Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_weechat(new Weechat(this))
     , m_buffers(QmlObjectList::create<Buffer>())
-    , m_proxyBufferList(new ProxyBufferList(this))
+    , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
 {
     connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::hasPassphraseChanged);
 }
@@ -186,6 +186,7 @@ ProxyBufferList::ProxyBufferList(QObject *parent, QAbstractListModel *parentMode
     : QSortFilterProxyModel(parent)
 {
     setSourceModel(parentModel);
+    setFilterRole(Qt::UserRole);
     connect(this, &ProxyBufferList::filterWordChanged, this, [this](){
         setFilterFixedString(filterWordGet());
     });
