@@ -16,32 +16,6 @@ class LineModel;
 
 #include <cstdint>
 
-namespace W {
-    struct Char { char d { 0 }; };
-    struct Integer { int32_t d { 0 }; };
-    struct LongInteger { int64_t d { 0 }; };
-    struct String { QString d {}; };
-    struct Buffer { QByteArray d {}; };
-    struct Pointer { pointer_t d { 0 }; };
-    struct Time { QString d {}; };
-    struct HashTable { QMap<QString, QString> d {}; };
-    struct HData { };
-    struct ArrayInt { QList<int> d {}; };
-    struct ArrayStr { QStringList d {}; };
-
-    bool parse(QDataStream &s, Char &r);
-    bool parse(QDataStream &s, Integer &r);
-    bool parse(QDataStream &s, LongInteger &r);
-    bool parse(QDataStream &s, String &r);
-    bool parse(QDataStream &s, Buffer &r);
-    bool parse(QDataStream &s, Pointer &r);
-    bool parse(QDataStream &s, Time &r);
-    bool parse(QDataStream &s, HashTable &r);
-    bool parse(QDataStream &s, HData &r);
-    bool parse(QDataStream &s, ArrayInt &r);
-    bool parse(QDataStream &s, ArrayStr &r);
-};
-
 
 class Nick : public QObject {
     Q_OBJECT

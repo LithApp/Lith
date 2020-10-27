@@ -1,5 +1,6 @@
 #include "lith.h"
 
+#include "protocol.h"
 #include "datamodel.h"
 #include "weechat.h"
 
@@ -135,8 +136,8 @@ void Lith::onMessageReceived(QByteArray &data) {
         s.readRawData(&wtf, 1);
     }
 
-    W::String id;
-    W::parse(s, id);
+    Protocol::String id;
+    Protocol::parse(s, id);
 
     //qCritical() << "=== ID" << id.d;
 
@@ -145,8 +146,8 @@ void Lith::onMessageReceived(QByteArray &data) {
     s.readRawData(type, 3);
 
     if (QString(type) == "hda") {
-        W::HData hda;
-        W::parse(s, hda);
+        Protocol::HData hda;
+        Protocol::parse(s, hda);
     }
     else {
         qCritical() << "onMessageReceived is not handling type: " << type;

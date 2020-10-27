@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QDebug>
 
+#include <cstdint>
+
 #include "qmlobjectlist.h"
 
 typedef uint64_t pointer_t;

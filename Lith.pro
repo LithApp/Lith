@@ -6,6 +6,7 @@ HEADERS += \
     src/clipboardproxy.h \
     src/datamodel.h \
     src/lith.h \
+    src/protocol.h \
     src/qmlobjectlist.h \
     src/settings.h \
     src/uploader.h \
@@ -17,6 +18,7 @@ SOURCES += \
     src/main.cpp \
     src/clipboardproxy.cpp \
     src/datamodel.cpp \
+    src/protocol.cpp \
     src/qmlobjectlist.cpp \
     src/settings.cpp \
     src/uploader.cpp \
