@@ -10,10 +10,11 @@ ColumnLayout {
     }
     property var messageModel: null
 
-    width: ListView.view.width + timeMetrics.width
+    width: ListView.view.width // + timeMetrics.width
     rotation: 180
     RowLayout {
         Layout.fillWidth: true
+        /*
         Text {
             Layout.alignment: Qt.AlignTop
             Layout.preferredWidth: timeMetrics.width
@@ -22,6 +23,7 @@ ColumnLayout {
             font.pointSize: settings.baseFontSize
             color: palette.text
         }
+        */
 
         Text {
             Layout.alignment: Qt.AlignTop
