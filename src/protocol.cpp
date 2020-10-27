@@ -304,6 +304,7 @@ QString Protocol::convertColorsToHtml(const QByteArray &data) {
     auto loadAttr = [&result, &bold, &reverse, &italic, &underline, &keep](QByteArray::const_iterator &it) {
        while (true) {
            switch(*it) {
+           case 0x01: // fallthrough // TODO what the fuck weechat
            case '*':
                if (bold)
                    break;
@@ -530,7 +531,6 @@ QString Protocol::convertColorsToHtml(const QByteArray &data) {
            }
        }
        else if (*it == 0x1C) {
-           ++it;
            endColors();
            endAttrs();
        }
