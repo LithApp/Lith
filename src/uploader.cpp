@@ -36,10 +36,10 @@ void Uploader::upload(const QString &path) {
         }
         QImage im(QUrl(path).toLocalFile());
         if (transformation & QImageIOHandler::TransformationRotate90) {
-            QMatrix matrix;
-            matrix.translate(im.size().width() / 2, im.size().height() / 2);
-            matrix.rotate(90);
-            im = im.transformed(matrix);
+            QTransform transform;
+            transform.translate(im.size().width() / 2, im.size().height() / 2);
+            transform.rotate(90);
+            im = im.transformed(transform);
         }
         uploadBinary(im);
         return;
