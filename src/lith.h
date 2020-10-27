@@ -17,7 +17,7 @@ class HotListItem;
 class Lith : public QObject {
     Q_OBJECT
     PROPERTY(QString, errorString)
-    PROPERTY(Settings*, settings, new Settings(this))
+    PROPERTY_PTR(Settings, settings, new Settings(this))
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
     Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
 

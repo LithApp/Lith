@@ -23,7 +23,17 @@ typedef uint64_t pointer_t;
 #define PROPERTY(type, name, ...) \
     PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
     public: \
-        void name ## Set (type o) { \
+        void name ## Set (const type &o) { \
+            if (m_ ## name != o) { \
+                m_ ## name = o; \
+                emit name ## Changed(); \
+            } \
+        }
+
+#define PROPERTY_PTR(type, name, ...) \
+    PROPERTY_NOSETTER(type*, name, __VA_ARGS__) \
+    public: \
+        void name ## Set (type *o) { \
             if (m_ ## name != o) { \
                 m_ ## name = o; \
                 emit name ## Changed(); \
