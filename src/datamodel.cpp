@@ -205,15 +205,34 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
 }
 QString BufferLineSegment::summaryGet()
 {
-    QUrl url(plainTextGet());
-    QString extension = url.fileName().split(".").last().toLower();
-    QString host = url.host();
-    QString file = url.fileName();
-
-    if (plainTextGet().size() > Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet() && !file.isEmpty() && !host.isEmpty() && !extension.isEmpty()) {
-        const auto ellipsis = "/\u2026/";
-        return url.scheme() + "://" + host + ellipsis + file;
-    } else {
+    const auto threshold = Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet();
+    if (plainTextGet().size() < threshold
+            || !plainTextGet().startsWith("http")) {
         return plainTextGet();
     }
+    QUrl url(plainTextGet());
+    if (!url.isValid()) {
+        return plainTextGet();
+    }
+
+    QString extension = url.fileName().split(".").last().toLower();
+    QString scheme = url.scheme();
+    QString host = url.host();
+    QString file = url.fileName();
+    QString query = url.query();
+    const auto ellipsis = "\u2026";
+    // We'll show always show the host (and the scheme, if it's present)
+    const auto hostPrefix = (!scheme.isEmpty() ? scheme + "://" : "") + host + "/" + ellipsis;
+    qDebug() << scheme << host << file << query;
+
+    // This is a classic "URL to a file", for example a link to an image on an image-hosting website, we'll make sure
+    // the shortened path includes the filename.
+    if (!file.isEmpty() && !host.isEmpty() && !extension.isEmpty() && !query.isEmpty()) {
+        return hostPrefix + file;
+    }
+
+    // Otherwise it's a weird link with queries and stuff. We'll just shorten the whole thing and leave just enough
+    // characters so that we are within the threshold (but at least 10).
+    const auto suffixCharacterCount = std::max(threshold - hostPrefix.length(), 10);
+    return hostPrefix + plainTextGet().right(suffixCharacterCount);
 }
