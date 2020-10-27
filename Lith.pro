@@ -30,7 +30,7 @@ RESOURCES += ui/ui.qrc assets/assets.qrc
 QML_IMPORT_PATH =
 
 android {
-    include(<path/to/android_openssl/openssl.pri)
+    #include(<path/to/android_openssl/openssl.pri)
 }
 
 ios: {
