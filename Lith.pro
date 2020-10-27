@@ -34,7 +34,7 @@ android {
 }
 
 ios: {
-  QMAKE_INFO_PLIST = dist/info/Info.plist
+  QMAKE_INFO_PLIST = dist/ios/Info.plist
   QMAKE_TARGET_BUNDLE_PREFIX=cz.rtinbriza.ma
 #  QMAKE_DEVELOPMENT_TEAM="Z52EFCPL6D"
 #  QMAKE_CODE_SIGN_IDENTITY="Martin Briza"
