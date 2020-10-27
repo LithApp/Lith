@@ -3,11 +3,6 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 
-Settings *Settings::instance() {
-    static Settings _self;
-    return &_self;
-}
-
 Settings::Settings(QObject *parent)
     : QObject(parent)
 {

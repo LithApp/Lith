@@ -32,9 +32,7 @@ public:
     }; Q_ENUMS(Status)
     PROPERTY(Status, status)
     PROPERTY(QString, errorString)
-    Q_PROPERTY(QString host READ host WRITE setHost NOTIFY settingsChanged)
-    Q_PROPERTY(int port READ port WRITE setPort NOTIFY settingsChanged)
-    Q_PROPERTY(bool encrypted READ encrypted WRITE setEncrypted NOTIFY settingsChanged)
+    PROPERTY(Settings*, settings, new Settings(this))
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
 
@@ -47,27 +45,19 @@ public:
 private:
     explicit Lith(QObject *parent = 0);
 
-    QString host() const;
-    int port() const;
     bool encrypted() const;
     bool hasPassphrase() const;
 
 signals:
-    void settingsChanged();
     void hasPassphraseChanged();
 
 private slots:
-    void onSettingsChanged();
+    void onConnectionSettingsChanged();
     void requestHotlist();
 
 public slots:
     void start();
     void restart();
-
-    void setHost(const QString &value);
-    void setPort(int value);
-    void setEncrypted(bool value);
-    void setPassphrase(const QString &value);
 
 public slots:
     void onReadyRead();
@@ -89,13 +79,6 @@ private:
 
     QByteArray m_fetchBuffer;
     int32_t m_bytesRemaining { 0 };
-
-    QString m_host { };
-    int m_port { };
-    QString m_passphrase { };
-    bool m_useEncryption { true };
-
-    QSettings m_settings;
 
     QTimer m_hotlistTimer;
     QTimer m_reconnectTimer;

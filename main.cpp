@@ -14,7 +14,13 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QCoreApplication::setOrganizationName("Lith");
+    QCoreApplication::setOrganizationDomain("ma.rtinbriza.cz");
+    QCoreApplication::setApplicationName("Lith");
+
     QApplication app(argc, argv);
+
 
     QQuickStyle::setStyle("Material");
     QQmlApplicationEngine engine;
@@ -31,7 +37,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("lith", Lith::instance());
     engine.rootContext()->setContextProperty("clipboard", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
-    engine.rootContext()->setContextProperty("settings", Settings::instance());
+    engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();

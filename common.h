@@ -16,7 +16,7 @@
 #define PROPERTY(type, name, ...) \
     PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
     public: \
-        void name ## Set (const type &o) { \
+        void name ## Set (type o) { \
             if (m_ ## name != o) { \
                 m_ ## name = o; \
                 emit name ## Changed(); \

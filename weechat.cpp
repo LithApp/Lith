@@ -18,19 +18,8 @@ ProxyBufferList *Lith::buffers() {
 Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_proxyBufferList(new ProxyBufferList(this))
-    , m_settings("Lith")
 {
     statusSet(UNCONFIGURED);
-    connect(this, &Lith::settingsChanged, this, &Lith::onSettingsChanged);
-
-    m_host = m_settings.value("host", QString()).toString();
-    m_port = m_settings.value("port", 9001).toInt();
-    m_useEncryption = m_settings.value("encrypted", true).toBool();
-    m_passphrase = m_settings.value("passphrase", QString()).toString();
-
-    if (!m_host.isEmpty() && !m_passphrase.isEmpty()) {
-        QTimer::singleShot(0, this, &Lith::start);
-    }
 
     m_reconnectTimer.setInterval(1000);
     m_reconnectTimer.setSingleShot(true);
@@ -43,22 +32,17 @@ Lith::Lith(QObject *parent)
     connect(&m_hotlistTimer, SIGNAL(timeout()), this, SLOT(requestHotlist()));
     m_hotlistTimer.setInterval(1000);
     m_hotlistTimer.setSingleShot(false);
-}
 
-QString Lith::host() const {
-    return m_host;
-}
-
-int Lith::port() const {
-    return m_port;
-}
-
-bool Lith::encrypted() const {
-    return m_useEncryption;
+    connect(settingsGet(), &Settings::hostChanged, this, &Lith::onConnectionSettingsChanged);
+    connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::onConnectionSettingsChanged);
+    connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::hasPassphraseChanged);
+    connect(settingsGet(), &Settings::portChanged, this, &Lith::onConnectionSettingsChanged);
+    connect(settingsGet(), &Settings::encryptedChanged, this, &Lith::onConnectionSettingsChanged);
+    QTimer::singleShot(0, this, &Lith::onConnectionSettingsChanged);
 }
 
 bool Lith::hasPassphrase() const {
-    return !m_passphrase.isEmpty();
+    return !settingsGet()->passphraseGet().isEmpty();
 }
 
 void Lith::start() {
@@ -79,56 +63,24 @@ void Lith::start() {
     connect(m_connection, &QSslSocket::connected, this, &Lith::onConnected);
     connect(m_connection, &QSslSocket::disconnected, this, &Lith::onDisconnected);
 
-    if (m_useEncryption)
-        m_connection->connectToHostEncrypted(m_host, m_port);
-    else
-        m_connection->connectToHost(m_host, m_port);
+    restart();
 }
 
 void Lith::restart() {
-    qCritical() << "Reconnecting";
-    if (m_useEncryption)
-        m_connection->connectToHostEncrypted(m_host, m_port);
+    auto host = settingsGet()->hostGet();
+    auto port = settingsGet()->portGet();
+    auto ssl = settingsGet()->encryptedGet();
+    if (ssl)
+        m_connection->connectToHostEncrypted(host, port);
     else
-        m_connection->connectToHost(m_host, m_port);
+        m_connection->connectToHost(host, port);
     m_reconnectTimer.stop();
 }
 
-void Lith::setHost(const QString &value) {
-    if (m_host != value) {
-        m_host = value;
-        m_settings.setValue("host", m_host);
-        emit settingsChanged();
-    }
-}
-
-void Lith::setPort(int value) {
-    if (m_port != value) {
-        m_port = value;
-        m_settings.setValue("port", m_port);
-        emit settingsChanged();
-    }
-}
-
-void Lith::setEncrypted(bool value) {
-    if (m_useEncryption != value) {
-        m_useEncryption = value;
-        m_settings.setValue("encrypted", m_useEncryption);
-        emit settingsChanged();
-    }
-}
-
-void Lith::setPassphrase(const QString &value) {
-    if (m_passphrase != value && !value.isEmpty()) {
-        m_passphrase = value;
-        m_settings.setValue("passphrase", m_passphrase);
-        emit settingsChanged();
-        emit hasPassphraseChanged();
-    }
-}
-
-void Lith::onSettingsChanged() {
-    if (!m_host.isEmpty() && !m_passphrase.isEmpty()) {
+void Lith::onConnectionSettingsChanged() {
+    auto host = settingsGet()->hostGet();
+    auto pass = settingsGet()->passphraseGet();
+    if (!host.isEmpty() && !pass.isEmpty()) {
         if (m_connection) {
             m_connection->deleteLater();
             m_connection = nullptr;
@@ -198,7 +150,8 @@ void Lith::onReadyRead() {
 void Lith::onConnected() {
     qCritical() << "Connected!";
     statusSet(CONNECTED);
-    m_connection->write(("init password=" + m_passphrase + ",compression=off\n").toUtf8());
+    auto pass = settingsGet()->passphraseGet();
+    m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,hidden,title\n");
     m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n");
     m_connection->write("hdata hotlist:gui_hotlist(*)\n");
@@ -310,10 +263,11 @@ QObject *StuffManager::getStuff(pointer_t ptr, const QString &type, pointer_t pa
             m_buffers.append(tmp);
             endInsertRows();
             emit buffersChanged();
-            if (m_buffers.count() == 1 && Settings::instance()->lastOpenBufferGet() < 0)
+            auto lastOpenBuffer = Lith::instance()->settingsGet()->lastOpenBufferGet();
+            if (m_buffers.count() == 1 && lastOpenBuffer < 0)
                 emit selectedChanged();
-            else if (Settings::instance()->lastOpenBufferGet() == m_buffers.count() - 1) {
-                setSelectedIndex(Settings::instance()->lastOpenBufferGet());
+            else if (lastOpenBuffer == m_buffers.count() - 1) {
+                setSelectedIndex(lastOpenBuffer);
             }
         }
         return m_bufferMap[ptr];
@@ -393,7 +347,7 @@ void StuffManager::setSelectedIndex(int o) {
         if (selectedBuffer())
             selectedBuffer()->fetchMoreLines();
         if (o >= 0)
-            Settings::instance()->lastOpenBufferSet(o);
+            Lith::instance()->settingsGet()->lastOpenBufferSet(o);
     }
 }
 

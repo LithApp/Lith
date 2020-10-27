@@ -29,10 +29,14 @@ class Settings : public QObject {
     SETTING(qreal, baseFontSize, 10)
     SETTING(bool, showFullLink, true)
     SETTING(bool, showSendButton, false)
+    SETTING(QString, host)
+    SETTING(int, port, 9001)
+    SETTING(bool, encrypted, true)
+    SETTING(QString, passphrase)
 public:
-    static Settings *instance();
-private:
     Settings(QObject *parent = nullptr);
+private:
+    QSettings m_settings;
 };
 
 #endif // SETTINGS_H
