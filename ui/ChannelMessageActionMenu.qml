@@ -4,14 +4,24 @@ import QtQuick.Layouts 1.3
 
 import lith 1.0
 
+/* Hold-to-copy action menu */
+
 Dialog {
     id: channelMessageActionMenuDialog
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-    anchors.centerIn: parent
+    anchors.centerIn: Overlay.overlay
 
     width: 400
+    /*onVisibleChanged:
+    {
+        console.warn("LOL", channelMessageActionMenuDialog.x, channelMessageActionMenuDialog.y);
+        console.warn("LOL", channelMessageActionMenuDialog.width);
+        console.warn("LOL", messageTextWithNicknameTimestamp.Layout.preferredWidth);
+        console.warn("LOL", messageTextWithNickname.Layout.preferredWidth);
+        console.warn("LOL", messageText.Layout.preferredWidth);
+    }*/
 
     property string message;
     property string nickname;
@@ -42,8 +52,8 @@ Dialog {
             columns: 1
             width: parent.width
 
-            Text {
 
+            Text {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
@@ -59,10 +69,24 @@ Dialog {
                 font.pointSize: settings.baseFontSize
 
                 MouseArea {
+                    id: mouseNicknameTimestamp
                     anchors.fill: parent
                     onClicked: {
                         channelMessageActionMenuDialog.close()
                         clipboard.setText(parent.text)
+                    }
+                }
+
+                Rectangle
+                {
+                    color: mouseNicknameTimestamp.pressed ? "gray" : "#eeeeee"
+                    width: parent.width
+                    height: parent.height
+                    z: -1
+                    Behavior on color {
+                        ColorAnimation {
+
+                        }
                     }
                 }
             }
@@ -71,7 +95,7 @@ Dialog {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
-                id: messageText
+                id: messageTextWithNickname
                 visible: nickname == "" ? false : true
                 text: "<" + nickname + "> " + message;
 
@@ -83,20 +107,32 @@ Dialog {
                 font.pointSize: settings.baseFontSize
 
                 MouseArea {
+                    id: mouseNickname
                     anchors.fill: parent
                     onClicked: {
                         channelMessageActionMenuDialog.close()
                         clipboard.setText(parent.text)
                     }
                 }
+                Rectangle
+                {
+                    color: mouseNickname.pressed ? "gray" : "#eeeeee"
+                    width: parent.width
+                    height: parent.height
+                    z: -1
+                    Behavior on color {
+                        ColorAnimation {
 
+                        }
+                    }
+                }
             }
 
             Text {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
-                id: messageTextWithNickname
+                id: messageText
                 text: message;
 
                 clip: true
@@ -107,12 +143,28 @@ Dialog {
                 font.pointSize: settings.baseFontSize
 
                 MouseArea {
+                    id: mouseMessage
                     anchors.fill: parent
                     onClicked: {
                         channelMessageActionMenuDialog.close()
                         clipboard.setText(parent.text)
                     }
                 }
+                Rectangle
+                {
+                    color: mouseMessage.pressed ? "gray" : "#eeeeee"
+                    width: parent.width
+                    height: parent.height
+                    z: -1
+                    Behavior on color {
+                        ColorAnimation {
+
+                        }
+                    }
+                }
+            }
+            Item {
+                Layout.fillHeight: true
             }
         }
     }

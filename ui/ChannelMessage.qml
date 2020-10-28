@@ -59,13 +59,14 @@ ColumnLayout {
                             onPressAndHold: {
                                 // no rofl, tohle tady je, protoze "prefix" uz obsahuje barvicky
                                 // TODO: fakt nevim
-                                console.log(messageModel.getNickFromTags)
+                                console.log(messageModel.colorlessNickname)
 
                                 channelMessageActionMenu.visible = true
 
                                 // TODO: how to do this better? neco s modelama? nevim jak to tam poslat, kdyz ten dialog mam jako jiny QML file :(
-                                channelMessageActionMenu.message = modelData.plainText;
-                                channelMessageActionMenu.nickname = messageModel.getNickFromTags;
+                                channelMessageActionMenu.message = messageModel.colorlessText;
+
+                                channelMessageActionMenu.nickname = messageModel.colorlessNickname;
                                 channelMessageActionMenu.timestamp = messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
                             }
 
