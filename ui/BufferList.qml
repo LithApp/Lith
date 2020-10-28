@@ -8,8 +8,11 @@ Drawer {
         id: palette
     }
     onVisibleChanged: {
-        if (visible)
+        if (visible) {
+            filterField.clear()
             filterField.focus = true
+            bufferList.currentIndex = lith.selectedBufferIndex
+        }
     }
 
     Rectangle {
