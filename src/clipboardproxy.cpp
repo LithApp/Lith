@@ -21,3 +21,7 @@ QString ClipboardProxy::text() {
 QImage ClipboardProxy::image() {
     return m_clipboard->image();
 }
+
+void ClipboardProxy::setText(const QString &text) {
+    m_clipboard->setText(text);
+}

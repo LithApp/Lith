@@ -15,6 +15,8 @@ public:
     Q_INVOKABLE QString text();
     Q_INVOKABLE QImage image();
 
+    Q_INVOKABLE void setText(const QString &text);
+
 private:
     QClipboard *m_clipboard;
 };
