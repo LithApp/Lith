@@ -12,5 +12,6 @@
         <file>ChannelHeader.qml</file>
         <file>ChannelInputBar.qml</file>
         <file>ChannelTextInput.qml</file>
+        <file>ChannelMessageActionMenu.qml</file>
     </qresource>
 </RCC>

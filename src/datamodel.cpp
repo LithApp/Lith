@@ -90,6 +90,17 @@ bool BufferLine::isPrivMsg() {
     return m_tags_array.contains("irc_privmsg");
 }
 
+QString BufferLine::getNickFromTags() {
+    // HORRIBLE HACK: no rofl, tohle tady je, protoze "prefix" uz obsahuje barvicky
+    // TODO: fakt nevim
+    foreach (const QString& var, m_tags_array) {
+      if ( var.startsWith("nick_") ) {
+          return var.mid(5);
+      }
+    }
+    return "";
+}
+
 QObject *BufferLine::bufferGet() {
     return parent();
 }

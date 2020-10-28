@@ -28,6 +28,10 @@ ListView {
     delegate: ChannelMessage {
         messageModel: modelData
     }
+
+    ChannelMessageActionMenu {
+        id: channelMessageActionMenu
+    }
     //reuseItems: true
 
     MouseArea {

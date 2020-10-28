@@ -53,6 +53,24 @@ ColumnLayout {
                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                         font.family: "Menlo"
                         font.pointSize: settings.baseFontSize
+                        MouseArea {
+                            anchors.fill: parent
+                            pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
+                            onPressAndHold: {
+                                // no rofl, tohle tady je, protoze "prefix" uz obsahuje barvicky
+                                // TODO: fakt nevim
+                                console.log(messageModel.getNickFromTags)
+
+                                channelMessageActionMenu.visible = true
+
+                                // TODO: how to do this better? neco s modelama? nevim jak to tam poslat, kdyz ten dialog mam jako jiny QML file :(
+                                channelMessageActionMenu.message = modelData.plainText;
+                                channelMessageActionMenu.messageWithNickname = "<" + messageModel.getNickFromTags + "> " + modelData.plainText;
+                                channelMessageActionMenu.messageWithNicknameTimestamp = messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+                                        + " <" + messageModel.getNickFromTags + "> " + modelData.plainText;
+                            }
+
+                        }
                     }
                     Button {
                         focusPolicy: Qt.NoFocus
