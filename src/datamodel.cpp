@@ -5,6 +5,7 @@
 
 #include <QUrl>
 #include <QApplication>
+#include <QTextDocumentFragment>
 
 
 Buffer::Buffer(QObject *parent, pointer_t pointer)
@@ -90,15 +91,14 @@ bool BufferLine::isPrivMsg() {
     return m_tags_array.contains("irc_privmsg");
 }
 
-QString BufferLine::getNickFromTags() {
-    // HORRIBLE HACK: no rofl, tohle tady je, protoze "prefix" uz obsahuje barvicky
-    // TODO: fakt nevim
-    foreach (const QString& var, m_tags_array) {
-      if ( var.startsWith("nick_") ) {
-          return var.mid(5);
-      }
-    }
-    return "";
+QString BufferLine::colorlessNicknameGet() {
+    QString nickStripped = QTextDocumentFragment::fromHtml(m_prefix).toPlainText();
+    return nickStripped;
+}
+
+QString BufferLine::colorlessTextGet() {
+    QString messageStripped = QTextDocumentFragment::fromHtml(m_message).toPlainText();
+    return messageStripped;
 }
 
 QObject *BufferLine::bufferGet() {

@@ -108,14 +108,16 @@ class BufferLine : public QObject {
     PROPERTY(QString, message)
 
     Q_PROPERTY(bool isPrivMsg READ isPrivMsg NOTIFY tags_arrayChanged)
-    Q_PROPERTY(QString getNickFromTags READ getNickFromTags NOTIFY tags_arrayChanged)
+    Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet)
+    Q_PROPERTY(QString colorlessText READ colorlessTextGet) // used here because segments is already chopped up
     Q_PROPERTY(QObject *buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)
     Q_PROPERTY(QList<QObject*> segments READ segments NOTIFY segmentsChanged)
 public:
     BufferLine(QObject *parent);
 
     bool isPrivMsg();
-    QString getNickFromTags();
+    QString colorlessNicknameGet();
+    QString colorlessTextGet();
 
     QObject *bufferGet();
     void bufferSet(QObject *o);
