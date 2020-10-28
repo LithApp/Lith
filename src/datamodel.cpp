@@ -11,6 +11,7 @@
 Buffer::Buffer(QObject *parent, pointer_t pointer)
     : QObject(parent)
     , m_lines(QmlObjectList::create<BufferLine>(this))
+    , m_nicks(QmlObjectList::create<Nick>(this))
     , m_ptr(pointer)
 {
 
@@ -32,35 +33,38 @@ QmlObjectList *Buffer::lines() {
     return m_lines;
 }
 
-QList<QObject *> Buffer::nicks() {
+QmlObjectList *Buffer::nicks() {
     return m_nicks;
 }
 
 Nick *Buffer::getNick(pointer_t ptr) {
-    for (auto i : m_nicks) {
-        auto n = qobject_cast<Nick*>(i);
-        if (n->ptrGet() == ptr)
+    for (int i = 0; i < m_nicks->count(); i++) {
+        auto n = m_nicks->get<Nick>(i);
+        if (n && n->ptrGet() == ptr) {
             return n;
+        }
     }
+    return nullptr;
 
+    /*
     auto nick = new Nick(this);
     m_nicks.append(nick);
     nick->ptrSet(ptr);
     emit nicksChanged();
     return nick;
+    */
 }
 
 void Buffer::addNick(pointer_t ptr, Nick *nick) {
-    m_nicks.append(nick);
     nick->ptrSet(ptr);
-    emit nicksChanged();
+    m_nicks->append(nick);
 }
 
 QStringList Buffer::getVisibleNicks() {
     QStringList result;
-    for (auto i : m_nicks) {
-        auto nick = qobject_cast<Nick*>(i);
-        if (nick->visibleGet() && nick->levelGet() == 0) {
+    for (int i = 0; i < m_nicks->count(); i++) {
+        auto nick = m_nicks->get<Nick>(i);
+        if (nick && nick->visibleGet() && nick->levelGet() == 0) {
             result.append(nick->nameGet());
         }
     }

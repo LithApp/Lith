@@ -46,7 +46,7 @@ class Buffer : public QObject {
     PROPERTY(int, hotMessages)
 
     Q_PROPERTY(QmlObjectList *lines READ lines CONSTANT)
-    Q_PROPERTY(QList<QObject*> nicks READ nicks NOTIFY nicksChanged)
+    Q_PROPERTY(QmlObjectList *nicks READ nicks CONSTANT)
 public:
     Buffer(QObject *parent, pointer_t pointer);
     //BufferLine *getLine(pointer_t ptr);
@@ -56,7 +56,7 @@ public:
     bool isAfterInitialFetch();
 
     QmlObjectList *lines();
-    QList<QObject*> nicks();
+    QmlObjectList *nicks();
     Q_INVOKABLE Nick *getNick(pointer_t ptr);
     void addNick(pointer_t ptr, Nick* nick);
     Q_INVOKABLE QStringList getVisibleNicks();
@@ -65,12 +65,9 @@ public slots:
     void input(const QString &data);
     void fetchMoreLines();
 
-signals:
-    void nicksChanged();
-
 private:
     QmlObjectList *m_lines { nullptr };
-    QList<QObject*> m_nicks {};
+    QmlObjectList *m_nicks { nullptr };
     pointer_t m_ptr;
     bool m_afterInitialFetch { false };
     int m_lastRequestedCount { 0 };
