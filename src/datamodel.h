@@ -57,6 +57,7 @@ public:
     QmlObjectList *lines();
     QList<QObject*> nicks();
     Q_INVOKABLE Nick *getNick(pointer_t ptr);
+    void addNick(pointer_t ptr, Nick* nick);
     Q_INVOKABLE QStringList getVisibleNicks();
 
 public slots:
@@ -110,22 +111,22 @@ class BufferLine : public QObject {
     Q_PROPERTY(bool isPrivMsg READ isPrivMsg NOTIFY tags_arrayChanged)
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
     Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged) // used here because segments is already chopped up
-    Q_PROPERTY(QObject *buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)
+    Q_PROPERTY(QObject *buffer READ bufferGet CONSTANT)
     Q_PROPERTY(QList<QObject*> segments READ segments NOTIFY segmentsChanged)
 public:
-    BufferLine(QObject *parent);
+    BufferLine(Buffer *parent);
+
+    void setParent(Buffer *parent);
 
     bool isPrivMsg();
     QString colorlessNicknameGet();
     QString colorlessTextGet();
 
     QObject *bufferGet();
-    void bufferSet(QObject *o);
 
     QList<QObject*> segments();
 
 signals:
-    void bufferChanged();
     void segmentsChanged();
 
 private slots:

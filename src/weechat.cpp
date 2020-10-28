@@ -82,7 +82,7 @@ void Weechat::onConnectionSettingsChanged() {
 
 void Weechat::requestHotlist() {
     if (m_connection) {
-        QString msg = QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
+        QString msg = QString("(handleHotlist;%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
         m_connection->write(msg.toUtf8());
     }
 }
@@ -187,7 +187,7 @@ void Weechat::input(pointer_t ptr, const QString &data) {
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {
-    QString line = QString("(%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
+    QString line = QString("(handleFetchLines;%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
     //qCritical() << "WRITING:" << line;
     auto bytes = m_connection->write(line.toUtf8());
     m_timeoutTimer.start(5000);
@@ -203,9 +203,6 @@ void Weechat::onMessageReceived(QByteArray &data) {
     Protocol::String id;
     Protocol::parse(s, id);
 
-    bool isIdANumber = false;
-    uint32_t possibleMessageOrder = id.d.toUInt(&isIdANumber);
-
     char type[4] = { 0 };
     s.readRawData(type, 3);
 
@@ -220,13 +217,10 @@ void Weechat::onMessageReceived(QByteArray &data) {
                 qWarning() << "Possible unhandled message:" << id.d;
             }
         }
-        else if (isIdANumber) {
-            qCritical() << QString("This was a response to request %1").arg(possibleMessageOrder);
-            // TODO handle
-        }
         else {
-            if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::DirectConnection, Q_ARG(const Protocol::HData&, hda))) {
-                qWarning() << "Possible unhandled message:" << id.d;
+            QString name = id.d.split(";").first();
+            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::DirectConnection, Q_ARG(const Protocol::HData&, hda))) {
+                qWarning() << "Possible unhandled message:" << name;
             }
         }
     }

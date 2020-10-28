@@ -58,6 +58,12 @@ Nick *Buffer::getNick(pointer_t ptr) {
     return nick;
 }
 
+void Buffer::addNick(pointer_t ptr, Nick *nick) {
+    m_nicks.append(nick);
+    nick->ptrSet(ptr);
+    emit nicksChanged();
+}
+
 QStringList Buffer::getVisibleNicks() {
     QStringList result;
     for (auto i : m_nicks) {
@@ -81,10 +87,15 @@ void Buffer::fetchMoreLines() {
     }
 }
 
-BufferLine::BufferLine(QObject *parent)
+BufferLine::BufferLine(Buffer *parent)
     : QObject(parent)
 {
     connect(this, &BufferLine::messageChanged, this, &BufferLine::onMessageChanged);
+}
+
+void BufferLine::setParent(Buffer *parent) {
+    QObject::setParent(parent);
+    parent->appendLine(this);
 }
 
 bool BufferLine::isPrivMsg() {
@@ -103,23 +114,6 @@ QString BufferLine::colorlessTextGet() {
 
 QObject *BufferLine::bufferGet() {
     return parent();
-}
-
-void BufferLine::bufferSet(QObject *o) {
-    Buffer *buffer = qobject_cast<Buffer*>(o);
-    if (!buffer) {
-        deleteLater();
-        return;
-    }
-    if (qobject_cast<Buffer*>(parent()) != nullptr)
-        return;
-
-    if (parent() != o) {
-        setParent(o);
-        emit bufferChanged();
-    }
-
-    buffer->appendLine(this);
 }
 
 QList<QObject *> BufferLine::segments() {

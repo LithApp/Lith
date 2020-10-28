@@ -51,6 +51,9 @@ public slots:
     void handleHotlistInitialization(const Protocol::HData& hda);
     void handleNicklistInitialization(const Protocol::HData& hda);
 
+    void handleFetchLines(const Protocol::HData& hda);
+    void handleHotlist(const Protocol::HData& hda);
+
     void _buffer_opened(const Protocol::HData& hda);
     void _buffer_type_changed(const Protocol::HData& hda);
     void _buffer_moved(const Protocol::HData& hda);
@@ -68,6 +71,13 @@ public slots:
     void _buffer_line_added(const Protocol::HData& hda);
     void _nicklist(const Protocol::HData& hda);
     void _nicklist_diff(const Protocol::HData& hda);
+
+protected:
+    void addBuffer(pointer_t ptr, Buffer *b);
+    Buffer *getBuffer(pointer_t ptr);
+    void addLine(pointer_t ptr, BufferLine *line);
+    BufferLine *getLine(pointer_t ptr);
+    void addHotlist(pointer_t ptr, HotListItem *hotlist);
 
 signals:
     void hasPassphraseChanged();

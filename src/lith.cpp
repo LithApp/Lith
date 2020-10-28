@@ -3,6 +3,8 @@
 #include "datamodel.h"
 #include "weechat.h"
 
+#include <iostream>
+
 Lith *Lith::_self = nullptr;
 Lith *Lith::instance() {
     if (!_self)
@@ -57,20 +59,6 @@ QObject *Lith::getObject(pointer_t ptr, const QString &type, pointer_t parent) {
         if (m_lineMap.contains(ptr))
             return m_lineMap[ptr];
         return nullptr;
-    }
-    else if (type == "buffer") {
-        if (!m_bufferMap.contains(ptr)) {
-            Buffer *tmp = new Buffer(this, ptr);
-            m_bufferMap[ptr] = tmp;
-            m_buffers->append(tmp);
-            auto lastOpenBuffer = settingsGet()->lastOpenBufferGet();
-            if (m_buffers->count() == 1 && lastOpenBuffer < 0)
-                emit selectedBufferChanged();
-            else if (lastOpenBuffer == m_buffers->count() - 1) {
-                selectedBufferIndexSet(lastOpenBuffer);
-            }
-        }
-        return m_bufferMap[ptr];
     }
     else if (type == "line_data") {/*
         if (m_bufferMap.contains(parent)) {
@@ -154,18 +142,92 @@ void Lith::resetData() {
 }
 
 void Lith::handleBufferInitialization(const Protocol::HData &hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda.data) {
+        // buffer
+        auto ptr = i.pointers.first();
+        auto b = new Buffer(this, ptr);
+        for (auto j : i.objects.keys()) {
+            b->setProperty(qPrintable(j), i.objects[j]);
+        }
+        addBuffer(ptr, b);
+    }
 }
 
 void Lith::handleFirstReceivedLine(const Protocol::HData &hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda.data) {
+        // buffer - lines - line - line_data
+        auto bufPtr = i.pointers.first();
+        auto linePtr = i.pointers.last();
+        auto buffer = getBuffer(bufPtr);
+        if (!buffer) {
+            qWarning() << "Line missing a parent:";
+            continue;
+        }
+        auto line = getLine(linePtr);
+        if (line)
+            continue;
+        line = new BufferLine(nullptr);
+        for (auto j : i.objects.keys()) {
+            line->setProperty(qPrintable(j), i.objects[j]);
+        }
+        line->setParent(buffer);
+        addLine(linePtr, line);
+    }
 }
 
 void Lith::handleHotlistInitialization(const Protocol::HData &hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda.data) {
+        // hotlist
+        auto ptr = i.pointers.first();
+        auto item = new HotListItem(this);
+        for (auto j : i.objects.keys()) {
+            item->setProperty(qPrintable(j), i.objects[j]);
+        }
+        addHotlist(ptr, item);
+    }
 }
 
 void Lith::handleNicklistInitialization(const Protocol::HData &hda) {
+    for (auto i : hda.data) {
+        // buffer - nicklist_item
+        auto bufPtr = i.pointers.first();
+        auto nickPtr = i.pointers.last();
+        auto buffer = getBuffer(bufPtr);
+        if (!buffer) {
+            qWarning() << "Nick missing a parent:";
+            continue;
+        }
+        auto nick = new Nick(buffer);
+        for (auto j : i.objects.keys()) {
+            nick->setProperty(qPrintable(j), i.objects[j]);
+        }
+        buffer->addNick(nickPtr, nick);
+    }
+}
+
+void Lith::handleFetchLines(const Protocol::HData &hda) {
+    for (auto i : hda.data) {
+        // buffer - lines - line - line_data
+        auto bufPtr = i.pointers.first();
+        auto linePtr = i.pointers.last();
+        auto buffer = getBuffer(bufPtr);
+        if (!buffer) {
+            qWarning() << "Line missing a parent:";
+            continue;
+        }
+        auto line = getLine(linePtr);
+        if (line)
+            continue;
+        line = new BufferLine(nullptr);
+        for (auto j : i.objects.keys()) {
+            line->setProperty(qPrintable(j), i.objects[j]);
+        }
+        line->setParent(buffer);
+        addLine(linePtr, line);
+    }
+}
+
+void Lith::handleHotlist(const Protocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
@@ -226,7 +288,28 @@ void Lith::_buffer_cleared(const Protocol::HData &hda) {
 }
 
 void Lith::_buffer_line_added(const Protocol::HData &hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda.data) {
+        // line_data
+        auto linePtr = i.pointers.last();
+        // path doesn't contain the buffer, we need to retrieve it like this
+        auto bufPtr = qvariant_cast<pointer_t>(i.objects["buffer"]);
+        auto buffer = getBuffer(bufPtr);
+        if (!buffer) {
+            qWarning() << "Line missing a parent:";
+            continue;
+        }
+        auto line = getLine(linePtr);
+        if (line)
+            continue;
+        line = new BufferLine(buffer);
+        for (auto j : i.objects.keys()) {
+            if (j == "buffer")
+                continue;
+            line->setProperty(qPrintable(j), i.objects[j]);
+        }
+        line->setParent(buffer);
+        addLine(linePtr, line);
+    }
 }
 
 void Lith::_nicklist(const Protocol::HData &hda) {
@@ -235,6 +318,48 @@ void Lith::_nicklist(const Protocol::HData &hda) {
 
 void Lith::_nicklist_diff(const Protocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::addBuffer(pointer_t ptr, Buffer *b) {
+    m_bufferMap[ptr] = b;
+    m_buffers->append(b);
+    auto lastOpenBuffer = settingsGet()->lastOpenBufferGet();
+    if (m_buffers->count() == 1 && lastOpenBuffer < 0)
+        emit selectedBufferChanged();
+    else if (lastOpenBuffer == m_buffers->count() - 1) {
+        selectedBufferIndexSet(lastOpenBuffer);
+    }
+}
+
+Buffer *Lith::getBuffer(pointer_t ptr) {
+    if (m_bufferMap.contains(ptr))
+        return m_bufferMap[ptr];
+    return nullptr;
+}
+
+void Lith::addLine(pointer_t ptr, BufferLine *line) {
+    if (m_lineMap.contains(ptr)) {
+        // TODO
+        qCritical() << "Line with ptr" << QString("%1").arg(ptr, 8, 16, QChar('0')) << "already exists";
+        qCritical() << "Original: " << m_lineMap[ptr]->messageGet();
+        qCritical() << "New:" << line->messageGet();
+    }
+    m_lineMap[ptr] = line;
+}
+
+BufferLine *Lith::getLine(pointer_t ptr) {
+    if (m_lineMap.contains(ptr)) {
+        return m_lineMap[ptr];
+    }
+    return nullptr;
+}
+
+void Lith::addHotlist(pointer_t ptr, HotListItem *hotlist) {
+    if (m_hotList.contains(ptr)) {
+        // TODO
+        qCritical() << "Hotlist with ptr" << QString("%1").arg(ptr, 8, 16, QChar('0')) << "already exists";
+    }
+    m_hotList[ptr] = hotlist;
 }
 
 

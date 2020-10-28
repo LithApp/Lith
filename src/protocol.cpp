@@ -100,139 +100,77 @@ bool Protocol::parse(QDataStream &s, Protocol::HashTable &r) {
 }
 
 bool Protocol::parse(QDataStream &s, Protocol::HData &r) {
-    //qCritical() << type;
     Protocol::String hpath;
     Protocol::String keys;
     Protocol::Integer count;
     parse(s, hpath);
     parse(s, keys);
     parse(s, count);
-    //qCritical() << hpath.d << keys.d << count.d;
-    for (int i = 0; i < count.d; i++) {
-        qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-        QStringList pathElems = hpath.d.split("/");
-        QStringList arguments = keys.d.split(",");
-        pointer_t parentPtr = 0;
-        pointer_t stuffPtr = 0;
+    r.path = hpath.d.split("/");
+    r.keys = keys.d.split(",");
 
-        pointer_t bufferPtr = 0;
-        pointer_t linePtr = 0;
-        pointer_t nickPtr = 0;
-        pointer_t hotListPtr = 0;
-        for (int i = 0; i < pathElems.count(); i++) { // TODO
+    for (int i = 0; i < count.d; i++) {
+        Protocol::HData::Item item;
+        for (int j = 0; j < r.path.count(); j++) {
             Protocol::Pointer ptr;
             parse(s, ptr);
-            if (pathElems[i] == "buffer") {
-                bufferPtr = ptr.d;
-            }
-            else if (pathElems[i] == "line_data") {
-                linePtr = ptr.d;
-            }
-            else if (pathElems[i] == "nicklist_item"){
-                nickPtr = ptr.d;
-            }
-            else if (pathElems[i] == "hotlist") {
-                hotListPtr = ptr.d;
-            }
-            if (i == 2 && hpath.d != "buffer/lines/line/line_data") {
-                qCritical() << "OMG got three stuff path";
-                exit(1);
-            }
+            item.pointers.append(ptr.d);
         }
-        if (hotListPtr != 0) {
-            stuffPtr = hotListPtr;
-        }
-        else if (linePtr != 0) {
-            stuffPtr = linePtr;
-        }
-        else if (bufferPtr != 0) {
-            stuffPtr = bufferPtr;
-        }
-        if (nickPtr != 0) {
-            stuffPtr = nickPtr;
-            parentPtr = bufferPtr;
-        }
-        for (auto i : arguments) {
-            qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
-            QStringList argument = i.split(":");
-            QString name = argument[0];
-            QString type = argument[1];
-            if (pathElems.last() == "hotlist") {
-                //qCritical() << pathElems << arguments;
-            }
+        for (int j = 0; j < r.keys.count(); j++) {
+            QString name = r.keys[j].split(":").first();
+            QString type = r.keys[j].split(":").last();
             if (type == "int") {
                 Protocol::Integer i;
                 parse(s, i);
-                //qCritical() << name << ":" << i.d;
-                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff && stuff->property(qPrintable(name)).isValid())
-                    stuff->setProperty(qPrintable(name), QVariant::fromValue(i.d));
+                item.objects[name] = QVariant::fromValue(i.d);
             }
             else if (type == "lon") {
                 Protocol::LongInteger l;
                 parse(s, l);
-                //qCritical() << name << ":" << l.d;
-                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff && stuff->property(qPrintable(name)).isValid())
-                    stuff->setProperty(qPrintable(name), QVariant::fromValue(l.d));
+                item.objects[name] = QVariant::fromValue(l.d);
             }
             else if (type == "str" || type == "buf") {
                 Protocol::String str;
                 parse(s, str);
-                //qCritical () << name << ":" << str.d;
-                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff && stuff->property(qPrintable(name)).isValid())
-                    stuff->setProperty(qPrintable(name), QVariant::fromValue(str.d));
+                item.objects[name] = QVariant::fromValue(str.d);
             }
             else if (type == "arr") {
-                char type[4] = { 0 };
-                s.readRawData(type, 3);
-                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
-                //qCritical() << name << ":" << QString(type);
-                if (strcmp(type, "int") == 0) {
+                char fieldType[4] = { 0 };
+                s.readRawData(fieldType, 3);
+                if (strcmp(fieldType, "int") == 0) {
                     Protocol::ArrayInt a;
                     parse(s, a);
-                    //qCritical() << name << ":" << a.d;
-                    if (stuff && stuff->property(qPrintable(name)).isValid())
-                        stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
+                    item.objects[name] = QVariant::fromValue(a.d);
                 }
-                if (strcmp(type, "str") == 0) {
+                else if (strcmp(fieldType, "str") == 0) {
                     Protocol::ArrayStr a;
                     parse(s, a);
-                    //qCritical() << name << ":" << a.d;
-                    if (stuff && stuff->property(qPrintable(name)).isValid())
-                        stuff->setProperty(qPrintable(name), QVariant::fromValue(a.d));
+                    item.objects[name] = QVariant::fromValue(a.d);
+                }
+                else {
+                    qCritical() << "Unhandled array item type:" << fieldType << "for field" << name;
                 }
             }
             else if (type == "tim") {
                 Protocol::Time t;
                 parse(s, t);
-                //qCritical() << name << ":" << t.d;
-                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff && stuff->property(qPrintable(name)).isValid())
-                    stuff->setProperty(qPrintable(name), QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.d.toLongLong() * 1000)));
+                item.objects[name] = QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.d.toLongLong() * 1000));
             }
             else if (type == "ptr") {
                 Protocol::Pointer p;
                 parse(s, p);
-                //qCritical() << name << ":" << p.d;
-                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
-                QObject *otherStuff = Lith::instance()->getObject(p.d, "");
-                if (stuff && stuff->property(qPrintable(name)).isValid())
-                    stuff->setProperty(qPrintable(name), QVariant::fromValue(otherStuff));
+                item.objects[name] = QVariant::fromValue(p.d);
             }
             else if (type == "chr") {
                 Protocol::Char c;
                 parse(s, c);
-                //qCritical() << name << ":" << c.d;
-                QObject *stuff = Lith::instance()->getObject(stuffPtr, pathElems.last(), parentPtr);
-                if (stuff && stuff->property(qPrintable(name)).isValid())
-                    stuff->setProperty(qPrintable(name), QVariant::fromValue(c.d));
+                item.objects[name] = QVariant::fromValue(c.d);
             }
             else {
-                //qCritical() << "Type was" << type;
+                qCritical() << "!!! Unhandled type:" << type << "for field" << name;
             }
         }
+        r.data.append(item);
     }
     return true;
 }
@@ -548,4 +486,32 @@ QString Protocol::convertColorsToHtml(const QByteArray &data) {
     endColors();
     endAttrs();
     return result;
+}
+
+QString Protocol::HData::toString() const {
+    QString ret;
+
+    ret += "HDATA\n";
+    ret += "- PATH:\n";
+    for (auto i : path) {
+        ret += "\t" + i + "\n";
+    }
+    ret += "- KEYS:\n";
+    for (auto i : keys) {
+        ret += "\t" + i + "\n";
+    }
+    ret += "-VALUES:\n";
+    for (auto i : data) {
+        ret += "\t-PATH\n";
+        ret += "\t\t";
+        for (auto j : i.pointers) {
+            ret += QString("%1").arg(j, 8, 16, QChar('0')) + " ";
+        }
+        ret += "\n";
+        for (auto j : i.objects) {
+            ret += QString("\t\t") + j.toString() + "\n";
+        }
+        ret += "\n";
+    }
+    return ret;
 }

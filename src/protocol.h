@@ -13,7 +13,18 @@ public:
     struct Pointer { pointer_t d { 0 }; };
     struct Time { QString d {}; };
     struct HashTable { QMap<QString, QString> d {}; };
-    struct HData { };
+    struct HData {
+        struct Item {
+            QList<pointer_t> pointers;
+            QMap<QString,QVariant> objects;
+        };
+
+        QStringList keys;
+        QStringList path;
+        QList<Item> data;
+
+        QString toString() const;
+    };
     struct ArrayInt { QList<int> d {}; };
     struct ArrayStr { QStringList d {}; };
 
