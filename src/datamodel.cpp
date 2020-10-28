@@ -16,20 +16,12 @@ Buffer::Buffer(QObject *parent, pointer_t pointer)
 
 }
 
+void Buffer::prependLine(BufferLine *line) {
+    m_lines->prepend(line);
+}
+
 void Buffer::appendLine(BufferLine *line) {
-    if (!line->dateGet().isValid()) {
-        m_lines->prepend(line);
-    }
-    else {
-        for (int i = 0; i < m_lines->count(); i++) {
-            auto curr = m_lines->get<BufferLine>(i);
-            if (curr && curr->dateGet() < line->dateGet()) {
-                m_lines->insert(i, line);
-                return;
-            }
-        }
-        m_lines->append(line);
-    }
+    m_lines->append(line);
 }
 
 bool Buffer::isAfterInitialFetch() {
@@ -91,11 +83,6 @@ BufferLine::BufferLine(Buffer *parent)
     : QObject(parent)
 {
     connect(this, &BufferLine::messageChanged, this, &BufferLine::onMessageChanged);
-}
-
-void BufferLine::setParent(Buffer *parent) {
-    QObject::setParent(parent);
-    parent->appendLine(this);
 }
 
 bool BufferLine::isPrivMsg() {

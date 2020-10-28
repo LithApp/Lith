@@ -163,15 +163,15 @@ void Lith::handleFirstReceivedLine(const Protocol::HData &hda) {
             qWarning() << "Line missing a parent:";
             continue;
         }
-        auto line = getLine(linePtr);
+        auto line = getLine(bufPtr, linePtr);
         if (line)
             continue;
-        line = new BufferLine(nullptr);
+        line = new BufferLine(buffer);
         for (auto j : i.objects.keys()) {
             line->setProperty(qPrintable(j), i.objects[j]);
         }
-        line->setParent(buffer);
-        addLine(linePtr, line);
+        buffer->appendLine(line);
+        addLine(bufPtr, linePtr, line);
     }
 }
 
@@ -215,15 +215,15 @@ void Lith::handleFetchLines(const Protocol::HData &hda) {
             qWarning() << "Line missing a parent:";
             continue;
         }
-        auto line = getLine(linePtr);
+        auto line = getLine(bufPtr, linePtr);
         if (line)
             continue;
-        line = new BufferLine(nullptr);
+        line = new BufferLine(buffer);
         for (auto j : i.objects.keys()) {
             line->setProperty(qPrintable(j), i.objects[j]);
         }
-        line->setParent(buffer);
-        addLine(linePtr, line);
+        buffer->appendLine(line);
+        addLine(bufPtr, linePtr, line);
     }
 }
 
@@ -298,17 +298,18 @@ void Lith::_buffer_line_added(const Protocol::HData &hda) {
             qWarning() << "Line missing a parent:";
             continue;
         }
-        auto line = getLine(linePtr);
-        if (line)
+        auto line = getLine(bufPtr, linePtr);
+        if (line) {
             continue;
+        }
         line = new BufferLine(buffer);
         for (auto j : i.objects.keys()) {
             if (j == "buffer")
                 continue;
             line->setProperty(qPrintable(j), i.objects[j]);
         }
-        line->setParent(buffer);
-        addLine(linePtr, line);
+        buffer->prependLine(line);
+        addLine(bufPtr, linePtr, line);
     }
 }
 
@@ -337,17 +338,19 @@ Buffer *Lith::getBuffer(pointer_t ptr) {
     return nullptr;
 }
 
-void Lith::addLine(pointer_t ptr, BufferLine *line) {
+void Lith::addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line) {
+    auto ptr = bufPtr << 32 | linePtr;
     if (m_lineMap.contains(ptr)) {
         // TODO
-        qCritical() << "Line with ptr" << QString("%1").arg(ptr, 8, 16, QChar('0')) << "already exists";
+        qCritical() << "Line with ptr" << QString("%1").arg(ptr, 16, 16, QChar('0')) << "already exists";
         qCritical() << "Original: " << m_lineMap[ptr]->messageGet();
         qCritical() << "New:" << line->messageGet();
     }
     m_lineMap[ptr] = line;
 }
 
-BufferLine *Lith::getLine(pointer_t ptr) {
+BufferLine *Lith::getLine(pointer_t bufPtr, pointer_t linePtr) {
+    auto ptr = bufPtr << 32 | linePtr;
     if (m_lineMap.contains(ptr)) {
         return m_lineMap[ptr];
     }

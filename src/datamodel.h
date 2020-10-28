@@ -50,6 +50,7 @@ class Buffer : public QObject {
 public:
     Buffer(QObject *parent, pointer_t pointer);
     //BufferLine *getLine(pointer_t ptr);
+    void prependLine(BufferLine *line);
     void appendLine(BufferLine *line);
 
     bool isAfterInitialFetch();

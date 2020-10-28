@@ -82,7 +82,10 @@ bool Protocol::parse(QDataStream &s, Protocol::Pointer &r) {
     s >> length;
     QByteArray buf((int) length + 1, 0);
     s.readRawData(buf.data(), length);
-    r.d = buf.toULongLong(nullptr, 16);
+    bool ok = false;
+    r.d = buf.toULongLong(&ok, 16);
+    if (!ok)
+        return false;
     return true;
 }
 
@@ -508,8 +511,9 @@ QString Protocol::HData::toString() const {
             ret += QString("%1").arg(j, 8, 16, QChar('0')) + " ";
         }
         ret += "\n";
-        for (auto j : i.objects) {
-            ret += QString("\t\t") + j.toString() + "\n";
+        ret += "\t-OBJECTS\n";
+        for (auto j : i.objects.keys()) {
+            ret += QString("\t\t") + j + ": \"" + i.objects[j].toString() + "\"\n";
         }
         ret += "\n";
     }
