@@ -1,6 +1,7 @@
 #include "weechat.h"
 
 #include "lith.h"
+#include "protocol.h"
 
 Weechat::Weechat(Lith *lith)
     : QObject(lith)
@@ -16,7 +17,7 @@ Weechat::Weechat(Lith *lith)
     connect(&m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout);
 
     connect(&m_hotlistTimer, &QTimer::timeout, this, &Weechat::requestHotlist);
-    m_hotlistTimer.setInterval(1000);
+    m_hotlistTimer.setInterval(10000);
     m_hotlistTimer.setSingleShot(false);
 
     connect(lith->settingsGet(), &Settings::hostChanged, this, &Weechat::onConnectionSettingsChanged);
@@ -81,7 +82,8 @@ void Weechat::onConnectionSettingsChanged() {
 
 void Weechat::requestHotlist() {
     if (m_connection) {
-        m_connection->write("hdata hotlist:gui_hotlist(*)\n");
+        QString msg = QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
+        m_connection->write(msg.toUtf8());
     }
 }
 
@@ -124,7 +126,7 @@ void Weechat::onReadyRead() {
             // TODO
         }
         guard = true;
-        lith()->onMessageReceived(m_fetchBuffer);
+        onMessageReceived(m_fetchBuffer);
         guard = false;
         m_fetchBuffer.clear();
     }
@@ -142,11 +144,11 @@ void Weechat::onConnected() {
     statusSet(CONNECTED);
     auto pass = lith()->settingsGet()->passphraseGet();
     m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
-    m_connection->write("hdata buffer:gui_buffers(*) number,name,short_name,hidden,title\n");
-    m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n");
-    m_connection->write("hdata hotlist:gui_hotlist(*)\n");
+    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title\n").arg(MessageNames::c_requestBuffers).toUtf8());
+    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n").arg(MessageNames::c_requestFirstLine).toUtf8());
+    m_connection->write(QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(MessageNames::c_requestHotlist).toUtf8());
     m_connection->write("sync\n");
-    m_connection->write("nicklist\n");
+    m_connection->write(QString("(%1) nicklist\n").arg(MessageNames::c_requestNicklist).toUtf8());
 
     m_hotlistTimer.start();
 }
@@ -178,18 +180,62 @@ void Weechat::onSslErrors(const QList<QSslError> &errors) {
 }
 
 void Weechat::input(pointer_t ptr, const QString &data) {
+    // server doesn't reply to input commands directly so no message order here
     QString line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
     //qCritical() << "WRITING:" << line;
     m_connection->write(line.toUtf8());
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {
-    QString line = QString("hdata buffer:0x%1/lines/last_line(-%2)/data\n").arg(ptr, 0, 16).arg(count);
+    QString line = QString("(%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
     //qCritical() << "WRITING:" << line;
     auto bytes = m_connection->write(line.toUtf8());
     m_timeoutTimer.start(5000);
     if (bytes != line.toUtf8().count()) {
         qWarning() << "fetchLines: Attempted to write" << line.toUtf8().count() << "but managed to write" << bytes;
+    }
+}
+
+void Weechat::onMessageReceived(QByteArray &data) {
+    //qCritical() << "Message!" << data;
+    QDataStream s(&data, QIODevice::ReadOnly);
+
+    Protocol::String id;
+    Protocol::parse(s, id);
+
+    bool isIdANumber = false;
+    uint32_t possibleMessageOrder = id.d.toUInt(&isIdANumber);
+
+    char type[4] = { 0 };
+    s.readRawData(type, 3);
+
+    if (QString(type) == "hda") {
+        Protocol::HData hda;
+        Protocol::parse(s, hda);
+
+        if (c_initializationMap.contains(id.d)) {
+            // wtf, why can't I write this as |= ?
+            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap.value(id.d, UNINITIALIZED));
+            if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::DirectConnection, Q_ARG(const Protocol::HData&, hda))) {
+                qWarning() << "Possible unhandled message:" << id.d;
+            }
+        }
+        else if (isIdANumber) {
+            qCritical() << QString("This was a response to request %1").arg(possibleMessageOrder);
+            // TODO handle
+        }
+        else {
+            if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::DirectConnection, Q_ARG(const Protocol::HData&, hda))) {
+                qWarning() << "Possible unhandled message:" << id.d;
+            }
+        }
+    }
+    else {
+        qCritical() << "onMessageReceived is not handling type: " << type;
+    }
+
+    if (!s.atEnd()) {
+        qCritical() << "STREAM WAS NOT AT END!!!";
     }
 }
 

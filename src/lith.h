@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "settings.h"
+#include "protocol.h"
 
 #include <QSortFilterProxyModel>
 #include <QPointer>
@@ -43,9 +44,30 @@ public:
     QObject *getObject(pointer_t ptr, const QString &type, pointer_t parent = 0);
 
 public slots:
-    void onMessageReceived(QByteArray &data);
-
     void resetData();
+
+    void handleBufferInitialization(const Protocol::HData& hda);
+    void handleFirstReceivedLine(const Protocol::HData& hda);
+    void handleHotlistInitialization(const Protocol::HData& hda);
+    void handleNicklistInitialization(const Protocol::HData& hda);
+
+    void _buffer_opened(const Protocol::HData& hda);
+    void _buffer_type_changed(const Protocol::HData& hda);
+    void _buffer_moved(const Protocol::HData& hda);
+    void _buffer_merged(const Protocol::HData& hda);
+    void _buffer_unmerged(const Protocol::HData& hda);
+    void _buffer_hidden(const Protocol::HData& hda);
+    void _buffer_unhidden(const Protocol::HData& hda);
+    void _buffer_renamed(const Protocol::HData& hda);
+    void _buffer_title_changed(const Protocol::HData& hda);
+    void _buffer_localvar_added(const Protocol::HData& hda);
+    void _buffer_localvar_changed(const Protocol::HData& hda);
+    void _buffer_localvar_removed(const Protocol::HData& hda);
+    void _buffer_closing(const Protocol::HData& hda);
+    void _buffer_cleared(const Protocol::HData& hda);
+    void _buffer_line_added(const Protocol::HData& hda);
+    void _nicklist(const Protocol::HData& hda);
+    void _nicklist_diff(const Protocol::HData& hda);
 
 signals:
     void hasPassphraseChanged();

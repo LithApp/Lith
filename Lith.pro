@@ -1,6 +1,6 @@
 QT += qml quick widgets webview multimedia quickcontrols2
 
-CONFIG += c++11
+CONFIG += c++17
 
 HEADERS += \
     src/clipboardproxy.h \

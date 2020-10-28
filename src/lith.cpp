@@ -1,6 +1,5 @@
 #include "lith.h"
 
-#include "protocol.h"
 #include "datamodel.h"
 #include "weechat.h"
 
@@ -123,37 +122,6 @@ bool Lith::hasPassphrase() const {
     return !settingsGet()->passphraseGet().isEmpty();
 }
 
-
-void Lith::onMessageReceived(QByteArray &data) {
-    //qCritical() << "Message!" << data;
-    QDataStream s(&data, QIODevice::ReadOnly);
-
-    // For whatever fucking reason, there sometimes seems to be an extra byte at the start of the message
-    // this of course completely fucks parsing of absolutely everything
-    // reading the extra byte beforehand may slithly help with this
-    char wtf;
-    if ((data[0] || data[1] || data[2]) && *(uint8_t*)data.data() != 0xff) {
-        s.readRawData(&wtf, 1);
-    }
-
-    Protocol::String id;
-    Protocol::parse(s, id);
-
-    //qCritical() << "=== ID" << id.d;
-
-
-    char type[4] = { 0 };
-    s.readRawData(type, 3);
-
-    if (QString(type) == "hda") {
-        Protocol::HData hda;
-        Protocol::parse(s, hda);
-    }
-    else {
-        qCritical() << "onMessageReceived is not handling type: " << type;
-    }
-}
-
 void Lith::resetData() {
     selectedBufferIndexSet(-1);
     for (int i = 0; i < m_buffers->count(); i++) {
@@ -183,6 +151,90 @@ void Lith::resetData() {
     }
     m_hotList.clear();
     qCritical() << "There is" << m_hotList.count() << "hotlist items";
+}
+
+void Lith::handleBufferInitialization(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::handleFirstReceivedLine(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::handleHotlistInitialization(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::handleNicklistInitialization(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_opened(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_type_changed(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_moved(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_merged(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_unmerged(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_hidden(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_unhidden(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_renamed(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_title_changed(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_localvar_added(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_localvar_changed(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_localvar_removed(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_closing(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_cleared(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_buffer_line_added(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_nicklist(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
+}
+
+void Lith::_nicklist_diff(const Protocol::HData &hda) {
+    qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
 
