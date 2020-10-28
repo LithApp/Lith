@@ -348,6 +348,7 @@ QString Protocol::convertColorsToHtml(const QByteArray &data) {
     auto clearAttr = [&result, &bold, &reverse, &italic, &underline, &keep](QByteArray::const_iterator &it) {
        while (true) {
            switch(*it) {
+           case 0x01: // fallthrough // TODO what the fuck weechat
            case '*':
                if (bold) {
                    bold = false;

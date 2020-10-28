@@ -165,17 +165,21 @@ void Lith::resetData() {
     qCritical() << "=== RESET";
     int lines = 0;
     for (auto i : m_lineMap) {
-        if (!i->parent())
-            lines++;
-        i->deleteLater();
+        if (i) {
+            if (!i->parent())
+                lines++;
+            i->deleteLater();
+        }
     }
     m_lineMap.clear();
     qCritical() << "There is" << m_lineMap.count() << "orphan lines";
     int hotlist = 0;
     for (auto i : m_hotList) {
-        if (!i->parent())
-            hotlist++;
-        i->deleteLater();
+        if (i) {
+            if (!i->parent())
+                hotlist++;
+            i->deleteLater();
+        }
     }
     m_hotList.clear();
     qCritical() << "There is" << m_hotList.count() << "hotlist items";
