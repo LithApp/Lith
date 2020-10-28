@@ -74,6 +74,7 @@ public slots:
 
 protected:
     void addBuffer(pointer_t ptr, Buffer *b);
+    void removeBuffer(pointer_t ptr);
     Buffer *getBuffer(pointer_t ptr);
     void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line);
     BufferLine *getLine(pointer_t bufPtr, pointer_t linePtr);

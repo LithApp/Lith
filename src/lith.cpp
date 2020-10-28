@@ -232,7 +232,18 @@ void Lith::handleHotlist(const Protocol::HData &hda) {
 }
 
 void Lith::_buffer_opened(const Protocol::HData &hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda.data) {
+        // buffer
+        auto bufPtr = i.pointers.first();
+        auto buffer = getBuffer(bufPtr);
+        if (buffer)
+            continue;
+        buffer = new Buffer(this, bufPtr);
+        for (auto j : i.objects.keys()) {
+            buffer->setProperty(qPrintable(j), i.objects[j]);
+        }
+        addBuffer(bufPtr, buffer);
+    }
 }
 
 void Lith::_buffer_type_changed(const Protocol::HData &hda) {
@@ -280,7 +291,15 @@ void Lith::_buffer_localvar_removed(const Protocol::HData &hda) {
 }
 
 void Lith::_buffer_closing(const Protocol::HData &hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda.data) {
+        // buffer
+        auto bufPtr = i.pointers.first();
+        auto buffer = getBuffer(bufPtr);
+        if (!buffer)
+            continue;
+
+        buffer->deleteLater();
+    }
 }
 
 void Lith::_buffer_cleared(const Protocol::HData &hda) {
@@ -329,6 +348,14 @@ void Lith::addBuffer(pointer_t ptr, Buffer *b) {
         emit selectedBufferChanged();
     else if (lastOpenBuffer == m_buffers->count() - 1) {
         selectedBufferIndexSet(lastOpenBuffer);
+    }
+}
+
+void Lith::removeBuffer(pointer_t ptr) {
+    if (m_bufferMap.contains(ptr)) {
+        auto buf = m_bufferMap[ptr];
+        m_bufferMap.remove(ptr);
+        m_buffers->removeItem(buf);
     }
 }
 

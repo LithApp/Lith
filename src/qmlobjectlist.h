@@ -43,6 +43,8 @@ public:
 
     Q_INVOKABLE bool removeRow(int row, const QModelIndex &parent = QModelIndex());
 
+    Q_INVOKABLE bool removeItem(QObject *item);
+
     Q_INVOKABLE inline void removeFirst() {
         if(!mData.isEmpty())
             removeRow(0);

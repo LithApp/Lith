@@ -58,6 +58,15 @@ bool QmlObjectList::removeRow(int row, const QModelIndex &parent)
     return true;
 }
 
+bool QmlObjectList::removeItem(QObject *item) {
+    for (int i = 0; i < mData.count(); i++) {
+        if (mData[i] == item) {
+            return removeRow(i);
+        }
+    }
+    return false;
+}
+
 QVariant QmlObjectList::data(const QModelIndex &index, int role) const
 {
     Q_UNUSED(role);
