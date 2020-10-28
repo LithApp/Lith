@@ -11,17 +11,14 @@ Dialog {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-    anchors.centerIn: Overlay.overlay
 
     width: 400
-    /*onVisibleChanged:
-    {
-        console.warn("LOL", channelMessageActionMenuDialog.x, channelMessageActionMenuDialog.y);
-        console.warn("LOL", channelMessageActionMenuDialog.width);
-        console.warn("LOL", messageTextWithNicknameTimestamp.Layout.preferredWidth);
-        console.warn("LOL", messageTextWithNickname.Layout.preferredWidth);
-        console.warn("LOL", messageText.Layout.preferredWidth);
-    }*/
+
+    // Center the popup/dialog, whatever
+    parent: Overlay.overlay
+    x: Math.round((parent.width - width) / 2)
+    y: Math.round((parent.height - height) / 2)
+
 
     property string message;
     property string nickname;
@@ -42,6 +39,9 @@ Dialog {
     background: Rectangle {
         color: "#eeeeee"
     }
+    /*Overlay.modal: Rectangle {
+        color: "#aacfdbe7"
+    }*/
 
     ColumnLayout {
 
