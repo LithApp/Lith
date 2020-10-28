@@ -65,9 +65,8 @@ ColumnLayout {
 
                                 // TODO: how to do this better? neco s modelama? nevim jak to tam poslat, kdyz ten dialog mam jako jiny QML file :(
                                 channelMessageActionMenu.message = modelData.plainText;
-                                channelMessageActionMenu.messageWithNickname = "<" + messageModel.getNickFromTags + "> " + modelData.plainText;
-                                channelMessageActionMenu.messageWithNicknameTimestamp = messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
-                                        + " <" + messageModel.getNickFromTags + "> " + modelData.plainText;
+                                channelMessageActionMenu.nickname = messageModel.getNickFromTags;
+                                channelMessageActionMenu.timestamp = messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
                             }
 
                         }
