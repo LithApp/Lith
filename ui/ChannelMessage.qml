@@ -46,6 +46,7 @@ ColumnLayout {
                         Layout.alignment: Qt.AlignTop
                         verticalAlignment: Text.AlignTop
                         text: modelData.type === LineSegment.PLAIN ? modelData.plainText : (settings.shortenLongUrls ? modelData.summary : modelData.plainText)
+                        textFormat: Text.RichText
                         // text: modelData.type ===
                         color: modelData.type === LineSegment.PLAIN ? palette.text : palette.highlight
                         font.underline: modelData.type !== LineSegment.PLAIN
