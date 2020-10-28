@@ -236,9 +236,9 @@ QString BufferLineSegment::summaryGet()
     const auto hostPrefix = (!scheme.isEmpty() ? scheme + "://" : "") + host + "/" + ellipsis;
     qDebug() << scheme << host << file << query;
 
-    // This is a classic "URL to a file", for example a link to an image on an image-hosting website, we'll make sure
-    // the shortened path includes the filename.
-    if (!file.isEmpty() && !host.isEmpty() && !extension.isEmpty() && !query.isEmpty()) {
+    // This is a classic "URL to a file", for example a link to an image on an image-hosting website with no queries,
+    // we'll make sure the shortened path includes the filename.
+    if (!file.isEmpty() && !host.isEmpty() && !extension.isEmpty() && query.isEmpty()) {
         return hostPrefix + file;
     }
 
