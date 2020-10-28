@@ -14,8 +14,8 @@ Dialog {
     width: 400
 
     property string message;
-    property string messageWithNickname;
-    property string messageWithNicknameTimestamp;
+    property string nickname;
+    property string timestamp;
 
     SystemPalette {
         id: palette
@@ -25,6 +25,7 @@ Dialog {
         topPadding: 20
         leftPadding: 20
         text: "Copy"
+        font.bold: true
         font.pointSize: settings.baseFontSize * 1.125
     }
 
@@ -47,7 +48,7 @@ Dialog {
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
                 id: messageTextWithNicknameTimestamp
-                text: messageWithNicknameTimestamp
+                text: timestamp + " <" + nickname + "> " + message;
 
                 clip: true
                 elide: Text.ElideRight
@@ -70,7 +71,7 @@ Dialog {
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
                 id: messageText
-                text: messageWithNickname
+                text: "<" + nickname + "> " + message;
                 clip: true
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -93,7 +94,7 @@ Dialog {
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
                 id: messageTextWithNickname
-                text: message
+                text: message;
 
                 clip: true
                 elide: Text.ElideRight
