@@ -26,6 +26,12 @@ SOURCES += \
 
 RESOURCES += ui/ui.qrc assets/assets.qrc
 
+# miniz bundled dependency
+DEFINES += MINIZ_NO_STDIO
+INCLUDEPATH += third_party/
+SOURCES += third_party/miniz/miniz.c
+HEADERS += third_party/miniz/miniz.h
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 

@@ -2,6 +2,9 @@
 
 #include "lith.h"
 
+#include <iostream>
+#include <miniz/miniz.h>
+
 Weechat::Weechat(Lith *lith)
     : QObject(lith)
 {
@@ -121,11 +124,42 @@ void Weechat::onReadyRead() {
     // one message has been received in full, process it
     if (m_bytesRemaining == 0) {
         if (compressed) {
-            // TODO
+            std::cerr << "COMPRESSED" << std::endl;
+            // TODO optimize
+            QByteArray decompressed(m_fetchBuffer.count() * 4, 0);
+            mz_stream stream;
+            memset(&stream, 0, sizeof(mz_stream));
+
+            stream.next_in = reinterpret_cast<const unsigned char*>(m_fetchBuffer.data());
+            stream.avail_in = static_cast<mz_uint32>(m_fetchBuffer.count());
+            stream.next_out = reinterpret_cast<unsigned char*>(decompressed.data());
+            stream.avail_out = m_fetchBuffer.count() * 4;
+
+            int status = mz_inflateInit2(&stream, MZ_DEFAULT_WINDOW_BITS);
+            if (status != MZ_OK) {
+                std::cerr << "PRUSER 1";
+                exit(0);
+            }
+            status = mz_inflate(&stream, MZ_FINISH);
+            std::cerr << "ZADNEJ PRUSER, STATUS JE: " << status << std::endl;
+            std::cerr << "total_in: " << stream.total_in << " / " << stream.avail_in << std::endl;
+            std::cerr << "total_out: " << stream.total_out << std::endl;
+            /*
+            if (status != MZ_STREAM_END) {
+                mz_inflateEnd(&stream);
+                return ((status == MZ_BUF_ERROR) && (!stream.avail_in)) ? MZ_DATA_ERROR : status;
+            }
+            *pDest_len = stream.total_out;
+            * */
+            guard = true;
+            lith()->onMessageReceived(decompressed);
+            guard = false;
         }
-        guard = true;
-        lith()->onMessageReceived(m_fetchBuffer);
-        guard = false;
+        else {
+            guard = true;
+            lith()->onMessageReceived(m_fetchBuffer);
+            guard = false;
+        }
         m_fetchBuffer.clear();
     }
 
@@ -141,7 +175,7 @@ void Weechat::onConnected() {
 
     statusSet(CONNECTED);
     auto pass = lith()->settingsGet()->passphraseGet();
-    m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
+    m_connection->write(("init password=" + pass + ",compression=zlib\n").toUtf8());
     m_connection->write("hdata buffer:gui_buffers(*) number,name,short_name,hidden,title\n");
     m_connection->write("hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n");
     m_connection->write("hdata hotlist:gui_hotlist(*)\n");
