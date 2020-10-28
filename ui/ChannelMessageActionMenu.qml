@@ -48,6 +48,7 @@ Dialog {
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
                 id: messageTextWithNicknameTimestamp
+                visible: nickname == "" ? false : true
                 text: timestamp + " <" + nickname + "> " + message;
 
                 clip: true
@@ -71,7 +72,9 @@ Dialog {
                 Layout.preferredWidth: parent.width
                 maximumLineCount: 2
                 id: messageText
+                visible: nickname == "" ? false : true
                 text: "<" + nickname + "> " + message;
+
                 clip: true
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
