@@ -82,7 +82,7 @@ void Weechat::onConnectionSettingsChanged() {
 
 void Weechat::requestHotlist() {
     if (m_connection) {
-        QString msg = QString("(handleHotlist;%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
+        auto msg = QString("(handleHotlist;%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
         m_connection->write(msg.toUtf8());
     }
 }
@@ -106,7 +106,7 @@ void Weechat::onReadyRead() {
 
     // not waiting for the rest of any message, get a new header
     if (m_bytesRemaining == 0) {
-        QByteArray header = m_connection->read(5);
+        auto header = m_connection->read(5);
         QDataStream s(&header, QIODevice::ReadOnly);
         s >> m_bytesRemaining >> compressed;
         m_bytesRemaining -= 5;
@@ -115,7 +115,7 @@ void Weechat::onReadyRead() {
 
     // continue in whatever message came before (be it from a previous readyRead or this one
     if (m_bytesRemaining > 0) {
-        QByteArray cache = m_connection->read(m_bytesRemaining);
+        auto cache = m_connection->read(m_bytesRemaining);
         m_bytesRemaining -= cache.count();
         m_fetchBuffer.append(cache);
     }
@@ -181,13 +181,13 @@ void Weechat::onSslErrors(const QList<QSslError> &errors) {
 
 void Weechat::input(pointer_t ptr, const QString &data) {
     // server doesn't reply to input commands directly so no message order here
-    QString line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
+    auto line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
     //qCritical() << "WRITING:" << line;
     m_connection->write(line.toUtf8());
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {
-    QString line = QString("(handleFetchLines;%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
+    auto line = QString("(handleFetchLines;%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
     //qCritical() << "WRITING:" << line;
     auto bytes = m_connection->write(line.toUtf8());
     m_timeoutTimer.start(5000);
@@ -218,7 +218,7 @@ void Weechat::onMessageReceived(QByteArray &data) {
             }
         }
         else {
-            QString name = id.d.split(";").first();
+            auto name = id.d.split(";").first();
             if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::DirectConnection, Q_ARG(const Protocol::HData&, hda))) {
                 qWarning() << "Possible unhandled message:" << name;
             }

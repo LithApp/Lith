@@ -120,8 +120,8 @@ bool Protocol::parse(QDataStream &s, Protocol::HData &r) {
             item.pointers.append(ptr.d);
         }
         for (int j = 0; j < r.keys.count(); j++) {
-            QString name = r.keys[j].split(":").first();
-            QString type = r.keys[j].split(":").last();
+            auto name = r.keys[j].split(":").first();
+            auto type = r.keys[j].split(":").last();
             if (type == "int") {
                 Protocol::Integer i;
                 parse(s, i);

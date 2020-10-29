@@ -404,7 +404,7 @@ ProxyBufferList::ProxyBufferList(QObject *parent, QAbstractListModel *parentMode
 }
 bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
     auto index = sourceModel()->index(source_row, 0, source_parent);
-    QVariant v = sourceModel()->data(index);
+    auto v = sourceModel()->data(index);
     auto b = qvariant_cast<Buffer*>(v);
     if (b) {
         return b->nameGet().toLower().contains(filterWordGet().toLower());

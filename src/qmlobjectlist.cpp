@@ -7,7 +7,7 @@
 
 void QmlObjectList::append(const QVariantMap& properties)
 {
-    QObject* newObj = mMetaObject.newInstance();
+    auto* newObj = mMetaObject.newInstance();
     if(newObj == Q_NULLPTR) {
         qWarning("invalid constructor");
         return;
@@ -72,7 +72,7 @@ QVariant QmlObjectList::data(const QModelIndex &index, int role) const
     Q_UNUSED(role);
     if(ValidateIndex(index.row()))
         return QVariant();
-    const QObjectPointer& data = mData[index.row()];
+    const auto& data = mData[index.row()];
     if(data.isNull()) {
         qWarning()<<__FUNCTION__<<"data is null";
         return QVariant();

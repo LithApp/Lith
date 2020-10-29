@@ -17,10 +17,10 @@ Uploader::Uploader(QObject *parent) : QObject(parent)
 }
 
 void Uploader::upload(const QString &path) {
-    QUrl url = QUrl("https://api.imgur.com/3/image");
+    auto url = QUrl("https://api.imgur.com/3/image");
     qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
 
-    QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
+    auto* mgr = new QNetworkAccessManager(this);
 
     QFile *file;
     if (path.startsWith("file://"))
@@ -64,9 +64,9 @@ void Uploader::upload(const QString &path) {
 }
 
 void Uploader::uploadBinary(QImage &data) {
-    QUrl url = QUrl("https://api.imgur.com/3/image");
+    auto url = QUrl("https://api.imgur.com/3/image");
 
-    QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
+    auto* mgr = new QNetworkAccessManager(this);
 
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
@@ -92,7 +92,7 @@ void Uploader::uploadBinary(QImage &data) {
 void Uploader::onFinished(QNetworkReply *reply) {
     workingSet(false);
     if (reply->isReadable()) {
-        QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+        auto doc = QJsonDocument::fromJson(reply->readAll());
         qCritical() << QString(doc.toJson());
         if (doc["success"].toBool()) {
             emit success(doc["data"]["link"].toString());
