@@ -176,10 +176,9 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
 {
     connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLineSegment::summaryChanged);
     QUrl url(plainTextGet());
-    if (plainTextGet().startsWith("http") && url.isValid()) {
+    if (url.scheme().startsWith("http")) {
         QString extension = url.fileName().split(".").last().toLower();
         QString host = url.host();
-        QString file = url.fileName();
 
         if (QStringList{"png", "jpg", "gif"}.indexOf(extension) != -1)
             m_type = IMAGE;
@@ -202,14 +201,10 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
 QString BufferLineSegment::summaryGet()
 {
     const auto threshold = Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet();
-    if (plainTextGet().size() < threshold
-            || !plainTextGet().startsWith("http")) {
+    if (plainTextGet().size() < threshold) {
         return plainTextGet();
     }
     QUrl url(plainTextGet());
-    if (!url.isValid()) {
-        return plainTextGet();
-    }
 
     QString extension = url.fileName().split(".").last().toLower();
     QString scheme = url.scheme();
@@ -219,7 +214,6 @@ QString BufferLineSegment::summaryGet()
     const auto ellipsis = "\u2026";
     // We'll show always show the host (and the scheme, if it's present)
     const auto hostPrefix = (!scheme.isEmpty() ? scheme + "://" : "") + host + "/" + ellipsis;
-    qDebug() << scheme << host << file << query;
 
     // This is a classic "URL to a file", for example a link to an image on an image-hosting website with no queries,
     // we'll make sure the shortened path includes the filename.
