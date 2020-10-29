@@ -94,12 +94,12 @@ bool BufferLine::isPrivMsg() {
 }
 
 QString BufferLine::colorlessNicknameGet() {
-    QString nickStripped = QTextDocumentFragment::fromHtml(m_prefix).toPlainText();
+    auto nickStripped = QTextDocumentFragment::fromHtml(m_prefix).toPlainText();
     return nickStripped;
 }
 
 QString BufferLine::colorlessTextGet() {
-    QString messageStripped = QTextDocumentFragment::fromHtml(m_message).toPlainText();
+    auto messageStripped = QTextDocumentFragment::fromHtml(m_message).toPlainText();
     return messageStripped;
 }
 
@@ -175,10 +175,10 @@ BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, Bu
     , m_plainText(text)
 {
     connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLineSegment::summaryChanged);
-    QUrl url(plainTextGet());
+    auto url = QUrl(plainTextGet());
     if (url.scheme().startsWith("http")) {
-        QString extension = url.fileName().split(".").last().toLower();
-        QString host = url.host();
+        auto extension = url.fileName().split(".").last().toLower();
+        auto host = url.host();
 
         if (QStringList{"png", "jpg", "gif"}.indexOf(extension) != -1)
             m_type = IMAGE;
@@ -204,12 +204,12 @@ QString BufferLineSegment::summaryGet()
     if (plainTextGet().size() < threshold) {
         return plainTextGet();
     }
-    QUrl url(plainTextGet());
-    QString scheme = url.scheme();
-    QString host = url.host();
-    QString file = url.fileName();
-    QString query = url.query();
-    QString path = url.path();
+    auto url = QUrl(plainTextGet());
+    auto scheme = url.scheme();
+    auto host = url.host();
+    auto file = url.fileName();
+    auto query = url.query();
+    auto path = url.path();
     // If we only have a hostname, we'll use it as is.
     if (path.isEmpty() || path == "/") {
         return plainTextGet();

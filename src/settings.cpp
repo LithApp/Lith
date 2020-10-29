@@ -10,7 +10,7 @@ Settings::Settings(QObject *parent)
     auto mo = Settings::metaObject();
     for (int i = 0; i < mo->propertyCount(); i++) {
         auto property = mo->property(i);
-        QString name = property.name();
+        auto name = property.name();
         auto defaultValue = property.read(this);
         auto settingsValue = s.value(name, defaultValue);
         if (defaultValue != settingsValue)
