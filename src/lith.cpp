@@ -398,7 +398,7 @@ ProxyBufferList::ProxyBufferList(QObject *parent, QAbstractListModel *parentMode
 {
     setSourceModel(parentModel);
     setFilterRole(Qt::UserRole);
-    connect(this, &ProxyBufferList::filterWordChanged, this, [this](){
+    connect(this, &ProxyBufferList::filterWordChanged, [this] {
         setFilterFixedString(filterWordGet());
     });
 }

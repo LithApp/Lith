@@ -146,9 +146,7 @@ HotListItem::HotListItem(QObject *parent)
     : QObject(parent)
 {
     connect(this, &HotListItem::countChanged, this, &HotListItem::onCountChanged);
-    connect(this, &HotListItem::bufferChanged, [this](){
-        onCountChanged();
-    });
+    connect(this, &HotListItem::bufferChanged, this, &HotListItem::onCountChanged);
 }
 
 Buffer *HotListItem::bufferGet() {
