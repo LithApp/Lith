@@ -58,6 +58,12 @@ ApplicationWindow {
         topMargin: keyboardArea.height
     }
 
+
+    NickListActionMenu {
+        id: nickListActionMenu
+    }
+
+
     ChannelView {
         id: channelView
         anchors {
