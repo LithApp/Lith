@@ -205,24 +205,34 @@ QString BufferLineSegment::summaryGet()
         return plainTextGet();
     }
     QUrl url(plainTextGet());
-
-    QString extension = url.fileName().split(".").last().toLower();
     QString scheme = url.scheme();
     QString host = url.host();
     QString file = url.fileName();
     QString query = url.query();
-    const auto ellipsis = "\u2026";
-    // We'll show always show the host (and the scheme, if it's present)
-    const auto hostPrefix = (!scheme.isEmpty() ? scheme + "://" : "") + host + "/" + ellipsis;
-
-    // This is a classic "URL to a file", for example a link to an image on an image-hosting website with no queries,
-    // we'll make sure the shortened path includes the filename.
-    if (!file.isEmpty() && !host.isEmpty() && !extension.isEmpty() && query.isEmpty()) {
-        return hostPrefix + file;
+    QString path = url.path();
+    // If we only have a hostname, we'll use it as is.
+    if (path.isEmpty() || path == "/") {
+        return plainTextGet();
     }
 
-    // Otherwise it's a weird link with queries and stuff. We'll just shorten the whole thing and leave just enough
-    // characters so that we are within the threshold (but at least 10).
-    const auto suffixCharacterCount = std::max(threshold - hostPrefix.length(), 10);
-    return hostPrefix + plainTextGet().right(suffixCharacterCount);
+    // We'll show always show the host and the scheme.
+    const auto hostPrefix = scheme + "://" + host + "/";
+    const auto ellipsis = "\u2026";
+
+    // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
+    // ellipsis...
+    if (hostPrefix.length() > threshold) {
+        return hostPrefix + ellipsis;
+    }
+
+    // This is a "nice" url with just a hostname and then one path fragment. We'll let these slide, because these tend
+    // to look nice even if they're long. Something like https://host.domain/file.extension
+    if (path == "/" + file && !url.hasQuery()) {
+        return plainTextGet();
+    }
+
+    // Otherwise it's a weird link with multiple path fragments and queries and stuff. We'll just use the host and 10
+    // characters of the path.
+    const auto maxCharsToAppend = threshold - hostPrefix.length();
+    return hostPrefix + ellipsis + plainTextGet().right(maxCharsToAppend - 1);
 }
