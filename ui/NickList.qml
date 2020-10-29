@@ -25,6 +25,16 @@ Drawer {
             height: visible ? nickTextItem.height + 12 : 0
             color: nickItemMouse.pressed ? "gray" : palette.base
 
+            MouseArea {
+                id: nickItemMouse
+                anchors.fill: parent
+                onClicked: {
+                    console.warn("something, soon?");
+                    nickListActionMenu.visible = true
+                    nickListActionMenu.nickname = modelData.name
+                }
+            }
+
             Behavior on color {
                 ColorAnimation {
 
@@ -43,14 +53,7 @@ Drawer {
                     font.pointSize: settings.baseFontSize * 1.125
                     color: palette.windowText
 
-                    MouseArea {
-                        id: nickItemMouse
-                        anchors.fill: parent
-                        onClicked: {
-                            console.warn("something, soon?");
-                            // TODO: open buffer with query? menu? whois? kick? ban?
-                        }
-                    }
+
                 }
             }
 
