@@ -150,7 +150,7 @@ void Lith::resetData() {
 }
 
 void Lith::handleBufferInitialization(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer
         auto ptr = i.pointers.first();
         auto b = new Buffer(this, ptr);
@@ -163,7 +163,7 @@ void Lith::handleBufferInitialization(Protocol::HData *hda) {
 }
 
 void Lith::handleFirstReceivedLine(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer - lines - line - line_data
         auto bufPtr = i.pointers.first();
         auto linePtr = i.pointers.last();
@@ -186,7 +186,7 @@ void Lith::handleFirstReceivedLine(Protocol::HData *hda) {
 }
 
 void Lith::handleHotlistInitialization(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // hotlist
         auto ptr = i.pointers.first();
         auto item = new HotListItem(this);
@@ -199,7 +199,7 @@ void Lith::handleHotlistInitialization(Protocol::HData *hda) {
 }
 
 void Lith::handleNicklistInitialization(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer - nicklist_item
         auto bufPtr = i.pointers.first();
         auto nickPtr = i.pointers.last();
@@ -218,7 +218,7 @@ void Lith::handleNicklistInitialization(Protocol::HData *hda) {
 }
 
 void Lith::handleFetchLines(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer - lines - line - line_data
         auto bufPtr = i.pointers.first();
         auto linePtr = i.pointers.last();
@@ -241,7 +241,7 @@ void Lith::handleFetchLines(Protocol::HData *hda) {
 }
 
 void Lith::handleHotlist(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // hotlist
         auto hlPtr = i.pointers.first();
         auto bufPtr = qvariant_cast<pointer_t>(i.objects["buffer"]);
@@ -265,7 +265,7 @@ void Lith::handleHotlist(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_opened(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer
         auto bufPtr = i.pointers.first();
         auto buffer = getBuffer(bufPtr);
@@ -311,7 +311,7 @@ void Lith::_buffer_unhidden(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_renamed(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer
         auto bufPtr = i.pointers.first();
         auto buf = getBuffer(bufPtr);
@@ -332,7 +332,7 @@ void Lith::_buffer_title_changed(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_localvar_added(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer
         auto bufPtr = i.pointers.first();
         auto buf = getBuffer(bufPtr);
@@ -354,7 +354,7 @@ void Lith::_buffer_localvar_removed(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_closing(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // buffer
         auto bufPtr = i.pointers.first();
         auto buffer = getBuffer(bufPtr);
@@ -373,7 +373,7 @@ void Lith::_buffer_cleared(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_line_added(Protocol::HData *hda) {
-    for (auto i : hda->data) {
+    for (auto &i : hda->data) {
         // line_data
         auto linePtr = i.pointers.last();
         // path doesn't contain the buffer, we need to retrieve it like this
