@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 
 import lith 1.0
 
-TextField {
+TextInput {
     id: inputField
     font.family: "Menlo"
     font.pointSize: settings.baseFontSize
@@ -12,9 +12,6 @@ TextField {
     focus: true
     inputMethodHints: Qt.ImhMultiLine
 
-    background: Rectangle {
-        color: palette.base
-    }
     color: palette.text
 
     property alias inputFieldAlias: inputField

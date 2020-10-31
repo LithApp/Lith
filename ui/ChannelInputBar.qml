@@ -6,19 +6,20 @@ import lith 1.0
 
 
 RowLayout {
-    spacing: 0
+    spacing: 3
     // TODO
     property alias textInput: channelTextInput
     property bool hasFocus: channelTextInput.activeFocus
     Button {
         Layout.preferredWidth: height
         text: "⇥"
-        font.pointSize: settings.baseFontSize * 1.25
+        font.pointSize: settings.baseFontSize
         focusPolicy: Qt.NoFocus
         onClicked: {
             channelTextInput.autocomplete();
         }
     }
+
     ChannelTextInput {
         id: channelTextInput
         Layout.fillWidth: true
