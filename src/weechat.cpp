@@ -43,7 +43,7 @@ void Weechat::start() {
     }
     qCritical() << "Connecting";
 
-    //lith()->statusSet(Lith::CONNECTING);
+    lith()->statusSet(Lith::CONNECTING);
     m_connection = new QSslSocket(this);
     m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
     m_connection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
@@ -145,7 +145,7 @@ void Weechat::onConnected() {
     qCritical() << "Connected!";
     lith()->resetData();
 
-    //lith()->statusSet(Lith::CONNECTED);
+    lith()->statusSet(Lith::CONNECTED);
     auto pass = lith()->settingsGet()->passphraseGet();
     m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
     m_connection->write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title\n").arg(MessageNames::c_requestBuffers).toUtf8());
@@ -158,7 +158,7 @@ void Weechat::onConnected() {
 }
 
 void Weechat::onDisconnected() {
-    //lith()->statusSet(Lith::DISCONNECTED);
+    lith()->statusSet(Lith::DISCONNECTED);
 
     m_hotlistTimer->stop();
     if (m_reconnectTimer->interval() < 5000)
@@ -168,7 +168,7 @@ void Weechat::onDisconnected() {
 
 void Weechat::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
-    //lith()->statusSet(Lith::ERROR);
+    lith()->statusSet(Lith::ERROR);
     lith()->errorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
 
     if (m_reconnectTimer->interval() < 5000)
@@ -241,6 +241,6 @@ void Weechat::onMessageReceived(QByteArray &data) {
 
 void Weechat::onTimeout() {
     m_connection->disconnect();
-    //lith()->statusSet(Lith::DISCONNECTED);
+    lith()->statusSet(Lith::DISCONNECTED);
     start();
 }
