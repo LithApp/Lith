@@ -81,18 +81,14 @@ ApplicationWindow {
     BufferList {
         id: bufferDrawer
         width: 0.66 * parent.width
-        height: parent.height
-        topMargin: topKeyboardArea.height
-        bottomMargin: bottomKeyboardArea.height
+        height: parent.height - bottomKeyboardArea.height
     }
 
     NickList {
         id: nickDrawer
         edge: Qt.RightEdge
         width: 0.66 * parent.width
-        height: parent.height
-        topMargin: topKeyboardArea.height
-        bottomMargin: bottomKeyboardArea.height
+        height: parent.height - bottomKeyboardArea.height
     }
 
     NickListActionMenu {
@@ -101,8 +97,8 @@ ApplicationWindow {
 
     SettingsDialog {
         id: settingsDialog
-        topMargin: topKeyboardArea.height
-        bottomMargin: bottomKeyboardArea.height
+        width: parent.width
+        height: parent.height - bottomKeyboardArea.height
     }
 
     PreviewPopup {
@@ -119,6 +115,5 @@ ApplicationWindow {
                 channelView.textInput.forceActiveFocus()
             }
         }
-
     }
 }

@@ -8,9 +8,6 @@ Dialog {
     closePolicy: Popup.CloseOnEscape
     standardButtons: Dialog.Ok | Dialog.Cancel
 
-    width: parent.width
-    height: parent.height
-
     SystemPalette {
         id: palette
     }
