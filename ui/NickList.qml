@@ -36,6 +36,7 @@ Drawer {
             height: nickFilter.height
             TextField {
                 id: nickFilter
+                focus: false
                 placeholderText: "Filter nicks"
                 anchors {
                     left: parent.left
