@@ -241,7 +241,26 @@ void Lith::handleFetchLines(Protocol::HData *hda) {
 }
 
 void Lith::handleHotlist(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda->data) {
+        // hotlist
+        auto hlPtr = i.pointers.first();
+        auto bufPtr = qvariant_cast<pointer_t>(i.objects["buffer"]);
+        auto hl = getHotlist(hlPtr);
+        auto buf = getBuffer(bufPtr);
+        if (!buf) {
+            qWarning() << "Got a hotlist item" << QString("%1").arg(hlPtr, 16, 16, QChar('0')) <<  "for nonexistent buffer" << QString("%1").arg(bufPtr, 16, 16, QChar('0'));
+            continue;
+        }
+        if (!hl) {
+            hl = new HotListItem(this);
+            hl->bufferSet(buf);
+        }
+        for (auto j : i.objects.keys()) {
+            if (j == "buffer")
+                continue;
+            hl->setProperty(qPrintable(j), i.objects[j]);
+        }
+    }
     delete hda;
 }
 
@@ -421,6 +440,12 @@ void Lith::addHotlist(pointer_t ptr, HotListItem *hotlist) {
         qCritical() << "Hotlist with ptr" << QString("%1").arg(ptr, 8, 16, QChar('0')) << "already exists";
     }
     m_hotList[ptr] = hotlist;
+}
+
+HotListItem *Lith::getHotlist(pointer_t ptr) {
+    if (m_hotList.contains(ptr))
+        return m_hotList[ptr];
+    return nullptr;
 }
 
 

@@ -90,6 +90,7 @@ protected:
     void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line);
     BufferLine *getLine(pointer_t bufPtr, pointer_t linePtr);
     void addHotlist(pointer_t ptr, HotListItem *hotlist);
+    HotListItem *getHotlist(pointer_t ptr);
 
 signals:
     void hasPassphraseChanged();
