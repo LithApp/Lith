@@ -13,6 +13,12 @@ ApplicationWindow {
     }
 
     Rectangle {
+        id: windowBackground
+        anchors.fill: parent
+        color: palette.base
+    }
+
+    Rectangle {
         id: keyboardArea
         anchors {
             left: parent.left
@@ -23,24 +29,33 @@ ApplicationWindow {
         height: Qt.inputMethod &&
                 Qt.inputMethod.keyboardRectangle &&
                 Qt.inputMethod.visible &&
-                channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height + errorMessage.height :
-                                               errorMessage.height
+                channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height :
+                                               0
         Behavior on height {
             NumberAnimation {
                 duration: 200
                 easing.type: Easing.OutCubic
             }
         }
-        ErrorMessage {
-            id: errorMessage
-            anchors.bottom: parent.bottom
+    }
+
+    ErrorMessage {
+        id: errorMessage
+        anchors {
+            top: keyboardArea.bottom
+            left: parent.left
+            right: parent.right
         }
     }
 
-    Rectangle {
-        id: windowBackground
-        anchors.fill: parent
-        color: palette.base
+    ChannelView {
+        id: channelView
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+            top: errorMessage.bottom
+        }
     }
 
     BufferList {
@@ -58,20 +73,8 @@ ApplicationWindow {
         topMargin: keyboardArea.height
     }
 
-
     NickListActionMenu {
         id: nickListActionMenu
-    }
-
-
-    ChannelView {
-        id: channelView
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-            top: keyboardArea.bottom
-        }
     }
 
     SettingsDialog {
