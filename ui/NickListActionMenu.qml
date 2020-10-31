@@ -41,44 +41,26 @@ Dialog {
     ListModel {
         id: nicklistActionMenuModel
 
-        property var doAction: function(operation) {
-            console.log("Doing: " + operation)
-
-            lith.selectedBuffer.input("/" + operation + " " + nickname)
-            nickListActionMenuDialog.close()
-            nickDrawer.close()
-        }
-
         ListElement {
             name: "Open query"
-            property var operation: function() {
-                // this obv doesn't switch to query buffe yet, soon(TM)
-                nicklistActionMenuModel.doAction("query")
-            }
+            operation: "query"
         }
         ListElement {
             name: "Op"
-            property var operation: function() {
-                nicklistActionMenuModel.doAction("op")
-            }
+            operation: "op"
         }
         ListElement {
             name: "Deop"
-            property var operation: function() {
-                nicklistActionMenuModel.doAction("deop")
-            }
+            operation: "deop"
         }
         ListElement {
             name: "Kick"
-            property var operation: function() {
-                nicklistActionMenuModel.doAction("kick")
-            }
+            operation:"kick"
         }
         ListElement {
             name: "Kickban"
-            property var operation: function() {
-                nicklistActionMenuModel.doAction("kickban")
-            }
+            operation: "kickban"
+
         }
     }
 
@@ -96,7 +78,11 @@ Dialog {
                 model: nicklistActionMenuModel
                 delegate: Button {
                     text: name
-                    onClicked: operation()
+                    onClicked: {
+                        lith.selectedBuffer.input("/" + operation + " " + nickname)
+                        nickListActionMenuDialog.close()
+                        nickDrawer.close()
+                    }
                     width: parent.fillWidth
                     Layout.fillWidth: true
                     font.family: "Menlo"
