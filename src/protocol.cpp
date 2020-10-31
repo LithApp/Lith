@@ -99,6 +99,26 @@ bool Protocol::parse(QDataStream &s, Protocol::Time &r) {
 }
 
 bool Protocol::parse(QDataStream &s, Protocol::HashTable &r) {
+    char keyType[4] = { 0 }, valueType[4] = { 0 };
+    s.readRawData(keyType, 3);
+    if (QString(keyType) != "str") {
+        qWarning() << "Hashtable currently supports only string keys";
+        return false;
+    }
+    s.readRawData(valueType, 3);
+    if (QString(valueType) != "str") {
+        qWarning() << "Hashtable currently supports only string values";
+        return false;
+    }
+    quint32 count = 0;
+    s >> count;
+    r.d.clear();
+    for (quint32 i = 0; i < count; i++) {
+        Protocol::String key, value;
+        parse(s, key);
+        parse(s, value);
+        r.d.insert(key.d, value.d);
+    }
     return true;
 }
 
@@ -168,6 +188,11 @@ bool Protocol::parse(QDataStream &s, Protocol::HData &r) {
                 Protocol::Char c;
                 parse(s, c);
                 item.objects[name] = QVariant::fromValue(c.d);
+            }
+            else if (type == "htb") {
+                Protocol::HashTable htb;
+                parse(s, htb);
+                item.objects[name] = QVariant::fromValue(htb.d);
             }
             else {
                 qCritical() << "!!! Unhandled type:" << type << "for field" << name;
