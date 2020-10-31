@@ -412,7 +412,47 @@ void Lith::_nicklist(Protocol::HData *hda) {
 }
 
 void Lith::_nicklist_diff(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    std::cerr << hda->toString().toStdString() << std::endl;
+    for (auto &i : hda->data) {
+        // buffer - nicklist_item
+        auto bufPtr = i.pointers.first();
+        auto nickPtr = i.pointers.last();
+        auto buffer = getBuffer(bufPtr);
+        if (!buffer)
+            continue;
+        auto op = qvariant_cast<char>(i.objects["_diff"]);
+        switch (op) {
+        case '+': {
+            auto nick = new Nick(buffer);
+            for (auto j : i.objects.keys()) {
+                if (j == "_diff")
+                    continue;
+                nick->setProperty(qPrintable(j), i.objects[j]);
+            }
+            buffer->addNick(nickPtr, nick);
+            break;
+        }
+        case '-': {
+            buffer->removeNick(nickPtr);
+            break;
+        }
+        case '^':
+        case '*': {
+            auto nick = buffer->getNick(nickPtr);
+            if (!nick)
+                break;
+            for (auto j : i.objects.keys()) {
+                if (j == "_diff")
+                    continue;
+                nick->setProperty(qPrintable(j), i.objects[j]);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+
+    }
     delete hda;
 }
 

@@ -60,6 +60,16 @@ void Buffer::addNick(pointer_t ptr, Nick *nick) {
     m_nicks->append(nick);
 }
 
+void Buffer::removeNick(pointer_t ptr) {
+    for (int i = 0; i < m_nicks->count(); i++) {
+        auto n = m_nicks->get<Nick>(i);
+        if (n && n->ptrGet() == ptr) {
+            m_nicks->removeRow(i);
+            break;
+        }
+    }
+}
+
 QStringList Buffer::getVisibleNicks() {
     QStringList result;
     for (int i = 0; i < m_nicks->count(); i++) {
