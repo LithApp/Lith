@@ -311,7 +311,18 @@ void Lith::_buffer_unhidden(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_renamed(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda->data) {
+        // buffer
+        auto bufPtr = i.pointers.first();
+        auto buf = getBuffer(bufPtr);
+        if (!buf)
+            continue;
+        for (auto j : i.objects.keys()) {
+            if (j.endsWith("name")) {
+                buf->setProperty(qPrintable(j), i.objects[j]);
+            }
+        }
+    }
     delete hda;
 }
 
