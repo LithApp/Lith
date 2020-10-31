@@ -68,9 +68,9 @@ private:
     QByteArray m_fetchBuffer;
     int32_t m_bytesRemaining { 0 };
 
-    QTimer m_hotlistTimer;
-    QTimer m_reconnectTimer;
-    QTimer m_timeoutTimer;
+    QTimer *m_hotlistTimer { new QTimer(this) };
+    QTimer *m_reconnectTimer { new QTimer(this) };
+    QTimer *m_timeoutTimer { new QTimer(this) };
 
     int64_t m_messageOrder { 0 };
 

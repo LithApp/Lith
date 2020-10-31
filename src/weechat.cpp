@@ -16,22 +16,22 @@ Lith *Weechat::lith() {
 }
 
 void Weechat::init() {
-    m_reconnectTimer.setInterval(1000);
-    m_reconnectTimer.setSingleShot(true);
-    connect(&m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart);
+    m_reconnectTimer->setInterval(1000);
+    m_reconnectTimer->setSingleShot(true);
+    connect(m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart, Qt::QueuedConnection);
 
-    m_timeoutTimer.setInterval(5000);
-    m_timeoutTimer.setSingleShot(true);
-    connect(&m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout);
+    m_timeoutTimer->setInterval(5000);
+    m_timeoutTimer->setSingleShot(true);
+    connect(m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout, Qt::QueuedConnection);
 
-    connect(&m_hotlistTimer, &QTimer::timeout, this, &Weechat::requestHotlist);
-    m_hotlistTimer.setInterval(10000);
-    m_hotlistTimer.setSingleShot(false);
+    connect(m_hotlistTimer, &QTimer::timeout, this, &Weechat::requestHotlist, Qt::QueuedConnection);
+    m_hotlistTimer->setInterval(10000);
+    m_hotlistTimer->setSingleShot(false);
 
-    connect(lith()->settingsGet(), &Settings::hostChanged, this, &Weechat::onConnectionSettingsChanged);
-    connect(lith()->settingsGet(), &Settings::passphraseChanged, this, &Weechat::onConnectionSettingsChanged);
-    connect(lith()->settingsGet(), &Settings::portChanged, this, &Weechat::onConnectionSettingsChanged);
-    connect(lith()->settingsGet(), &Settings::encryptedChanged, this, &Weechat::onConnectionSettingsChanged);
+    connect(lith()->settingsGet(), &Settings::hostChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
+    connect(lith()->settingsGet(), &Settings::passphraseChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
+    connect(lith()->settingsGet(), &Settings::portChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
+    connect(lith()->settingsGet(), &Settings::encryptedChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
 
     onConnectionSettingsChanged();
 }
@@ -49,14 +49,14 @@ void Weechat::start() {
     m_connection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &Weechat::onError);
+    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &Weechat::onError, Qt::QueuedConnection);
 #else
-    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &Weechat::onError);
+    connect(m_connection, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &Weechat::onError, Qt::QueuedConnection);
 #endif
-    connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Weechat::onSslErrors);
-    connect(m_connection, &QSslSocket::readyRead, this, &Weechat::onReadyRead);
-    connect(m_connection, &QSslSocket::connected, this, &Weechat::onConnected);
-    connect(m_connection, &QSslSocket::disconnected, this, &Weechat::onDisconnected);
+    connect(m_connection, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &Weechat::onSslErrors, Qt::QueuedConnection);
+    connect(m_connection, &QSslSocket::readyRead, this, &Weechat::onReadyRead, Qt::QueuedConnection);
+    connect(m_connection, &QSslSocket::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
+    connect(m_connection, &QSslSocket::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
 
     restart();
 }
@@ -69,7 +69,7 @@ void Weechat::restart() {
         m_connection->connectToHostEncrypted(host, port);
     else
         m_connection->connectToHost(host, port);
-    m_reconnectTimer.stop();
+    m_reconnectTimer->stop();
 }
 
 void Weechat::onConnectionSettingsChanged() {
@@ -92,7 +92,7 @@ void Weechat::requestHotlist() {
 }
 
 void Weechat::onReadyRead() {
-    m_timeoutTimer.stop();
+    m_timeoutTimer->stop();
 
     if (!m_connection) {
         // this shouldn't really happen, yet it seems it probably does
@@ -154,16 +154,16 @@ void Weechat::onConnected() {
     m_connection->write("sync\n");
     m_connection->write(QString("(%1) nicklist\n").arg(MessageNames::c_requestNicklist).toUtf8());
 
-    m_hotlistTimer.start();
+    m_hotlistTimer->start();
 }
 
 void Weechat::onDisconnected() {
     //lith()->statusSet(Lith::DISCONNECTED);
 
-    m_hotlistTimer.stop();
-    if (m_reconnectTimer.interval() < 5000)
-        m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
-    m_reconnectTimer.start();
+    m_hotlistTimer->stop();
+    if (m_reconnectTimer->interval() < 5000)
+        m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
+    m_reconnectTimer->start();
 }
 
 void Weechat::onError(QAbstractSocket::SocketError e) {
@@ -171,9 +171,9 @@ void Weechat::onError(QAbstractSocket::SocketError e) {
     //lith()->statusSet(Lith::ERROR);
     lith()->errorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
 
-    if (m_reconnectTimer.interval() < 5000)
-        m_reconnectTimer.setInterval(m_reconnectTimer.interval() * 2);
-    m_reconnectTimer.start();
+    if (m_reconnectTimer->interval() < 5000)
+        m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
+    m_reconnectTimer->start();
 }
 
 void Weechat::onSslErrors(const QList<QSslError> &errors) {
@@ -194,7 +194,7 @@ void Weechat::fetchLines(pointer_t ptr, int count) {
     auto line = QString("(handleFetchLines;%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
     //qCritical() << "WRITING:" << line;
     auto bytes = m_connection->write(line.toUtf8());
-    m_timeoutTimer.start(5000);
+    m_timeoutTimer->start(5000);
     if (bytes != line.toUtf8().count()) {
         qWarning() << "fetchLines: Attempted to write" << line.toUtf8().count() << "but managed to write" << bytes;
     }
