@@ -12,7 +12,10 @@ Drawer {
 
         if (visible) {
             filterField.clear()
-            filterField.focus = true
+            if (platform.os === "android" || platform.os === "ios")
+                filterField.focus = false
+            else
+                filterField.focus = true
         }
     }
 

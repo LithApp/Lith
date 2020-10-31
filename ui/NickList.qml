@@ -7,6 +7,16 @@ Drawer {
         id: palette
     }
 
+    onVisibleChanged: {
+        if (visible) {
+            if (platform.os === "android" || platform.os === "ios")
+                nickFilter.focus = false
+            else
+                nickFilter.focus = true
+        }
+    }
+
+
     Rectangle {
         anchors.fill: parent
         color: palette.window
