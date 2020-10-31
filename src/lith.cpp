@@ -332,18 +332,25 @@ void Lith::_buffer_title_changed(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_localvar_added(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto i : hda->data) {
+        // buffer
+        auto bufPtr = i.pointers.first();
+        auto buf = getBuffer(bufPtr);
+        if (!buf)
+            continue;
+        buf->local_variablesSet(i.objects["local_variables"].toStringList());
+    }
     delete hda;
 }
 
 void Lith::_buffer_localvar_changed(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
-    delete hda;
+    // These three seem to be the same
+    _buffer_localvar_added(hda);
 }
 
 void Lith::_buffer_localvar_removed(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
-    delete hda;
+    // These three seem to be the same
+    _buffer_localvar_added(hda);
 }
 
 void Lith::_buffer_closing(Protocol::HData *hda) {
