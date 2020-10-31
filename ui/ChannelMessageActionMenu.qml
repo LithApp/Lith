@@ -12,7 +12,7 @@ Dialog {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    width: 400
+    width: parent.width / 1.25
 
     // Center the popup/dialog, whatever
     parent: Overlay.overlay
