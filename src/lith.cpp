@@ -327,7 +327,14 @@ void Lith::_buffer_renamed(Protocol::HData *hda) {
 }
 
 void Lith::_buffer_title_changed(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
+    for (auto &i : hda->data) {
+        // buffer
+        auto bufPtr = i.pointers.first();
+        auto buf = getBuffer(bufPtr);
+        if (!buf)
+            continue;
+        buf->titleSet(i.objects["title"].toString());
+    }
     delete hda;
 }
 
