@@ -39,9 +39,23 @@ Dialog {
     background: Rectangle {
         color: "#eeeeee"
     }
-    /*Overlay.modal: Rectangle {
-        color: "#aacfdbe7"
-    }*/
+
+    ListModel {
+        id: channelMessageActionMenuModel
+
+        ListElement {
+            textVal: "%3 (%2) %1"
+            numberOfArgs: 3
+        }
+        ListElement {
+            textVal: "(%2) %1"
+            numberOfArgs: 2
+        }
+        ListElement {
+            textVal: "%1"
+            numberOfArgs: 1
+        }
+    }
 
     ColumnLayout {
 
@@ -52,113 +66,43 @@ Dialog {
             columns: 1
             width: parent.width
 
+            Repeater {
+                model: channelMessageActionMenuModel
+                delegate: Text {
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.preferredWidth: parent.width
+                    maximumLineCount: 2
+                    visible: nickname == "" ? false : true
+                    text: numberOfArgs == 3 ? textVal.arg(message).arg(nickname).arg(timestamp) :
+                                              (numberOfArgs == 2 ? textVal.arg(message).arg(nickname) :
+                                                                   textVal.arg(message))
 
-            Text {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: parent.width
-                maximumLineCount: 2
-                id: messageTextWithNicknameTimestamp
-                visible: nickname == "" ? false : true
-                text: timestamp + " <" + nickname + "> " + message;
+                    clip: true
+                    elide: Text.ElideRight
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                clip: true
-                elide: Text.ElideRight
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    font.family: "Menlo"
+                    font.pointSize: settings.baseFontSize
 
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize
-
-                MouseArea {
-                    id: mouseNicknameTimestamp
-                    anchors.fill: parent
-                    onClicked: {
-                        channelMessageActionMenuDialog.close()
-                        clipboard.setText(parent.text)
-                    }
-                }
-
-                Rectangle
-                {
-                    color: mouseNicknameTimestamp.pressed ? "gray" : "#eeeeee"
-                    width: parent.width
-                    height: parent.height
-                    z: -1
-                    Behavior on color {
-                        ColorAnimation {
-
+                    MouseArea {
+                        id: mouseActionMenuItem
+                        anchors.fill: parent
+                        onClicked: {
+                            channelMessageActionMenuDialog.close()
+                            clipboard.setText(parent.text)
                         }
                     }
-                }
-            }
 
-            Text {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: parent.width
-                maximumLineCount: 2
-                id: messageTextWithNickname
-                visible: nickname == "" ? false : true
-                text: "<" + nickname + "> " + message;
+                    Rectangle
+                    {
+                        color: mouseActionMenuItem.pressed ? "gray" : "#eeeeee"
+                        width: parent.width
+                        height: parent.height
+                        z: -1
+                        Behavior on color {
+                            ColorAnimation {
 
-                clip: true
-                elide: Text.ElideRight
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize
-
-                MouseArea {
-                    id: mouseNickname
-                    anchors.fill: parent
-                    onClicked: {
-                        channelMessageActionMenuDialog.close()
-                        clipboard.setText(parent.text)
-                    }
-                }
-                Rectangle
-                {
-                    color: mouseNickname.pressed ? "gray" : "#eeeeee"
-                    width: parent.width
-                    height: parent.height
-                    z: -1
-                    Behavior on color {
-                        ColorAnimation {
-
-                        }
-                    }
-                }
-            }
-
-            Text {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: parent.width
-                maximumLineCount: 2
-                id: messageText
-                text: message;
-
-                clip: true
-                elide: Text.ElideRight
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize
-
-                MouseArea {
-                    id: mouseMessage
-                    anchors.fill: parent
-                    onClicked: {
-                        channelMessageActionMenuDialog.close()
-                        clipboard.setText(parent.text)
-                    }
-                }
-                Rectangle
-                {
-                    color: mouseMessage.pressed ? "gray" : "#eeeeee"
-                    width: parent.width
-                    height: parent.height
-                    z: -1
-                    Behavior on color {
-                        ColorAnimation {
-
+                            }
                         }
                     }
                 }
