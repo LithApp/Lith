@@ -114,6 +114,7 @@ Drawer {
                     width: ListView.view.width
                     height: childrenRect.height + 12
                     property var buffer: modelData
+                    visible: buffer
                     color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : palette.base
 
                     Behavior on color {

@@ -12,7 +12,7 @@ ApplicationWindow {
         id: palette
     }
 
-    header: Rectangle {
+    Rectangle {
         id: keyboardArea
         anchors {
             left: parent.left

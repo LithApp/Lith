@@ -15,10 +15,11 @@ Drawer {
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 9
+        visible: lith && lith.selectedBuffer
 
         Label {
             Layout.alignment: Qt.AlignHCenter
-            text: lith.selectedBuffer.full_name
+            text: lith.selectedBuffer ? lith.selectedBuffer.full_name : ""
             font.family: "Menlo"
             font.pointSize: settings.baseFontSize * 1.125
         }
