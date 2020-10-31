@@ -32,6 +32,18 @@ Drawer {
             text: lith.selectedBuffer ? lith.selectedBuffer.full_name : ""
             font.family: "Menlo"
             font.pointSize: settings.baseFontSize * 1.125
+            color: palette.windowText
+        }
+
+        Label {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.fillWidth: true
+            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+            horizontalAlignment: Label.AlignHCenter
+            text: lith.selectedBuffer.title
+            font.family: "Menlo"
+            font.pointSize: settings.baseFontSize
+            color: palette.windowText
         }
 
         Label {
@@ -39,6 +51,7 @@ Drawer {
             text: "0 users, 0 voice, 0 ops"
             font.family: "Menlo"
             font.pointSize: settings.baseFontSize * 0.75
+            color: palette.windowText
         }
 
         Item {
