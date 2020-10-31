@@ -26,6 +26,7 @@ Dialog {
         text: nickname
         horizontalAlignment: Qt.AlignCenter
         font.pointSize: settings.baseFontSize * 1.125
+        font.bold: true
     }
 
     background: Rectangle {
@@ -38,46 +39,75 @@ Dialog {
 
     ColumnLayout {
         /*Layout.alignment: Qt.AlignHCenter*/
-
+        width: parent.width
         anchors.centerIn: parent
         GridLayout {
+            width: parent.fillWidth
             columns: 1
             rowSpacing: 12
             Button {
                 width: parent.fillWidth
+                Layout.fillWidth: true
                 text: "Open query"
                 font.family: "Menlo"
                 font.pointSize: settings.baseFontSize * 1.125
                 onClicked: {
                     /*console.log("kicking", nickname)
                     lith.selectedBuffer.input("/query " + nickname)
-                    bufferDrawer.visible = false
                     nickListActionMenuDialog.close()*/
 
-                    console.log("Doing fuck all.")
+                    console.log("Doing fuck all, for now.")
+                    nickListActionMenuDialog.close()
+                    nickDrawer.close()
                 }
             }
             Button {
                 width: parent.fillWidth
+                Layout.fillWidth: true
+                text: "Op user"
+                font.family: "Menlo"
+                font.pointSize: settings.baseFontSize * 1.125
+                onClicked: {
+                    lith.selectedBuffer.input("/op " + nickname)
+                    nickListActionMenuDialog.close()
+                    nickDrawer.close()
+                }
+            }
+            Button {
+                width: parent.fillWidth
+                Layout.fillWidth: true
+                text: "Deop user"
+                font.family: "Menlo"
+                font.pointSize: settings.baseFontSize * 1.125
+                onClicked: {
+                    lith.selectedBuffer.input("/deop " + nickname)
+                    nickListActionMenuDialog.close()
+                    nickDrawer.close()
+                }
+            }
+            Button {
+                width: parent.fillWidth
+                Layout.fillWidth: true
                 text: "Kick user"
                 font.family: "Menlo"
                 font.pointSize: settings.baseFontSize * 1.125
                 onClicked: {
-                    console.log("kicking", nickname)
-                    lith.selectedBuffer.input("/say /kick " + nickname)
+                    lith.selectedBuffer.input("/kick " + nickname)
                     nickListActionMenuDialog.close()
+                    nickDrawer.close()
                 }
             }
-
             Button {
+                // font.capitalization: Font.MixedCase
                 width: parent.fillWidth
+                Layout.fillWidth: true
                 text: "Kickban user"
                 font.family: "Menlo"
                 font.pointSize: settings.baseFontSize * 1.125
                 onClicked: {
-                    console.log("kicking", nickname)
-                    lith.selectedBuffer.input("/say /kick " + nickname)
+                    lith.selectedBuffer.input("/kickban " + nickname)
                     nickListActionMenuDialog.close()
+                    nickDrawer.close()
                 }
             }
 
