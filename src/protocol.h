@@ -31,7 +31,7 @@ public:
     static bool parse(QDataStream &s, Char &r);
     static bool parse(QDataStream &s, Integer &r);
     static bool parse(QDataStream &s, LongInteger &r);
-    static bool parse(QDataStream &s, String &r);
+    static bool parse(QDataStream &s, String &r, bool canContainHTML = false);
     static bool parse(QDataStream &s, Buffer &r);
     static bool parse(QDataStream &s, Pointer &r);
     static bool parse(QDataStream &s, Time &r);
@@ -40,7 +40,7 @@ public:
     static bool parse(QDataStream &s, ArrayInt &r);
     static bool parse(QDataStream &s, ArrayStr &r);
 
-    static QString convertColorsToHtml(const QByteArray &data);
+    static QString convertColorsToHtml(const QByteArray &data, bool canContainHTML);
 };
 Q_DECLARE_METATYPE(Protocol::HData);
 Q_DECLARE_METATYPE(Protocol::HData*);

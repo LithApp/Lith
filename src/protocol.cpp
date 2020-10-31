@@ -48,7 +48,7 @@ bool Protocol::parse(QDataStream &s, Protocol::LongInteger &r) {
     return true;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::String &r) {
+bool Protocol::parse(QDataStream &s, Protocol::String &r, bool canContainHtml) {
     uint32_t len;
     r.d.clear();
     s >> len;
@@ -59,7 +59,7 @@ bool Protocol::parse(QDataStream &s, Protocol::String &r) {
     else if (len > 0) {
         QByteArray buf(len + 1, 0);
         s.readRawData(buf.data(), len);
-        r.d = convertColorsToHtml(buf);
+        r.d = convertColorsToHtml(buf, canContainHtml);
     }
     return true;
 }
@@ -154,7 +154,10 @@ bool Protocol::parse(QDataStream &s, Protocol::HData &r) {
             }
             else if (type == "str" || type == "buf") {
                 Protocol::String str;
-                parse(s, str);
+                bool canContainHTML = false;
+                if (name == "message" || name == "title")
+                    canContainHTML = true;
+                parse(s, str, canContainHTML);
                 item.objects[name] = QVariant::fromValue(str.d);
             }
             else if (type == "arr") {
@@ -225,7 +228,7 @@ bool Protocol::parse(QDataStream &s, Protocol::ArrayStr &r) {
     return true;
 }
 
-QString Protocol::convertColorsToHtml(const QByteArray &data) {
+QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
     QString result;
 
     bool foreground = false;
@@ -507,6 +510,10 @@ QString Protocol::convertColorsToHtml(const QByteArray &data) {
        else if (*it == 0x1B) {
            clearAttr(it);
        }
+       else if (canContainHtml && (*it == '<'))
+           result += "&lt;";
+       else if (canContainHtml && (*it == '>'))
+           result += "&gt;";
        else if (*it) {
            result += getChar(it);
        }
