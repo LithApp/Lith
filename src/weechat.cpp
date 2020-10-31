@@ -136,7 +136,7 @@ void Weechat::onReadyRead() {
     }
 
     // if there's still more data left, do one more round
-    if (m_connection->bytesAvailable()) {
+    if (m_connection && m_connection->bytesAvailable()) {
         onReadyRead();
     }
 }
