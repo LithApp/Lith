@@ -37,80 +37,72 @@ Dialog {
         console.log(nickListActionMenuDialog.x, nickListActionMenuDialog.y)
     }
 
+
+    ListModel {
+        id: nicklistActionMenuModel
+
+        property var doAction: function(operation) {
+            console.log("Doing: " + operation)
+
+            lith.selectedBuffer.input("/" + operation + " " + nickname)
+            nickListActionMenuDialog.close()
+            nickDrawer.close()
+        }
+
+        ListElement {
+            name: "Open query"
+            property var operation: function() {
+                // this obv doesn't switch to query buffe yet, soon(TM)
+                nicklistActionMenuModel.doAction("query")
+            }
+        }
+        ListElement {
+            name: "Op"
+            property var operation: function() {
+                nicklistActionMenuModel.doAction("op")
+            }
+        }
+        ListElement {
+            name: "Deop"
+            property var operation: function() {
+                nicklistActionMenuModel.doAction("deop")
+            }
+        }
+        ListElement {
+            name: "Kick"
+            property var operation: function() {
+                nicklistActionMenuModel.doAction("kick")
+            }
+        }
+        ListElement {
+            name: "Kickban"
+            property var operation: function() {
+                nicklistActionMenuModel.doAction("kickban")
+            }
+        }
+    }
+
     ColumnLayout {
         /*Layout.alignment: Qt.AlignHCenter*/
+
         width: parent.width
         anchors.centerIn: parent
         GridLayout {
             width: parent.fillWidth
             columns: 1
             rowSpacing: 12
-            Button {
-                width: parent.fillWidth
-                Layout.fillWidth: true
-                text: "Open query"
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize * 1.125
-                onClicked: {
-                    /*console.log("kicking", nickname)
-                    lith.selectedBuffer.input("/query " + nickname)
-                    nickListActionMenuDialog.close()*/
 
-                    console.log("Doing fuck all, for now.")
-                    nickListActionMenuDialog.close()
-                    nickDrawer.close()
+            Repeater {
+                model: nicklistActionMenuModel
+                delegate: Button {
+                    text: name
+                    onClicked: operation()
+                    width: parent.fillWidth
+                    Layout.fillWidth: true
+                    font.family: "Menlo"
+                    font.pointSize: settings.baseFontSize * 1.125
                 }
             }
-            Button {
-                width: parent.fillWidth
-                Layout.fillWidth: true
-                text: "Op user"
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize * 1.125
-                onClicked: {
-                    lith.selectedBuffer.input("/op " + nickname)
-                    nickListActionMenuDialog.close()
-                    nickDrawer.close()
-                }
-            }
-            Button {
-                width: parent.fillWidth
-                Layout.fillWidth: true
-                text: "Deop user"
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize * 1.125
-                onClicked: {
-                    lith.selectedBuffer.input("/deop " + nickname)
-                    nickListActionMenuDialog.close()
-                    nickDrawer.close()
-                }
-            }
-            Button {
-                width: parent.fillWidth
-                Layout.fillWidth: true
-                text: "Kick user"
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize * 1.125
-                onClicked: {
-                    lith.selectedBuffer.input("/kick " + nickname)
-                    nickListActionMenuDialog.close()
-                    nickDrawer.close()
-                }
-            }
-            Button {
-                // font.capitalization: Font.MixedCase
-                width: parent.fillWidth
-                Layout.fillWidth: true
-                text: "Kickban user"
-                font.family: "Menlo"
-                font.pointSize: settings.baseFontSize * 1.125
-                onClicked: {
-                    lith.selectedBuffer.input("/kickban " + nickname)
-                    nickListActionMenuDialog.close()
-                    nickDrawer.close()
-                }
-            }
-
         }
         Item {
             Layout.fillHeight: true
