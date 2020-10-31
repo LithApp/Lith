@@ -376,6 +376,7 @@ void Lith::_buffer_closing(Protocol::HData *hda) {
 
 void Lith::_buffer_cleared(Protocol::HData *hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
+    std::cerr << hda->toString().toStdString() << std::endl;
     delete hda;
 }
 
@@ -408,11 +409,11 @@ void Lith::_buffer_line_added(Protocol::HData *hda) {
 
 void Lith::_nicklist(Protocol::HData *hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
+    std::cerr << hda->toString().toStdString() << std::endl;
     delete hda;
 }
 
 void Lith::_nicklist_diff(Protocol::HData *hda) {
-    std::cerr << hda->toString().toStdString() << std::endl;
     for (auto &i : hda->data) {
         // buffer - nicklist_item
         auto bufPtr = i.pointers.first();
