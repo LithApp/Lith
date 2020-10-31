@@ -44,16 +44,13 @@ Dialog {
         id: channelMessageActionMenuModel
 
         ListElement {
-            textVal: "%3 (%2) %1"
-            numberOfArgs: 3
+            textVal: "%3 <%2> %1"
         }
         ListElement {
-            textVal: "(%2) %1"
-            numberOfArgs: 2
+            textVal: "<%2> %1"
         }
         ListElement {
             textVal: "%1"
-            numberOfArgs: 1
         }
     }
 
@@ -73,9 +70,10 @@ Dialog {
                     Layout.preferredWidth: parent.width
                     maximumLineCount: 2
                     visible: nickname == "" ? false : true
-                    text: numberOfArgs == 3 ? textVal.arg(message).arg(nickname).arg(timestamp) :
-                                              (numberOfArgs == 2 ? textVal.arg(message).arg(nickname) :
-                                                                   textVal.arg(message))
+                    text: index == 0 ? textVal.arg(message).arg(nickname).arg(timestamp) :
+                                       (index == 1 ? textVal.arg(message).arg(nickname) :
+                                                     textVal.arg(message))
+
 
                     clip: true
                     elide: Text.ElideRight
