@@ -160,6 +160,8 @@ void Weechat::onConnected() {
 void Weechat::onDisconnected() {
     lith()->statusSet(Lith::DISCONNECTED);
 
+    m_fetchBuffer.clear();
+    m_bytesRemaining = 0;
     m_hotlistTimer->stop();
     if (m_reconnectTimer->interval() < 5000)
         m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
