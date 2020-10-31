@@ -3,11 +3,19 @@
 #include "lith.h"
 #include "protocol.h"
 
-Weechat::Weechat(Lith *lith)
-    : QObject(lith)
-{
-    statusSet(UNCONFIGURED);
+#include <QThread>
 
+Weechat::Weechat(Lith *lith)
+    : QObject(nullptr)
+    , m_lith(lith)
+{
+}
+
+Lith *Weechat::lith() {
+    return m_lith;
+}
+
+void Weechat::init() {
     m_reconnectTimer.setInterval(1000);
     m_reconnectTimer.setSingleShot(true);
     connect(&m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart);
@@ -20,16 +28,12 @@ Weechat::Weechat(Lith *lith)
     m_hotlistTimer.setInterval(10000);
     m_hotlistTimer.setSingleShot(false);
 
-    connect(lith->settingsGet(), &Settings::hostChanged, this, &Weechat::onConnectionSettingsChanged);
-    connect(lith->settingsGet(), &Settings::passphraseChanged, this, &Weechat::onConnectionSettingsChanged);
-    connect(lith->settingsGet(), &Settings::portChanged, this, &Weechat::onConnectionSettingsChanged);
-    connect(lith->settingsGet(), &Settings::encryptedChanged, this, &Weechat::onConnectionSettingsChanged);
+    connect(lith()->settingsGet(), &Settings::hostChanged, this, &Weechat::onConnectionSettingsChanged);
+    connect(lith()->settingsGet(), &Settings::passphraseChanged, this, &Weechat::onConnectionSettingsChanged);
+    connect(lith()->settingsGet(), &Settings::portChanged, this, &Weechat::onConnectionSettingsChanged);
+    connect(lith()->settingsGet(), &Settings::encryptedChanged, this, &Weechat::onConnectionSettingsChanged);
 
-    QTimer::singleShot(0, this, &Weechat::onConnectionSettingsChanged);
-}
-
-Lith *Weechat::lith() {
-    return qobject_cast<Lith*>(parent());
+    onConnectionSettingsChanged();
 }
 
 void Weechat::start() {
@@ -39,7 +43,7 @@ void Weechat::start() {
     }
     qCritical() << "Connecting";
 
-    statusSet(CONNECTING);
+    //lith()->statusSet(Lith::CONNECTING);
     m_connection = new QSslSocket(this);
     m_connection->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
     m_connection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
@@ -141,7 +145,7 @@ void Weechat::onConnected() {
     qCritical() << "Connected!";
     lith()->resetData();
 
-    statusSet(CONNECTED);
+    //lith()->statusSet(Lith::CONNECTED);
     auto pass = lith()->settingsGet()->passphraseGet();
     m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
     m_connection->write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title\n").arg(MessageNames::c_requestBuffers).toUtf8());
@@ -154,7 +158,7 @@ void Weechat::onConnected() {
 }
 
 void Weechat::onDisconnected() {
-    statusSet(DISCONNECTED);
+    //lith()->statusSet(Lith::DISCONNECTED);
 
     m_hotlistTimer.stop();
     if (m_reconnectTimer.interval() < 5000)
@@ -164,7 +168,7 @@ void Weechat::onDisconnected() {
 
 void Weechat::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
-    statusSet(ERROR);
+    //lith()->statusSet(Lith::ERROR);
     lith()->errorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
 
     if (m_reconnectTimer.interval() < 5000)
@@ -207,20 +211,22 @@ void Weechat::onMessageReceived(QByteArray &data) {
     s.readRawData(type, 3);
 
     if (QString(type) == "hda") {
-        Protocol::HData hda;
-        Protocol::parse(s, hda);
+        Protocol::HData *hda = new Protocol::HData();
+        Protocol::parse(s, *hda);
 
         if (c_initializationMap.contains(id.d)) {
             // wtf, why can't I write this as |= ?
             m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap.value(id.d, UNINITIALIZED));
-            if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::DirectConnection, Q_ARG(const Protocol::HData&, hda))) {
+            if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData*, hda))) {
                 qWarning() << "Possible unhandled message:" << id.d;
+                delete hda;
             }
         }
         else {
             auto name = id.d.split(";").first();
-            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::DirectConnection, Q_ARG(const Protocol::HData&, hda))) {
+            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData*, hda))) {
                 qWarning() << "Possible unhandled message:" << name;
+                delete hda;
             }
         }
     }
@@ -235,6 +241,6 @@ void Weechat::onMessageReceived(QByteArray &data) {
 
 void Weechat::onTimeout() {
     m_connection->disconnect();
-    statusSet(DISCONNECTED);
+    //lith()->statusSet(Lith::DISCONNECTED);
     start();
 }

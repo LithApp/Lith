@@ -42,5 +42,7 @@ public:
 
     static QString convertColorsToHtml(const QByteArray &data);
 };
+Q_DECLARE_METATYPE(Protocol::HData);
+Q_DECLARE_METATYPE(Protocol::HData*);
 
 #endif // PROTOCOL_H

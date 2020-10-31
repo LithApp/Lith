@@ -12,21 +12,14 @@ class Lith;
 
 class Weechat : public QObject {
 public:
-    enum Status {
-        UNCONFIGURED,
-        CONNECTING,
-        CONNECTED,
-        DISCONNECTED,
-        ERROR
-    }; Q_ENUMS(Status)
-
     Q_OBJECT
-    PROPERTY(Status, status)
 public:
     Weechat(Lith *lith = nullptr);
     Lith *lith();
 
 public slots:
+    void init();
+
     void start();
     void restart();
 
@@ -80,6 +73,8 @@ private:
     QTimer m_timeoutTimer;
 
     int64_t m_messageOrder { 0 };
+
+    Lith *m_lith;
 };
 
 #endif // WEECHAT_H

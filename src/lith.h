@@ -17,10 +17,21 @@ class HotListItem;
 
 class Lith : public QObject {
     Q_OBJECT
+public:
+    enum Status {
+        UNCONFIGURED,
+        CONNECTING,
+        CONNECTED,
+        DISCONNECTED,
+        ERROR
+    };
+    Q_ENUMS(Status)
+private:
+    PROPERTY(Status, status, UNCONFIGURED)
     PROPERTY(QString, errorString)
     PROPERTY_PTR(Settings, settings, new Settings(this))
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
-    Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
+    //Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
 
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
     Q_PROPERTY(QmlObjectList* unfilteredBuffers READ unfilteredBuffers CONSTANT)
@@ -46,31 +57,31 @@ public:
 public slots:
     void resetData();
 
-    void handleBufferInitialization(const Protocol::HData& hda);
-    void handleFirstReceivedLine(const Protocol::HData& hda);
-    void handleHotlistInitialization(const Protocol::HData& hda);
-    void handleNicklistInitialization(const Protocol::HData& hda);
+    void handleBufferInitialization(Protocol::HData *hda);
+    void handleFirstReceivedLine(Protocol::HData *hda);
+    void handleHotlistInitialization(Protocol::HData *hda);
+    void handleNicklistInitialization(Protocol::HData *hda);
 
-    void handleFetchLines(const Protocol::HData& hda);
-    void handleHotlist(const Protocol::HData& hda);
+    void handleFetchLines(Protocol::HData *hda);
+    void handleHotlist(Protocol::HData *hda);
 
-    void _buffer_opened(const Protocol::HData& hda);
-    void _buffer_type_changed(const Protocol::HData& hda);
-    void _buffer_moved(const Protocol::HData& hda);
-    void _buffer_merged(const Protocol::HData& hda);
-    void _buffer_unmerged(const Protocol::HData& hda);
-    void _buffer_hidden(const Protocol::HData& hda);
-    void _buffer_unhidden(const Protocol::HData& hda);
-    void _buffer_renamed(const Protocol::HData& hda);
-    void _buffer_title_changed(const Protocol::HData& hda);
-    void _buffer_localvar_added(const Protocol::HData& hda);
-    void _buffer_localvar_changed(const Protocol::HData& hda);
-    void _buffer_localvar_removed(const Protocol::HData& hda);
-    void _buffer_closing(const Protocol::HData& hda);
-    void _buffer_cleared(const Protocol::HData& hda);
-    void _buffer_line_added(const Protocol::HData& hda);
-    void _nicklist(const Protocol::HData& hda);
-    void _nicklist_diff(const Protocol::HData& hda);
+    void _buffer_opened(Protocol::HData *hda);
+    void _buffer_type_changed(Protocol::HData *hda);
+    void _buffer_moved(Protocol::HData *hda);
+    void _buffer_merged(Protocol::HData *hda);
+    void _buffer_unmerged(Protocol::HData *hda);
+    void _buffer_hidden(Protocol::HData *hda);
+    void _buffer_unhidden(Protocol::HData *hda);
+    void _buffer_renamed(Protocol::HData *hda);
+    void _buffer_title_changed(Protocol::HData *hda);
+    void _buffer_localvar_added(Protocol::HData *hda);
+    void _buffer_localvar_changed(Protocol::HData *hda);
+    void _buffer_localvar_removed(Protocol::HData *hda);
+    void _buffer_closing(Protocol::HData *hda);
+    void _buffer_cleared(Protocol::HData *hda);
+    void _buffer_line_added(Protocol::HData *hda);
+    void _nicklist(Protocol::HData *hda);
+    void _nicklist_diff(Protocol::HData *hda);
 
 protected:
     void addBuffer(pointer_t ptr, Buffer *b);
@@ -87,6 +98,7 @@ signals:
 private:
     explicit Lith(QObject *parent = 0);
 
+    QThread *m_weechatThread { nullptr };
     Weechat *m_weechat { nullptr };
     QmlObjectList *m_buffers { nullptr };
     ProxyBufferList *m_proxyBufferList { nullptr };
