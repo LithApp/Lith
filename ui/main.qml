@@ -19,7 +19,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        id: keyboardArea
+        id: topKeyboardArea
         anchors {
             left: parent.left
             right: parent.right
@@ -38,11 +38,31 @@ ApplicationWindow {
             }
         }
     }
+    Rectangle {
+        id: bottomKeyboardArea
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        color: palette.window
+        height: Qt.inputMethod &&
+                Qt.inputMethod.keyboardRectangle &&
+                Qt.inputMethod.visible &&
+                !channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height :
+                                                0
+        Behavior on height {
+            NumberAnimation {
+                duration: 200
+                easing.type: Easing.OutCubic
+            }
+        }
+    }
 
     ErrorMessage {
         id: errorMessage
         anchors {
-            top: keyboardArea.bottom
+            top: topKeyboardArea.bottom
             left: parent.left
             right: parent.right
         }
@@ -51,10 +71,10 @@ ApplicationWindow {
     ChannelView {
         id: channelView
         anchors {
-            bottom: parent.bottom
             left: parent.left
             right: parent.right
             top: errorMessage.bottom
+            bottom: bottomKeyboardArea.top
         }
     }
 
@@ -62,7 +82,8 @@ ApplicationWindow {
         id: bufferDrawer
         width: 0.66 * parent.width
         height: parent.height
-        topMargin: keyboardArea.height
+        topMargin: topKeyboardArea.height
+        bottomMargin: bottomKeyboardArea.height
     }
 
     NickList {
@@ -70,7 +91,8 @@ ApplicationWindow {
         edge: Qt.RightEdge
         width: 0.66 * parent.width
         height: parent.height
-        topMargin: keyboardArea.height
+        topMargin: topKeyboardArea.height
+        bottomMargin: bottomKeyboardArea.height
     }
 
     NickListActionMenu {
@@ -79,12 +101,14 @@ ApplicationWindow {
 
     SettingsDialog {
         id: settingsDialog
-        topMargin: keyboardArea.height
+        topMargin: topKeyboardArea.height
+        bottomMargin: bottomKeyboardArea.height
     }
 
     PreviewPopup {
         id: previewPopup
-        topMargin: keyboardArea.height
+        topMargin: topKeyboardArea.height
+        bottomMargin: bottomKeyboardArea.height
 
         onVisibleChanged: {
             if (visible) {
