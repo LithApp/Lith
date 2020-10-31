@@ -344,6 +344,7 @@ void Lith::_buffer_closing(Protocol::HData *hda) {
             continue;
 
         buffer->deleteLater();
+        removeBuffer(bufPtr);
     }
     delete hda;
 }
@@ -404,6 +405,8 @@ void Lith::addBuffer(pointer_t ptr, Buffer *b) {
 void Lith::removeBuffer(pointer_t ptr) {
     if (m_bufferMap.contains(ptr)) {
         auto buf = m_bufferMap[ptr];
+        if (selectedBuffer() == buf)
+            selectedBufferIndexSet(selectedBufferIndex() - 1);
         m_bufferMap.remove(ptr);
         m_buffers->removeItem(buf);
     }
