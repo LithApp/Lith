@@ -113,6 +113,11 @@ void Weechat::onReadyRead() {
         auto header = m_connection->read(5);
         QDataStream s(&header, QIODevice::ReadOnly);
         s >> m_bytesRemaining >> compressed;
+        if (m_bytesRemaining <= 5) {
+            qCritical() << "The server sent a message header saying the message is shorter than 5 bytes, that doesn't make sense";
+            QTimer::singleShot(0, this, &Weechat::onDisconnected);
+            return;
+        }
         m_bytesRemaining -= 5;
         m_fetchBuffer.clear();
     }
