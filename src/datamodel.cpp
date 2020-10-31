@@ -72,13 +72,15 @@ QStringList Buffer::getVisibleNicks() {
 }
 
 void Buffer::input(const QString &data) {
-    Lith::instance()->weechat()->input(m_ptr, data);
+    QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Q_ARG(pointer_t, m_ptr), Q_ARG(const QString&, data));
+    //Lith::instance()->weechat()->input(m_ptr, data);
 }
 
 void Buffer::fetchMoreLines() {
     m_afterInitialFetch = true;
     if (m_lines->count() >= m_lastRequestedCount) {
-        Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
+        QMetaObject::invokeMethod(Lith::instance()->weechat(), "fetchLines", Q_ARG(pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25));
+        //Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
         m_lastRequestedCount = m_lines->count() + 25;
     }
 }

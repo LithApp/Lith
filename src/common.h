@@ -9,6 +9,7 @@
 #include "qmlobjectlist.h"
 
 typedef uint64_t pointer_t;
+Q_DECLARE_METATYPE(pointer_t);
 
 #define STRINGIFY(x) #x
 
