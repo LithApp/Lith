@@ -53,7 +53,7 @@ ApplicationWindow {
     NickList {
         id: nickDrawer
         edge: Qt.RightEdge
-        width: 0.50 * parent.width
+        width: 0.66 * parent.width
         height: parent.height
         topMargin: keyboardArea.height
     }
