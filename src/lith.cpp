@@ -408,8 +408,23 @@ void Lith::_buffer_line_added(Protocol::HData *hda) {
 }
 
 void Lith::_nicklist(Protocol::HData *hda) {
-    qCritical() << __FUNCTION__ << "is not implemented yet";
-    std::cerr << hda->toString().toStdString() << std::endl;
+    Buffer *previousBuffer = nullptr;
+    for (auto &i : hda->data) {
+        // buffer - nicklist_item
+        auto bufPtr = i.pointers.first();
+        auto nickPtr = i.pointers.last();
+        auto buffer = getBuffer(bufPtr);
+        if (!buffer)
+            continue;
+        if (buffer != previousBuffer)
+            buffer->clearNicks();
+        previousBuffer = buffer;
+        auto nick = new Nick(buffer);
+        for (auto j : i.objects.keys()) {
+            nick->setProperty(qPrintable(j), i.objects[j]);
+        }
+        buffer->addNick(nickPtr, nick);
+    }
     delete hda;
 }
 

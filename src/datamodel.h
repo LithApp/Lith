@@ -60,6 +60,7 @@ public:
     Q_INVOKABLE Nick *getNick(pointer_t ptr);
     void addNick(pointer_t ptr, Nick* nick);
     void removeNick(pointer_t ptr);
+    void clearNicks();
     Q_INVOKABLE QStringList getVisibleNicks();
 
 public slots:

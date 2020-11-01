@@ -70,6 +70,15 @@ void Buffer::removeNick(pointer_t ptr) {
     }
 }
 
+void Buffer::clearNicks() {
+    for (int i = 0; i < m_nicks->count(); i++) {
+        auto n = m_nicks->get<Nick>(i);
+        if (n)
+            n->deleteLater();
+    }
+    m_nicks->clear();
+}
+
 QStringList Buffer::getVisibleNicks() {
     QStringList result;
     for (int i = 0; i < m_nicks->count(); i++) {
