@@ -69,7 +69,7 @@ Dialog {
                     Layout.alignment: Qt.AlignCenter
                     Layout.preferredWidth: parent.width
                     maximumLineCount: 2
-                    visible: nickname == "" ? false : true
+                    visible: nickname == "" && index != 2 ? false : true
                     text: index == 0 ? textVal.arg(message).arg(nickname).arg(timestamp) :
                                        (index == 1 ? textVal.arg(message).arg(nickname) :
                                                      textVal.arg(message))
