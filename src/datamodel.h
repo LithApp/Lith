@@ -105,8 +105,8 @@ class BufferLine : public QObject {
     PROPERTY(bool, displayed)
     PROPERTY(bool, highlight)
     PROPERTY(QStringList, tags_array)
-    PROPERTY(QString, prefix)
 
+    Q_PROPERTY(QString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(QString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
     Q_PROPERTY(bool isPrivMsg READ isPrivMsg NOTIFY tags_arrayChanged)
@@ -119,6 +119,8 @@ public:
 
     void setParent(Buffer *parent);
 
+    QString prefixGet() const;
+    void prefixSet(const QString &o);
     QString messageGet() const;
     void messageSet(const QString &o);
 
@@ -133,12 +135,14 @@ public:
 signals:
     void segmentsChanged();
     void messageChanged();
+    void prefixChanged();
 
 private slots:
     void onMessageChanged();
 
 private:
     QString m_message;
+    QString m_prefix;
     QList<QObject*> m_segments;
 };
 

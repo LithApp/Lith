@@ -8,21 +8,21 @@
 #include <QAbstractEventDispatcher>
 
 static const QMap<int, QString> weechatColors {
-    { 0, "" },
+    { 0, "default" },
     { 1, "black" },
     { 2, "dark gray" },
-    { 3, "#8b0000" },
-    { 4, "#ffcccb" },
+    { 3, "dark red" },
+    { 4, "light red" },
     { 5, "dark green" },
     { 6, "light green" },
     { 7, "brown" },
     { 8, "yellow" },
-    { 9, "#00008b" },
-    { 10, "#add8e6" },
-    { 11, "#8b008b" },
-    { 12, "#ff80ff" },
-    { 13, "#008b8b" },
-    { 14, "#e0ffff" },
+    { 9, "dark blue" },
+    { 10, "light blue" },
+    { 11, "dark magenta" },
+    { 12, "light magenta" },
+    { 13, "dark cyan" },
+    { 14, "light cyan" },
     { 15, "gray" },
     { 16, "white" }
 };
