@@ -8,6 +8,8 @@
 #include <QEventLoop>
 #include <QAbstractEventDispatcher>
 
+#include <QSystemTrayIcon>
+
 Lith *Lith::_self = nullptr;
 Lith *Lith::instance() {
     if (!_self)
@@ -403,6 +405,14 @@ void Lith::_buffer_line_added(Protocol::HData *hda) {
         }
         buffer->prependLine(line);
         addLine(bufPtr, linePtr, line);
+        if (line->highlightGet()) {
+            qCritical() << "JSEM TU FFS";
+            QSystemTrayIcon *icon = new QSystemTrayIcon();
+            icon->show();
+            icon->showMessage("LITH AF", line->messageGet());
+            icon->hide();
+            icon->deleteLater();
+        }
     }
     delete hda;
 }
