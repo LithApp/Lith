@@ -127,38 +127,91 @@ TextInput {
         sequences: lith.settings.shortcutSwitchToPreviousBuffer
         onActivated: lith.selectedBufferIndex -= 1
     }
-
-    Keys.onPressed: {
-        if (event.modifiers & Qt.ControlModifier) {
-            if (event.key === Qt.Key_W) {
-                var str = inputField.text.replace(/\s+$/, '')
-                var lastIndex = str.lastIndexOf(" ");
-                inputField.text = inputField.text.substring(0, lastIndex + 1);
-                event.accepted = true
-            }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+W"
+        onActivated: {
+            var str = inputField.text.replace(/\s+$/, '')
+            var lastIndex = str.lastIndexOf(" ");
+            inputField.text = inputField.text.substring(0, lastIndex + 1);
         }
-        else {
-            if (event.key === Qt.Key_Up) {
-                channelMessageList.contentY += 30
-            }
-            if (event.key === Qt.Key_Down) {
-                if (channelMessageList.contentY > 30)
-                    channelMessageList.contentY -= 30
-                else
-                    channelMessageList.contentY = 0
-            }
-            if (event.key === Qt.Key_PageUp) {
-                channelMessageList.contentY += channelMessageList.height - 30
-            }
-            if (event.key === Qt.Key_PageDown) {
-                if (channelMessageList.contentY > channelMessageList.height)
-                    channelMessageList.contentY -= channelMessageList.height - 30
-                else
-                    channelMessageList.contentY = 0
-            }
-            if (event.key === Qt.Key_End) {
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+D"
+        onActivated: {
+            var str = inputField.text
+            str = str.slice(0, inputField.cursorPosition - 1) + str.slice(inputField.cursorPosition);
+            inputField.text = str
+        }
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+K"
+        onActivated: {
+            var right = inputField.text.slice(inputField.cursorPosition)
+            inputField.text = inputField.text.slice(0, inputField.cursorPosition - 1)
+            clipboard.setText(right)
+        }
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+U"
+        onActivated: {
+            var left = inputField.text.slice(0, inputField.cursorPosition - 1)
+            inputField.text = inputField.text.slice(inputField.cursorPosition)
+            clipboard.setText(left)
+        }
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+Y"
+        onActivated: {
+            if (clipboard.text.length > 0)
+                inputField.text = clipboard.text()
+        }
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+F"
+        onActivated: inputField.cursorPosition++
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+B"
+        onActivated: inputField.cursorPosition--
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+A"
+        onActivated: inputField.cursorPosition = 0
+    }
+    Shortcut {
+        enabled: lith.settings.enableReadlineShortcuts
+        sequence: "Ctrl+E"
+        onActivated: inputField.cursorPosition = inputField.text.length
+    }
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Up) {
+            channelMessageList.contentY += 30
+        }
+        if (event.key === Qt.Key_Down) {
+            if (channelMessageList.contentY > 30)
+                channelMessageList.contentY -= 30
+            else
                 channelMessageList.contentY = 0
-            }
+        }
+        if (event.key === Qt.Key_PageUp) {
+            channelMessageList.contentY += channelMessageList.height - 30
+        }
+        if (event.key === Qt.Key_PageDown) {
+            if (channelMessageList.contentY > channelMessageList.height)
+                channelMessageList.contentY -= channelMessageList.height - 30
+            else
+                channelMessageList.contentY = 0
+        }
+        if (event.key === Qt.Key_End) {
+            channelMessageList.contentY = 0
         }
     }
 }
