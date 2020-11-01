@@ -61,6 +61,7 @@ Rectangle {
             text: messageModel.message
             Layout.fillWidth: true
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            color: palette.text
             font.family: "Menlo"
             font.pointSize: settings.baseFontSize
             onLinkActivated: {

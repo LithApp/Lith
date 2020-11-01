@@ -28,25 +28,24 @@ static const QMap<QString, QString> lightModeColors {
 };
 
 static const QMap<QString, QString> darkModeColors {
-    { "<font color=\"default\">", "" },
-    { "<font color=\"black\">", "" },
-    { "<font color=\"dark gray\">", "" },
-    { "<font color=\"dark red\">", "" },
-    { "<font color=\"light red\">", "" },
-    { "<font color=\"dark green\">", "" },
-    { "<font color=\"light green\">", "" },
-    { "<font color=\"brown\">", "" },
-    { "<font color=\"yellow\">", "" },
-    { "<font color=\"dark blue\">", "" },
-    { "<font color=\"light blue\">", "" },
-    { "<font color=\"dark magenta\">", "" },
-    { "<font color=\"light magenta\">", "" },
-    { "<font color=\"dark cyan\">", "" },
-    { "<font color=\"light cyan\">", "" },
-    { "<font color=\"gray\">", "" },
-    { "<font color=\"white\">", "" }
+    { "<font color=\"default\">", "<font color=\"white\">" },
+    { "<font color=\"black\">", "<font color=\"black\">" },
+    { "<font color=\"dark gray\">", "<font color=\"#444444\">" },
+    { "<font color=\"dark red\">", "<font color=\"#880000\">" },
+    { "<font color=\"light red\">", "<font color=\"#ff4444\">" },
+    { "<font color=\"dark green\">", "<font color=\"#33dd33\">" },
+    { "<font color=\"light green\">", "<font color=\"#55ff55\">" },
+    { "<font color=\"brown\">", "<font color=\"#d2691e\">" },
+    { "<font color=\"yellow\">", "<font color=\"#ffff00\">" },
+    { "<font color=\"dark blue\">", "<font color=\"#4444ff\">" },
+    { "<font color=\"light blue\">", "<font color=\"#9999ff\">" },
+    { "<font color=\"dark magenta\">", "<font color=\"#ee44ee\">" },
+    { "<font color=\"light magenta\">", "<font color=\"#ff88ff\">" },
+    { "<font color=\"dark cyan\">", "<font color=\"#22aaaa\">" },
+    { "<font color=\"light cyan\">", "<font color=\"#44dddd\">" },
+    { "<font color=\"gray\">", "<font color=\"#aaaaaa\">" },
+    { "<font color=\"white\">", "<font color=\"#ffffff\">" }
 };
-
 
 
 Buffer::Buffer(QObject *parent, pointer_t pointer)
@@ -153,8 +152,8 @@ BufferLine::BufferLine(Buffer *parent)
 
 QString BufferLine::prefixGet() const {
     auto ret = m_prefix;
-    for (auto i : lightModeColors.keys()) {
-        ret.replace(i, lightModeColors[i]);
+    for (auto i : darkModeColors.keys()) {
+        ret.replace(i, darkModeColors[i]);
     }
     return ret;
 }
@@ -168,8 +167,8 @@ void BufferLine::prefixSet(const QString &o) {
 
 QString BufferLine::messageGet() const {
     auto ret = m_message;
-    for (auto i : lightModeColors.keys()) {
-        ret.replace(i, lightModeColors[i]);
+    for (auto i : darkModeColors.keys()) {
+        ret.replace(i, darkModeColors[i]);
     }
     return ret;
 }
