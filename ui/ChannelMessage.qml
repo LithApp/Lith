@@ -82,19 +82,23 @@ Rectangle {
                         }
                         Button {
                             focusPolicy: Qt.NoFocus
-                            text: "⤶"
-                            rotation: 180
                             visible: modelData.type !== LineSegment.PLAIN
-                            font.pointSize: settings.baseFontSize * 1.25
+                            font.pointSize: settings.baseFontSize
+                            Layout.preferredHeight: 36
                             Layout.preferredWidth: height
                             onClicked: Qt.openUrlExternally(modelData.plainText)
+                            Text {
+                                text: "⤶"
+                                rotation: 180
+                                anchors.centerIn: parent
+                            }
                         }
                         Button {
                             focusPolicy: Qt.NoFocus
                             text: "🖼️"
                             visible: modelData.type === LineSegment.IMAGE || modelData.type === LineSegment.VIDEO // || modelData.type === LineSegment.EMBED
-                            font.family: "Menlo"
-                            font.pointSize: settings.baseFontSize * 1.125
+                            font.pointSize: settings.baseFontSize
+                            Layout.preferredHeight: 36
                             Layout.preferredWidth: height
                             onClicked: {
                                 if (modelData.type === LineSegment.IMAGE) {
