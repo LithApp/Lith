@@ -14,5 +14,7 @@
         <file>ChannelTextInput.qml</file>
         <file>ChannelMessageActionMenu.qml</file>
         <file>NickListActionMenu.qml</file>
+        <file>SettingsNetwork.qml</file>
+        <file>SettingsInterface.qml</file>
     </qresource>
 </RCC>
