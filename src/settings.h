@@ -4,6 +4,7 @@
 #include "common.h"
 #include <QSettings>
 #include <QDebug>
+#include <QKeySequence>
 
 #define SETTING(type, name, ...) \
     PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
@@ -35,6 +36,13 @@ class Settings : public QObject {
     SETTING(int, port, 9001)
     SETTING(bool, encrypted, true)
     SETTING(QString, passphrase)
+
+    SETTING(bool, enableReadlineShortcuts, true)
+    SETTING(QStringList, shortcutSearchBuffer, {"Alt+G"})
+    SETTING(QStringList, shortcutAutocomplete, {"Tab"})
+    SETTING(QStringList, shortcutSwitchToNextBuffer, {"Alt+Right", "Alt+Down"})
+    SETTING(QStringList, shortcutSwitchToPreviousBuffer, {"Alt+Left", "Alt+Up"})
+
 public:
     Settings(QObject *parent = nullptr);
 private:

@@ -111,22 +111,25 @@ TextInput {
         lastCursorPos = cursorPosition
     }
 
+    Shortcut {
+        sequences: lith.settings.shortcutSearchBuffer
+        onActivated: bufferDrawer.open()
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutAutocomplete
+        onActivated: autocomplete();
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToNextBuffer
+        onActivated: lith.selectedBufferIndex += 1
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToPreviousBuffer
+        onActivated: lith.selectedBufferIndex -= 1
+    }
+
     Keys.onPressed: {
-        if (event.modifiers & Qt.AltModifier) {
-            if (event.key === Qt.Key_Right || event.key === Qt.Key_Down) {
-                lith.selectedBufferIndex += 1
-                event.accepted = true
-            }
-            else if (event.key === Qt.Key_Left || event.key === Qt.Key_Up) {
-                lith.selectedBufferIndex -= 1
-                event.accepted = true
-            }
-            else if (event.key === Qt.Key_G) {
-                bufferDrawer.open()
-                event.accepted = true
-            }
-        }
-        else if (event.modifiers & Qt.ControlModifier) {
+        if (event.modifiers & Qt.ControlModifier) {
             if (event.key === Qt.Key_W) {
                 var str = inputField.text.replace(/\s+$/, '')
                 var lastIndex = str.lastIndexOf(" ");
@@ -135,11 +138,6 @@ TextInput {
             }
         }
         else {
-            if (event.key === Qt.Key_Tab) {
-                autocomplete();
-                // var last = autocomplete();
-                event.accepted = true
-            }
             if (event.key === Qt.Key_Up) {
                 channelMessageList.contentY += 30
             }

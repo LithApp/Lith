@@ -24,6 +24,10 @@ Dialog {
         TabButton {
             text: "Interface"
         }
+        TabButton {
+            text: "Shortcuts"
+            visible: Qt.platform.name !== "ios" && Qt.platform.name !== "android"
+        }
     }
 
     background: Rectangle {
@@ -33,10 +37,12 @@ Dialog {
     onAccepted: {
         settingsNetwork.onAccepted()
         settingsInterface.onAccepted()
+        settingsShortcuts.onAccepted()
     }
     onRejected: {
         settingsNetwork.onRejected()
         settingsInterface.onRejected()
+        settingsShortcuts.onRejected()
     }
 
     StackLayout {
@@ -49,6 +55,11 @@ Dialog {
 
         SettingsInterface {
             id: settingsInterface
+        }
+
+        SettingsShortcuts {
+            id: settingsShortcuts
+            enabled: Qt.platform.name !== "ios" && Qt.platform.name !== "android"
         }
 
     }
