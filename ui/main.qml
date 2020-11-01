@@ -116,4 +116,87 @@ ApplicationWindow {
             }
         }
     }
+
+    Dialog {
+        id: linkHandler
+        width: parent.width * 0.78
+        height: linkHandlerLayout.height + 40
+        visible: false
+        anchors.centerIn: parent
+
+        property string currentLink
+        property bool containsImage: currentLink.endsWith("png") ||
+                                     currentLink.endsWith("jpg") ||
+                                     currentLink.endsWith("gif")
+        property bool containsVideo: currentLink.endsWith("avi") ||
+                                     currentLink.endsWith("mov") ||
+                                     currentLink.endsWith("mp4") ||
+                                     currentLink.endsWith("webm")
+
+        function show(link, newparent) {
+            visible = true
+            currentLink = link
+            console.warn("AHOJ " + link)
+        }
+
+        ColumnLayout {
+            id: linkHandlerLayout
+            width: parent.width
+            spacing: 9
+            Text {
+                id: linkText
+                Layout.fillWidth: true
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                horizontalAlignment: Text.AlignHCenter
+                font.family: "Menlo"
+                font.pointSize: lith.settings.baseFontSize
+                textFormat: Text.RichText
+                text: "<a href=\""+linkHandler.currentLink+"\">"+linkHandler.currentLink+"</a>"
+            }
+            RowLayout {
+                Layout.alignment: Qt.AlignCenter
+                Button {
+                    focusPolicy: Qt.NoFocus
+                    font.pointSize: settings.baseFontSize
+                    Layout.preferredHeight: 36
+                    Layout.preferredWidth: height
+                    text: "📋"
+                    onClicked: {
+                        clipboard.setText(linkHandler.currentLink)
+                        linkHandler.visible = false
+                    }
+                }
+                Button {
+                    focusPolicy: Qt.NoFocus
+                    font.pointSize: settings.baseFontSize
+                    Layout.preferredHeight: 36
+                    Layout.preferredWidth: height
+                    onClicked: {
+                        Qt.openUrlExternally(linkHandler.currentLink)
+                        linkHandler.visible = false
+                    }
+                    Text {
+                        text: "⤶"
+                        rotation: 180
+                        anchors.centerIn: parent
+                    }
+                }
+                Button {
+                    visible: linkHandler.containsImage || linkHandler.containsVideo
+                    focusPolicy: Qt.NoFocus
+                    text: "🖼️"
+                    font.pointSize: settings.baseFontSize
+                    Layout.preferredHeight: 36
+                    Layout.preferredWidth: height
+                    onClicked: {
+                        if (linkHandler.containsImage)
+                            previewPopup.showImage(linkHandler.currentLink)
+                        if (linkHandler.containsVideo)
+                            previewPopup.showVideo(modelData.plainText)
+                        linkHandler.visible = false
+                    }
+                }
+            }
+        }
+    }
 }

@@ -110,6 +110,20 @@ BufferLine::BufferLine(Buffer *parent)
     connect(this, &BufferLine::messageChanged, this, &BufferLine::onMessageChanged);
 }
 
+QString BufferLine::messageGet() const {
+    return m_message;
+}
+
+void BufferLine::messageSet(const QString &o) {
+    QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+    auto copy = o;
+    copy.replace(re, "<a href=\"\\1\">\\1</a>");
+    if (copy != m_message) {
+        m_message = copy;
+        emit messageChanged();
+    }
+}
+
 bool BufferLine::isPrivMsg() {
     return m_tags_array.contains("irc_privmsg");
 }

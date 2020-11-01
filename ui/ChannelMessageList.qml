@@ -1,5 +1,6 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.12
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 ListView {
     id: listView
@@ -35,25 +36,19 @@ ListView {
     //reuseItems: true
 
     MouseArea {
+        id: messageListMouse
         z: -1
         enabled: false
         anchors.fill: parent
         anchors.leftMargin: 20
         anchors.rightMargin: 20
+        hoverEnabled: true
         drag.target: listView
         drag.axis: Drag.XAxis
         drag.maximumX: 0
         drag.minimumX: timeMetrics.width + 6
     }
-    /*
-    onContentYChanged: {
-        if (contentY + height - contentHeight < 50)
-            lith.selectedBuffer.fetchMoreLines()
-        else
-            console.warn(contentY + height - contentHeight)
-        console.warn(contentY + " " + contentHeight + " " +height)
-    }
-    */
+
     function fillTopOfList() {
         if (yPosition + visibleArea.heightRatio > 0.65)
             lith.selectedBuffer.fetchMoreLines()
@@ -63,14 +58,4 @@ ListView {
     onYPositionChanged: fillTopOfList()
     onContentHeightChanged: fillTopOfList()
     onModelChanged: fillTopOfList()
-
-
-
-    /*
-    onVerticalOvershootChanged: {
-        if (verticalOvershoot > 30)
-            lith.selectedBuffer.fetchMoreLines()
-        console.warn(verticalOvershoot)
-    }
-    */
 }

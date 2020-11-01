@@ -106,7 +106,8 @@ class BufferLine : public QObject {
     PROPERTY(bool, highlight)
     PROPERTY(QStringList, tags_array)
     PROPERTY(QString, prefix)
-    PROPERTY(QString, message)
+
+    Q_PROPERTY(QString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
     Q_PROPERTY(bool isPrivMsg READ isPrivMsg NOTIFY tags_arrayChanged)
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
@@ -118,6 +119,9 @@ public:
 
     void setParent(Buffer *parent);
 
+    QString messageGet() const;
+    void messageSet(const QString &o);
+
     bool isPrivMsg();
     QString colorlessNicknameGet();
     QString colorlessTextGet();
@@ -128,11 +132,13 @@ public:
 
 signals:
     void segmentsChanged();
+    void messageChanged();
 
 private slots:
     void onMessageChanged();
 
 private:
+    QString m_message;
     QList<QObject*> m_segments;
 };
 
