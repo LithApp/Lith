@@ -71,9 +71,8 @@ Dialog {
                     maximumLineCount: 2
                     visible: nickname == "" && index != 2 ? false : true
                     text: index == 0 ? textVal.arg(message).arg(nickname).arg(timestamp) :
-                                       (index == 1 ? textVal.arg(message).arg(nickname) :
-                                                     textVal.arg(message))
-
+                          index == 1 ? textVal.arg(message).arg(nickname) :
+                                       textVal.arg(message)
 
                     clip: true
                     elide: Text.ElideRight
