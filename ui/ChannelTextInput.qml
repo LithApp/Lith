@@ -11,6 +11,7 @@ TextInput {
     verticalAlignment: TextField.AlignVCenter
     focus: true
     inputMethodHints: Qt.ImhMultiLine
+    clip: true
 
     color: palette.text
 

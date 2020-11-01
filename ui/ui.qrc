@@ -17,5 +17,8 @@
         <file>SettingsNetwork.qml</file>
         <file>SettingsInterface.qml</file>
         <file>SettingsShortcuts.qml</file>
+        <file>style/Button.qml</file>
+        <file>style/CheckBox.qml</file>
+        <file>style/TextField.qml</file>
     </qresource>
 </RCC>
