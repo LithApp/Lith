@@ -7,8 +7,16 @@ Drawer {
     SystemPalette {
         id: palette
     }
+
+    Connections {
+        target: lith
+        function onSelectedBufferChanged() {
+            bufferList.currentIndex = lith.selectedBufferIndex
+        }
+    }
+
     onVisibleChanged: {
-        bufferList.currentIndex = lith.selectedBufferIndex
+        /* bufferList.currentIndex = lith.selectedBufferIndex */
 
         if (visible) {
             filterField.clear()
