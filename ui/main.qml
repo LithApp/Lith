@@ -111,8 +111,8 @@ ApplicationWindow {
                 Qt.inputMethod.hide()
             }
             else {
-                Qt.inputMethod.show()
                 channelView.textInput.forceActiveFocus()
+                Qt.inputMethod.hide()
             }
         }
     }
