@@ -15,6 +15,7 @@ RowLayout {
         text: "⇥"
         font.pointSize: settings.baseFontSize
         focusPolicy: Qt.NoFocus
+        visible: settings.showAutocompleteButton
         onClicked: {
             channelTextInput.autocomplete();
         }
@@ -29,6 +30,7 @@ RowLayout {
     Button {
         focusPolicy: Qt.NoFocus
         id: imageButton
+        visible: settings.showGalleryButton
         Layout.preferredWidth: height
         property bool isBusy: uploader.working
         text: isBusy ? "" : "📷"

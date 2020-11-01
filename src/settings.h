@@ -32,6 +32,9 @@ class Settings : public QObject {
     SETTING(int, shortenLongUrlsThreshold, 50)
 
     SETTING(bool, showSendButton, false)
+    SETTING(bool, showAutocompleteButton, true)
+    SETTING(bool, showGalleryButton, true)
+
     SETTING(QString, host)
     SETTING(int, port, 9001)
     SETTING(bool, encrypted, true)

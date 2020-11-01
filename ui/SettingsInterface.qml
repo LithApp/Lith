@@ -9,11 +9,15 @@ ScrollView {
     function onAccepted() {
         settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
         settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
+        settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
+        settings.showGalleryButton = showGalleryButtonCheckbox.checked
         settings.showSendButton = showSendButtonCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
         shortenLongUrlsThreshold.text = settings.shortenLongUrlsThreshold
+        showAutocompleteButtonCheckbox.checked = settings.showAutocompleteButton
+        showGalleryButtonCheckbox.checked = settings.showGalleryButton
         showSendButtonCheckbox.checked = settings.showSendButton
     }
 
@@ -21,6 +25,39 @@ ScrollView {
         x: 6
         y: 6
         width: root.width - 12
+
+        GroupBox {
+            Layout.alignment: Qt.AlignHCenter
+            title: "Input bar"
+            GridLayout {
+                id: inputBarLayout
+                columns: 2
+                Text {
+                    text: "Show autocomplete button"
+                }
+                CheckBox {
+                    id: showAutocompleteButtonCheckbox
+                    checked: settings.showAutocompleteButton
+                    Layout.alignment: Qt.AlignLeft
+                }
+                Text {
+                    text: "Show gallery button"
+                }
+                CheckBox {
+                    id: showGalleryButtonCheckbox
+                    checked: settings.showGalleryButton
+                    Layout.alignment: Qt.AlignLeft
+                }
+                Text {
+                    text: "Show send button"
+                }
+                CheckBox {
+                    id: showSendButtonCheckbox
+                    checked: settings.showSendButton
+                    Layout.alignment: Qt.AlignLeft
+                }
+            }
+        }
 
         GridLayout {
             Layout.alignment: Qt.AlignHCenter
@@ -44,14 +81,6 @@ ScrollView {
                 validator: IntValidator {
                     bottom: 0
                 }
-            }
-            Text {
-                text: "Show send button"
-            }
-            CheckBox {
-                id: showSendButtonCheckbox
-                checked: settings.showSendButton
-                Layout.alignment: Qt.AlignLeft
             }
             Text {
                 text: "Font size"
