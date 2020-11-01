@@ -22,8 +22,6 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-
-    QQuickStyle::setStyle("Material");
     QQmlApplicationEngine engine;
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
