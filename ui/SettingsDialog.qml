@@ -41,6 +41,7 @@ Dialog {
 
         settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
         settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
+        settings.showSendButton = showSendButtonCheckbox.checked
     }
     onRejected: {
         hostField.text = settings.host
