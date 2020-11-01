@@ -34,7 +34,7 @@ ScrollView {
         GridLayout {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
-            Text {
+            Label {
                 text: qsTr("Enable readline shortcuts (^W, ^D, etc.)")
             }
             CheckBox {
@@ -42,7 +42,7 @@ ScrollView {
                 checked: lith.settings.enableReadlineShortcuts
             }
 
-            Text {
+            Label {
                 text: qsTr("Start buffer search and filtering")
             }
             TextField {
@@ -51,7 +51,7 @@ ScrollView {
                 Layout.preferredWidth: 176
             }
 
-            Text {
+            Label {
                 text: qsTr("Autocomplete")
             }
             TextField {
@@ -60,7 +60,7 @@ ScrollView {
                 Layout.preferredWidth: 176
             }
 
-            Text {
+            Label {
                 text: qsTr("Switch to next buffer")
             }
             TextField {
@@ -69,7 +69,7 @@ ScrollView {
                 Layout.preferredWidth: 176
             }
 
-            Text {
+            Label {
                 text: qsTr("Switch to previous buffer")
             }
             TextField {

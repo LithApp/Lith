@@ -20,7 +20,7 @@ import QtQuick.Controls 2.12
 
 import lith 1.0
 
-TextInput {
+TextField {
     id: inputField
     clip: true
     font.pointSize: settings.baseFontSize

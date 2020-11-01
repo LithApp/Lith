@@ -105,8 +105,8 @@ Dialog {
 
                 opacity: 0.6
 
-                source: delegateVideo.loops === Multimedia.MediaPlayer.Infinite ? "qrc:/navigation/reload.png" :
-                                                                            "qrc:/navigation/reload-disabled.png"
+                source: delegateVideo.loops === Multimedia.MediaPlayer.Infinite ? "qrc:/navigation/"+currentTheme+"/reload.png" :
+                                                                            "qrc:/navigation/"+currentTheme+"/reload-disabled.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -131,8 +131,8 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: 0.6
-                source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/pause.png" :
-                                                                                              "qrc:/navigation/play.png"
+                source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/"+currentTheme+"/pause.png" :
+                                                                                              "qrc:/navigation/"+currentTheme+"/play.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -157,7 +157,7 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: delegateVideo.hasAudio ? 0.6 : 0.0
-                source: delegateVideo.volume > 0.0 ? "qrc:/navigation/volume.png" : "qrc:/navigation/mute.png"
+                source: delegateVideo.volume > 0.0 ? "qrc:/navigation/"+currentTheme+"/volume.png" : "qrc:/navigation/"+currentTheme+"/mute.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -309,7 +309,7 @@ Dialog {
                     font.pointSize: settings.baseFontSize
                     Layout.preferredHeight: 40
                     Layout.preferredWidth: height
-                    icon.source: "qrc:/navigation/copy.png"
+                    icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
                     onClicked: {
                         clipboardProxy.setText(root.currentUrl)
                     }
@@ -322,7 +322,7 @@ Dialog {
                     onClicked: {
                         Qt.openUrlExternally(root.currentUrl)
                     }
-                    icon.source: "qrc:/navigation/resize.png"
+                    icon.source: "qrc:/navigation/"+currentTheme+"/resize.png"
                 }
             }
         }

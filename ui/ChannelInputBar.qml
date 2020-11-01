@@ -36,7 +36,7 @@ Item {
         spacing: 0
         Button {
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/download-rotated.png"
+            icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
             font.pointSize: settings.baseFontSize
             focusPolicy: Qt.NoFocus
             visible: settings.showAutocompleteButton
@@ -61,7 +61,7 @@ Item {
             visible: settings.showGalleryButton
             Layout.preferredWidth: height
             property bool isBusy: uploader.working
-            icon.source: isBusy ? null : "qrc:/navigation/image-gallery.png"
+            icon.source: isBusy ? null : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
             enabled: !isBusy
             font.pointSize: settings.baseFontSize
             onClicked: {
@@ -96,7 +96,7 @@ Item {
             focusPolicy: Qt.NoFocus
             id: sendButton
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/paper-plane.png"
+            icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
             visible: settings.showSendButton
             font.pointSize: settings.baseFontSize
             onClicked: {
@@ -115,6 +115,7 @@ Item {
             right: parent.right
         }
         height: 1
-        color: palette.mid
+        color: palette.text
+        opacity: 0.3
     }
 }

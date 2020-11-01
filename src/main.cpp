@@ -313,6 +313,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("ma.rtinbriza.cz");
     QCoreApplication::setApplicationName("Lith");
 
+    QQuickStyle::setStyle(":/style");
+
     QApplication app(argc, argv);
     setColorScheme(determineDarkStyle());
 #ifdef WIN32
@@ -345,6 +347,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
     engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
+    engine.rootContext()->setContextProperty("currentTheme", determineDarkStyle() ? "dark" : "light");
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     Lith::instance()->darkThemeSet(determineDarkStyle());

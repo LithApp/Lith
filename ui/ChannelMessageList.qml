@@ -153,7 +153,7 @@ ListView {
                 font.pointSize: settings.baseFontSize
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
-                icon.source: "qrc:/navigation/copy.png"
+                icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
                 onClicked: {
                     clipboardProxy.setText(linkHandler.currentLink)
                     linkHandler.visible = false
@@ -168,12 +168,12 @@ ListView {
                     linkHandler.openCurrentLink(false)
                     linkHandler.visible = false
                 }
-                icon.source: "qrc:/navigation/resize.png"
+                icon.source: "qrc:/navigation/"+currentTheme+"/resize.png"
             }
             Button {
                 visible: linkHandler.containsImage || linkHandler.containsVideo
                 focusPolicy: Qt.NoFocus
-                icon.source: "qrc:/navigation/image.png"
+                icon.source: "qrc:/navigation/"+currentTheme+"/image.png"
                 font.pointSize: settings.baseFontSize
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height

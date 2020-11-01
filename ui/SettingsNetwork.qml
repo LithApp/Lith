@@ -48,7 +48,7 @@ ScrollView {
         GridLayout {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
-            Text {
+            Label {
                 text: qsTr("Hostname")
             }
             TextField {
@@ -56,7 +56,7 @@ ScrollView {
                 text: settings.host
                 inputMethodHints: Qt.ImhNoPredictiveText
             }
-            Text {
+            Label {
                 text: qsTr("Port")
             }
             TextField {
@@ -68,7 +68,7 @@ ScrollView {
                     top: 65535
                 }
             }
-            Text {
+            Label {
                 text: "SSL"
             }
             CheckBox {
@@ -76,7 +76,7 @@ ScrollView {
                 checked: settings.encrypted
                 Layout.alignment: Qt.AlignLeft
             }
-            Text {
+            Label {
                 text: qsTr("Password")
             }
             TextField {

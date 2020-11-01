@@ -48,7 +48,7 @@ Dialog {
     }
 
     background: Rectangle {
-        color: "#eeeeee"
+        color: palette.window
     }
 
     onAccepted: {

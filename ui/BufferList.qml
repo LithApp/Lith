@@ -21,9 +21,7 @@ import QtQuick.Layouts 1.3
 
 Drawer {
     id: root
-    SystemPalette {
-        id: palette
-    }
+
     onVisibleChanged: {
         bufferList.currentIndex = lith.selectedBufferIndex
 
@@ -62,14 +60,14 @@ Drawer {
                 Button {
                     Layout.preferredWidth: height
                     font.pointSize: settings.baseFontSize * 1.25
-                    icon.source: "qrc:/navigation/screwdriver.png"
+                    icon.source: "qrc:/navigation/"+currentTheme+"/screwdriver.png"
                     onClicked: dataBrowser.open()
                 }
 
                 Button {
                     Layout.preferredWidth: height
                     font.pointSize: settings.baseFontSize * 1.25
-                    icon.source: "qrc:/navigation/cogwheel.png"
+                    icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
                     onClicked: settingsDialog.visible = true
                 }
                 Item {
@@ -86,9 +84,7 @@ Drawer {
                 placeholderText: qsTr("Filter buffers")
                 text: lith.buffers.filterWord
                 onTextChanged: lith.buffers.filterWord = text
-                font.pointSize: settings.baseFontSize
-                color: "black"
-                placeholderTextColor: "gray"
+                font.pointSize: settings.baseFontSize * 1.125
 
                 Keys.onPressed: {
                     if (event.key === Qt.Key_Up) {
@@ -165,6 +161,7 @@ Drawer {
                             Text {
                                 text: buffer.number
                                 anchors.centerIn: parent
+                                color: disabledPalette.text
                             }
                             Behavior on opacity { NumberAnimation { duration: 100 } }
                         }

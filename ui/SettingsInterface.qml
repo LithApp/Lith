@@ -59,7 +59,7 @@ ScrollView {
             columns: 2
             Layout.alignment: Qt.AlignHCenter
 
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Message font size")
             }
@@ -70,7 +70,7 @@ ScrollView {
                 to: 32
             }
 
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Timestamp format")
             }
@@ -79,7 +79,7 @@ ScrollView {
                 text: lith.settings.timestampFormat
             }
 
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Align nick length")
             }
@@ -100,9 +100,9 @@ ScrollView {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 height: 1
-                color: palette.mid
+                color: palette.base
             }
-            Text {
+            Label {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 text: qsTr("Input bar")
@@ -110,7 +110,7 @@ ScrollView {
                 font.bold: true
             }
 
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Show autocomplete button")
             }
@@ -119,7 +119,7 @@ ScrollView {
                 checked: settings.showAutocompleteButton
                 Layout.alignment: Qt.AlignLeft
             }
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Show gallery button")
             }
@@ -128,7 +128,7 @@ ScrollView {
                 checked: settings.showGalleryButton
                 Layout.alignment: Qt.AlignLeft
             }
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Show send button")
             }
@@ -143,10 +143,10 @@ ScrollView {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 height: 1
-                color: palette.mid
+                color: palette.base
             }
 
-            Text {
+            Label {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 text: qsTr("URL handling")
@@ -154,7 +154,7 @@ ScrollView {
                 font.bold: true
             }
 
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Shortening Enabled")
             }
@@ -163,7 +163,7 @@ ScrollView {
                 checked: settings.shortenLongUrls
                 Layout.alignment: Qt.AlignLeft
             }
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Length threshold")
             }
@@ -182,9 +182,9 @@ ScrollView {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 height: 1
-                color: palette.mid
+                color: palette.base
             }
-            Text {
+            Label {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 text: qsTr("Multimedia")
@@ -192,7 +192,7 @@ ScrollView {
                 font.bold: true
             }
 
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Open links directly")
             }
@@ -201,7 +201,7 @@ ScrollView {
                 checked: settings.openLinksDirectly
                 Layout.alignment: Qt.AlignLeft
             }
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Loop videos by default")
             }
@@ -210,7 +210,7 @@ ScrollView {
                 checked: settings.showSendButton
                 Layout.alignment: Qt.AlignLeft
             }
-            Text {
+            Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Mute videos by default")
             }
