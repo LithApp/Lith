@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
@@ -11,6 +11,10 @@ Dialog {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+    onVisibleChanged: {
+        console.log(" visible = " + !(nickname == ""))
+    }
 
     width: parent.width / 1.25
 
@@ -40,75 +44,133 @@ Dialog {
         color: "#eeeeee"
     }
 
-    ListModel {
-        id: channelMessageActionMenuModel
-
-        ListElement {
-            textVal: "%3 (%2) %1"
-            numberOfArgs: 3
-        }
-        ListElement {
-            textVal: "(%2) %1"
-            numberOfArgs: 2
-        }
-        ListElement {
-            textVal: "%1"
-            numberOfArgs: 1
-        }
-    }
-
-    ColumnLayout {
-
+    ColumnLayout
+    {
+        spacing: 16
+        // columns: 1
         width: parent.width
-        GridLayout
-        {
-            rowSpacing: 32
-            columns: 1
+
+        Rectangle {
+            clip: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+
             width: parent.width
+            visible: !(nickname == "")
+            height: visible ? 45 : 0
+            color: mouseNicknameTimestamp.pressed ? "gray" : "#eeeeee"
 
-            Repeater {
-                model: channelMessageActionMenuModel
-                delegate: Text {
-                    Layout.alignment: Qt.AlignCenter
-                    Layout.preferredWidth: parent.width
-                    maximumLineCount: 2
-                    visible: nickname == "" ? false : true
-                    text: numberOfArgs == 3 ? textVal.arg(message).arg(nickname).arg(timestamp) :
-                                              (numberOfArgs == 2 ? textVal.arg(message).arg(nickname) :
-                                                                   textVal.arg(message))
+            Behavior on color {
+                ColorAnimation {
 
-                    clip: true
-                    elide: Text.ElideRight
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                }
+            }
 
-                    font.family: "Menlo"
-                    font.pointSize: settings.baseFontSize
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
+                maximumLineCount: 2
+                id: messageTextWithNicknameTimestamp
+                text: timestamp + " <" + nickname + "> " + message
 
-                    MouseArea {
-                        id: mouseActionMenuItem
-                        anchors.fill: parent
-                        onClicked: {
-                            channelMessageActionMenuDialog.close()
-                            clipboard.setText(parent.text)
-                        }
-                    }
+                elide: Text.ElideRight
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                    Rectangle
-                    {
-                        color: mouseActionMenuItem.pressed ? "gray" : "#eeeeee"
-                        width: parent.width
-                        height: parent.height
-                        z: -1
-                        Behavior on color {
-                            ColorAnimation {
+                font.family: "Menlo"
+                font.pointSize: settings.baseFontSize
 
-                            }
-                        }
+                MouseArea {
+                    id: mouseNicknameTimestamp
+                    anchors.fill: parent
+                    onClicked: {
+                        channelMessageActionMenuDialog.close()
+                        clipboard.setText(parent.text)
                     }
                 }
             }
-            Item {
-                Layout.fillHeight: true
+        }
+        Rectangle {
+            clip: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+
+            visible: !(nickname == "")
+            height: visible ? 45 : 0
+            color: mouseNickname.pressed ? "gray" : "#eeeeee"
+
+            Behavior on color {
+                ColorAnimation {
+
+                }
+            }
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
+                maximumLineCount: 2
+                id: messageTextWithNickname
+                text: "<" + nickname + "> " + message
+
+                elide: Text.ElideRight
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+                font.family: "Menlo"
+                font.pointSize: settings.baseFontSize
+
+                MouseArea {
+                    id: mouseNickname
+                    anchors.fill: parent
+                    onClicked: {
+                        channelMessageActionMenuDialog.close()
+                        clipboard.setText(parent.text)
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            clip: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+
+            visible: true
+            height: 45
+            color: mouseText.pressed ? "gray" : "#eeeeee"
+
+            Behavior on color {
+                ColorAnimation {
+
+                }
+            }
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
+                maximumLineCount: 2
+                id: messageText
+                visible: true
+                text: message
+
+                elide: Text.ElideRight
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+
+                font.family: "Menlo"
+                font.pointSize: settings.baseFontSize
+
+                MouseArea {
+                    id: mouseText
+                    anchors.fill: parent
+                    onClicked: {
+                        channelMessageActionMenuDialog.close()
+                        clipboard.setText(parent.text)
+                    }
+                }
             }
         }
     }
