@@ -199,7 +199,7 @@ ApplicationWindow {
                         if (linkHandler.containsImage)
                             previewPopup.showImage(linkHandler.currentLink)
                         if (linkHandler.containsVideo)
-                            previewPopup.showVideo(modelData.plainText)
+                            previewPopup.showVideo(linkHandler.currentLink)
                         linkHandler.visible = false
                     }
                 }
