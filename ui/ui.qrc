@@ -17,5 +17,6 @@
         <file>SettingsNetwork.qml</file>
         <file>SettingsInterface.qml</file>
         <file>SettingsShortcuts.qml</file>
+        <file>DataBrowser.qml</file>
     </qresource>
 </RCC>

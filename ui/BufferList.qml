@@ -45,6 +45,13 @@ Drawer {
                 Button {
                     Layout.preferredWidth: height
                     font.pointSize: settings.baseFontSize * 1.25
+                    text: "🪛"
+                    onClicked: dataBrowser.open()
+                }
+
+                Button {
+                    Layout.preferredWidth: height
+                    font.pointSize: settings.baseFontSize * 1.25
                     text: "⚙"
                     onClicked: settingsDialog.visible = true
                 }

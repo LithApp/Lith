@@ -206,4 +206,11 @@ ApplicationWindow {
             }
         }
     }
+
+    DataBrowser {
+        id: dataBrowser
+        visible: false
+        width: parent.width
+        height: parent.height
+    }
 }
