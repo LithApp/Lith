@@ -196,7 +196,8 @@ void Lith::handleFirstReceivedLine(Protocol::HData *hda) {
             continue;
         line = new BufferLine(buffer);
         for (auto j : i.objects.keys()) {
-            line->setProperty(qPrintable(j), i.objects[j]);
+            if (j != "buffer")
+                line->setProperty(qPrintable(j), i.objects[j]);
         }
         buffer->appendLine(line);
         addLine(bufPtr, linePtr, line);
@@ -251,7 +252,8 @@ void Lith::handleFetchLines(Protocol::HData *hda) {
             continue;
         line = new BufferLine(buffer);
         for (auto j : i.objects.keys()) {
-            line->setProperty(qPrintable(j), i.objects[j]);
+            if (j != "buffer")
+                line->setProperty(qPrintable(j), i.objects[j]);
         }
         buffer->appendLine(line);
         addLine(bufPtr, linePtr, line);
