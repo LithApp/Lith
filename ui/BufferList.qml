@@ -159,7 +159,8 @@ Drawer {
                             id: bufferName
                             Layout.fillWidth: true
                             clip: true
-                            text: buffer.short_name === "" ? buffer.name : buffer.short_name
+                            text: buffer ? buffer.short_name === "" ? buffer.name : buffer.short_name
+                                         : ""
                             font.family: "Menlo"
                             font.pointSize: settings.baseFontSize * 1.125
                             color: palette.windowText

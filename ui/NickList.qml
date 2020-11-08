@@ -56,7 +56,7 @@ Drawer {
             Layout.fillWidth: true
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             horizontalAlignment: Label.AlignHCenter
-            text: lith.selectedBuffer.title
+            text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
             font.family: "Menlo"
             font.pointSize: settings.baseFontSize
             color: palette.windowText

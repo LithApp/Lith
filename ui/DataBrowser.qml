@@ -28,7 +28,7 @@ Dialog {
             model: lith.unfilteredBuffers
             header: Item {
                 width: bufferListView.width
-                height: childrenRect.height
+                height: headerTextBuffer.height
                 Rectangle {
                     anchors {
                         bottom: parent.bottom
@@ -41,6 +41,7 @@ Dialog {
                 }
 
                 Text {
+                    id: headerTextBuffer
                     text: "Buffer"
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter

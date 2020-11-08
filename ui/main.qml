@@ -134,13 +134,6 @@ ApplicationWindow {
         }
     }
 
-    Connections {
-        target: lith
-        onHotMessageReceived: {
-
-        }
-    }
-
     Dialog {
         id: linkHandler
         width: parent.width * 0.78

@@ -66,8 +66,11 @@ ListView {
     }
 
     function fillTopOfList() {
-        if (yPosition + visibleArea.heightRatio > 0.65)
+        if (!lith.selectedBuffer)
+            return
+        if (yPosition + visibleArea.heightRatio > 0.65) {
             lith.selectedBuffer.fetchMoreLines()
+        }
     }
 
     property real yPosition: visibleArea.yPosition
