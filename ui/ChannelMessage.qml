@@ -70,6 +70,7 @@ Rectangle {
             text: messageModel.prefix
             font.pointSize: settings.baseFontSize
             color: palette.text
+            textFormat: Text.RichText
         }
 
         Text {
@@ -78,6 +79,7 @@ Rectangle {
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: palette.text
             font.pointSize: settings.baseFontSize
+            textFormat: Text.RichText
             onLinkActivated: {
                 linkHandler.show(link, this)
             }
