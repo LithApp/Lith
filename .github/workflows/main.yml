@@ -1,11 +1,14 @@
 name: Build
 
 on:
+  push:
+    branches:
+      - '**'
   release:
     types: [ created ]
 
 jobs:
-  ios:
+  iOS:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v2
@@ -40,48 +43,48 @@ jobs:
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp dist/ios/*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v1
-      with:
-        path: ../Qt
-        key: QtCache-5.15.1
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
         version: 5.15.1
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
         target: ios
-    - name: Build the iOS binary and upload it to Testflight
-      env:
-        APPLEID_PASSWORD: ${{ secrets.APPLEID_PASSWORD }}
-        APPLEID_NAME: ${{ secrets.APPLEID_NAME }}
+    - name: Patch Qt
+      run: |
+        pushd $Qt5_Dir
+        patch -p1 < $GITHUB_WORKSPACE/dist/ios/qt-ios.patch
+        popd
+    - name: Build the iOS binary
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
-        bash ./dist/ios/build.sh
+        bash ./dist/ios/build.sh        
+    - name: Upload artifacts to GitHub
+      if: github.event_name != 'release'
+      uses: actions/upload-artifact@v2
+      with:
+        name: Lith.ipa
+        path: build_ios/Lith.ipa
     - name: Upload to GitHub
       if: github.event_name == 'release'
       run: |
-        TAG_NAME=$(./dist/get-tag-name.sh)
-        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_ios/Lith.ipa"
+        export TAG_NAME=$(./dist/get-tag-name.sh)
+        ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/Lith.ipa"
+    - name: Upload to Testflight
+      if: github.event_name == 'release'
+      run: |
+        export TAG_NAME=$(./dist/get-tag-name.sh)
+        xcrun altool --validate-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_PASSWORD }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+        xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_PASSWORD }}" --password "${{ secrets.APPLEID_PASSWORD }}"
 
-  android:
+  Android-29:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 1
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v1
-      with:
-        path: ../Qt
-        key: QtCache-5.15.1
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
         version: 5.15.1
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
         target: android
     - name: Get OpenSSL
       run: |
