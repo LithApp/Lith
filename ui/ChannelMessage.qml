@@ -60,7 +60,6 @@ Rectangle {
             Layout.alignment: Qt.AlignTop
             Layout.preferredWidth: timeMetrics.width
             text: messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
-            font.family: "Menlo"
             font.pointSize: settings.baseFontSize
             color: palette.text
         }
@@ -69,7 +68,6 @@ Rectangle {
             Layout.alignment: Qt.AlignTop
             font.bold: true
             text: messageModel.prefix
-            font.family: "Menlo"
             font.pointSize: settings.baseFontSize
             color: palette.text
         }
@@ -79,7 +77,6 @@ Rectangle {
             Layout.fillWidth: true
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: palette.text
-            font.family: "Menlo"
             font.pointSize: settings.baseFontSize
             onLinkActivated: {
                 linkHandler.show(link, this)

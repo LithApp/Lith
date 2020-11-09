@@ -165,7 +165,6 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 horizontalAlignment: Text.AlignHCenter
-                font.family: "Menlo"
                 font.pointSize: lith.settings.baseFontSize
                 textFormat: Text.RichText
                 text: "<a href=\""+linkHandler.currentLink+"\">"+linkHandler.currentLink+"</a>"

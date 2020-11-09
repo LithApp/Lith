@@ -52,7 +52,6 @@ Drawer {
         Label {
             Layout.alignment: Qt.AlignHCenter
             text: lith.selectedBuffer ? lith.selectedBuffer.full_name : ""
-            font.family: "Menlo"
             font.pointSize: settings.baseFontSize * 1.125
             color: palette.windowText
         }
@@ -63,7 +62,6 @@ Drawer {
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             horizontalAlignment: Label.AlignHCenter
             text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
-            font.family: "Menlo"
             font.pointSize: settings.baseFontSize
             color: palette.windowText
         }
@@ -71,7 +69,6 @@ Drawer {
         Label {
             Layout.alignment: Qt.AlignHCenter
             text: "0 users, 0 voice, 0 ops"
-            font.family: "Menlo"
             font.pointSize: settings.baseFontSize * 0.75
             color: palette.windowText
         }
@@ -88,7 +85,6 @@ Drawer {
                     right: parent.right
                     margins: 3
                 }
-                font.family: "Menlo"
                 font.pointSize: settings.baseFontSize * 1
                 onTextChanged: lith.selectedBufferNicks.filterWord = text
 
@@ -148,7 +144,6 @@ Drawer {
                         id: nickTextItem
                         clip: true
                         text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
-                        font.family: "Menlo"
                         font.pointSize: settings.baseFontSize * 1.125
                         color: palette.windowText
 

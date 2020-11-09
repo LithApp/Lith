@@ -44,7 +44,6 @@ Frame {
                 clip: true
                 height: 1
                 font.bold: true
-                font.family: "Menlo"
                 font.pointSize: lith.selectedBuffer && lith.selectedBuffer.title.length > 0 ? settings.baseFontSize * 0.875 :
                                                                                     settings.baseFontSize * 1.125
                 color: palette.windowText
@@ -61,7 +60,6 @@ Frame {
                 text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
                 elide: Text.ElideRight
                 maximumLineCount: 2
-                font.family: "Menlo"
                 font.pointSize: settings.baseFontSize * 0.75
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

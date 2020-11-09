@@ -87,7 +87,6 @@ Drawer {
                 placeholderText: "Filter buffers"
                 text: lith.buffers.filterWord
                 onTextChanged: lith.buffers.filterWord = text
-                font.family: "Menlo"
                 font.pointSize: settings.baseFontSize
                 color: palette.windowText
 
@@ -161,7 +160,6 @@ Drawer {
                             clip: true
                             text: buffer ? buffer.short_name === "" ? buffer.name : buffer.short_name
                                          : ""
-                            font.family: "Menlo"
                             font.pointSize: settings.baseFontSize * 1.125
                             color: palette.windowText
                             MouseArea {
@@ -183,7 +181,6 @@ Drawer {
                             radius: 2
                             Text {
                                 text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
-                                font.family: "Menlo"
                                 font.pointSize: settings.baseFontSize
                                 anchors.centerIn: parent
                                 color: palette.windowText

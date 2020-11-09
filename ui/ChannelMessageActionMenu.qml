@@ -95,7 +95,6 @@ Dialog {
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                font.family: "Menlo"
                 font.pointSize: settings.baseFontSize
 
                 MouseArea {
@@ -135,7 +134,6 @@ Dialog {
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                font.family: "Menlo"
                 font.pointSize: settings.baseFontSize
 
                 MouseArea {
@@ -177,7 +175,6 @@ Dialog {
                 elide: Text.ElideRight
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
-                font.family: "Menlo"
                 font.pointSize: settings.baseFontSize
 
                 MouseArea {

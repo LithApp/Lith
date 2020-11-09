@@ -22,7 +22,6 @@ import lith 1.0
 
 TextInput {
     id: inputField
-    font.family: "Menlo"
     font.pointSize: settings.baseFontSize
     verticalAlignment: TextField.AlignVCenter
     focus: true

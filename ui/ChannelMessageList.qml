@@ -23,7 +23,6 @@ ListView {
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
-        font.family: "Menlo"
         font.pointSize: settings.baseFontSize
     }
     // TODO breaks time dragging from outside of the screen

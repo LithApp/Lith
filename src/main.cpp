@@ -20,6 +20,8 @@
 #include <QtQml>
 #include <QQmlEngine>
 #include <QQuickStyle>
+#include <QFont>
+#include <QFontDatabase>
 
 #include "weechat.h"
 #include "uploader.h"
@@ -37,6 +39,18 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Lith");
 
     QApplication app(argc, argv);
+    QFontDatabase db;
+    for (auto i : db.families()) {
+        if (db.isFixedPitch(i)) {
+            qCritical() << i;
+        }
+    }
+#ifdef WIN32
+    QFont font("Consolas");
+#else
+    QFont font("Menlo");
+#endif
+    app.setFont(font);
 
     QQmlApplicationEngine engine;
     qRegisterMetaType<Protocol::HData>();

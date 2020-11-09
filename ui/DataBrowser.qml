@@ -68,7 +68,6 @@ Dialog {
                 Text {
                     width: 256
                     text: modelData.name
-                    font.family: "monospace"
                     MouseArea {
                         anchors.fill: parent
                         onClicked: viewer.obj = modelData
@@ -83,7 +82,6 @@ Dialog {
                     model: modelData.nicks
                     delegate: Text {
                         Layout.fillWidth: true
-                        font.family: "monospace"
                         text: modelData.name
                         Rectangle {
                             z: -1
@@ -131,7 +129,6 @@ Dialog {
                     model: modelData.lines
                     delegate: Text {
                         Layout.fillWidth: true
-                        font.family: "monospace"
                         text: modelData.message
                         Rectangle {
                             z: -1
@@ -194,13 +191,11 @@ Dialog {
                 TextEdit {
                     id: title
                     readOnly: true
-                    font.family: "monospace"
                     Layout.fillWidth: true
                 }
                 TextEdit {
                     id: description
                     readOnly: true
-                    font.family: "monospace"
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     Layout.fillWidth: true
                 }
