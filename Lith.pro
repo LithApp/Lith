@@ -10,6 +10,7 @@ HEADERS += \
     src/qmlobjectlist.h \
     src/settings.h \
     src/uploader.h \
+    src/util/nicklistfilter.h \
     src/weechat.h \
     src/common.h
 
@@ -22,7 +23,11 @@ SOURCES += \
     src/qmlobjectlist.cpp \
     src/settings.cpp \
     src/uploader.cpp \
+    src/util/nicklistfilter.cpp \
     src/weechat.cpp
+
+INCLUDEPATH += \
+    src
 
 RESOURCES += ui/ui.qrc assets/assets.qrc
 

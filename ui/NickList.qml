@@ -30,8 +30,14 @@ Drawer {
             else
                 nickFilter.focus = true
         }
+        nickListView.currentIndex = 0
     }
 
+    function openNickActionMenu(nick) {
+        console.warn("something, soon?");
+        nickListActionMenu.visible = true
+        nickListActionMenu.nickname = nick
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -84,28 +90,47 @@ Drawer {
                 }
                 font.family: "Menlo"
                 font.pointSize: settings.baseFontSize * 1
+                onTextChanged: lith.selectedBufferNicks.filterWord = text
+
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        nickListView.currentIndex--;
+                        event.accepted = true
+                    }
+                    if (event.key === Qt.Key_Down) {
+                        nickListView.currentIndex++;
+                        event.accepted = true
+                    }
+                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                        openNickActionMenu(nickListView.currentItem.nick.name)
+                        nickFilter.text = ""
+                    }
+                }
             }
         }
 
         ListView {
+            id: nickListView
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
-            model: lith.selectedBuffer ? lith.selectedBuffer.nicks : null
+            model: lith.selectedBufferNicks
+            currentIndex: 0
 
             delegate: Rectangle {
                 width: ListView.view.width
                 visible: modelData.visible && modelData.level === 0
                 height: visible ? nickTextItem.height + 12 : 0
-                color: nickItemMouse.pressed ? "gray" : palette.base
+                color: index === nickListView.currentIndex ? "#bb6666" : nickItemMouse.pressed ? "gray" : palette.base
+
+                property var nick: modelData
 
                 MouseArea {
                     id: nickItemMouse
                     anchors.fill: parent
                     onClicked: {
-                        console.warn("something, soon?");
-                        nickListActionMenu.visible = true
-                        nickListActionMenu.nickname = modelData.name
+                        nickListView.currentIndex = index
+                        openNickActionMenu(modelData.name)
                     }
                 }
 

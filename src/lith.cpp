@@ -74,6 +74,10 @@ void Lith::selectedBufferIndexSet(int index) {
     }
 }
 
+NickListFilter *Lith::selectedBufferNicks() {
+    return m_selectedBufferNicks;
+}
+
 QObject *Lith::getObject(pointer_t ptr, const QString &type, pointer_t parent) {
     if (type.isEmpty()) {
         if (m_bufferMap.contains(ptr))
@@ -125,8 +129,15 @@ Lith::Lith(QObject *parent)
     , m_weechat(new Weechat(this))
     , m_buffers(QmlObjectList::create<Buffer>())
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
+    , m_selectedBufferNicks(new NickListFilter(this))
 {
     connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::hasPassphraseChanged);
+    connect(this, &Lith::selectedBufferChanged, [this](){
+        if (selectedBuffer())
+            m_selectedBufferNicks->setSourceModel(selectedBuffer()->nicks());
+        else
+            m_selectedBufferNicks->setSourceModel(nullptr);
+    });
 
     m_weechat->moveToThread(m_weechatThread);
     m_weechatThread->start();

@@ -132,6 +132,10 @@ TextInput {
         onActivated: bufferDrawer.open()
     }
     Shortcut {
+        sequences: lith.settings.shortcutNicklist
+        onActivated: nickDrawer.open()
+    }
+    Shortcut {
         sequences: lith.settings.shortcutAutocomplete
         onActivated: autocomplete();
     }

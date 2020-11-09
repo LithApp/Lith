@@ -60,6 +60,7 @@ class Settings : public QObject {
 
     SETTING(bool, enableReadlineShortcuts, true)
     SETTING(QStringList, shortcutSearchBuffer, {"Alt+G"})
+    SETTING(QStringList, shortcutNicklist, {"Alt+N"})
     SETTING(QStringList, shortcutAutocomplete, {"Tab"})
     SETTING(QStringList, shortcutSwitchToNextBuffer, {"Alt+Right", "Alt+Down"})
     SETTING(QStringList, shortcutSwitchToPreviousBuffer, {"Alt+Left", "Alt+Up"})

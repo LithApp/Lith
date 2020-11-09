@@ -20,6 +20,7 @@
 #include "common.h"
 #include "settings.h"
 #include "protocol.h"
+#include "util/nicklistfilter.h"
 
 #include <QSortFilterProxyModel>
 #include <QPointer>
@@ -53,6 +54,7 @@ private:
     Q_PROPERTY(QmlObjectList* unfilteredBuffers READ unfilteredBuffers CONSTANT)
     Q_PROPERTY(Buffer* selectedBuffer READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedBufferChanged)
     Q_PROPERTY(int selectedBufferIndex READ selectedBufferIndex WRITE selectedBufferIndexSet NOTIFY selectedBufferChanged)
+    Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
 
 public:
     static Lith *_self;
@@ -67,6 +69,7 @@ public:
     void selectedBufferSet(Buffer *b);
     int selectedBufferIndex();
     void selectedBufferIndexSet(int index);
+    NickListFilter *selectedBufferNicks();
 
     QObject *getObject(pointer_t ptr, const QString &type, pointer_t parent = 0);
 
@@ -119,6 +122,7 @@ private:
     Weechat *m_weechat { nullptr };
     QmlObjectList *m_buffers { nullptr };
     ProxyBufferList *m_proxyBufferList { nullptr };
+    NickListFilter *m_selectedBufferNicks { nullptr };
     int m_selectedBufferIndex { -1 };
 
     QMap<pointer_t, QPointer<Buffer>> m_bufferMap {};
