@@ -36,7 +36,7 @@ bool NickListFilter::filterAcceptsRow(int source_row, const QModelIndex &source_
     if (n) {
         return n->visibleGet() &&
                n->levelGet() == 0 &&
-               n->nameGet().toLower().contains(filterWordGet());
+               n->nameGet().toLower().contains(filterWordGet().toLower());
     }
     return false;
 }
