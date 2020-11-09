@@ -9,6 +9,7 @@ on:
 
 jobs:
   iOS:
+    if: github.event_name == 'release'
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v2
@@ -56,7 +57,7 @@ jobs:
     - name: Build the iOS binary
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
-        bash ./dist/ios/build.sh        
+        bash ./dist/ios/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'release'
       uses: actions/upload-artifact@v2
@@ -76,6 +77,7 @@ jobs:
         xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
 
   Android-29:
+    if: github.event_name == 'release'
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -105,3 +107,57 @@ jobs:
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk"
+
+  Windows-MSVC:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Build the application
+      shell: bash
+      run: |
+        eval $(./dist/win/make-vs2019-env.bat)
+        mkdir build
+        cd build
+        $Qt5_Dir/bin/qmake.exe ..
+        nmake
+
+  Linux:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: Install Make
+      run: |
+        sudo apt update
+        sudo apt install make
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+    - name: Build the application
+      run: |
+        mkdir build
+        cd build
+        $Qt5_Dir/bin/qmake ..
+        make -j5
+
+  macOS:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+    - name: Build the application
+      run: |
+        mkdir build
+        cd build
+        $Qt5_Dir/bin/qmake ..
+        make -j5
+
