@@ -72,8 +72,8 @@ jobs:
       if: github.event_name == 'release'
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
-        xcrun altool --validate-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_PASSWORD }}" --password "${{ secrets.APPLEID_PASSWORD }}"
-        xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_PASSWORD }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+        xcrun altool --validate-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+        xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
 
   Android-29:
     runs-on: ubuntu-20.04
