@@ -22,6 +22,7 @@ import lith 1.0
 
 TextInput {
     id: inputField
+    clip: true
     font.pointSize: settings.baseFontSize
     verticalAlignment: TextField.AlignVCenter
     focus: true
