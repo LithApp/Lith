@@ -29,6 +29,7 @@ public:
     int count();
 
     void clear();
+    void purge();
 
     Q_INVOKABLE
     /**
