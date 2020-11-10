@@ -129,6 +129,7 @@ Drawer {
                 Layout.fillWidth: true
                 model: lith.buffers
                 currentIndex: 0
+                highlightMoveDuration: 120
 
                 ScrollBar.vertical: ScrollBar {
                     id: scrollBar
