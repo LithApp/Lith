@@ -77,4 +77,102 @@ ListView {
     onYPositionChanged: fillTopOfList()
     onContentHeightChanged: fillTopOfList()
     onModelChanged: fillTopOfList()
+
+    Dialog {
+        id: linkHandler
+        z: 99999999
+        width: parent.width
+        height: linkHandlerLayout.height + 12
+        anchors.centerIn: parent
+        visible: false
+        padding: 0
+        topPadding: 0
+
+        property string currentLink
+        property bool containsImage: currentLink.endsWith("png") ||
+                                     currentLink.endsWith("jpg") ||
+                                     currentLink.endsWith("gif")
+        property bool containsVideo: currentLink.endsWith("avi") ||
+                                     currentLink.endsWith("mov") ||
+                                     currentLink.endsWith("mp4") ||
+                                     currentLink.endsWith("webm")
+
+        function show(link, item) {
+            visible = true
+            parent = item
+            currentLink = link
+            console.warn("AHOJ " + link)
+        }
+
+        RowLayout {
+            id: linkHandlerLayout
+            y: 6
+            x: 6
+            width: parent.width - 12
+            spacing: 9
+            Text {
+                id: linkText
+                Layout.fillWidth: true
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: lith.settings.baseFontSize
+                textFormat: Text.RichText
+                text: "<a href=\""+linkHandler.currentLink+"\">"+linkHandler.currentLink+"</a>"
+            }
+            Button {
+                focusPolicy: Qt.NoFocus
+                font.pointSize: settings.baseFontSize
+                Layout.preferredHeight: 36
+                Layout.preferredWidth: height
+                text: "📋"
+                onClicked: {
+                    clipboard.setText(linkHandler.currentLink)
+                    linkHandler.visible = false
+                }
+            }
+            Button {
+                focusPolicy: Qt.NoFocus
+                font.pointSize: settings.baseFontSize
+                Layout.preferredHeight: 36
+                Layout.preferredWidth: height
+                onClicked: {
+                    Qt.openUrlExternally(linkHandler.currentLink)
+                    linkHandler.visible = false
+                }
+                Text {
+                    text: "⤶"
+                    rotation: 180
+                    anchors.centerIn: parent
+                }
+            }
+            Button {
+                visible: linkHandler.containsImage || linkHandler.containsVideo
+                focusPolicy: Qt.NoFocus
+                text: "🖼️"
+                font.pointSize: settings.baseFontSize
+                Layout.preferredHeight: 36
+                Layout.preferredWidth: height
+                onClicked: {
+                    if (linkHandler.containsImage)
+                        previewPopup.showImage(linkHandler.currentLink)
+                    if (linkHandler.containsVideo)
+                        previewPopup.showVideo(linkHandler.currentLink)
+                    linkHandler.visible = false
+                }
+            }
+        }
+        /*
+        Rectangle {
+            anchors.centerIn: parent
+            z: -1
+            width: 100000
+            height: 100000
+            color: "#44000000"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: linkHandler.visible = false
+            }
+        }
+        */
+    }
 }

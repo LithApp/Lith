@@ -22,6 +22,8 @@ import QtQuick.Controls 2.4
 import lith 1.0
 
 Rectangle {
+    id: root
+    z: index
     width: ListView.view.width // + timeMetrics.width
     property var messageModel: null
     rotation: 180
@@ -83,7 +85,7 @@ Rectangle {
             textFormat: Text.RichText
             renderType: Text.NativeRendering
             onLinkActivated: {
-                linkHandler.show(link, this)
+                linkHandler.show(link, root)
             }
             MouseArea {
                 id: linkHoverMouse
