@@ -89,19 +89,19 @@ ListView {
         topPadding: 0
 
         property string currentLink
-        property bool containsImage: currentLink.endsWith("png") ||
-                                     currentLink.endsWith("jpg") ||
-                                     currentLink.endsWith("gif")
-        property bool containsVideo: currentLink.endsWith("avi") ||
-                                     currentLink.endsWith("mov") ||
-                                     currentLink.endsWith("mp4") ||
-                                     currentLink.endsWith("webm")
+        property string currentExtension: lith.getLinkFileExtension(currentLink)
+        property bool containsImage: currentExtension.endsWith("png") ||
+                                     currentExtension.endsWith("jpg") ||
+                                     currentExtension.endsWith("gif")
+        property bool containsVideo: currentExtension.endsWith("avi") ||
+                                     currentExtension.endsWith("mov") ||
+                                     currentExtension.endsWith("mp4") ||
+                                     currentExtension.endsWith("webm")
 
         function show(link, item) {
             visible = true
             parent = item
             currentLink = link
-            console.warn("AHOJ " + link)
         }
 
         RowLayout {

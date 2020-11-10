@@ -27,6 +27,8 @@
 
 #include <QSystemTrayIcon>
 
+#include <QUrl>
+
 Lith *Lith::_self = nullptr;
 Lith *Lith::instance() {
     if (!_self)
@@ -117,6 +119,12 @@ QObject *Lith::getObject(pointer_t ptr, const QString &type, pointer_t parent) {
         //qCritical() << "Unknown type of new stuff requested:" << type;
     }
     return nullptr;
+}
+
+QString Lith::getLinkFileExtension(const QString &url) {
+    QUrl u(url);
+    auto extension = u.fileName().split(".").last().toLower();
+    return extension;
 }
 
 Weechat *Lith::weechat() {

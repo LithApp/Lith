@@ -73,6 +73,9 @@ public:
 
     QObject *getObject(pointer_t ptr, const QString &type, pointer_t parent = 0);
 
+    // TODO hack, this shouldn't be in this class
+    Q_INVOKABLE QString getLinkFileExtension(const QString &url);
+
 public slots:
     void resetData();
 
