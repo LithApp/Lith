@@ -150,13 +150,8 @@ bool Lith::hasPassphrase() const {
 
 void Lith::resetData() {
     selectedBufferIndexSet(-1);
-    for (int i = 0; i < m_buffers->count(); i++) {
-        if (m_buffers->get<Buffer>(i))
-            m_buffers->get<Buffer>(i)->deleteLater();
-    }
-    m_buffers->clear();
+    m_buffers->purge();
     m_bufferMap.clear();
-    qCritical() << "=== RESET";
     int lines = 0;
     for (auto i : m_lineMap) {
         if (i) {
@@ -166,7 +161,6 @@ void Lith::resetData() {
         }
     }
     m_lineMap.clear();
-    qCritical() << "There is" << m_lineMap.count() << "orphan lines";
     int hotlist = 0;
     for (auto i : m_hotList) {
         if (i) {
@@ -176,7 +170,6 @@ void Lith::resetData() {
         }
     }
     m_hotList.clear();
-    qCritical() << "There is" << m_hotList.count() << "hotlist items";
 }
 
 void Lith::handleBufferInitialization(Protocol::HData *hda) {

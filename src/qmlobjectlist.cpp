@@ -101,3 +101,12 @@ void QmlObjectList::clear() {
     mData.clear();
     endResetModel();
 }
+
+void QmlObjectList::purge() {
+    beginResetModel();
+    for (auto i : mData) {
+        i->deleteLater();
+    }
+    mData.clear();
+    endResetModel();
+}
