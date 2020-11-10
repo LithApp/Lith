@@ -1,3 +1,6 @@
+Rem Source: https://gist.github.com/vvuk/01dc8a12678d1beffaa1e26549d03b02
+Rem Author: Vladimir Vukicevic (vvuk)
+
 @ECHO OFF
 
 set OLDPATH=%PATH%
