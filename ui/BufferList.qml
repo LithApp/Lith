@@ -83,7 +83,6 @@ Drawer {
             TextField {
                 id: filterField
                 Layout.fillWidth: true
-                placeholderTextColor: palette.alternateBase
                 placeholderText: "Filter buffers"
                 text: lith.buffers.filterWord
                 onTextChanged: lith.buffers.filterWord = text
