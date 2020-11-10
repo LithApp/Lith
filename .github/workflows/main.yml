@@ -172,6 +172,31 @@ jobs:
         $Qt5_Dir/bin/qmake ..
         make -j5
 
+
+  Flatpak:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/bilelmoussaoui/flatpak-github-actions
+      options: --privileged
+    steps:
+    - uses: actions/checkout@v2
+    - uses: bilelmoussaoui/flatpak-github-actions@v2
+      with:
+        bundle: "app.Lith.Lith.flatpak"
+        manifest-path: "dist/linux/flatpak/app.Lith.Lith.json"
+    - name: Upload artifacts to GitHub
+      if: github.event_name != 'release'
+      uses: actions/upload-artifact@v2
+      with:
+        name: app.Lith.Lith.flatpak
+        path: app.Lith.Lith.flatpak
+    - name: Upload to GitHub
+      if: github.event_name == 'release'
+      run: |
+        TAG_NAME=$(./dist/get-tag-name.sh)
+        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="app.Lith.Lith.flatpak"
+
+
   macOS:
     runs-on: macOS-latest
     steps:

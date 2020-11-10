@@ -1,4 +1,4 @@
-QT += qml quick widgets webview multimedia quickcontrols2
+QT += qml quick widgets multimedia quickcontrols2
 
 CONFIG += c++17
 
@@ -50,6 +50,6 @@ ios: {
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
+else: unix:!android: target.path = $${PREFIX}/bin
 !isEmpty(target.path): INSTALLS += target
 
