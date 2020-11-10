@@ -40,6 +40,7 @@ ListView {
     }
 
     rotation: 180
+    spacing: 0
     model: lith.selectedBuffer ? lith.selectedBuffer.lines : null
     delegate: ChannelMessage {
         messageModel: modelData
