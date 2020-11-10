@@ -80,7 +80,7 @@ void Uploader::upload(const QString &path) {
     connect(mgr, &QNetworkAccessManager::finished, this, &Uploader::onFinished);
 }
 
-void Uploader::uploadBinary(QImage &data) {
+void Uploader::uploadBinary(QImage data) {
     auto url = QUrl("https://api.imgur.com/3/image");
 
     auto* mgr = new QNetworkAccessManager(this);

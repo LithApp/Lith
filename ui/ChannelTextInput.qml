@@ -46,18 +46,6 @@ TextInput {
         }
     }
 
-    Action {
-        id: pasteAction
-        text: "&Paste"
-        shortcut: StandardKey.Paste
-        //enabled: inputField.activeFocus
-        onTriggered: {
-            if (clipboard.hasImage) {
-                uploader.uploadBinary(clipboard.image())
-            }
-        }
-    }
-
     Shortcut {
         sequence: StandardKey.Paste
         onActivated: {
@@ -212,6 +200,18 @@ TextInput {
         onActivated: inputField.cursorPosition = inputField.text.length
     }
     Keys.onPressed: {
+        if (event.modifiers & Qt.ControlModifier) {
+            if (event.key === Qt.Key_V) {
+                if (clipboard.hasImage) {
+                    uploader.uploadBinary(clipboard.image())
+                }
+                else {
+                    inputField.paste()
+                }
+                event.accepted = true
+            }
+        }
+
         if (event.key === Qt.Key_Up) {
             channelMessageList.contentY += 30
         }

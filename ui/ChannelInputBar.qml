@@ -17,6 +17,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
+import QtQml 2.12
 
 import lith 1.0
 
@@ -63,7 +64,7 @@ RowLayout {
         }
         Connections {
             target: uploader
-            function onSuccess(url) {
+            onSuccess: {
                 console.warn("FINISHED")
                 console.warn(url)
                 if (channelTextInput.length !== 0 && !channelTextInput.text.endsWith(" "))
@@ -71,7 +72,7 @@ RowLayout {
                 channelTextInput.text += url
                 channelTextInput.text += " "
             }
-            function onError(message) {
+            onError: {
                 console.warn("ERROR")
                 console.warn(message)
             }

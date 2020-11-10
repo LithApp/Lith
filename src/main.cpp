@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
     //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
+    qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
     engine.rootContext()->setContextProperty("lith", Lith::instance());
     engine.rootContext()->setContextProperty("clipboard", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
