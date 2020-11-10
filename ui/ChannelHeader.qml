@@ -50,6 +50,7 @@ Frame {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: lith.selectedBuffer ? lith.selectedBuffer.name : ""
+                renderType: Text.NativeRendering
             }
             Text {
                 Layout.fillWidth: true
@@ -63,6 +64,7 @@ Frame {
                 font.pointSize: settings.baseFontSize * 0.75
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                renderType: Text.NativeRendering
                 color: palette.windowText
             }
         }

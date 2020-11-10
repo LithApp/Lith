@@ -71,6 +71,7 @@ Rectangle {
             font.pointSize: settings.baseFontSize
             color: palette.text
             textFormat: Text.RichText
+            renderType: Text.NativeRendering
         }
 
         Text {
@@ -80,6 +81,7 @@ Rectangle {
             color: palette.text
             font.pointSize: settings.baseFontSize
             textFormat: Text.RichText
+            renderType: Text.NativeRendering
             onLinkActivated: {
                 linkHandler.show(link, this)
             }
