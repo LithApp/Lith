@@ -28,6 +28,7 @@ ScrollView {
         settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
         settings.showGalleryButton = showGalleryButtonCheckbox.checked
         settings.showSendButton = showSendButtonCheckbox.checked
+        settings.baseFontSize = baseFontSizeSpinBox.value
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -35,6 +36,7 @@ ScrollView {
         showAutocompleteButtonCheckbox.checked = settings.showAutocompleteButton
         showGalleryButtonCheckbox.checked = settings.showGalleryButton
         showSendButtonCheckbox.checked = settings.showSendButton
+        baseFontSizeSpinBox.value = settings.baseFontSize
     }
 
     ColumnLayout {
@@ -102,8 +104,8 @@ ScrollView {
                 text: "Font size"
             }
             SpinBox {
+                id: baseFontSizeSpinBox
                 value: settings.baseFontSize
-                onValueChanged: settings.baseFontSize = value
                 from: 6
                 to: 32
             }
