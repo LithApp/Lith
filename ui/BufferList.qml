@@ -87,7 +87,8 @@ Drawer {
                 text: lith.buffers.filterWord
                 onTextChanged: lith.buffers.filterWord = text
                 font.pointSize: settings.baseFontSize
-                color: palette.windowText
+                color: "black"
+                placeholderTextColor: "gray"
 
                 Keys.onPressed: {
                     if (event.key === Qt.Key_Up) {
