@@ -172,6 +172,15 @@ Dialog {
             }
         }
     }
+    Button {
+        text: "x"
+        width: 32
+        height: 32
+        x: -8
+        y: -8
+        onClicked: root.close()
+    }
+
     Dialog {
         id: viewer
         property var obj: null

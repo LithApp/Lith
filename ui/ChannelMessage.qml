@@ -73,7 +73,7 @@ Rectangle {
             text: {
                 // ugh
                 if (lith.settings.nickCutoffThreshold < 0)
-                    return messageModel.prefix
+                    return messageModel.prefix + "\u00A0"
                 var attr = messageModel.nickAttribute
                 var attrC = messageModel.nickAttributeColor
                 var nick = messageModel.nick

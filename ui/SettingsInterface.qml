@@ -30,6 +30,7 @@ ScrollView {
         settings.showSendButton = showSendButtonCheckbox.checked
         settings.baseFontSize = baseFontSizeSpinBox.value
         settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
+        settings.timestampFormat = timestampFormatInput.text
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -39,6 +40,7 @@ ScrollView {
         showSendButtonCheckbox.checked = settings.showSendButton
         baseFontSizeSpinBox.value = settings.baseFontSize
         nickCutoffThresholdSpinBox.value = settings.nickCutoffThreshold
+        timestampFormatInput.text = settings.timestampFormat
     }
 
     ColumnLayout {
@@ -82,6 +84,14 @@ ScrollView {
         GridLayout {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
+            Text {
+                text: qsTr("Timestamp format")
+            }
+            TextField {
+                id: timestampFormatInput
+                text: lith.settings.timestampFormat
+            }
+
             Text {
                 text: qsTr("Align nick on length")
             }
