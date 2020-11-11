@@ -172,7 +172,7 @@ bool Protocol::parse(QDataStream &s, Protocol::HData &r) {
             else if (type == "str" || type == "buf") {
                 Protocol::String str;
                 bool canContainHTML = false;
-                if (name == "message" || name == "title")
+                if (name == "message" || name == "title" || name == "prefix")
                     canContainHTML = true;
                 parse(s, str, canContainHTML);
                 item.objects[name] = QVariant::fromValue(str.d);
@@ -247,6 +247,8 @@ bool Protocol::parse(QDataStream &s, Protocol::ArrayStr &r) {
 
 QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
     QString result;
+    if (canContainHtml)
+        result += "<html><body>";
 
     bool foreground = false;
     bool background = false;
@@ -382,8 +384,10 @@ QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtm
            ++it;
        }
        --it;
-       if (foreground)
+       if (foreground) {
            result += "</font>";
+           foreground = false;
+       }
        if (weechatColors.contains(code)) {
            result += "<font color=\""+weechatColors[code]+"\">";
            foreground = true;
@@ -399,8 +403,10 @@ QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtm
            ++it;
        }
        --it;
-       if (foreground)
+       if (foreground) {
            result += "</font>";
+           foreground = false;
+       }
        result += "<font color=\"green\">";
        foreground = true;
     };
@@ -531,12 +537,16 @@ QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtm
            result += "&lt;";
        else if (canContainHtml && (*it == '>'))
            result += "&gt;";
+       else if (canContainHtml && (*it == '&'))
+           result += "&amp;";
        else if (*it) {
            result += getChar(it);
        }
     }
     endColors();
     endAttrs();
+    if (canContainHtml)
+        result += "</body></html>";
     return result;
 }
 

@@ -57,6 +57,7 @@ Rectangle {
     RowLayout {
         id: messageRootLayout
         width: parent.width
+        spacing: 0
         /*
         Text {
             Layout.alignment: Qt.AlignTop
@@ -69,7 +70,22 @@ Rectangle {
         Text {
             Layout.alignment: Qt.AlignTop
             font.bold: true
-            text: messageModel.prefix
+            text: {
+
+                if (lith.settings.nickCutoffThreshold < 0)
+                    return messageModel.prefix
+                var attr = messageModel.nickAttribute
+                var attrC = messageModel.nickAttributeColor
+                var nick = messageModel.nick
+                var nickC = messageModel.nickColor
+                if (nickC + attrC == 0)
+                    return ""
+                var nickL = lith.settings.nickCutoffThreshold - attr.length
+                var nickS = nick.substring(0, nickL)
+                var attrS = attr.padStart(lith.settings.nickCutoffThreshold - nickS.length, "\u00A0")
+                return "<font color=\"" + attrC + "\">" + attrS + "</font>" +
+                        "<font color=\"" + nickC + "\">" + nickS + "</font> "
+            }
             font.pointSize: settings.baseFontSize
             color: palette.text
             textFormat: Text.RichText

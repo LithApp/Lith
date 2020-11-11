@@ -24,45 +24,47 @@
 #include <QUrl>
 #include <QApplication>
 #include <QTextDocumentFragment>
+#include <QXmlStreamReader>
+#include <QDomDocument>
 
 static const QMap<QString, QString> lightModeColors {
-    { "<font color=\"default\">", "<font color=\"black\">" },
-    { "<font color=\"black\">", "<font color=\"black\">" },
-    { "<font color=\"dark gray\">", "<font color=\"#444444\">" },
-    { "<font color=\"dark red\">", "<font color=\"#880000\">" },
-    { "<font color=\"light red\">", "<font color=\"#ff4444\">" },
-    { "<font color=\"dark green\">", "<font color=\"#008800\">" },
-    { "<font color=\"light green\">", "<font color=\"#33cc33\">" },
-    { "<font color=\"brown\">", "<font color=\"#d2691e\">" },
-    { "<font color=\"yellow\">", "<font color=\"#dddd00\">" },
-    { "<font color=\"dark blue\">", "<font color=\"#000088\">" },
-    { "<font color=\"light blue\">", "<font color=\"#3333dd\">" },
-    { "<font color=\"dark magenta\">", "<font color=\"#660066\">" },
-    { "<font color=\"light magenta\">", "<font color=\"#ff44ff\">" },
-    { "<font color=\"dark cyan\">", "<font color=\"#006666\">" },
-    { "<font color=\"light cyan\">", "<font color=\"#22aaaa\">" },
-    { "<font color=\"gray\">", "<font color=\"#aaaaaa\">" },
-    { "<font color=\"white\">", "<font color=\"#ffffff\">" }
+    { "default",       "black" },
+    { "black",         "black" },
+    { "dark gray",     "#444444" },
+    { "dark red",      "#880000" },
+    { "light red",     "#ff4444" },
+    { "dark green",    "#008800" },
+    { "light green",   "#33cc33" },
+    { "brown",         "#d2691e" },
+    { "yellow",        "#dddd00" },
+    { "dark blue",     "#000088" },
+    { "light blue",    "#3333dd" },
+    { "dark magenta",  "#660066" },
+    { "light magenta", "#ff44ff" },
+    { "dark cyan",     "#006666" },
+    { "light cyan",    "#22aaaa" },
+    { "gray",          "#aaaaaa" },
+    { "white",         "#ffffff" }
 };
 
 static const QMap<QString, QString> darkModeColors {
-    { "<font color=\"default\">", "<font color=\"white\">" },
-    { "<font color=\"black\">", "<font color=\"black\">" },
-    { "<font color=\"dark gray\">", "<font color=\"#444444\">" },
-    { "<font color=\"dark red\">", "<font color=\"#880000\">" },
-    { "<font color=\"light red\">", "<font color=\"#ff4444\">" },
-    { "<font color=\"dark green\">", "<font color=\"#33dd33\">" },
-    { "<font color=\"light green\">", "<font color=\"#55ff55\">" },
-    { "<font color=\"brown\">", "<font color=\"#d2691e\">" },
-    { "<font color=\"yellow\">", "<font color=\"#ffff00\">" },
-    { "<font color=\"dark blue\">", "<font color=\"#4444ff\">" },
-    { "<font color=\"light blue\">", "<font color=\"#9999ff\">" },
-    { "<font color=\"dark magenta\">", "<font color=\"#ee44ee\">" },
-    { "<font color=\"light magenta\">", "<font color=\"#ff88ff\">" },
-    { "<font color=\"dark cyan\">", "<font color=\"#22aaaa\">" },
-    { "<font color=\"light cyan\">", "<font color=\"#44dddd\">" },
-    { "<font color=\"gray\">", "<font color=\"#aaaaaa\">" },
-    { "<font color=\"white\">", "<font color=\"#ffffff\">" }
+    { "default",       "white" },
+    { "black",         "black" },
+    { "dark gray",     "#444444" },
+    { "dark red",      "#880000" },
+    { "light red",     "#ff4444" },
+    { "dark green",    "#33dd33" },
+    { "light green",   "#55ff55" },
+    { "brown",         "#d2691e" },
+    { "yellow",        "#ffff00" },
+    { "dark blue",     "#4444ff" },
+    { "light blue",    "#9999ff" },
+    { "dark magenta",  "#ee44ee" },
+    { "light magenta", "#ff88ff" },
+    { "dark cyan",     "#22aaaa" },
+    { "light cyan",    "#44dddd" },
+    { "gray",          "#aaaaaa" },
+    { "white",         "#ffffff" }
 };
 
 
@@ -169,26 +171,75 @@ BufferLine::BufferLine(Buffer *parent)
 }
 
 QString BufferLine::prefixGet() const {
-    auto ret = m_prefix;
-    for (auto i : darkModeColors.keys()) {
-        ret.replace(i, darkModeColors[i]);
+    QString ret;
+    if (nickAttributeGet().count() > 0) {
+        ret += "<font color=\"" + nickAttributeColorGet() + "\">" + nickAttributeGet() + "</color>";
+    }
+    if (nickGet().count() > 0) {
+        ret += "<font color=\"" + nickColorGet() + "\">" + nickGet() + "</color>";
     }
     return ret;
 }
 
 void BufferLine::prefixSet(const QString &o) {
-    if (m_prefix != o) {
-        m_prefix = o;
-        emit prefixChanged();
+    QXmlStreamReader xml(o);
+    QStringList colors;
+    QStringList parts;
+    while (!xml.atEnd()) {
+        xml.readNextStartElement();
+        if (xml.attributes().count() >= 1 && xml.attributes().first().name() == "color") {
+            colors.append(xml.attributes().first().value().toString());
+            parts.append(xml.readElementText(QXmlStreamReader::IncludeChildElements));
+        }
     }
+    bool changed = false;
+    if (parts.count() == 2 && colors.count() == 2) {
+        if (m_nickAttr != parts[0] || m_nickAttrColor != colors[0]) {
+            changed = true;
+            m_nickAttr = parts[0];
+            m_nickAttrColor = colors[0];
+        }
+        if (m_nick != parts[1] || m_nickColor != colors[1]) {
+            changed = true;
+            m_nick = parts[1];
+            m_nickColor = colors[1];
+        }
+    }
+    if (changed)
+        emit prefixChanged();
+}
+
+QString BufferLine::nickAttributeGet() const {
+    return m_nickAttr;
+}
+
+QString BufferLine::nickAttributeColorGet() const {
+    if (lightModeColors.contains(m_nickAttrColor))
+        return lightModeColors[m_nickAttrColor];
+    return m_nickAttrColor;
+}
+
+QString BufferLine::nickGet() const {
+    return m_nick;
+}
+
+QString BufferLine::nickColorGet() const {
+    if (lightModeColors.contains(m_nickColor))
+        return lightModeColors[m_nickColor];
+    return m_nickColor;
 }
 
 QString BufferLine::messageGet() const {
-    auto ret = m_message;
-    for (auto i : darkModeColors.keys()) {
-        ret.replace(i, darkModeColors[i]);
+    QDomDocument doc;
+    QString error;
+    doc.setContent(m_message, &error);
+    auto fontList = doc.elementsByTagName("font");
+    for (int i = 0; i < fontList.size(); i++) {
+        auto elem = fontList.at(i).toElement();
+        auto oldColor = elem.attribute("color");
+        elem.setAttribute("color", lightModeColors[oldColor]);
     }
-    return ret;
+    return doc.toString(-1);
 }
 
 void BufferLine::messageSet(const QString &o) {
@@ -206,8 +257,7 @@ bool BufferLine::isPrivMsg() {
 }
 
 QString BufferLine::colorlessNicknameGet() {
-    auto nickStripped = QTextDocumentFragment::fromHtml(m_prefix).toPlainText();
-    return nickStripped;
+    return m_nick;
 }
 
 QString BufferLine::colorlessTextGet() {

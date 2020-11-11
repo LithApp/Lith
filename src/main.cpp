@@ -45,10 +45,12 @@ int main(int argc, char *argv[])
     QFont font("Inconsolata");
     font.setKerning(false);
     font.setHintingPreference(QFont::PreferNoHinting);
+    font.setStyleHint(QFont::Monospace);
 #else
     QFont font("Menlo");
 #endif
     app.setFont(font);
+    app.setFont(font, "monospace");
 
     QQmlApplicationEngine engine;
     qRegisterMetaType<Protocol::HData>();

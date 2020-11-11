@@ -29,6 +29,7 @@ ScrollView {
         settings.showGalleryButton = showGalleryButtonCheckbox.checked
         settings.showSendButton = showSendButtonCheckbox.checked
         settings.baseFontSize = baseFontSizeSpinBox.value
+        settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -37,6 +38,7 @@ ScrollView {
         showGalleryButtonCheckbox.checked = settings.showGalleryButton
         showSendButtonCheckbox.checked = settings.showSendButton
         baseFontSizeSpinBox.value = settings.baseFontSize
+        nickCutoffThresholdSpinBox.value = settings.nickCutoffThreshold
     }
 
     ColumnLayout {
@@ -80,6 +82,21 @@ ScrollView {
         GridLayout {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
+            Text {
+                text: qsTr("Align nick on length")
+            }
+            SpinBox {
+                id: nickCutoffThresholdSpinBox
+                from: -1
+                to: 100
+                value: settings.nickCutoffThreshold
+                textFromValue: function(value, locale) {
+                    if (value >= 0)
+                        return Number(value)
+                    return "Disabled"
+                }
+            }
+
             Text {
                 text: qsTr("Shorten long URLs")
             }

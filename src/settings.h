@@ -48,6 +48,8 @@ class Settings : public QObject {
     SETTING(qreal, baseFontSize, 10)
     SETTING(bool, shortenLongUrls, true)
     SETTING(int, shortenLongUrlsThreshold, 50)
+    SETTING(int, nickCutoffThreshold, -1)
+    SETTING(QString, timestampFormat, "HH:MM:SS")
 
     SETTING(bool, showSendButton, false)
     SETTING(bool, showAutocompleteButton, true)

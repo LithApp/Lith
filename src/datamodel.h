@@ -123,6 +123,10 @@ class BufferLine : public QObject {
     PROPERTY(bool, highlight)
     PROPERTY(QStringList, tags_array)
 
+    Q_PROPERTY(QString nickAttribute READ nickAttributeGet NOTIFY prefixChanged)
+    Q_PROPERTY(QString nickAttributeColor READ nickAttributeColorGet NOTIFY prefixChanged)
+    Q_PROPERTY(QString nick READ nickGet NOTIFY prefixChanged)
+    Q_PROPERTY(QString nickColor READ nickColorGet NOTIFY prefixChanged)
     Q_PROPERTY(QString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(QString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
@@ -138,6 +142,10 @@ public:
 
     QString prefixGet() const;
     void prefixSet(const QString &o);
+    QString nickAttributeGet() const;
+    QString nickAttributeColorGet() const;
+    QString nickGet() const;
+    QString nickColorGet() const;
     QString messageGet() const;
     void messageSet(const QString &o);
 
@@ -159,7 +167,10 @@ private slots:
 
 private:
     QString m_message;
-    QString m_prefix;
+    QString m_nickAttr;
+    QString m_nick;
+    QString m_nickAttrColor;
+    QString m_nickColor;
     QList<QObject*> m_segments;
 };
 
