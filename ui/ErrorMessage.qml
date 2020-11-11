@@ -19,7 +19,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
 Rectangle {
-    height: errorText.text.length > 0 ? 64 : 0
+    height: errorText.text.length > 0 ? 48 : 0
     width: parent.width
     //visible: height != 0
     gradient: Gradient {

@@ -24,6 +24,7 @@ Frame {
     background: Rectangle {
         color: palette.window
     }
+    padding: 6
 
     RowLayout {
         width: parent.width
