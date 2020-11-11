@@ -51,26 +51,32 @@ Drawer {
 
         Label {
             Layout.alignment: Qt.AlignHCenter
+            horizontalAlignment: Label.AlignHCenter
+            Layout.fillWidth: true
             text: lith.selectedBuffer ? lith.selectedBuffer.full_name : ""
             font.pointSize: settings.baseFontSize * 1.125
             color: palette.windowText
+            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
 
         Label {
             Layout.alignment: Qt.AlignHCenter
+            horizontalAlignment: Label.AlignHCenter
             Layout.fillWidth: true
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-            horizontalAlignment: Label.AlignHCenter
             text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
             font.pointSize: settings.baseFontSize
             color: palette.windowText
         }
 
         Label {
+            Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
+            horizontalAlignment: Label.AlignHCenter
             text: qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(lith.selectedBuffer.normals).arg(lith.selectedBuffer.voices).arg(lith.selectedBuffer.ops).arg(lith.selectedBuffer.normals + lith.selectedBuffer.voices + lith.selectedBuffer.ops)
             font.pointSize: settings.baseFontSize * 0.75
             color: palette.windowText
+            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
 
         Item {
