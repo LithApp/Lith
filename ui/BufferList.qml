@@ -154,6 +154,19 @@ Drawer {
                         x: 3
                         y: 6
                         width: parent.width - 6
+
+                        Rectangle {
+                            width: bufferName.height + 6
+                            height: width
+                            color: "#22000000"
+                            opacity: index < 10 ? 0.5 : 0.0
+                            radius: 2
+                            Text {
+                                text: index + 1
+                                anchors.centerIn: parent
+                            }
+                        }
+
                         Text {
                             id: bufferName
                             Layout.fillWidth: true
