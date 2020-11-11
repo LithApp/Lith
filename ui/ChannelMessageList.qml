@@ -91,12 +91,12 @@ ListView {
         property string currentLink
         property string currentExtension: lith.getLinkFileExtension(currentLink)
         property bool containsImage: currentExtension.endsWith("png") ||
-                                     currentExtension.endsWith("jpg") ||
-                                     currentExtension.endsWith("gif")
+                                     currentExtension.endsWith("jpg")
         property bool containsVideo: currentExtension.endsWith("avi") ||
                                      currentExtension.endsWith("mov") ||
                                      currentExtension.endsWith("mp4") ||
-                                     currentExtension.endsWith("webm")
+                                     currentExtension.endsWith("webm") ||
+                                     currentExtension.endsWith("gif")
 
         function show(link, item) {
             visible = true
@@ -124,7 +124,7 @@ ListView {
                 font.pointSize: settings.baseFontSize
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
-                text: "📋"
+                icon.source: "qrc:/navigation/copy.png"
                 onClicked: {
                     clipboard.setText(linkHandler.currentLink)
                     linkHandler.visible = false
@@ -139,16 +139,12 @@ ListView {
                     Qt.openUrlExternally(linkHandler.currentLink)
                     linkHandler.visible = false
                 }
-                Text {
-                    text: "⤶"
-                    rotation: 180
-                    anchors.centerIn: parent
-                }
+                icon.source: "qrc:/navigation/resize.png"
             }
             Button {
                 visible: linkHandler.containsImage || linkHandler.containsVideo
                 focusPolicy: Qt.NoFocus
-                text: "🖼️"
+                icon.source: "qrc:/navigation/image.png"
                 font.pointSize: settings.baseFontSize
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height

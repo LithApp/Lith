@@ -31,7 +31,7 @@ Frame {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
             font.pointSize: settings.baseFontSize * 1.25
-            text: "☰"
+            icon.source: "qrc:/navigation/menu.png"
             onClicked: bufferDrawer.visible = !bufferDrawer.visible
         }
         ColumnLayout {
@@ -75,12 +75,19 @@ Frame {
             font.pointSize: settings.baseFontSize * 1.25
             visible: lith.status !== Lith.UNCONFIGURED
             enabled: lith.status === Lith.CONNECTED
-            text: lith.status === Lith.CONNECTING   ? "🤔" :
-                  lith.status === Lith.CONNECTED    ? "🙂" :
-                  lith.status === Lith.DISCONNECTED ? "😴" :
-                  lith.status === Lith.ERROR        ? "☠" :
-                                                      "😱"
             onClicked: nickDrawer.visible = !nickDrawer.visible
+            Image {
+                // has to be an Image, not icon.source because it doesn't render the smileyface correctly
+                anchors.fill: parent
+                anchors.margins: 6
+                antialiasing: true
+                mipmap: true
+                source: lith.status === Lith.CONNECTING   ? "qrc:/navigation/transfer.png" :
+                         lith.status === Lith.CONNECTED    ? "qrc:/navigation/smile.png" :
+                         lith.status === Lith.DISCONNECTED ? "qrc:/navigation/no-wifi.png" :
+                         lith.status === Lith.ERROR        ? "qrc:/navigation/sleeping.png" :
+                                                             "qrc:/navigation/dizzy.png"
+            }
         }
     }
 }

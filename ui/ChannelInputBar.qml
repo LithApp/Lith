@@ -29,7 +29,7 @@ RowLayout {
     property bool hasFocus: channelTextInput.activeFocus
     Button {
         Layout.preferredWidth: height
-        text: "⇥"
+        icon.source: "qrc:/navigation/download-rotated.png"
         font.pointSize: settings.baseFontSize
         focusPolicy: Qt.NoFocus
         visible: settings.showAutocompleteButton
@@ -50,7 +50,7 @@ RowLayout {
         visible: settings.showGalleryButton
         Layout.preferredWidth: height
         property bool isBusy: uploader.working
-        text: isBusy ? "" : "📷"
+        icon.source: isBusy ? null : "qrc:/navigation/image-gallery.png"
         enabled: !isBusy
         font.pointSize: settings.baseFontSize
         onClicked: {
@@ -84,7 +84,7 @@ RowLayout {
         focusPolicy: Qt.NoFocus
         id: sendButton
         Layout.preferredWidth: height
-        text: "↳"
+        icon.source: "qrc:/navigation/paper-plane.png"
         visible: settings.showSendButton
         font.pointSize: settings.baseFontSize
         onClicked: {

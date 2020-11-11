@@ -63,19 +63,22 @@ Dialog {
             height: parent.height - 2
             anchors.centerIn: parent
         }
-        Text {
+        Image {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 80
-            font.pixelSize: 64
-            color: "white"
-            text: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "⏸️" : "▶️"
+            height: 48
+            width: 48
+
+            opacity: 0.6
+            source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/pause.png" :
+                                                                                          "qrc:/navigation/play.png"
             Rectangle {
                 z: -1
                 anchors.centerIn: parent
-                width: 56
-                height: 56
-                color: "#33000000"
+                width: 64
+                height: 64
+                color: "#44000000"
                 radius: 2
                 MouseArea {
                     anchors.fill: parent

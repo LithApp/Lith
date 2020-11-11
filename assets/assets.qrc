@@ -1,5 +1,32 @@
 <RCC>
     <qresource prefix="/">
         <file>icon.png</file>
+        <file>navigation/album-folder.png</file>
+        <file>navigation/cogwheel.png</file>
+        <file>navigation/copy.png</file>
+        <file>navigation/dizzy.png</file>
+        <file>navigation/download.png</file>
+        <file>navigation/download-rotated.png</file>
+        <file>navigation/ellipsis.png</file>
+        <file>navigation/filter.png</file>
+        <file>navigation/forward.png</file>
+        <file>navigation/image.png</file>
+        <file>navigation/image-gallery.png</file>
+        <file>navigation/menu.png</file>
+        <file>navigation/mute.png</file>
+        <file>navigation/no-wifi.png</file>
+        <file>navigation/paper-plane.png</file>
+        <file>navigation/paste.png</file>
+        <file>navigation/pause.png</file>
+        <file>navigation/play.png</file>
+        <file>navigation/photo.png</file>
+        <file>navigation/reload.png</file>
+        <file>navigation/resize.png</file>
+        <file>navigation/scissors.png</file>
+        <file>navigation/screwdriver.png</file>
+        <file>navigation/sleeping.png</file>
+        <file>navigation/smile.png</file>
+        <file>navigation/transfer.png</file>
+        <file>navigation/volume.png</file>
     </qresource>
 </RCC>
