@@ -71,7 +71,7 @@ Rectangle {
             Layout.alignment: Qt.AlignTop
             font.bold: true
             text: {
-
+                // ugh
                 if (lith.settings.nickCutoffThreshold < 0)
                     return messageModel.prefix
                 var attr = messageModel.nickAttribute
@@ -84,7 +84,7 @@ Rectangle {
                 var nickS = nick.substring(0, nickL)
                 var attrS = attr.padStart(lith.settings.nickCutoffThreshold - nickS.length, "\u00A0")
                 return "<font color=\"" + attrC + "\">" + attrS + "</font>" +
-                        "<font color=\"" + nickC + "\">" + nickS + "</font> "
+                        "<font color=\"" + nickC + "\">" + nickS.replace("<", "&lt;") + "</font> "
             }
             font.pointSize: settings.baseFontSize
             color: palette.text

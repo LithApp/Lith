@@ -205,6 +205,20 @@ void BufferLine::prefixSet(const QString &o) {
             m_nickColor = colors[1];
         }
     }
+    else if (parts.count() >= 1 && colors.count() >= 1){
+        if (m_nick != parts[0] || m_nickColor != colors[0]) {
+            changed = true;
+            m_nick = parts[0];
+            m_nickColor = colors[0];
+        }
+    }
+    else if (parts.count() == 1) {
+        if (m_nick != parts[0] || m_nickColor != "default") {
+            changed = true;
+            m_nick = parts[0];
+            m_nickColor = "default";
+        }
+    }
     if (changed)
         emit prefixChanged();
 }
