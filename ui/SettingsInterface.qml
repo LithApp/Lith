@@ -46,12 +46,12 @@ ScrollView {
 
         GroupBox {
             Layout.alignment: Qt.AlignHCenter
-            title: "Input bar"
+            title: qsTr("Input bar")
             GridLayout {
                 id: inputBarLayout
                 columns: 2
                 Text {
-                    text: "Show autocomplete button"
+                    text: qsTr("Show autocomplete button")
                 }
                 CheckBox {
                     id: showAutocompleteButtonCheckbox
@@ -59,7 +59,7 @@ ScrollView {
                     Layout.alignment: Qt.AlignLeft
                 }
                 Text {
-                    text: "Show gallery button"
+                    text: qsTr("Show gallery button")
                 }
                 CheckBox {
                     id: showGalleryButtonCheckbox
@@ -67,7 +67,7 @@ ScrollView {
                     Layout.alignment: Qt.AlignLeft
                 }
                 Text {
-                    text: "Show send button"
+                    text: qsTr("Show send button")
                 }
                 CheckBox {
                     id: showSendButtonCheckbox
@@ -81,7 +81,7 @@ ScrollView {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
             Text {
-                text: "Shorten long URLs"
+                text: qsTr("Shorten long URLs")
             }
             CheckBox {
                 id: shortenLongUrlsCheckbox
@@ -89,7 +89,7 @@ ScrollView {
                 Layout.alignment: Qt.AlignLeft
             }
             Text {
-                text: "Length threshold"
+                text: qsTr("Length threshold")
             }
             TextField {
                 id: shortenLongUrlsThreshold
@@ -101,7 +101,7 @@ ScrollView {
                 }
             }
             Text {
-                text: "Font size"
+                text: qsTr("Font size")
             }
             SpinBox {
                 id: baseFontSizeSpinBox

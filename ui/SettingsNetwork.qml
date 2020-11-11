@@ -49,7 +49,7 @@ ScrollView {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
             Text {
-                text: "Hostname"
+                text: qsTr("Hostname")
             }
             TextField {
                 id: hostField
@@ -57,7 +57,7 @@ ScrollView {
                 inputMethodHints: Qt.ImhNoPredictiveText
             }
             Text {
-                text: "Port"
+                text: qsTr("Port")
             }
             TextField {
                 id: portField
@@ -77,7 +77,7 @@ ScrollView {
                 Layout.alignment: Qt.AlignLeft
             }
             Text {
-                text: "Password"
+                text: qsTr("Password")
             }
             TextField {
                 id: passphraseField

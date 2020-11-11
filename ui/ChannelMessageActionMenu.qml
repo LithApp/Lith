@@ -52,7 +52,7 @@ Dialog {
     header: Label {
         topPadding: 20
         leftPadding: 20
-        text: "Copy"
+        text: qsTr("Copy")
         font.bold: true
         font.pointSize: settings.baseFontSize * 1.125
     }

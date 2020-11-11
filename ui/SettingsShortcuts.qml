@@ -35,7 +35,7 @@ ScrollView {
             Layout.alignment: Qt.AlignHCenter
             columns: 2
             Text {
-                text: "Enable readline shortcuts (^W, ^D, etc.)"
+                text: qsTr("Enable readline shortcuts (^W, ^D, etc.)")
             }
             CheckBox {
                 enabled: false
@@ -43,7 +43,7 @@ ScrollView {
             }
 
             Text {
-                text: "Start buffer search and filtering"
+                text: qsTr("Start buffer search and filtering")
             }
             TextField {
                 enabled: false
@@ -52,7 +52,7 @@ ScrollView {
             }
 
             Text {
-                text: "Autocomplete"
+                text: qsTr("Autocomplete")
             }
             TextField {
                 enabled: false
@@ -61,7 +61,7 @@ ScrollView {
             }
 
             Text {
-                text: "Switch to next buffer"
+                text: qsTr("Switch to next buffer")
             }
             TextField {
                 enabled: false
@@ -70,7 +70,7 @@ ScrollView {
             }
 
             Text {
-                text: "Switch to previous buffer"
+                text: qsTr("Switch to previous buffer")
             }
             TextField {
                 enabled: false

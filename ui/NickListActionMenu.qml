@@ -59,23 +59,23 @@ Dialog {
         id: nicklistActionMenuModel
 
         ListElement {
-            name: "Open query"
+            name: qsTr("Open query")
             operation: "query"
         }
         ListElement {
-            name: "Op"
+            name: qsTr("Op")
             operation: "op"
         }
         ListElement {
-            name: "Deop"
+            name: qsTr("Deop")
             operation: "deop"
         }
         ListElement {
-            name: "Kick"
+            name: qsTr("Kick")
             operation:"kick"
         }
         ListElement {
-            name: "Kickban"
+            name: qsTr("Kickban")
             operation: "kickban"
 
         }

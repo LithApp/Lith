@@ -42,21 +42,21 @@ Dialog {
 
                 Text {
                     id: headerTextBuffer
-                    text: "Buffer"
+                    text: qsTr("Buffer")
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     width: 256
                 }
                 Text {
                     x: 256
-                    text: "Nick"
+                    text: qsTr("Nick")
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     width: 256
                 }
                 Text {
                     x: 512
-                    text: "Message"
+                    text: qsTr("Message")
                     font.bold: true
                     horizontalAlignment: Text.AlignHCenter
                     width: parent.width - 512

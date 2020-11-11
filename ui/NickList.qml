@@ -68,7 +68,7 @@ Drawer {
 
         Label {
             Layout.alignment: Qt.AlignHCenter
-            text: "0 users, 0 voice, 0 ops"
+            text: qsTr("%1 users, %2 voice, %3 ops").arg(0).arg(0).arg(0)
             font.pointSize: settings.baseFontSize * 0.75
             color: palette.windowText
         }
@@ -79,7 +79,7 @@ Drawer {
             TextField {
                 id: nickFilter
                 focus: false
-                placeholderText: "Filter nicks"
+                placeholderText: qsTr("Filter nicks")
                 anchors {
                     left: parent.left
                     right: parent.right
@@ -146,8 +146,6 @@ Drawer {
                         text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
                         font.pointSize: settings.baseFontSize * 1.125
                         color: palette.windowText
-
-
                     }
                 }
             }

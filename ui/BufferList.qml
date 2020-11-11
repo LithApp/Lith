@@ -83,7 +83,7 @@ Drawer {
             TextField {
                 id: filterField
                 Layout.fillWidth: true
-                placeholderText: "Filter buffers"
+                placeholderText: qsTr("Filter buffers")
                 text: lith.buffers.filterWord
                 onTextChanged: lith.buffers.filterWord = text
                 font.pointSize: settings.baseFontSize

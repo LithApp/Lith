@@ -36,13 +36,13 @@ Dialog {
         id: tabBar
         width: parent.width
         TabButton {
-            text: "Connection"
+            text: qsTr("Connection")
         }
         TabButton {
-            text: "Interface"
+            text: qsTr("Interface")
         }
         TabButton {
-            text: "Shortcuts"
+            text: qsTr("Shortcuts")
             visible: Qt.platform.name !== "ios" && Qt.platform.name !== "android"
         }
     }
