@@ -39,13 +39,34 @@ ColumnLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
         visible: !lith.selectedBuffer
-        text: qsTr("Welcome to Lith") + "\n" +
-              qsTr("Weechat status:") + " " + lith.status + "\n" +
-              qsTr("Current error status:") + " " + (lith.errorString.length > 0 ? lith.errorString : qsTr("None")) +
-              qsTr("Icons made by <a href=\"https://www.flaticon.com/authors/pixel-perfect\" title=\"Pixel perfect\">Pixel perfect</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a>")
+        text: qsTr("Welcome to Lith") + "<br>" +
+              qsTr("Weechat status:") + " " + lith.status + "<br>" +
+              qsTr("Current error status:") + " " + (lith.errorString.length > 0 ? lith.errorString : qsTr("None")) + "<br>"
+        onLinkActivated: {
+            Qt.openUrlExternally(link)
+        }
+        textFormat: Text.RichText
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
         color: palette.text
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+    }
+    Text {
+        visible: !lith.selectedBuffer
+        Layout.fillWidth: true
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        onLinkActivated: {
+            Qt.openUrlExternally(link)
+        }
+        textFormat: Text.RichText
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        text: qsTr("Icons made by <a href=\"https://www.flaticon.com/authors/pixel-perfect\" title=\"Pixel perfect\">Pixel perfect</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a>")
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+        }
     }
 
     Item {
