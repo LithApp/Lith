@@ -168,7 +168,7 @@ void Weechat::onReadyRead() {
 
 void Weechat::onConnected() {
     qCritical() << "Connected!";
-    lith()->resetData();
+    QTimer::singleShot(0, lith(), &Lith::resetData);
 
     lith()->statusSet(Lith::CONNECTED);
     auto pass = lith()->settingsGet()->passphraseGet();

@@ -77,6 +77,11 @@ Buffer::Buffer(QObject *parent, pointer_t pointer)
 
 }
 
+Buffer::~Buffer() {
+    m_nicks->clear();
+    m_lines->clear();
+}
+
 void Buffer::prependLine(BufferLine *line) {
     m_lines->prepend(line);
 }
@@ -168,6 +173,9 @@ BufferLine::BufferLine(Buffer *parent)
     : QObject(parent)
 {
     connect(this, &BufferLine::messageChanged, this, &BufferLine::onMessageChanged);
+}
+
+BufferLine::~BufferLine() {
 }
 
 QString BufferLine::prefixGet() const {
@@ -316,6 +324,9 @@ Nick::Nick(Buffer *parent)
     : QObject(parent)
 {
 
+}
+
+Nick::~Nick() {
 }
 
 HotListItem::HotListItem(QObject *parent)

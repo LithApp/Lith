@@ -158,25 +158,10 @@ bool Lith::hasPassphrase() const {
 
 void Lith::resetData() {
     selectedBufferIndexSet(-1);
-    m_buffers->purge();
+
+    m_buffers->clear();
     m_bufferMap.clear();
-    int lines = 0;
-    for (auto i : m_lineMap) {
-        if (i) {
-            if (!i->parent())
-                lines++;
-            i->deleteLater();
-        }
-    }
     m_lineMap.clear();
-    int hotlist = 0;
-    for (auto i : m_hotList) {
-        if (i) {
-            if (!i->parent())
-                hotlist++;
-            i->deleteLater();
-        }
-    }
     m_hotList.clear();
 }
 

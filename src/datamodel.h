@@ -47,6 +47,7 @@ class Nick : public QObject {
     PROPERTY(pointer_t, ptr)
 public:
     Nick(Buffer *parent = nullptr);
+    virtual ~Nick();
 
 };
 
@@ -66,6 +67,7 @@ class Buffer : public QObject {
     Q_PROPERTY(QmlObjectList *nicks READ nicks CONSTANT)
 public:
     Buffer(QObject *parent, pointer_t pointer);
+    virtual ~Buffer();
     //BufferLine *getLine(pointer_t ptr);
     void prependLine(BufferLine *line);
     void appendLine(BufferLine *line);
@@ -137,6 +139,7 @@ class BufferLine : public QObject {
     Q_PROPERTY(QList<QObject*> segments READ segments NOTIFY segmentsChanged)
 public:
     BufferLine(Buffer *parent);
+    virtual ~BufferLine();
 
     void setParent(Buffer *parent);
 
