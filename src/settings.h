@@ -49,7 +49,7 @@ class Settings : public QObject {
     SETTING(bool, shortenLongUrls, true)
     SETTING(int, shortenLongUrlsThreshold, 50)
     SETTING(int, nickCutoffThreshold, -1)
-    SETTING(QString, timestampFormat, "HH:MM:SS")
+    SETTING(QString, timestampFormat, "hh:mm:ss")
 
     SETTING(bool, showSendButton, false)
     SETTING(bool, showAutocompleteButton, true)

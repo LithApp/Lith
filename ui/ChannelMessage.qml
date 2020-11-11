@@ -58,15 +58,15 @@ Rectangle {
         id: messageRootLayout
         width: parent.width
         spacing: 0
-        /*
         Text {
             Layout.alignment: Qt.AlignTop
-            Layout.preferredWidth: timeMetrics.width
-            text: messageModel.date.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+            visible: lith.settings.timestampFormat.length > 0
+            text: messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
             font.pointSize: settings.baseFontSize
-            color: palette.text
+            color: palette.mid
+            textFormat: Text.RichText
+            renderType: Text.NativeRendering
         }
-        */
         Text {
             Layout.alignment: Qt.AlignTop
             font.bold: true
