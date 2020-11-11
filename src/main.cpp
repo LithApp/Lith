@@ -40,7 +40,11 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 #ifdef WIN32
-    QFont font("Consolas");
+    QFontDatabase fdb;
+    fdb.addApplicationFont(":/fonts/Inconsolata-Variable.ttf");
+    QFont font("Inconsolata");
+    font.setKerning(false);
+    font.setHintingPreference(QFont::PreferNoHinting);
 #else
     QFont font("Menlo");
 #endif

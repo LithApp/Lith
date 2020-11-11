@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>icon.png</file>
+        <file>fonts/Inconsolata-Variable.ttf</file>
         <file>navigation/album-folder.png</file>
         <file>navigation/cogwheel.png</file>
         <file>navigation/copy.png</file>
