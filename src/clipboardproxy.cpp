@@ -20,6 +20,7 @@
 #include <QApplication>
 #include <QMimeData>
 #include <QImage>
+#include <QDebug>
 
 ClipboardProxy::ClipboardProxy(QObject *parent)
     : QObject(parent)
@@ -28,7 +29,7 @@ ClipboardProxy::ClipboardProxy(QObject *parent)
 }
 
 bool ClipboardProxy::hasImage() {
-    return !m_clipboard->mimeData()->hasImage();
+    return m_clipboard->mimeData()->hasImage();
 }
 
 QString ClipboardProxy::text() {

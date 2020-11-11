@@ -47,12 +47,6 @@ TextInput {
         }
     }
 
-    Shortcut {
-        sequence: StandardKey.Paste
-        onActivated: {
-             console.warn("HA")
-        }
-    }
     property int lastCursorPos: 0
     property int matchedNickIndex: 0
     property variant matchedNicks: []
@@ -203,8 +197,8 @@ TextInput {
     Keys.onPressed: {
         if (event.modifiers & Qt.ControlModifier) {
             if (event.key === Qt.Key_V) {
-                if (clipboard.hasImage) {
-                    uploader.uploadBinary(clipboard.image())
+                if (clipboardProxy.hasImage()) {
+                    uploader.uploadBinary(clipboardProxy.image())
                 }
                 else {
                     inputField.paste()
