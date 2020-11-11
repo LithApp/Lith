@@ -220,7 +220,7 @@ TextInput {
             channelMessageList.contentY += channelMessageList.height - 30
         }
         if (event.key === Qt.Key_PageDown) {
-            if (channelMessageList.contentY > channelMessageList.height)
+            if (channelMessageList.contentY > channelMessageList.height - 30)
                 channelMessageList.contentY -= channelMessageList.height - 30
             else
                 channelMessageList.contentY = 0
