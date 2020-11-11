@@ -65,6 +65,9 @@ class Buffer : public QObject {
 
     Q_PROPERTY(QmlObjectList *lines READ lines CONSTANT)
     Q_PROPERTY(QmlObjectList *nicks READ nicks CONSTANT)
+    Q_PROPERTY(int normals READ normalsGet NOTIFY nicksChanged)
+    Q_PROPERTY(int voices READ voicesGet NOTIFY nicksChanged)
+    Q_PROPERTY(int ops READ opsGet NOTIFY nicksChanged)
 public:
     Buffer(QObject *parent, pointer_t pointer);
     virtual ~Buffer();
@@ -81,6 +84,12 @@ public:
     void removeNick(pointer_t ptr);
     void clearNicks();
     Q_INVOKABLE QStringList getVisibleNicks();
+    int normalsGet() const;
+    int voicesGet() const;
+    int opsGet() const;
+
+signals:
+    void nicksChanged();
 
 public slots:
     void input(const QString &data);

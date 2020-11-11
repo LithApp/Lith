@@ -123,6 +123,7 @@ Nick *Buffer::getNick(pointer_t ptr) {
 void Buffer::addNick(pointer_t ptr, Nick *nick) {
     nick->ptrSet(ptr);
     m_nicks->append(nick);
+    emit nicksChanged();
 }
 
 void Buffer::removeNick(pointer_t ptr) {
@@ -130,18 +131,15 @@ void Buffer::removeNick(pointer_t ptr) {
         auto n = m_nicks->get<Nick>(i);
         if (n && n->ptrGet() == ptr) {
             m_nicks->removeRow(i);
+            emit nicksChanged();
             break;
         }
     }
 }
 
 void Buffer::clearNicks() {
-    for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
-        if (n)
-            n->deleteLater();
-    }
     m_nicks->clear();
+    emit nicksChanged();
 }
 
 QStringList Buffer::getVisibleNicks() {
@@ -153,6 +151,42 @@ QStringList Buffer::getVisibleNicks() {
         }
     }
     return result;
+}
+
+int Buffer::normalsGet() const {
+    int total = 0;
+    for (int i = 0; i < m_nicks->count(); i++) {
+        auto n = m_nicks->get<Nick>(i);
+        if (n && n->visibleGet() && n->levelGet() == 0) {
+            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() == "<html><body> </body></html>")
+                total++;
+        }
+    }
+    return total;
+}
+
+int Buffer::voicesGet() const {
+    int total = 0;
+    for (int i = 0; i < m_nicks->count(); i++) {
+        auto n = m_nicks->get<Nick>(i);
+        if (n && n->visibleGet() && n->levelGet() == 0) {
+            if (n->prefixGet() == "<html><body>+</body></html>")
+                total++;
+        }
+    }
+    return total;
+}
+
+int Buffer::opsGet() const {
+    int total = 0;
+    for (int i = 0; i < m_nicks->count(); i++) {
+        auto n = m_nicks->get<Nick>(i);
+        if (n && n->visibleGet() && n->levelGet() == 0) {
+            if (n->prefixGet() == "<html><body>@</body></html>")
+                total++;
+        }
+    }
+    return total;
 }
 
 void Buffer::input(const QString &data) {

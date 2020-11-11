@@ -68,7 +68,7 @@ Drawer {
 
         Label {
             Layout.alignment: Qt.AlignHCenter
-            text: qsTr("%1 users, %2 voice, %3 ops").arg(0).arg(0).arg(0)
+            text: qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(lith.selectedBuffer.normals).arg(lith.selectedBuffer.voices).arg(lith.selectedBuffer.ops).arg(lith.selectedBuffer.normals + lith.selectedBuffer.voices + lith.selectedBuffer.ops)
             font.pointSize: settings.baseFontSize * 0.75
             color: palette.windowText
         }
