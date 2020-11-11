@@ -159,12 +159,13 @@ Drawer {
                             width: bufferName.height + 6
                             height: width
                             color: "#22000000"
-                            opacity: index < 10 ? 0.5 : 0.0
+                            opacity: index < 10 && filterField.text.length == 0 ? 0.5 : 0.0
                             radius: 2
                             Text {
                                 text: index + 1
                                 anchors.centerIn: parent
                             }
+                            Behavior on opacity { NumberAnimation { duration: 100 } }
                         }
 
                         Text {
