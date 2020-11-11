@@ -22,76 +22,100 @@ import QtQml 2.12
 import lith 1.0
 
 
-RowLayout {
-    spacing: 3
+Item {
+    height: inputBarLayout.height
+
     // TODO
     property alias textInput: channelTextInput
     property bool hasFocus: channelTextInput.activeFocus
-    Button {
-        Layout.preferredWidth: height
-        icon.source: "qrc:/navigation/download-rotated.png"
-        font.pointSize: settings.baseFontSize
-        focusPolicy: Qt.NoFocus
-        visible: settings.showAutocompleteButton
-        onClicked: {
-            channelTextInput.autocomplete();
-        }
-    }
 
-    ChannelTextInput {
-        id: channelTextInput
-        Layout.fillWidth: true
-        Layout.alignment: Qt.AlignVCenter
-    }
+    RowLayout {
+        width: parent.width
+        id: inputBarLayout
 
-    Button {
-        focusPolicy: Qt.NoFocus
-        id: imageButton
-        visible: settings.showGalleryButton
-        Layout.preferredWidth: height
-        property bool isBusy: uploader.working
-        icon.source: isBusy ? null : "qrc:/navigation/image-gallery.png"
-        enabled: !isBusy
-        font.pointSize: settings.baseFontSize
-        onClicked: {
-            fileDialog.open()
+        spacing: 0
+        Button {
+            Layout.preferredWidth: height
+            icon.source: "qrc:/navigation/download-rotated.png"
+            font.pointSize: settings.baseFontSize
+            focusPolicy: Qt.NoFocus
+            visible: settings.showAutocompleteButton
+            onClicked: {
+                channelTextInput.autocomplete();
+            }
         }
-        BusyIndicator {
-            id: busy
-            visible: parent.isBusy
-            anchors.fill: parent
-            scale: 0.7
+
+        Item { width: 3; height: 1 }
+
+        ChannelTextInput {
+            id: channelTextInput
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter
         }
-        Connections {
-            target: uploader
-            onSuccess: {
-                console.warn("FINISHED")
-                console.warn(url)
-                if (channelTextInput.length !== 0 && !channelTextInput.text.endsWith(" "))
+
+        Item { width: 3; height: 1 }
+
+        Button {
+            focusPolicy: Qt.NoFocus
+            id: imageButton
+            visible: settings.showGalleryButton
+            Layout.preferredWidth: height
+            property bool isBusy: uploader.working
+            icon.source: isBusy ? null : "qrc:/navigation/image-gallery.png"
+            enabled: !isBusy
+            font.pointSize: settings.baseFontSize
+            onClicked: {
+                fileDialog.open()
+            }
+            BusyIndicator {
+                id: busy
+                visible: parent.isBusy
+                anchors.fill: parent
+                scale: 0.7
+            }
+            Connections {
+                target: uploader
+                onSuccess: {
+                    console.warn("FINISHED")
+                    console.warn(url)
+                    if (channelTextInput.length !== 0 && !channelTextInput.text.endsWith(" "))
+                        channelTextInput.text += " "
+                    channelTextInput.text += url
                     channelTextInput.text += " "
-                channelTextInput.text += url
-                channelTextInput.text += " "
+                }
+                onError: {
+                    console.warn("ERROR")
+                    console.warn(message)
+                }
             }
-            onError: {
-                console.warn("ERROR")
-                console.warn(message)
-            }
+
         }
 
+        Item { width: 1; height: 1 }
+
+        Button {
+            focusPolicy: Qt.NoFocus
+            id: sendButton
+            Layout.preferredWidth: height
+            icon.source: "qrc:/navigation/paper-plane.png"
+            visible: settings.showSendButton
+            font.pointSize: settings.baseFontSize
+            onClicked: {
+                if (channelTextInput.inputFieldAlias.text.length > 0) {
+                    lith.selectedBuffer.input(channelTextInput.inputFieldAlias.text)
+                    channelTextInput.inputFieldAlias.text = ""
+                }
+            }
+        }
     }
 
-    Button {
-        focusPolicy: Qt.NoFocus
-        id: sendButton
-        Layout.preferredWidth: height
-        icon.source: "qrc:/navigation/paper-plane.png"
-        visible: settings.showSendButton
-        font.pointSize: settings.baseFontSize
-        onClicked: {
-            if (channelTextInput.inputFieldAlias.text.length > 0) {
-                lith.selectedBuffer.input(channelTextInput.inputFieldAlias.text)
-                channelTextInput.inputFieldAlias.text = ""
-            }
+    Rectangle {
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
         }
+        height: 1
+        color: palette.mid
     }
 }

@@ -23,6 +23,15 @@ import lith 1.0
 Frame {
     background: Rectangle {
         color: palette.window
+        Rectangle {
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+            }
+            height: 1
+            color: palette.mid
+        }
     }
     padding: 6
 
