@@ -90,7 +90,7 @@ ListView {
         z: 99999999
         width: parent.width
         height: linkHandlerLayout.height + 12
-        anchors.centerIn: parent ? parent : listView
+        anchors.centerIn: parent
         visible: false
         padding: 0
         topPadding: 0
@@ -111,9 +111,9 @@ ListView {
         }
 
         function show(link, item) {
-            visible = true
             parent = item
             currentLink = link
+            visible = true
         }
 
         RowLayout {
