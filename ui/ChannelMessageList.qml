@@ -90,7 +90,7 @@ ListView {
         z: 99999999
         width: parent.width
         height: linkHandlerLayout.height + 12
-        anchors.centerIn: parent
+        anchors.centerIn: parent ? parent : listView
         visible: false
         padding: 0
         topPadding: 0
@@ -104,6 +104,11 @@ ListView {
                                      currentExtension.endsWith("mp4") ||
                                      currentExtension.endsWith("webm") ||
                                      currentExtension.endsWith("gif")
+
+        onVisibleChanged: {
+            if (!visible)
+                parent = listView
+        }
 
         function show(link, item) {
             visible = true
