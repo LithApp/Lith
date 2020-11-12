@@ -70,6 +70,7 @@ public:
     int selectedBufferIndex();
     void selectedBufferIndexSet(int index);
     NickListFilter *selectedBufferNicks();
+    Q_INVOKABLE void switchToBufferNumber(int number);
 
     QObject *getObject(pointer_t ptr, const QString &type, pointer_t parent = 0);
 

@@ -131,6 +131,46 @@ TextInput {
         onActivated: lith.selectedBufferIndex -= 1
     }
     Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer1
+        onActivated: lith.switchToBufferNumber(1)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer2
+        onActivated: lith.switchToBufferNumber(2)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer3
+        onActivated: lith.switchToBufferNumber(3)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer4
+        onActivated: lith.switchToBufferNumber(4)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer5
+        onActivated: lith.switchToBufferNumber(5)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer6
+        onActivated: lith.switchToBufferNumber(6)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer7
+        onActivated: lith.switchToBufferNumber(7)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer8
+        onActivated: lith.switchToBufferNumber(8)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer9
+        onActivated: lith.switchToBufferNumber(9)
+    }
+    Shortcut {
+        sequences: lith.settings.shortcutSwitchToBuffer10
+        onActivated: lith.switchToBufferNumber(10)
+    }
+    Shortcut {
         enabled: lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+W"
         onActivated: {

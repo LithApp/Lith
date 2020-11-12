@@ -66,6 +66,16 @@ class Settings : public QObject {
     SETTING(QStringList, shortcutAutocomplete, {"Tab"})
     SETTING(QStringList, shortcutSwitchToNextBuffer, {"Alt+Right", "Alt+Down"})
     SETTING(QStringList, shortcutSwitchToPreviousBuffer, {"Alt+Left", "Alt+Up"})
+    SETTING(QStringList, shortcutSwitchToBuffer1, {"Alt+1"})
+    SETTING(QStringList, shortcutSwitchToBuffer2, {"Alt+2"})
+    SETTING(QStringList, shortcutSwitchToBuffer3, {"Alt+3"})
+    SETTING(QStringList, shortcutSwitchToBuffer4, {"Alt+4"})
+    SETTING(QStringList, shortcutSwitchToBuffer5, {"Alt+5"})
+    SETTING(QStringList, shortcutSwitchToBuffer6, {"Alt+6"})
+    SETTING(QStringList, shortcutSwitchToBuffer7, {"Alt+7"})
+    SETTING(QStringList, shortcutSwitchToBuffer8, {"Alt+8"})
+    SETTING(QStringList, shortcutSwitchToBuffer9, {"Alt+9"})
+    SETTING(QStringList, shortcutSwitchToBuffer10, {"Alt+0"})
 
 public:
     Settings(QObject *parent = nullptr);

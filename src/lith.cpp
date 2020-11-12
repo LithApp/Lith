@@ -80,6 +80,16 @@ NickListFilter *Lith::selectedBufferNicks() {
     return m_selectedBufferNicks;
 }
 
+void Lith::switchToBufferNumber(int number) {
+    for (int i = 0; i < m_buffers->count(); i++) {
+        auto b = m_buffers->get<Buffer>(i);
+        if (b && b->numberGet() == number) {
+            selectedBufferIndexSet(i);
+            break;
+        }
+    }
+}
+
 QObject *Lith::getObject(pointer_t ptr, const QString &type, pointer_t parent) {
     if (type.isEmpty()) {
         if (m_bufferMap.contains(ptr))
