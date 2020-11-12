@@ -363,7 +363,8 @@ void Lith::_buffer_localvar_added(Protocol::HData *hda) {
         auto buf = getBuffer(bufPtr);
         if (!buf)
             continue;
-        buf->local_variablesSet(i.objects["local_variables"].toStringList());
+        auto strm = i.objects["local_variables"].value<StringMap>();
+        buf->local_variablesSet(strm);
     }
     delete hda;
 }

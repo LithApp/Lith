@@ -24,6 +24,9 @@
 
 #include "qmlobjectlist.h"
 
+typedef QMap<QString, QString> StringMap;
+Q_DECLARE_METATYPE(StringMap);
+
 typedef uint64_t pointer_t;
 Q_DECLARE_METATYPE(pointer_t);
 

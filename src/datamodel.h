@@ -33,7 +33,6 @@ class LineModel;
 
 #include <cstdint>
 
-
 class Nick : public QObject {
     Q_OBJECT
     PROPERTY(char, visible)
@@ -58,7 +57,8 @@ class Buffer : public QObject {
     PROPERTY(QString, short_name)
     ALIAS(QString, name, full_name)
     PROPERTY(QString, title)
-    PROPERTY(QStringList, local_variables)
+    PROPERTY(StringMap, local_variables)
+    Q_PROPERTY(QStringList local_variables_stringList READ local_variables_stringListGet NOTIFY local_variablesChanged)
 
     PROPERTY(int, unreadMessages)
     PROPERTY(int, hotMessages)
@@ -87,6 +87,8 @@ public:
     int normalsGet() const;
     int voicesGet() const;
     int opsGet() const;
+
+    QStringList local_variables_stringListGet() const;
 
 signals:
     void nicksChanged();

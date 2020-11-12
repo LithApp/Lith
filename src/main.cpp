@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
     app.setFont(font, "monospace");
 
     QQmlApplicationEngine engine;
+    qRegisterMetaType<StringMap>();
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");

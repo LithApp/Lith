@@ -28,7 +28,7 @@ public:
     struct Buffer { QByteArray d {}; };
     struct Pointer { pointer_t d { 0 }; };
     struct Time { QString d {}; };
-    struct HashTable { QMap<QString, QString> d {}; };
+    struct HashTable { StringMap d {}; };
     struct HData {
         struct Item {
             QList<pointer_t> pointers;

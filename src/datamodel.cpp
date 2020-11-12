@@ -189,6 +189,14 @@ int Buffer::opsGet() const {
     return total;
 }
 
+QStringList Buffer::local_variables_stringListGet() const {
+    QStringList ret;
+    for (auto i : m_local_variables.keys()) {
+        ret.append(QString("%1: %2").arg(i).arg(m_local_variables[i]));
+    }
+    return ret;
+}
+
 void Buffer::input(const QString &data) {
     QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Q_ARG(pointer_t, m_ptr), Q_ARG(const QString&, data));
     //Lith::instance()->weechat()->input(m_ptr, data);
