@@ -25,6 +25,13 @@ ListView {
         text: Qt.formatTime(new Date(), Locale.LongFormat)
         font.pointSize: settings.baseFontSize
     }
+
+    ScrollHelper {
+        flickable: parent
+        reverse: true
+        anchors.fill: parent
+    }
+
     // TODO breaks time dragging from outside of the screen
     ScrollBar.vertical: ScrollBar {
         id: scrollBar

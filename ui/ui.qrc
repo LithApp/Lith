@@ -18,5 +18,6 @@
         <file>SettingsInterface.qml</file>
         <file>SettingsShortcuts.qml</file>
         <file>DataBrowser.qml</file>
+        <file>ScrollHelper.qml</file>
     </qresource>
 </RCC>
