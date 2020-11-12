@@ -46,6 +46,7 @@ ApplicationWindow {
         height: Qt.inputMethod &&
                 Qt.inputMethod.keyboardRectangle &&
                 Qt.inputMethod.visible &&
+                Qt.platform.os !== "android" &&
                 channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height :
                                                0
         Behavior on height {
@@ -53,6 +54,10 @@ ApplicationWindow {
                 duration: 200
                 easing.type: Easing.OutCubic
             }
+        }
+        Text {
+            text: "Top Area\nIf you see this, report a bug, please"
+            anchors.centerIn: parent
         }
     }
     Rectangle {
@@ -66,6 +71,7 @@ ApplicationWindow {
         height: Qt.inputMethod &&
                 Qt.inputMethod.keyboardRectangle &&
                 Qt.inputMethod.visible &&
+                Qt.platform.os !== "android" &&
                 !channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height :
                                                 0
         Behavior on height {
@@ -73,6 +79,10 @@ ApplicationWindow {
                 duration: 200
                 easing.type: Easing.OutCubic
             }
+        }
+        Text {
+            text: "Bottom Area\nIf you see this, report a bug, please"
+            anchors.centerIn: parent
         }
     }
 
