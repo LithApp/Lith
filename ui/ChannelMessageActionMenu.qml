@@ -141,7 +141,7 @@ Dialog {
                     anchors.fill: parent
                     onClicked: {
                         channelMessageActionMenuDialog.close()
-                        clipboard.setText(parent.text)
+                        clipboardProxy.setText(parent.text)
                     }
                 }
             }
@@ -182,7 +182,7 @@ Dialog {
                     anchors.fill: parent
                     onClicked: {
                         channelMessageActionMenuDialog.close()
-                        clipboard.setText(parent.text)
+                        clipboardProxy.setText(parent.text)
                     }
                 }
             }

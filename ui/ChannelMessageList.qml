@@ -138,7 +138,7 @@ ListView {
                 Layout.preferredWidth: height
                 icon.source: "qrc:/navigation/copy.png"
                 onClicked: {
-                    clipboard.setText(linkHandler.currentLink)
+                    clipboardProxy.setText(linkHandler.currentLink)
                     linkHandler.visible = false
                 }
             }

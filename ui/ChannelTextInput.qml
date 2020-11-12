@@ -194,7 +194,7 @@ TextInput {
         onActivated: {
             var right = inputField.text.slice(inputField.cursorPosition)
             inputField.text = inputField.text.slice(0, inputField.cursorPosition - 1)
-            clipboard.setText(right)
+            clipboardProxy.setText(right)
         }
     }
     Shortcut {
@@ -203,15 +203,15 @@ TextInput {
         onActivated: {
             var left = inputField.text.slice(0, inputField.cursorPosition - 1)
             inputField.text = inputField.text.slice(inputField.cursorPosition)
-            clipboard.setText(left)
+            clipboardProxy.setText(left)
         }
     }
     Shortcut {
         enabled: lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+Y"
         onActivated: {
-            if (clipboard.text.length > 0)
-                inputField.text = clipboard.text()
+            if (clipboardProxy.text.length > 0)
+                inputField.text = clipboardProxy.text()
         }
     }
     Shortcut {
