@@ -27,9 +27,10 @@ ListView {
     }
 
     ScrollHelper {
-        flickable: parent
+        property bool mobile: Qt.platform.os == "ios" || Qt.platform.os == "android"
+        flickable: mobile ? null : parent
         reverse: true
-        anchors.fill: parent
+        anchors.fill: mobile ? null : parent
     }
 
     // TODO breaks time dragging from outside of the screen
