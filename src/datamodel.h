@@ -68,6 +68,9 @@ class Buffer : public QObject {
     Q_PROPERTY(int normals READ normalsGet NOTIFY nicksChanged)
     Q_PROPERTY(int voices READ voicesGet NOTIFY nicksChanged)
     Q_PROPERTY(int ops READ opsGet NOTIFY nicksChanged)
+    Q_PROPERTY(bool isServer READ isServerGet NOTIFY local_variablesChanged)
+    Q_PROPERTY(bool isChannel READ isChannelGet NOTIFY local_variablesChanged)
+    Q_PROPERTY(bool isPrivate READ isPrivateGet NOTIFY local_variablesChanged)
 public:
     Buffer(QObject *parent, pointer_t pointer);
     virtual ~Buffer();
@@ -89,6 +92,9 @@ public:
     int opsGet() const;
 
     QStringList local_variables_stringListGet() const;
+    bool isServerGet() const;
+    bool isChannelGet() const;
+    bool isPrivateGet() const;
 
 signals:
     void nicksChanged();

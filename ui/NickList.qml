@@ -64,6 +64,7 @@ Drawer {
             horizontalAlignment: Label.AlignHCenter
             Layout.fillWidth: true
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
             text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
             font.pointSize: settings.baseFontSize
             color: palette.windowText
@@ -73,6 +74,7 @@ Drawer {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
             horizontalAlignment: Label.AlignHCenter
+            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
             text: qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(lith.selectedBuffer.normals).arg(lith.selectedBuffer.voices).arg(lith.selectedBuffer.ops).arg(lith.selectedBuffer.normals + lith.selectedBuffer.voices + lith.selectedBuffer.ops)
             font.pointSize: settings.baseFontSize * 0.75
             color: palette.windowText
@@ -80,6 +82,7 @@ Drawer {
         }
 
         Item {
+            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
             Layout.fillWidth: true
             height: nickFilter.height
             TextField {
@@ -113,6 +116,7 @@ Drawer {
 
         ListView {
             id: nickListView
+            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true

@@ -197,6 +197,18 @@ QStringList Buffer::local_variables_stringListGet() const {
     return ret;
 }
 
+bool Buffer::isServerGet() const {
+    return m_local_variables.contains("type") && m_local_variables["type"] == "server";
+}
+
+bool Buffer::isChannelGet() const {
+    return m_local_variables.contains("type") && m_local_variables["type"] == "channel";
+}
+
+bool Buffer::isPrivateGet() const {
+    return m_local_variables.contains("type") && m_local_variables["type"] == "private";
+}
+
 void Buffer::input(const QString &data) {
     QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Q_ARG(pointer_t, m_ptr), Q_ARG(const QString&, data));
     //Lith::instance()->weechat()->input(m_ptr, data);
