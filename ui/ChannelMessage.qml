@@ -75,16 +75,20 @@ Rectangle {
                 if (lith.settings.nickCutoffThreshold < 0)
                     return messageModel.prefix + "\u00A0"
                 var attr = messageModel.nickAttribute
+                var attrL = attr.length
                 var attrC = messageModel.nickAttributeColor
                 var nick = messageModel.nick
                 var nickC = messageModel.nickColor
                 if (nickC + attrC == 0)
                     return ""
-                var nickL = lith.settings.nickCutoffThreshold - attr.length
+                var nickL = lith.settings.nickCutoffThreshold - attrL
                 var nickS = nick.substring(0, nickL)
                 var attrS = attr.padStart(lith.settings.nickCutoffThreshold - nickS.length, "\u00A0")
+                // TODO color
+                var suffix = attrL + nick.length <= lith.settings.nickCutoffThreshold ? "\u00A0" : "<font color=\"light gray\">+</font>"
                 return "<font color=\"" + attrC + "\">" + attrS + "</font>" +
-                        "<font color=\"" + nickC + "\">" + nickS.replace("<", "&lt;") + "</font> "
+                        "<font color=\"" + nickC + "\">" + nickS.replace("<", "&lt;") + "</font>" +
+                        suffix
             }
             font.pointSize: settings.baseFontSize
             color: palette.text
