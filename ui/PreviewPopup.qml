@@ -145,7 +145,13 @@ Dialog {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
             onWheel: {
-                delegateImage.scale += wheel.angleDelta.y * 0.002
+                if (wheel.modifiers & Qt.ShiftModifier) {
+                    console.warn(wheel.angleDelta.y)
+                    delegateImage.rotation += wheel.angleDelta.y / 12
+                }
+                else {
+                    delegateImage.scale += wheel.angleDelta.y * 0.002
+                }
             }
             drag.target: delegateImage
             drag.axis: Drag.XAndYAxis
@@ -159,9 +165,15 @@ Dialog {
                     root.visible = false
                 }
                 else if (mouse.button == Qt.MiddleButton) {
-                    delegateImage.scale = 1.0
-                    delegateImage.x = 1
-                    delegateImage.y = 1
+                    if (mouse.modifiers & Qt.ShiftModifier) {
+                        delegateImage.rotation = (Math.floor((delegateImage.rotation + 90) / 90) * 90) % 360
+                    }
+                    else {
+                        delegateImage.scale = 1.0
+                        delegateImage.x = 1
+                        delegateImage.y = 1
+                        delegateImage.rotation = 0
+                    }
                 }
             }
         }
