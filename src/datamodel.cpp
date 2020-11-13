@@ -306,22 +306,25 @@ QString BufferLine::nickColorGet() const {
 }
 
 QString BufferLine::messageGet() const {
-    QDomDocument doc;
-    QString error;
-    doc.setContent(m_message, &error);
-    auto fontList = doc.elementsByTagName("font");
-    for (int i = 0; i < fontList.size(); i++) {
-        auto elem = fontList.at(i).toElement();
-        auto oldColor = elem.attribute("color");
-        elem.setAttribute("color", lightModeColors[oldColor]);
-    }
-    return doc.toString(-1);
+    return m_message;
 }
 
 void BufferLine::messageSet(const QString &o) {
     QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     auto copy = o;
     copy.replace(re, "<a href=\"\\1\">\\1</a>");
+
+    QDomDocument doc;
+    QString error;
+    doc.setContent(copy, &error);
+    auto fontList = doc.elementsByTagName("font");
+    for (int i = 0; i < fontList.size(); i++) {
+        auto elem = fontList.at(i).toElement();
+        auto oldColor = elem.attribute("color");
+        elem.setAttribute("color", lightModeColors[oldColor]);
+    }
+    copy = doc.toString(-1);
+
     if (copy != m_message) {
         m_message = copy;
         emit messageChanged();
