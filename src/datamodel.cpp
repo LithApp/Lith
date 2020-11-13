@@ -315,14 +315,14 @@ void BufferLine::messageSet(const QString &o) {
     // this may be completely wrong
     // TODO fix this mess, do everything in QDomDocument probably
     copy = copy.replace("&amp;", "&");
-    if (re.indexIn(copy)) {
+    if (re.indexIn(copy) >= 0) {
         auto escaped = re.cap();
         escaped = escaped.replace('&', "&amp;");
         copy.replace(re, "<a href=\""+escaped+"\">"+escaped+"</a>");
     }
-
-    qCritical() << "COPY: " << copy;
-    qCritical() << "O: " << o;
+    else {
+        copy = copy.replace('&', "&amp;");
+    }
 
     QDomDocument doc;
     QString error;
@@ -334,8 +334,8 @@ void BufferLine::messageSet(const QString &o) {
         elem.setAttribute("color", lightModeColors[oldColor]);
     }
     copy = doc.toString(-1);
-    qCritical() << "RESULT: " << copy;
-    qCritical() << "ERROR: " << error;
+    if (!error.isEmpty())
+        qWarning() << "URL parsing error when handling message: " << o;
 
     if (copy != m_message) {
         m_message = copy;
