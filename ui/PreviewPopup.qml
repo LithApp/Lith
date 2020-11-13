@@ -146,7 +146,6 @@ Dialog {
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
             onWheel: {
                 if (wheel.modifiers & Qt.ShiftModifier) {
-                    console.warn(wheel.angleDelta.y)
                     delegateImage.rotation += wheel.angleDelta.y / 12
                 }
                 else {
