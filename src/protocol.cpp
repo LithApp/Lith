@@ -539,6 +539,10 @@ QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtm
            result += "&gt;";
        else if (canContainHtml && (*it == '&'))
            result += "&amp;";
+       else if (canContainHtml && (*it == '"'))
+           result += "&quot;";
+       else if (canContainHtml && (*it == '\''))
+           result += "&apos;";
        else if (*it) {
            result += getChar(it);
        }

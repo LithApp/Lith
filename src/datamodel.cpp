@@ -315,13 +315,19 @@ void BufferLine::messageSet(const QString &o) {
     // this may be completely wrong
     // TODO fix this mess, do everything in QDomDocument probably
     copy = copy.replace("&amp;", "&");
+    copy = copy.replace("&quot;", "\"");
+    copy = copy.replace("&apos;", "'");
     if (re.indexIn(copy) >= 0) {
         auto escaped = re.cap();
         escaped = escaped.replace('&', "&amp;");
+        escaped = escaped.replace('"', "&quot;");
+        escaped = escaped.replace('\'', "&apos;");
         copy.replace(re, "<a href=\""+escaped+"\">"+escaped+"</a>");
     }
     else {
         copy = copy.replace('&', "&amp;");
+        copy = copy.replace('"', "&quot;");
+        copy = copy.replace('\'', "&apos;");
     }
 
     QDomDocument doc;
@@ -333,9 +339,13 @@ void BufferLine::messageSet(const QString &o) {
         auto oldColor = elem.attribute("color");
         elem.setAttribute("color", lightModeColors[oldColor]);
     }
-    copy = doc.toString(-1);
-    if (!error.isEmpty())
-        qWarning() << "URL parsing error when handling message: " << o;
+    if (!error.isEmpty()) {
+        qWarning() << "URL parsing error" << error << "when handling message:" << o;
+        qWarning() << "Offending result:" << copy;
+    }
+    else {
+        copy = doc.toString(-1);
+    }
 
     if (copy != m_message) {
         m_message = copy;
