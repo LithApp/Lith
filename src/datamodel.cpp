@@ -312,7 +312,17 @@ QString BufferLine::messageGet() const {
 void BufferLine::messageSet(const QString &o) {
     QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     auto copy = o;
-    copy.replace(re, "<a href=\"\\1\">\\1</a>");
+    // this may be completely wrong
+    // TODO fix this mess, do everything in QDomDocument probably
+    copy = copy.replace("&amp;", "&");
+    if (re.indexIn(copy)) {
+        auto escaped = re.cap();
+        escaped = escaped.replace('&', "&amp;");
+        copy.replace(re, "<a href=\""+escaped+"\">"+escaped+"</a>");
+    }
+
+    qCritical() << "COPY: " << copy;
+    qCritical() << "O: " << o;
 
     QDomDocument doc;
     QString error;
@@ -324,6 +334,8 @@ void BufferLine::messageSet(const QString &o) {
         elem.setAttribute("color", lightModeColors[oldColor]);
     }
     copy = doc.toString(-1);
+    qCritical() << "RESULT: " << copy;
+    qCritical() << "ERROR: " << error;
 
     if (copy != m_message) {
         m_message = copy;
