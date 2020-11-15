@@ -136,7 +136,7 @@ ScrollView {
                 Layout.alignment: Qt.AlignLeft
             }
 
-            ////////////////////////// URL SHORTENING
+            ////////////////////////// URL HANDLING
             Rectangle {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
@@ -147,14 +147,14 @@ ScrollView {
             Text {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
-                text: qsTr("URL shortening")
+                text: qsTr("URL handling")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
             }
 
             Text {
                 Layout.alignment: Qt.AlignRight
-                text: qsTr("Enabled")
+                text: qsTr("Shortening Enabled")
             }
             CheckBox {
                 id: shortenLongUrlsCheckbox
