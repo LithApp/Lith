@@ -1,4 +1,4 @@
-QT += qml quick widgets quickwidgets multimedia quickcontrols2 xml gui-private
+QT += qml quick widgets multimedia quickcontrols2 xml
 
 CONFIG += c++17
 

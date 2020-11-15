@@ -14,13 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
-#include "weechat.h"
-#include "uploader.h"
-#include "clipboardproxy.h"
-#include "datamodel.h"
-#include "settings.h"
-#include "lith.h"
-
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -30,10 +23,13 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QPalette>
-#include <QQuickWidget>
-#include <QMainWindow>
-#include <QtGui/qpa/qplatformwindow.h>
 
+#include "weechat.h"
+#include "uploader.h"
+#include "clipboardproxy.h"
+#include "datamodel.h"
+#include "settings.h"
+#include "lith.h"
 
 void setColorScheme(bool dark) {
     QPalette palette;
@@ -331,6 +327,7 @@ int main(int argc, char *argv[])
     app.setFont(font);
     app.setFont(font, "monospace");
 
+    QQmlApplicationEngine engine;
     qRegisterMetaType<StringMap>();
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
@@ -343,30 +340,11 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
-
-    auto quickWidget = new QQuickWidget();
-    auto mainWindow = new QMainWindow();
-    mainWindow->setCentralWidget(quickWidget);
-    QQmlEngine *engine = quickWidget->engine();
-    engine->rootContext()->setContextProperty("lith", Lith::instance());
-    engine->rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
-    engine->rootContext()->setContextProperty("uploader", new Uploader());
-    engine->rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
-    quickWidget->setSource(QUrl(QLatin1String("qrc:/main.qml")));
-    quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
-    mainWindow->show();
-    if (mainWindow->windowHandle() && mainWindow->windowHandle()->handle()) {
-        QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(mainWindow->windowHandle()->handle());
-        QMargins margins = platformWindow->safeAreaMargins();
-        engine->rootContext()->setContextProperty("bottomSafeAreaHeight", margins.bottom());
-        engine->rootContext()->setContextProperty("topSafeAreaHeight", margins.top());
-    }
-    else {
-        engine->rootContext()->setContextProperty("bottomSafeAreaHeight", 0);
-        engine->rootContext()->setContextProperty("topSafeAreaHeight", 0);
-    }
-
-    //QMargins margins = platformWindow->safeAreaMargins();
+    engine.rootContext()->setContextProperty("lith", Lith::instance());
+    engine.rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
+    engine.rootContext()->setContextProperty("uploader", new Uploader());
+    engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
+    engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();
 }

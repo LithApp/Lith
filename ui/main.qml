@@ -19,9 +19,11 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 
-Item {
+ApplicationWindow {
+    visible: true
     width: 480
     height: 800
+    title: "Lith"
 
     SystemPalette {
         id: palette
@@ -46,7 +48,7 @@ Item {
                 Qt.inputMethod.keyboardRectangle &&
                 Qt.inputMethod.visible &&
                 (Qt.platform.os !== "android" ||
-                channelView.inputBarHasFocus) ? Qt.inputMethod.keyboardRectangle.height - bottomSafeAreaHeight :
+                channelView.inputBarHasFocus) ? Qt.inputMethod.keyboardRectangle.height :
                                                0
         Behavior on height {
             NumberAnimation {
@@ -72,7 +74,7 @@ Item {
                 Qt.inputMethod.keyboardRectangle &&
                 Qt.inputMethod.visible &&
                 Qt.platform.os !== "android" &&
-                !channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height - bottomSafeAreaHeight :
+                !channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height :
                                                 0
         Behavior on height {
             NumberAnimation {
