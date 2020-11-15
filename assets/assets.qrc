@@ -22,6 +22,7 @@
         <file>navigation/play.png</file>
         <file>navigation/photo.png</file>
         <file>navigation/reload.png</file>
+        <file>navigation/reload-disabled.png</file>
         <file>navigation/resize.png</file>
         <file>navigation/scissors.png</file>
         <file>navigation/screwdriver.png</file>

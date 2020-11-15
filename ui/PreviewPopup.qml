@@ -43,9 +43,16 @@ Dialog {
     }
     function showVideo(url) {
         delegateVideo.source = url
+        delegateVideo.loops = lith.settings.loopVideosByDefault ? Multimedia.MediaPlayer.Infinite : 1
+        delegateVideo.volume = lith.settings.muteVideosByDefault ? 0.0 : 1.0
         videoWrapper.visible = true
         imageWrapper.visible = false
         root.open()
+    }
+    onVisibleChanged: {
+        if (!visible) {
+            delegateVideo.stop()
+        }
     }
 
     Item {
@@ -59,37 +66,15 @@ Dialog {
             y: 1
             autoPlay: true
             fillMode: Image.PreserveAspectFit
+            loops: Multimedia.MediaPlayer.Infinite
             width: parent.width - 2
             height: parent.height - 2
             anchors.centerIn: parent
         }
-        Image {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 80
-            height: 48
-            width: 48
-
-            opacity: 0.6
-            source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/pause.png" :
-                                                                                          "qrc:/navigation/play.png"
-            Rectangle {
-                z: -1
-                anchors.centerIn: parent
-                width: 64
-                height: 64
-                color: "#44000000"
-                radius: 2
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState)
-                            delegateVideo.pause()
-                        else
-                            delegateVideo.play()
-                    }
-                }
-            }
+        BusyIndicator {
+            anchors.centerIn: parent
+            visible: delegateVideo.status === Multimedia.Video.Buffering ||
+                     delegateVideo.status === Multimedia.Video.Loading
         }
         MouseArea {
             anchors.fill: parent
@@ -98,6 +83,92 @@ Dialog {
                 if (mouse.button == Qt.LeftButton) {
                     videoWrapper.visible = false
                     root.visible = false
+                }
+            }
+        }
+
+        RowLayout {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 80
+            spacing: 64
+
+            Image {
+                id: rewindImage
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 40
+
+                opacity: 0.6
+
+                source: delegateVideo.loops === Multimedia.MediaPlayer.Infinite ? "qrc:/navigation/reload.png" :
+                                                                            "qrc:/navigation/reload-disabled.png"
+                Rectangle {
+                    z: -1
+                    anchors.centerIn: parent
+                    width: 64
+                    height: 64
+                    color: "#44000000"
+                    radius: 2
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (delegateVideo.loops === Multimedia.MediaPlayer.Infinite)
+                                delegateVideo.loops = 1
+                            else
+                                delegateVideo.loops = Multimedia.MediaPlayer.Infinite
+                        }
+                    }
+                }
+            }
+
+            Image {
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 40
+
+                opacity: 0.6
+                source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/pause.png" :
+                                                                                              "qrc:/navigation/play.png"
+                Rectangle {
+                    z: -1
+                    anchors.centerIn: parent
+                    width: 64
+                    height: 64
+                    color: "#44000000"
+                    radius: 2
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState)
+                                delegateVideo.pause()
+                            else
+                                delegateVideo.play()
+                        }
+                    }
+                }
+            }
+
+            Image {
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 40
+
+                opacity: delegateVideo.hasAudio ? 0.6 : 0.0
+                source: delegateVideo.volume > 0.0 ? "qrc:/navigation/volume.png" : "qrc:/navigation/mute.png"
+                Rectangle {
+                    z: -1
+                    anchors.centerIn: parent
+                    width: 64
+                    height: 64
+                    color: "#44000000"
+                    radius: 2
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (delegateVideo.volume > 0.0)
+                                delegateVideo.volume = 0.0
+                            else
+                                delegateVideo.volume = 1.0
+                        }
+                    }
                 }
             }
         }

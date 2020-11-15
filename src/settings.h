@@ -55,6 +55,9 @@ class Settings : public QObject {
     SETTING(bool, showAutocompleteButton, true)
     SETTING(bool, showGalleryButton, true)
 
+    SETTING(bool, muteVideosByDefault, true)
+    SETTING(bool, loopVideosByDefault, true)
+
     SETTING(QString, host)
     SETTING(int, port, 9001)
     SETTING(bool, encrypted, true)

@@ -31,6 +31,8 @@ ScrollView {
         settings.baseFontSize = baseFontSizeSpinBox.value
         settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
         settings.timestampFormat = timestampFormatInput.text
+        settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
+        settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -41,6 +43,8 @@ ScrollView {
         baseFontSizeSpinBox.value = settings.baseFontSize
         nickCutoffThresholdSpinBox.value = settings.nickCutoffThreshold
         timestampFormatInput.text = settings.timestampFormat
+        muteVideosByDefaultCheckbox.checked = settings.muteVideosByDefault
+        loopVideosByDefaultCheckbox.checked = settings.loopVideosByDefault
     }
 
     ColumnLayout {
@@ -89,44 +93,7 @@ ScrollView {
                 }
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: 2
-                height: 1
-                color: palette.mid
-            }
-
-            Text {
-                Layout.fillWidth: true
-                Layout.columnSpan: 2
-                text: qsTr("URL shortening")
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-            }
-
-            Text {
-                Layout.alignment: Qt.AlignRight
-                text: qsTr("Enabled")
-            }
-            CheckBox {
-                id: shortenLongUrlsCheckbox
-                checked: settings.shortenLongUrls
-                Layout.alignment: Qt.AlignLeft
-            }
-            Text {
-                Layout.alignment: Qt.AlignRight
-                text: qsTr("Length threshold")
-            }
-            TextField {
-                id: shortenLongUrlsThreshold
-                enabled: shortenLongUrlsCheckbox.checked
-                text: settings.shortenLongUrlsThreshold
-                inputMethodHints: Qt.ImhPreferNumbers
-                validator: IntValidator {
-                    bottom: 0
-                }
-            }
-
+            ////////////////////////// INPUT BAR
             Rectangle {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
@@ -169,6 +136,78 @@ ScrollView {
                 Layout.alignment: Qt.AlignLeft
             }
 
+            ////////////////////////// URL SHORTENING
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.mid
+            }
+
+            Text {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("URL shortening")
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Enabled")
+            }
+            CheckBox {
+                id: shortenLongUrlsCheckbox
+                checked: settings.shortenLongUrls
+                Layout.alignment: Qt.AlignLeft
+            }
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Length threshold")
+            }
+            TextField {
+                id: shortenLongUrlsThreshold
+                enabled: shortenLongUrlsCheckbox.checked
+                text: settings.shortenLongUrlsThreshold
+                inputMethodHints: Qt.ImhPreferNumbers
+                validator: IntValidator {
+                    bottom: 0
+                }
+            }
+
+            ////////////////////////// MULTIMEDIA
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.mid
+            }
+            Text {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("Multimedia")
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Loop videos by default")
+            }
+            CheckBox {
+                id: loopVideosByDefaultCheckbox
+                checked: settings.showSendButton
+                Layout.alignment: Qt.AlignLeft
+            }
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Mute videos by default")
+            }
+            CheckBox {
+                id: muteVideosByDefaultCheckbox
+                checked: settings.showSendButton
+                Layout.alignment: Qt.AlignLeft
+            }
         }
     }
 }
