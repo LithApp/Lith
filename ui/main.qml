@@ -74,7 +74,7 @@ ApplicationWindow {
                 Qt.inputMethod.keyboardRectangle &&
                 Qt.inputMethod.visible &&
                 Qt.platform.os !== "android" &&
-                !channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height :
+                !channelView.inputBarHasFocus ? Qt.inputMethod.keyboardRectangle.height - bottomSafeAreaHeight :
                                                 0
         Behavior on height {
             NumberAnimation {
