@@ -463,7 +463,6 @@ void Lith::_buffer_line_added(Protocol::HData *hda) {
                 title = tr("New message from %1").arg(buffer->short_nameGet());
             }
             icon->showMessage(title, line->colorlessTextGet(), appIcon);
-            icon->hide();
         }
     }
     delete hda;
