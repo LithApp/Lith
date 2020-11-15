@@ -99,7 +99,8 @@ ListView {
         property string currentLink
         property string currentExtension: lith.getLinkFileExtension(currentLink)
         property bool containsImage: currentExtension.endsWith("png") ||
-                                     currentExtension.endsWith("jpg")
+                                     currentExtension.endsWith("jpg") ||
+                                     currentExtension.endsWith("jpeg")
         property bool containsVideo: currentExtension.endsWith("avi") ||
                                      currentExtension.endsWith("mov") ||
                                      currentExtension.endsWith("mp4") ||
