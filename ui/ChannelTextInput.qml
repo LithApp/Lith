@@ -62,10 +62,15 @@ TextInput {
         if(matchedNicks.length > 1) {
             if(lastCursorPos == cursorPosition) {
                 inputField.text = inputField.text.substring(0,
-                                                            inputField.text.length -
-                                                            matchedNicks[matchedNickIndex == 0 ? matchedNicks.length-1 : matchedNickIndex - 1].length
-                                                            - 2)
-                inputField.text += matchedNicks[matchedNickIndex] + ": "
+                                                            (inputField.text.length) -
+                                                            (matchedNicks[matchedNickIndex == 0 ? matchedNicks.length-1 : matchedNickIndex - 1].length) -
+                                                            (inputField.text.endsWith(": ") ? 2 : 1)
+                                                            )
+
+                inputField.text += matchedNicks[matchedNickIndex]
+
+                // This needs to be on a seperate line as we are working based of the current cursor position AFTER adding the nickname, ugh
+                inputField.text += cursorPosition - matchedNicks[matchedNickIndex].length === 0 ? ": " : " "
 
                 matchedNickIndex += 1
 
@@ -98,8 +103,12 @@ TextInput {
                 inputField.text = inputField.text.substring(0, i)
                 if (i !== 0) {
                     inputField.text += " "
+                    inputField.text += nicks[y] + " "
                 }
-                inputField.text += nicks[y] + ": "
+                else {
+                    inputField.text += nicks[y] + ": "
+                }
+
                 matchedNicks.push(nicks[y])
             }
         }
