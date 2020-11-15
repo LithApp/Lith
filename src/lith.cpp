@@ -141,6 +141,25 @@ Weechat *Lith::weechat() {
     return m_weechat;
 }
 
+QString Lith::errorStringGet() {
+    return m_error;
+}
+
+void Lith::errorStringSet(const QString &o) {
+    if (m_error != o) {
+        m_error = o;
+        emit errorStringChanged();
+    }
+}
+
+void Lith::networkErrorStringSet(const QString &o) {
+    if (m_error != o && m_lastNetworkError != o) {
+        m_lastNetworkError = o;
+        m_error = o;
+        emit errorStringChanged();
+    }
+}
+
 Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_weechatThread(new QThread(this))

@@ -45,7 +45,7 @@ public:
     Q_ENUMS(Status)
 private:
     PROPERTY(Status, status, UNCONFIGURED)
-    PROPERTY(QString, errorString)
+    Q_PROPERTY(QString errorString READ errorStringGet WRITE errorStringSet NOTIFY errorStringChanged)
     PROPERTY_PTR(Settings, settings, new Settings(this))
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
     //Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
@@ -62,6 +62,10 @@ public:
 
     bool hasPassphrase() const;
     Weechat *weechat();
+
+    QString errorStringGet();
+    void errorStringSet(const QString &o);
+    void networkErrorStringSet(const QString &o);
 
     ProxyBufferList *buffers();
     QmlObjectList *unfilteredBuffers();
@@ -118,6 +122,7 @@ protected:
 signals:
     void hasPassphraseChanged();
     void selectedBufferChanged();
+    void errorStringChanged();
 
 private:
     explicit Lith(QObject *parent = 0);
@@ -128,6 +133,9 @@ private:
     ProxyBufferList *m_proxyBufferList { nullptr };
     NickListFilter *m_selectedBufferNicks { nullptr };
     int m_selectedBufferIndex { -1 };
+
+    QString m_lastNetworkError {};
+    QString m_error {};
 
     QMap<pointer_t, QPointer<Buffer>> m_bufferMap {};
     QMap<pointer_t, QPointer<BufferLine>> m_lineMap;

@@ -198,7 +198,7 @@ void Weechat::onError(QAbstractSocket::SocketError e) {
     lith()->statusSet(Lith::ERROR);
     // TODO
     if (e != QAbstractSocket::SslHandshakeFailedError)
-        lith()->errorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
+        lith()->networkErrorStringSet(QString("Connection failed: %1").arg(m_connection->errorString()));
 
     if (m_reconnectTimer->interval() < 5000)
         m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
