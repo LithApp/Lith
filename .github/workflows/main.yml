@@ -71,13 +71,17 @@ jobs:
       if: github.event_name == 'create'
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
-        ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/Lith.ipa"
+        if [[ "$TAG_NAME" != "" ]]; then
+            ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/Lith.ipa"
+        fi
     - name: Upload to Testflight
       if: github.event_name == 'create'
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
-        xcrun altool --validate-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
-        xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+        if [[ "$TAG_NAME" != "" ]]; then
+            xcrun altool --validate-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+            xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+        fi
 
   Android-29:
     if: github.event_name == 'create'
@@ -108,8 +112,10 @@ jobs:
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
-        TAG_NAME=$(./dist/get-tag-name.sh)
-        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk"
+        TAG_NAME=$(./dist/get-tag-name.sh)        
+        if [[ "$TAG_NAME" != "" ]]; then
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk"
+        fi
 
   Windows-MSVC:
     runs-on: windows-2019
@@ -155,7 +161,9 @@ jobs:
       if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
-        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="Lith.zip"
+        if [[ "$TAG_NAME" != "" ]]; then
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="Lith.zip"
+        fi
 
 
 
@@ -203,7 +211,9 @@ jobs:
       if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
-        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="app.Lith.Lith.flatpak"
+        if [[ "$TAG_NAME" != "" ]]; then
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="app.Lith.Lith.flatpak"
+        fi
 
 
   macOS:
@@ -255,6 +265,8 @@ jobs:
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
-        TAG_NAME=$(./dist/get-tag-name.sh)
-        ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/Lith.dmg"
+        TAG_NAME=$(./dist/get-tag-name.sh)        
+        if [[ "$TAG_NAME" != "" ]]; then
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/Lith.dmg"
+        fi
 

@@ -297,6 +297,7 @@ void Lith::handleFetchLines(Protocol::HData *hda) {
 }
 
 void Lith::handleHotlist(Protocol::HData *hda) {
+    qCritical() << "======";
     for (auto &i : hda->data) {
         // hotlist
         auto hlPtr = i.pointers.first();
@@ -311,6 +312,7 @@ void Lith::handleHotlist(Protocol::HData *hda) {
             hl = new HotListItem(this);
             hl->bufferSet(buf);
         }
+        qCritical() << buf->nameGet() << i.objects["count"];
         for (auto j : i.objects.keys()) {
             if (j == "buffer")
                 continue;
