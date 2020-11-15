@@ -310,24 +310,13 @@ QString BufferLine::messageGet() const {
 }
 
 void BufferLine::messageSet(const QString &o) {
-    QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+    // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+    // ; was added to handle &amp; escapes right
+    QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     auto copy = o;
-    // this may be completely wrong
-    // TODO fix this mess, do everything in QDomDocument probably
-    copy = copy.replace("&amp;", "&");
-    copy = copy.replace("&quot;", "\"");
-    copy = copy.replace("&apos;", "'");
     if (re.indexIn(copy) >= 0) {
-        auto escaped = re.cap();
-        escaped = escaped.replace('&', "&amp;");
-        escaped = escaped.replace('"', "&quot;");
-        escaped = escaped.replace('\'', "&apos;");
-        copy.replace(re, "<a href=\""+escaped+"\">"+escaped+"</a>");
-    }
-    else {
-        copy = copy.replace('&', "&amp;");
-        copy = copy.replace('"', "&quot;");
-        copy = copy.replace('\'', "&apos;");
+        auto url = re.cap();
+        copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
     }
 
     QDomDocument doc;
