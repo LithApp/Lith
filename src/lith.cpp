@@ -235,8 +235,15 @@ void Lith::handleHotlistInitialization(Protocol::HData *hda) {
     for (auto &i : hda->data) {
         // hotlist
         auto ptr = i.pointers.first();
+        auto bufPtr = i.objects["buffer"].value<pointer_t>();
         auto item = new HotListItem(this);
+        auto buffer = getBuffer(bufPtr);
+        if (buffer) {
+            item->bufferSet(buffer);
+        }
         for (auto j : i.objects.keys()) {
+            if (j == "buffer")
+                continue;
             item->setProperty(qPrintable(j), i.objects[j]);
         }
         addHotlist(ptr, item);
