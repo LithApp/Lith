@@ -69,8 +69,10 @@ void Lith::selectedBufferIndexSet(int index) {
     if (m_selectedBufferIndex != index && index < m_buffers->count()) {
         m_selectedBufferIndex = index;
         emit selectedBufferChanged();
-        if (selectedBuffer())
+        if (selectedBuffer()) {
             selectedBuffer()->fetchMoreLines();
+            selectedBuffer()->clearHotlist();
+        }
         if (index >= 0)
             settingsGet()->lastOpenBufferSet(index);
     }

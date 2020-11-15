@@ -102,6 +102,7 @@ signals:
 public slots:
     bool input(const QString &data);
     void fetchMoreLines();
+    void clearHotlist();
 
 private:
     QmlObjectList *m_lines { nullptr };

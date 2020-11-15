@@ -228,6 +228,12 @@ void Buffer::fetchMoreLines() {
     }
 }
 
+void Buffer::clearHotlist() {
+    input("/buffer set hotlist -1");
+    unreadMessagesSet(0);
+    hotMessagesSet(0);
+}
+
 BufferLine::BufferLine(Buffer *parent)
     : QObject(parent)
 {
