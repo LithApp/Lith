@@ -35,8 +35,9 @@ TextInput {
 
     onAccepted: {
         if (text.length > 0) {
-            lith.selectedBuffer.input(text)
-            text = ""
+            if (lith.selectedBuffer.input(text)) {
+                text = ""
+            }
         }
     }
 

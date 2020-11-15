@@ -212,11 +212,14 @@ void Weechat::onSslErrors(const QList<QSslError> &errors) {
     }
 }
 
-void Weechat::input(pointer_t ptr, const QString &data) {
+bool Weechat::input(pointer_t ptr, const QString &data) {
     // server doesn't reply to input commands directly so no message order here
     auto line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
     //qCritical() << "WRITING:" << line;
-    m_connection->write(line.toUtf8());
+    auto message = line.toUtf8();
+    if (message.count() == m_connection->write(line.toUtf8()))
+        return true;
+    return false;
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {

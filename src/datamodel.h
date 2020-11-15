@@ -100,7 +100,7 @@ signals:
     void nicksChanged();
 
 public slots:
-    void input(const QString &data);
+    bool input(const QString &data);
     void fetchMoreLines();
 
 private:

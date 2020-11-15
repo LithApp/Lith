@@ -209,8 +209,13 @@ bool Buffer::isPrivateGet() const {
     return m_local_variables.contains("type") && m_local_variables["type"] == "private";
 }
 
-void Buffer::input(const QString &data) {
-    QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Q_ARG(pointer_t, m_ptr), Q_ARG(const QString&, data));
+bool Buffer::input(const QString &data) {
+    if (Lith::instance()->statusGet() == Lith::CONNECTED) {
+        bool success = false;
+        QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr), Q_ARG(const QString&, data));
+        return success;
+    }
+    return false;
     //Lith::instance()->weechat()->input(m_ptr, data);
 }
 
