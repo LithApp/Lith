@@ -48,43 +48,24 @@ ScrollView {
         y: 6
         width: root.width - 12
 
-        GroupBox {
-            Layout.alignment: Qt.AlignHCenter
-            title: qsTr("Input bar")
-            GridLayout {
-                id: inputBarLayout
-                columns: 2
-                Text {
-                    text: qsTr("Show autocomplete button")
-                }
-                CheckBox {
-                    id: showAutocompleteButtonCheckbox
-                    checked: settings.showAutocompleteButton
-                    Layout.alignment: Qt.AlignLeft
-                }
-                Text {
-                    text: qsTr("Show gallery button")
-                }
-                CheckBox {
-                    id: showGalleryButtonCheckbox
-                    checked: settings.showGalleryButton
-                    Layout.alignment: Qt.AlignLeft
-                }
-                Text {
-                    text: qsTr("Show send button")
-                }
-                CheckBox {
-                    id: showSendButtonCheckbox
-                    checked: settings.showSendButton
-                    Layout.alignment: Qt.AlignLeft
-                }
-            }
-        }
-
         GridLayout {
-            Layout.alignment: Qt.AlignHCenter
+            id: inputBarLayout
             columns: 2
+            Layout.alignment: Qt.AlignHCenter
+
             Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Message font size")
+            }
+            SpinBox {
+                id: baseFontSizeSpinBox
+                value: settings.baseFontSize
+                from: 6
+                to: 32
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignRight
                 text: qsTr("Timestamp format")
             }
             TextField {
@@ -93,7 +74,8 @@ ScrollView {
             }
 
             Text {
-                text: qsTr("Align nick on length")
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Align nick length")
             }
             SpinBox {
                 id: nickCutoffThresholdSpinBox
@@ -103,12 +85,28 @@ ScrollView {
                 textFromValue: function(value, locale) {
                     if (value >= 0)
                         return Number(value)
-                    return "Disabled"
+                    return qsTr("Disabled")
                 }
             }
 
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.mid
+            }
+
             Text {
-                text: qsTr("Shorten long URLs")
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("URL shortening")
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Enabled")
             }
             CheckBox {
                 id: shortenLongUrlsCheckbox
@@ -116,6 +114,7 @@ ScrollView {
                 Layout.alignment: Qt.AlignLeft
             }
             Text {
+                Layout.alignment: Qt.AlignRight
                 text: qsTr("Length threshold")
             }
             TextField {
@@ -127,15 +126,49 @@ ScrollView {
                     bottom: 0
                 }
             }
+
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.mid
+            }
             Text {
-                text: qsTr("Font size")
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("Input bar")
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
             }
-            SpinBox {
-                id: baseFontSizeSpinBox
-                value: settings.baseFontSize
-                from: 6
-                to: 32
+
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Show autocomplete button")
             }
+            CheckBox {
+                id: showAutocompleteButtonCheckbox
+                checked: settings.showAutocompleteButton
+                Layout.alignment: Qt.AlignLeft
+            }
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Show gallery button")
+            }
+            CheckBox {
+                id: showGalleryButtonCheckbox
+                checked: settings.showGalleryButton
+                Layout.alignment: Qt.AlignLeft
+            }
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Show send button")
+            }
+            CheckBox {
+                id: showSendButtonCheckbox
+                checked: settings.showSendButton
+                Layout.alignment: Qt.AlignLeft
+            }
+
         }
     }
 }
