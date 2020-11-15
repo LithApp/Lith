@@ -28,6 +28,8 @@
 #include <QApplication>
 #include <QAbstractEventDispatcher>
 
+#include "lith.h"
+
 Uploader::Uploader(QObject *parent) : QObject(parent)
 {
 
@@ -71,7 +73,7 @@ void Uploader::upload(const QString &path) {
     workingSet(true);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
-    request.setRawHeader("Authorization", "Client-ID a416e89635996b4");
+    request.setRawHeader("Authorization", "Client-ID " + Lith::instance()->settingsGet()->imgurApiKeyGet().toUtf8());
 
     qCritical() << "FILESIZE:" << file->size();
     auto reply = mgr->post(request, file->readAll());
@@ -85,9 +87,11 @@ void Uploader::uploadBinary(QImage data) {
 
     auto* mgr = new QNetworkAccessManager(this);
 
+    qCritical() << "TOKEN:" <<  Lith::instance()->settingsGet()->imgurApiKeyGet().toUtf8();
+
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
-    request.setRawHeader("Authorization", "Client-ID a416e89635996b4");
+    request.setRawHeader("Authorization", "Client-ID " + Lith::instance()->settingsGet()->imgurApiKeyGet().toUtf8());
 
     workingSet(true);
 

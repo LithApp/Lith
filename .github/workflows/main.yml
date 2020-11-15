@@ -60,7 +60,7 @@ jobs:
     - name: Build the iOS binary
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
-        bash ./dist/ios/build.sh
+        IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/ios/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
@@ -98,7 +98,7 @@ jobs:
       run: |
         export ANDROID_NDK_ROOT=/usr/local/lib/android/sdk/ndk-bundle
         export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
-        bash ./dist/android/build.sh
+        IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/android/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
@@ -123,15 +123,18 @@ jobs:
         choco install openssl
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
+      with:
+        version: 5.15.1
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
     - name: Build the application
       shell: bash
       run: |
+        TAG_NAME=$(./dist/get-tag-name.sh)
         eval $(./dist/win/make-vs2019-env.bat)
         mkdir build_win
         cd build_win
-        $Qt5_Dir/bin/qmake.exe ..
+        $Qt5_Dir/bin/qmake.exe .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION=$TAG_NAME
         nmake
     - name: Windeployqt + zip
       shell: bash
@@ -172,7 +175,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        $Qt5_Dir/bin/qmake ..
+        $Qt5_Dir/bin/qmake .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION=$TAG_NAME
         make -j5
 
 
@@ -183,6 +186,9 @@ jobs:
       options: --privileged
     steps:
     - uses: actions/checkout@v2
+    - name: "Inject build variables"
+      run: |
+        sed -i "s/#IMGUR_API_KEY=/IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }}/" Lith.pro
     - uses: bilelmoussaoui/flatpak-github-actions@v2
       with:
         bundle: "app.Lith.Lith.flatpak"
@@ -232,9 +238,11 @@ jobs:
         fetch-depth: 1
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
+      with:
+        version: 5.15.1
     - name: Build the application
       run: |
-        ./dist/macos/build.sh
+        IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
     - name: Generate .dmg
       run: |
         $Qt5_Dir/bin/macdeployqt build_macos/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D

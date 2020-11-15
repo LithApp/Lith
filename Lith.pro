@@ -31,6 +31,11 @@ INCLUDEPATH += \
 
 RESOURCES += ui/ui.qrc assets/assets.qrc
 
+#placeholders for sed
+#VERSION=
+#IMGUR_API_KEY=
+DEFINES += IMGUR_API_KEY=\\\"$${IMGUR_API_KEY}\\\"
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
