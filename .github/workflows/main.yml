@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - '**'
-  release:
-    types: [ created ]
+  create:
+    branches:
+      - 'master'
+    tags:
+      - '**'
 
 jobs:
   iOS:
-    if: github.event_name == 'release'
+    if: github.event_name == 'create'
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v2
@@ -59,25 +62,25 @@ jobs:
         export TAG_NAME=$(./dist/get-tag-name.sh)
         bash ./dist/ios/build.sh
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'release'
+      if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
       with:
         name: Lith.ipa
         path: build_ios/Lith.ipa
     - name: Upload to GitHub
-      if: github.event_name == 'release'
+      if: github.event_name == 'create'
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
         ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/Lith.ipa"
     - name: Upload to Testflight
-      if: github.event_name == 'release'
+      if: github.event_name == 'create'
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
         xcrun altool --validate-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
         xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
 
   Android-29:
-    if: github.event_name == 'release'
+    if: github.event_name == 'create'
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -97,13 +100,13 @@ jobs:
         export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
         bash ./dist/android/build.sh
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'release'
+      if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
       with:
         name: android-build-debug.apk
         path: build_android/android-build//build/outputs/apk/debug/android-build-debug.apk
     - name: Upload to GitHub
-      if: github.event_name == 'release'
+      if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk"
@@ -139,14 +142,14 @@ jobs:
         cp /c/Program\ Files/OpenSSL-Win64/bin/*.dll .
         7z a ../../Lith.zip *
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'release'
+      if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
       with:
         name: Lith.zip
         path: Lith.zip
     - name: Upload to GitHub
       shell: bash
-      if: github.event_name == 'release'
+      if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="Lith.zip"
@@ -185,13 +188,13 @@ jobs:
         bundle: "app.Lith.Lith.flatpak"
         manifest-path: "dist/linux/flatpak/app.Lith.Lith.json"
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'release'
+      if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
       with:
         name: app.Lith.Lith.flatpak
         path: app.Lith.Lith.flatpak
     - name: Upload to GitHub
-      if: github.event_name == 'release'
+      if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="app.Lith.Lith.flatpak"
@@ -236,13 +239,13 @@ jobs:
       run: |
         $Qt5_Dir/bin/macdeployqt build_macos/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'release'
+      if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
       with:
         name: Lith.dmg
         path: build_macos/Lith.dmg
     - name: Upload to GitHub
-      if: github.event_name == 'release'
+      if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/Lith.dmg"
