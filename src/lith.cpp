@@ -458,7 +458,7 @@ void Lith::_buffer_line_added(Protocol::HData *hda) {
         }
         buffer->prependLine(line);
         addLine(bufPtr, linePtr, line);
-        if (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsg())) {
+        if (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet())) {
             static QIcon appIcon(":/icon.png");
             static QSystemTrayIcon *icon = new QSystemTrayIcon(appIcon);
             icon->show();

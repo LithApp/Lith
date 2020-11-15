@@ -347,7 +347,11 @@ void BufferLine::messageSet(const QString &o) {
     }
 }
 
-bool BufferLine::isPrivMsg() {
+bool BufferLine::isSelfMsgGet() {
+    return m_tags_array.contains("self_msg");
+}
+
+bool BufferLine::isPrivMsgGet() {
     return m_tags_array.contains("irc_privmsg");
 }
 

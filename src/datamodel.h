@@ -149,7 +149,8 @@ class BufferLine : public QObject {
     Q_PROPERTY(QString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(QString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
-    Q_PROPERTY(bool isPrivMsg READ isPrivMsg NOTIFY tags_arrayChanged)
+    Q_PROPERTY(bool isPrivMsg READ isPrivMsgGet NOTIFY tags_arrayChanged)
+    Q_PROPERTY(bool isSelfMsg READ isSelfMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
     Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged) // used here because segments is already chopped up
     Q_PROPERTY(QObject *buffer READ bufferGet CONSTANT)
@@ -169,7 +170,8 @@ public:
     QString messageGet() const;
     void messageSet(const QString &o);
 
-    bool isPrivMsg();
+    bool isPrivMsgGet();
+    bool isSelfMsgGet();
     QString colorlessNicknameGet();
     QString colorlessTextGet();
 
