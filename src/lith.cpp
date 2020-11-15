@@ -452,12 +452,18 @@ void Lith::_buffer_line_added(Protocol::HData *hda) {
         buffer->prependLine(line);
         addLine(bufPtr, linePtr, line);
         if (line->highlightGet()) {
-            qCritical() << "JSEM TU FFS";
-            QSystemTrayIcon *icon = new QSystemTrayIcon();
+            static QIcon appIcon(":/icon.png");
+            static QSystemTrayIcon *icon = new QSystemTrayIcon(appIcon);
             icon->show();
-            icon->showMessage("LITH AF", line->messageGet());
+            QString title;
+            if (buffer->isChannelGet() || buffer->isServerGet()) {
+                title = tr("New highlight in %1 from %2").arg(buffer->short_nameGet()).arg(line->colorlessNicknameGet());
+            }
+            else {
+                title = tr("New message from %1").arg(buffer->short_nameGet());
+            }
+            icon->showMessage(title, line->colorlessTextGet(), appIcon);
             icon->hide();
-            icon->deleteLater();
         }
     }
     delete hda;
