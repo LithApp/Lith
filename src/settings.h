@@ -80,6 +80,8 @@ class Settings : public QObject {
     SETTING(QStringList, shortcutSwitchToBuffer9, {"Alt+9"})
     SETTING(QStringList, shortcutSwitchToBuffer10, {"Alt+0"})
 
+    SETTING(QString, imgurApiKey, IMGUR_API_KEY)
+
 public:
     Settings(QObject *parent = nullptr);
 private:
