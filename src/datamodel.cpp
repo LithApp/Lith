@@ -92,6 +92,21 @@ void Buffer::appendLine(BufferLine *line) {
     m_lines->append(line);
 }
 
+QString Buffer::titleGet() const {
+    return m_title;
+}
+
+void Buffer::titleSet(const QString &o) {
+    auto copy = o;
+    for (auto i : lightModeColors.keys()) {
+        copy.replace(i, lightModeColors[i]);
+    }
+    if (copy != m_title) {
+        m_title = copy;
+        emit titleChanged();
+    }
+}
+
 bool Buffer::isAfterInitialFetch() {
     return m_afterInitialFetch;
 }
