@@ -63,7 +63,7 @@ Rectangle {
             visible: lith.settings.timestampFormat.length > 0
             text: messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
             font.pointSize: settings.baseFontSize
-            color: palette.mid
+            color: disabledPalette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
         }
@@ -85,7 +85,7 @@ Rectangle {
                 var nickS = nick.substring(0, nickL)
                 var attrS = attr.padStart(lith.settings.nickCutoffThreshold - nickS.length, "\u00A0")
                 // TODO color
-                var suffix = attrL + nick.length <= lith.settings.nickCutoffThreshold ? "\u00A0" : "<font color=\"light gray\">+</font>"
+                var suffix = attrL + nick.length <= lith.settings.nickCutoffThreshold ? "\u00A0" : "<font color=\""+disabledPalette.text+"\">+</font>"
                 return "<font color=\"" + attrC + "\">" + attrS + "</font>" +
                         "<font color=\"" + nickC + "\">" + nickS.replace("<", "&lt;") + "</font>" +
                         suffix

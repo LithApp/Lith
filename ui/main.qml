@@ -28,6 +28,10 @@ ApplicationWindow {
     SystemPalette {
         id: palette
     }
+    SystemPalette {
+        id: disabledPalette
+        colorGroup: SystemPalette.Disabled
+    }
 
     Rectangle {
         id: windowBackground
