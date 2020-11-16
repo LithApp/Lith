@@ -58,6 +58,8 @@ class Settings : public QObject {
     SETTING(bool, muteVideosByDefault, true)
     SETTING(bool, loopVideosByDefault, true)
 
+    SETTING(bool, openLinksDirectly, false)
+
     SETTING(QString, host)
     SETTING(int, port, 9001)
     SETTING(bool, encrypted, true)

@@ -33,6 +33,7 @@ ScrollView {
         settings.timestampFormat = timestampFormatInput.text
         settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
         settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
+        settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -45,6 +46,7 @@ ScrollView {
         timestampFormatInput.text = settings.timestampFormat
         muteVideosByDefaultCheckbox.checked = settings.muteVideosByDefault
         loopVideosByDefaultCheckbox.checked = settings.loopVideosByDefault
+        openLinksDirectlyCheckbox.checked = settings.openLinksDirectly
     }
 
     ColumnLayout {
@@ -190,6 +192,15 @@ ScrollView {
                 font.bold: true
             }
 
+            Text {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Open links directly")
+            }
+            CheckBox {
+                id: openLinksDirectlyCheckbox
+                checked: settings.openLinksDirectly
+                Layout.alignment: Qt.AlignLeft
+            }
             Text {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Loop videos by default")

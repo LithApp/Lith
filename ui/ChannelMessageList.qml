@@ -113,9 +113,24 @@ ListView {
         }
 
         function show(link, item) {
-            parent = item
-            currentLink = link
-            visible = true
+            if (lith.settings.openLinksDirectly) {
+                currentLink = link
+                openCurrentLink()
+            }
+            else {
+                parent = item
+                currentLink = link
+                visible = true
+            }
+        }
+
+        function openCurrentLink() {
+            if (linkHandler.containsImage)
+                previewPopup.showImage(linkHandler.currentLink)
+            else if (linkHandler.containsVideo)
+                previewPopup.showVideo(linkHandler.currentLink)
+            else
+                Qt.openUrlExternally(linkHandler.currentLink)
         }
 
         RowLayout {
@@ -150,7 +165,7 @@ ListView {
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {
-                    Qt.openUrlExternally(linkHandler.currentLink)
+                    linkHandler.openCurrentLink()
                     linkHandler.visible = false
                 }
                 icon.source: "qrc:/navigation/resize.png"
@@ -163,10 +178,7 @@ ListView {
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {
-                    if (linkHandler.containsImage)
-                        previewPopup.showImage(linkHandler.currentLink)
-                    if (linkHandler.containsVideo)
-                        previewPopup.showVideo(linkHandler.currentLink)
+                    linkHandler.openCurrentLink()
                     linkHandler.visible = false
                 }
             }

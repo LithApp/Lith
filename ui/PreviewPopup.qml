@@ -35,13 +35,17 @@ Dialog {
     padding: 0
     background: Item {}
 
+    property string currentUrl
+
     function showImage(url) {
+        currentUrl = url
         delegateImage.source = url
         imageWrapper.visible = true
         videoWrapper.visible = false
         root.open()
     }
     function showVideo(url) {
+        currentUrl = url
         delegateVideo.source = url
         delegateVideo.loops = lith.settings.loopVideosByDefault ? Multimedia.MediaPlayer.Infinite : 1
         delegateVideo.volume = lith.settings.muteVideosByDefault ? 0.0 : 1.0
@@ -51,6 +55,7 @@ Dialog {
     }
     onVisibleChanged: {
         if (!visible) {
+            currentUrl = ""
             delegateVideo.stop()
         }
     }
@@ -264,6 +269,51 @@ Dialog {
             }
         }
     }
+
+    Rectangle {
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        height: 96
+
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "transparent" }
+            GradientStop { position: 0.6; color: "#aa000000" }
+        }
+
+        RowLayout {
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: 12
+                horizontalCenter: parent.horizontalCenter
+            }
+            spacing: 24
+            Button {
+                focusPolicy: Qt.NoFocus
+                font.pointSize: settings.baseFontSize
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: height
+                icon.source: "qrc:/navigation/copy.png"
+                onClicked: {
+                    clipboardProxy.setText(root.currentUrl)
+                }
+            }
+            Button {
+                focusPolicy: Qt.NoFocus
+                font.pointSize: settings.baseFontSize
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: height
+                onClicked: {
+                    Qt.openUrlExternally(root.currentUrl)
+                }
+                icon.source: "qrc:/navigation/resize.png"
+            }
+
+        }
+    }
+
     /*
     MouseArea {
         anchors.fill: parent
