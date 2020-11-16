@@ -28,43 +28,45 @@
 #include <QDomDocument>
 
 static const QMap<QString, QString> lightModeColors {
-    { "default",       "black" },
-    { "black",         "black" },
-    { "dark gray",     "#444444" },
-    { "dark red",      "#880000" },
-    { "light red",     "#ff4444" },
-    { "dark green",    "#008800" },
-    { "light green",   "#33cc33" },
-    { "brown",         "#d2691e" },
-    { "yellow",        "#dddd00" },
-    { "dark blue",     "#000088" },
-    { "light blue",    "#3333dd" },
-    { "dark magenta",  "#660066" },
-    { "light magenta", "#ff44ff" },
-    { "dark cyan",     "#006666" },
-    { "light cyan",    "#22aaaa" },
-    { "gray",          "#aaaaaa" },
-    { "white",         "#ffffff" }
+    { "<foreground>",    "black" },
+    { "<background>",    "white" },
+    { "<black>",         "black" },
+    { "<dark gray>",     "#444444" },
+    { "<dark red>",      "#880000" },
+    { "<light red>",     "#ff4444" },
+    { "<dark green>",    "#008800" },
+    { "<light green>",   "#33cc33" },
+    { "<brown>",         "#d2691e" },
+    { "<yellow>",        "#dddd00" },
+    { "<dark blue>",     "#000088" },
+    { "<light blue>",    "#3333dd" },
+    { "<dark magenta>",  "#660066" },
+    { "<light magenta>", "#ff44ff" },
+    { "<dark cyan>",     "#006666" },
+    { "<light cyan>",    "#22aaaa" },
+    { "<gray>",          "#aaaaaa" },
+    { "<white>",         "#ffffff" }
 };
 
 static const QMap<QString, QString> darkModeColors {
-    { "default",       "white" },
-    { "black",         "black" },
-    { "dark gray",     "#444444" },
-    { "dark red",      "#880000" },
-    { "light red",     "#ff4444" },
-    { "dark green",    "#33dd33" },
-    { "light green",   "#55ff55" },
-    { "brown",         "#d2691e" },
-    { "yellow",        "#ffff00" },
-    { "dark blue",     "#4444ff" },
-    { "light blue",    "#9999ff" },
-    { "dark magenta",  "#ee44ee" },
-    { "light magenta", "#ff88ff" },
-    { "dark cyan",     "#22aaaa" },
-    { "light cyan",    "#44dddd" },
-    { "gray",          "#aaaaaa" },
-    { "white",         "#ffffff" }
+    { "<foreground>",    "white" },
+    { "<background>",    "black" },
+    { "<black>",         "black" },
+    { "<dark gray>",     "#444444" },
+    { "<dark red>",      "#880000" },
+    { "<light red>",     "#ff4444" },
+    { "<dark green>",    "#33dd33" },
+    { "<light green>",   "#55ff55" },
+    { "<brown>",         "#d2691e" },
+    { "<yellow>",        "#ffff00" },
+    { "<dark blue>",     "#4444ff" },
+    { "<light blue>",    "#9999ff" },
+    { "<dark magenta>",  "#ee44ee" },
+    { "<light magenta>", "#ff88ff" },
+    { "<dark cyan>",     "#22aaaa" },
+    { "<light cyan>",    "#44dddd" },
+    { "<gray>",          "#aaaaaa" },
+    { "<white>",         "#ffffff" }
 };
 
 
@@ -255,7 +257,11 @@ QString BufferLine::prefixGet() const {
 }
 
 void BufferLine::prefixSet(const QString &o) {
-    QXmlStreamReader xml(o);
+    auto copy = o;
+    for (auto i : lightModeColors.keys()) {
+        copy.replace(i, lightModeColors[i]);
+    }
+    QXmlStreamReader xml(copy);
     QStringList colors;
     QStringList parts;
     while (!xml.atEnd()) {
@@ -301,8 +307,6 @@ QString BufferLine::nickAttributeGet() const {
 }
 
 QString BufferLine::nickAttributeColorGet() const {
-    if (lightModeColors.contains(m_nickAttrColor))
-        return lightModeColors[m_nickAttrColor];
     return m_nickAttrColor;
 }
 
@@ -311,8 +315,6 @@ QString BufferLine::nickGet() const {
 }
 
 QString BufferLine::nickColorGet() const {
-    if (lightModeColors.contains(m_nickColor))
-        return lightModeColors[m_nickColor];
     return m_nickColor;
 }
 
@@ -330,25 +332,7 @@ void BufferLine::messageSet(const QString &o) {
         copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
     }
     for (auto i : lightModeColors.keys()) {
-        auto needle = QString("<span style=\"background-color: %1\">").arg(i);
-        copy.replace(needle, "<span style=\"background-color: "+lightModeColors[i]+"\">");
-    }
-
-    QDomDocument doc;
-    QString error;
-    doc.setContent(copy, &error);
-    auto fontList = doc.elementsByTagName("font");
-    for (int i = 0; i < fontList.size(); i++) {
-        auto elem = fontList.at(i).toElement();
-        auto oldColor = elem.attribute("color");
-        elem.setAttribute("color", lightModeColors[oldColor]);
-    }
-    if (!error.isEmpty()) {
-        qWarning() << "URL parsing error" << error << "when handling message:" << o;
-        qWarning() << "Offending result:" << copy;
-    }
-    else {
-        copy = doc.toString(-1);
+        copy.replace(i, lightModeColors[i]);
     }
 
     if (copy != m_message) {

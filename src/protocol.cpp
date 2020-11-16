@@ -26,23 +26,23 @@
 #include <QStringLiteral>
 
 static const QVector<QString> weechatColors {
-    "default",
-    "black",
-    "dark gray",
-    "dark red",
-    "light red",
-    "dark green",
-    "light green",
-    "brown",
-    "yellow",
-    "dark blue",
-    "light blue",
-    "dark magenta",
-    "light magenta",
-    "dark cyan",
-    "light cyan",
-    "gray",
-    "white"
+    "",
+    "<black>",
+    "<dark gray>",
+    "<dark red>",
+    "<light red>",
+    "<dark green>",
+    "<light green>",
+    "<brown>",
+    "<yellow>",
+    "<dark blue>",
+    "<light blue>",
+    "<dark magenta>",
+    "<light magenta>",
+    "<dark cyan>",
+    "<light cyan>",
+    "<gray>",
+    "<white>"
 };
 
 static const QVector<QString> extendedColors {
@@ -427,7 +427,11 @@ QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtm
            result += "</font>";
            foreground = false;
        }
-       if (code >= 0 && code < weechatColors.count()) {
+       if (code == 0) {
+           result += "<font color=\"<foreground>\">";
+           foreground = true;
+       }
+       else if (code > 0 && code < weechatColors.count()) {
            result += "<font color=\""+weechatColors[code]+"\">";
            foreground = true;
        }
@@ -463,7 +467,11 @@ QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtm
        --it;
        if (background)
            result += "</span>";
-       if (code >= 0 && code < weechatColors.count()) {
+       if (code == 0) {
+           result += "<font color=\"<background>\">";
+           background = true;
+       }
+       else if (code >= 0 && code < weechatColors.count()) {
            result += "<span style=\"background-color: "+weechatColors[code]+"\">";
            background = true;
        }
