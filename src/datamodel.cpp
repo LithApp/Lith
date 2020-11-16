@@ -329,6 +329,10 @@ void BufferLine::messageSet(const QString &o) {
         auto url = re.cap();
         copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
     }
+    for (auto i : lightModeColors.keys()) {
+        auto needle = QString("<span style=\"background-color: %1\">").arg(i);
+        copy.replace(needle, "<span style=\"background-color: "+lightModeColors[i]+"\">");
+    }
 
     QDomDocument doc;
     QString error;
