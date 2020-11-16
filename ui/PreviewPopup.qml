@@ -18,7 +18,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import QtMultimedia 5.12 as Multimedia
-import QtWebView 1.1
+//import QtWebView 1.1
 
 Dialog {
     id: root

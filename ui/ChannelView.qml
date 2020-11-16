@@ -17,7 +17,7 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
-import QtQuick.Dialogs 1.2 as Dialogs
+import Qt.labs.platform 1.1
 
 import lith 1.0
 
@@ -86,7 +86,7 @@ ColumnLayout {
         Layout.fillWidth: true
     }
 
-    Dialogs.FileDialog {
+    FileDialog {
         id: fileDialog
         folder: shortcuts.pictures
         nameFilters: [ "Image files (*.jpg *.png)" ]
