@@ -115,7 +115,7 @@ ListView {
         function show(link, item) {
             if (lith.settings.openLinksDirectly) {
                 currentLink = link
-                openCurrentLink()
+                openCurrentLink(false)
             }
             else {
                 parent = item
@@ -124,10 +124,10 @@ ListView {
             }
         }
 
-        function openCurrentLink() {
-            if (linkHandler.containsImage)
+        function openCurrentLink(openPreview) {
+            if (linkHandler.containsImage && openPreview)
                 previewPopup.showImage(linkHandler.currentLink)
-            else if (linkHandler.containsVideo)
+            else if (linkHandler.containsVideo && openPreview)
                 previewPopup.showVideo(linkHandler.currentLink)
             else
                 Qt.openUrlExternally(linkHandler.currentLink)
@@ -165,7 +165,7 @@ ListView {
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {
-                    linkHandler.openCurrentLink()
+                    linkHandler.openCurrentLink(false)
                     linkHandler.visible = false
                 }
                 icon.source: "qrc:/navigation/resize.png"
@@ -178,7 +178,7 @@ ListView {
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {
-                    linkHandler.openCurrentLink()
+                    linkHandler.openCurrentLink(true)
                     linkHandler.visible = false
                 }
             }
