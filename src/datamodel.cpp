@@ -70,7 +70,7 @@ static const QMap<QString, QString> darkModeColors {
 };
 
 
-Buffer::Buffer(QObject *parent, pointer_t pointer)
+Buffer::Buffer(Lith *parent, pointer_t pointer)
     : QObject(parent)
     , m_lines(QmlObjectList::create<BufferLine>(this))
     , m_nicks(QmlObjectList::create<Nick>(this))
@@ -82,6 +82,10 @@ Buffer::Buffer(QObject *parent, pointer_t pointer)
 Buffer::~Buffer() {
     m_nicks->clear();
     m_lines->clear();
+}
+
+Lith *Buffer::lith() {
+    return qobject_cast<Lith*>(parent());
 }
 
 void Buffer::prependLine(BufferLine *line) {
@@ -98,8 +102,15 @@ QString Buffer::titleGet() const {
 
 void Buffer::titleSet(const QString &o) {
     auto copy = o;
-    for (auto i : lightModeColors.keys()) {
-        copy.replace(i, lightModeColors[i]);
+    if (lith()->darkThemeGet()) {
+        for (auto i : darkModeColors.keys()) {
+            copy.replace(i, darkModeColors[i]);
+        }
+    }
+    else {
+        for (auto i : lightModeColors.keys()) {
+            copy.replace(i, lightModeColors[i]);
+        }
     }
     if (copy != m_title) {
         m_title = copy;
@@ -260,6 +271,16 @@ BufferLine::BufferLine(Buffer *parent)
 BufferLine::~BufferLine() {
 }
 
+Buffer *BufferLine::buffer() {
+    return qobject_cast<Buffer*>(parent());
+}
+
+Lith *BufferLine::lith() {
+    if (buffer())
+        return buffer()->lith();
+    return nullptr;
+}
+
 QString BufferLine::prefixGet() const {
     QString ret;
     if (nickAttributeGet().count() > 0) {
@@ -273,8 +294,15 @@ QString BufferLine::prefixGet() const {
 
 void BufferLine::prefixSet(const QString &o) {
     auto copy = o;
-    for (auto i : lightModeColors.keys()) {
-        copy.replace(i, lightModeColors[i]);
+    if (lith() && lith()->darkThemeGet()) {
+        for (auto i : darkModeColors.keys()) {
+            copy.replace(i, darkModeColors[i]);
+        }
+    }
+    else {
+        for (auto i : lightModeColors.keys()) {
+            copy.replace(i, lightModeColors[i]);
+        }
     }
     QXmlStreamReader xml(copy);
     QStringList colors;
@@ -346,8 +374,15 @@ void BufferLine::messageSet(const QString &o) {
         auto url = re.cap();
         copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
     }
-    for (auto i : lightModeColors.keys()) {
-        copy.replace(i, lightModeColors[i]);
+    if (lith() && lith()->darkThemeGet()) {
+        for (auto i : darkModeColors.keys()) {
+            copy.replace(i, darkModeColors[i]);
+        }
+    }
+    else {
+        for (auto i : lightModeColors.keys()) {
+            copy.replace(i, lightModeColors[i]);
+        }
     }
 
     if (copy != m_message) {

@@ -30,6 +30,7 @@
 class Buffer;
 class BufferLine;
 class LineModel;
+class Lith;
 
 #include <cstdint>
 
@@ -72,8 +73,11 @@ class Buffer : public QObject {
     Q_PROPERTY(bool isChannel READ isChannelGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isPrivate READ isPrivateGet NOTIFY local_variablesChanged)
 public:
-    Buffer(QObject *parent, pointer_t pointer);
+    Buffer(Lith *parent, pointer_t pointer);
     virtual ~Buffer();
+
+    Lith *lith();
+
     //BufferLine *getLine(pointer_t ptr);
     void prependLine(BufferLine *line);
     void appendLine(BufferLine *line);
@@ -164,6 +168,9 @@ class BufferLine : public QObject {
 public:
     BufferLine(Buffer *parent);
     virtual ~BufferLine();
+
+    Buffer *buffer();
+    Lith *lith();
 
     void setParent(Buffer *parent);
 

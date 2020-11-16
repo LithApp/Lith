@@ -347,6 +347,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
+    Lith::instance()->darkThemeSet(determineDarkStyle());
+
     if (qApp->allWindows().count() > 0) {
         auto window = qApp->allWindows().first();
         QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window->handle());
