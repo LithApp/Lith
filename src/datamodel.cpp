@@ -384,6 +384,9 @@ void BufferLine::messageSet(const QString &o) {
             copy.replace(i, lightModeColors[i]);
         }
     }
+    copy.replace("<html><body> ", "<html><body>&nbsp;");
+    copy.replace("   ", "&nbsp; &nbsp;");
+    copy.replace("  ", "&nbsp; ");
 
     if (copy != m_message) {
         m_message = copy;
