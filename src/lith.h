@@ -56,6 +56,8 @@ private:
     Q_PROPERTY(int selectedBufferIndex READ selectedBufferIndex WRITE selectedBufferIndexSet NOTIFY selectedBufferChanged)
     Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
 
+    PROPERTY(bool, darkTheme, false)
+
 public:
     static Lith *_self;
     static Lith *instance();
@@ -75,8 +77,6 @@ public:
     void selectedBufferIndexSet(int index);
     NickListFilter *selectedBufferNicks();
     Q_INVOKABLE void switchToBufferNumber(int number);
-
-    QObject *getObject(pointer_t ptr, const QString &type, pointer_t parent = 0);
 
     // TODO hack, this shouldn't be in this class
     Q_INVOKABLE QString getLinkFileExtension(const QString &url);

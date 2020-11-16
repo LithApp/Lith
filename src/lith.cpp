@@ -92,47 +92,6 @@ void Lith::switchToBufferNumber(int number) {
     }
 }
 
-QObject *Lith::getObject(pointer_t ptr, const QString &type, pointer_t parent) {
-    if (type.isEmpty()) {
-        if (m_bufferMap.contains(ptr))
-            return m_bufferMap[ptr];
-        if (m_lineMap.contains(ptr))
-            return m_lineMap[ptr];
-        return nullptr;
-    }
-    else if (type == "line_data") {/*
-        if (m_bufferMap.contains(parent)) {
-            //Buffer *buffer = m_bufferMap[parent];
-            //return buffer->getLine(ptr);
-        }
-        else if (parent == 0) { */
-            if (!m_lineMap.contains(ptr))
-                m_lineMap[ptr] = new BufferLine(nullptr);
-            return m_lineMap[ptr];
-            /*
-        }
-        else {
-            qCritical() << "Got line information before the buffer was allocated";
-        }
-        */
-    }
-    else if (type == "nicklist_item") {
-        if (m_bufferMap.contains(parent)) {
-            return m_bufferMap[parent]->getNick(ptr);
-        }
-    }
-    else if (type == "hotlist") {
-        //qCritical() << ptr;
-        if (!m_hotList.contains(ptr))
-            m_hotList.insert(ptr, new HotListItem(nullptr));
-        return m_hotList[ptr];
-    }
-    else {
-        //qCritical() << "Unknown type of new stuff requested:" << type;
-    }
-    return nullptr;
-}
-
 QString Lith::getLinkFileExtension(const QString &url) {
     QUrl u(url);
     auto extension = u.fileName().split(".").last().toLower();
