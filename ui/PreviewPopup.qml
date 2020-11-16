@@ -42,6 +42,7 @@ Dialog {
         delegateImage.source = url
         imageWrapper.visible = true
         videoWrapper.visible = false
+        errorMsgText.visible = delegateImage.status === Image.Error
         root.open()
     }
     function showVideo(url) {
@@ -51,6 +52,7 @@ Dialog {
         delegateVideo.volume = lith.settings.muteVideosByDefault ? 0.0 : 1.0
         videoWrapper.visible = true
         imageWrapper.visible = false
+        errorMsgText.visible = delegateVideo.errorString.length > 0
         root.open()
     }
     onVisibleChanged: {
@@ -75,6 +77,9 @@ Dialog {
             width: parent.width - 2
             height: parent.height - 2
             anchors.centerIn: parent
+            onErrorChanged: {
+                errorMsgText.visible = delegateVideo.errorString.length > 0
+            }
         }
         BusyIndicator {
             anchors.centerIn: parent
@@ -194,6 +199,9 @@ Dialog {
                 rotation = 0
                 scale = 1
             }
+            onStatusChanged: {
+                errorMsgText.visible = delegateImage.status === Image.Error
+            }
 
             fillMode: Image.PreserveAspectFit
             width: parent.width - 2
@@ -296,8 +304,9 @@ Dialog {
             }
             spacing: 12
             Text {
+                id: errorMsgText
+                // visible: delegateImage.status === Image.Error || delegateVideo.errorString.length > 0
                 Layout.alignment: Qt.AlignHCenter
-                visible: delegateImage.status === Image.Error || delegateVideo.errorString.length > 0
                 color: "red"
                 text: delegateImage.status === Image.Error ? qsTr("The picture could not be displayed") : delegateVideo.errorString
             }
