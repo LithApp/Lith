@@ -45,7 +45,6 @@ void Uploader::upload(const QString &path) {
     if (path.startsWith("file://"))
         file = new QFile(QUrl(path).toLocalFile());
     else if (path.startsWith("file:assets-library")) {
-        qCritical() << "1";
         QImageIOHandler::Transformations transformation;
         {
             // this needs to be in its own scope
@@ -75,7 +74,6 @@ void Uploader::upload(const QString &path) {
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
     request.setRawHeader("Authorization", "Client-ID " + Lith::instance()->settingsGet()->imgurApiKeyGet().toUtf8());
 
-    qCritical() << "FILESIZE:" << file->size();
     auto reply = mgr->post(request, file->readAll());
     file->setParent(reply);
 
@@ -86,8 +84,6 @@ void Uploader::uploadBinary(QImage data) {
     auto url = QUrl("https://api.imgur.com/3/image");
 
     auto* mgr = new QNetworkAccessManager(this);
-
-    qCritical() << "TOKEN:" <<  Lith::instance()->settingsGet()->imgurApiKeyGet().toUtf8();
 
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
@@ -103,8 +99,6 @@ void Uploader::uploadBinary(QImage data) {
     buffer.open(QIODevice::WriteOnly);
     data.save(&buffer, "png");
     buffer.close();
-    qCritical() << "BUFFER " << arr.size();
-    qCritical() << "IMAGE " << data.size();
     auto reply = mgr->post(request, arr);
 
     connect(mgr, &QNetworkAccessManager::finished, this, &Uploader::onFinished);

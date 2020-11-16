@@ -29,10 +29,6 @@ Dialog {
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    onVisibleChanged: {
-        console.log(" visible = " + !(nickname == ""))
-    }
-
     width: parent.width / 1.25
 
     // Center the popup/dialog, whatever

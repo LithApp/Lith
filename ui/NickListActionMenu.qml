@@ -50,11 +50,6 @@ Dialog {
         color: "#eeeeee"
     }
 
-    onVisibleChanged: {
-        console.log(nickListActionMenuDialog.x, nickListActionMenuDialog.y)
-    }
-
-
     ListModel {
         id: nicklistActionMenuModel
 

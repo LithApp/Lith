@@ -76,16 +76,15 @@ Item {
             Connections {
                 target: uploader
                 onSuccess: {
-                    console.warn("FINISHED")
-                    console.warn(url)
                     if (channelTextInput.length !== 0 && !channelTextInput.text.endsWith(" "))
                         channelTextInput.text += " "
                     channelTextInput.text += url
                     channelTextInput.text += " "
                 }
                 onError: {
-                    console.warn("ERROR")
+                    console.warn("IMAGE UPLOAD ERROR")
                     console.warn(message)
+                    lith.errorString = message
                 }
             }
 
