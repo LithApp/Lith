@@ -203,6 +203,11 @@ Dialog {
                     duration: 60
                 }
             }
+
+            BusyIndicator {
+                anchors.centerIn: parent
+                visible: delegateImage.status === Image.Loading
+            }
         }
         /*
         PinchArea {
@@ -283,34 +288,43 @@ Dialog {
             GradientStop { position: 0.6; color: "#aa000000" }
         }
 
-        RowLayout {
+        ColumnLayout {
             anchors {
                 bottom: parent.bottom
                 bottomMargin: 12
                 horizontalCenter: parent.horizontalCenter
             }
-            spacing: 24
-            Button {
-                focusPolicy: Qt.NoFocus
-                font.pointSize: settings.baseFontSize
-                Layout.preferredHeight: 40
-                Layout.preferredWidth: height
-                icon.source: "qrc:/navigation/copy.png"
-                onClicked: {
-                    clipboardProxy.setText(root.currentUrl)
+            spacing: 12
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                visible: delegateImage.status === Image.Error || delegateVideo.errorString.length > 0
+                color: "red"
+                text: delegateImage.status === Image.Error ? qsTr("The picture could not be displayed") : delegateVideo.errorString
+            }
+            RowLayout {
+                spacing: 24
+                Layout.alignment: Qt.AlignHCenter
+                Button {
+                    focusPolicy: Qt.NoFocus
+                    font.pointSize: settings.baseFontSize
+                    Layout.preferredHeight: 40
+                    Layout.preferredWidth: height
+                    icon.source: "qrc:/navigation/copy.png"
+                    onClicked: {
+                        clipboardProxy.setText(root.currentUrl)
+                    }
+                }
+                Button {
+                    focusPolicy: Qt.NoFocus
+                    font.pointSize: settings.baseFontSize
+                    Layout.preferredHeight: 40
+                    Layout.preferredWidth: height
+                    onClicked: {
+                        Qt.openUrlExternally(root.currentUrl)
+                    }
+                    icon.source: "qrc:/navigation/resize.png"
                 }
             }
-            Button {
-                focusPolicy: Qt.NoFocus
-                font.pointSize: settings.baseFontSize
-                Layout.preferredHeight: 40
-                Layout.preferredWidth: height
-                onClicked: {
-                    Qt.openUrlExternally(root.currentUrl)
-                }
-                icon.source: "qrc:/navigation/resize.png"
-            }
-
         }
     }
 
