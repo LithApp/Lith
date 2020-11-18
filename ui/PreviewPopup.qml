@@ -196,9 +196,6 @@ Dialog {
                 rotation = 0
                 scale = 1
             }
-            onStatusChanged: {
-                errorMsgText.visible = delegateImage.status === Image.Error
-            }
 
             fillMode: Image.PreserveAspectFit
             width: parent.width - 2
