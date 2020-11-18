@@ -59,6 +59,7 @@ class Settings : public QObject {
     SETTING(bool, loopVideosByDefault, true)
 
     SETTING(bool, openLinksDirectly, false)
+    SETTING(bool, openLinksDirectlyInBrowser, false)
 
     SETTING(QString, host)
     SETTING(int, port, 9001)

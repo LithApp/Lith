@@ -34,6 +34,7 @@ ScrollView {
         settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
         settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
         settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
+        lith.settings.openLinksDirectlyInBrowser = openLinksDirectlyInBrowserSwitch.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -47,6 +48,7 @@ ScrollView {
         muteVideosByDefaultCheckbox.checked = settings.muteVideosByDefault
         loopVideosByDefaultCheckbox.checked = settings.loopVideosByDefault
         openLinksDirectlyCheckbox.checked = settings.openLinksDirectly
+        openLinksDirectlyInBrowserSwitch.checked = lith.settings.openLinksDirectlyInBrowser
     }
 
     ColumnLayout {
@@ -201,6 +203,24 @@ ScrollView {
                 checked: settings.openLinksDirectly
                 Layout.alignment: Qt.AlignLeft
             }
+            Label {
+                visible: openLinksDirectlyCheckbox.checked
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Inside Lith (when possible)")
+                color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
+            }
+            RowLayout {
+                visible: openLinksDirectlyCheckbox.checked
+                Switch {
+                    id: openLinksDirectlyInBrowserSwitch
+                    checked: lith.settings.openLinksDirectlyInBrowser
+                }
+                Label {
+                    text: qsTr("In browser")
+                    color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
+                }
+            }
+
             Label {
                 Layout.alignment: Qt.AlignRight
                 text: qsTr("Loop videos by default")

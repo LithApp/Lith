@@ -115,7 +115,7 @@ ListView {
         function show(link, item) {
             if (lith.settings.openLinksDirectly) {
                 currentLink = link
-                openCurrentLink(false)
+                openCurrentLink(!lith.settings.openLinksDirectlyInBrowser)
             }
             else {
                 parent = item
