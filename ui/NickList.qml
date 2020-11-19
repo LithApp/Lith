@@ -25,7 +25,7 @@ Drawer {
 
     onVisibleChanged: {
         if (visible) {
-            if (Qt.platform.os === "android" || Qt.platform.os === "ios")
+            if (mobilePlatform)
                 nickFilter.focus = false
             else
                 nickFilter.focus = true

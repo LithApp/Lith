@@ -27,7 +27,7 @@ Drawer {
 
         if (visible) {
             filterField.clear()
-            if (Qt.platform.os === "android" || Qt.platform.os === "ios")
+            if (mobilePlatform)
                 filterField.focus = false
             else
                 filterField.focus = true

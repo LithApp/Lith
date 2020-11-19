@@ -43,7 +43,7 @@ Dialog {
         }
         TabButton {
             text: qsTr("Shortcuts")
-            visible: Qt.platform.name !== "ios" && Qt.platform.name !== "android"
+            visible: mobilePlatform
         }
     }
 
@@ -76,7 +76,7 @@ Dialog {
 
         SettingsShortcuts {
             id: settingsShortcuts
-            enabled: Qt.platform.name !== "ios" && Qt.platform.name !== "android"
+            enabled: mobilePlatform
         }
 
     }
