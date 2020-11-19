@@ -39,13 +39,20 @@ Rectangle {
         anchors.fill: parent
         pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
         hoverEnabled: false
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         onPressAndHold: {
-            channelMessageActionMenu.visible = true
-            channelMessageActionMenu.message = messageModel.colorlessText;
-            channelMessageActionMenu.nickname = messageModel.colorlessNickname;
-            channelMessageActionMenu.timestamp = messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat)
+            channelMessageActionMenu.show(messageModel.colorlessText,
+                                          messageModel.colorlessNickname,
+                                          messageModel.date)
         }
-
+        onClicked: {
+            if (mouse.button === Qt.RightButton) {
+                channelMessageActionMenu.show(messageModel.colorlessText,
+                                              messageModel.colorlessNickname,
+                                              messageModel.date)
+                mouse.accepted = true
+            }
+        }
     }
     RowLayout {
         id: messageRootLayout

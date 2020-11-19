@@ -39,7 +39,14 @@ Dialog {
 
     property string message;
     property string nickname;
-    property string timestamp;
+    property var timestamp;
+
+    function show(msg, nick, time) {
+        message = msg
+        nickname = nick
+        timestamp = time
+        visible = true
+    }
 
     SystemPalette {
         id: palette
@@ -47,14 +54,10 @@ Dialog {
 
     header: Label {
         topPadding: 20
-        leftPadding: 20
         text: qsTr("Copy")
         font.bold: true
         font.pointSize: settings.baseFontSize * 1.125
-    }
-
-    background: Rectangle {
-        color: "#eeeeee"
+        horizontalAlignment: Label.AlignHCenter
     }
 
     ColumnLayout
@@ -63,124 +66,81 @@ Dialog {
         // columns: 1
         width: parent.width
 
-        Rectangle {
-            clip: true
+        Button {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
+            Layout.preferredHeight: 1.5 * implicitHeight
 
-            width: parent.width
-            visible: !(nickname == "")
-            height: visible ? 45 : 0
-            color: mouseNicknameTimestamp.pressed ? "gray" : "#eeeeee"
-
-            Behavior on color {
-                ColorAnimation {
-
+            Label {
+                id: label1
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 6
+                    verticalCenter: parent.verticalCenter
                 }
+                maximumLineCount: 2
+                elide: Text.ElideRight
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                text: timestamp.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + " <" + nickname + "> " + message
             }
 
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignCenter
-                maximumLineCount: 2
-                id: messageTextWithNicknameTimestamp
-                text: timestamp + " <" + nickname + "> " + message
+            visible: !(nickname == "")
 
-                elide: Text.ElideRight
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                font.pointSize: settings.baseFontSize
-
-                MouseArea {
-                    id: mouseNicknameTimestamp
-                    anchors.fill: parent
-                    onClicked: {
-                        channelMessageActionMenuDialog.close()
-                        clipboardProxy.setText(parent.text)
-                    }
-                }
+            onClicked: {
+                channelMessageActionMenuDialog.close()
+                clipboardProxy.setText(label1.text)
             }
         }
-        Rectangle {
-            clip: true
+        Button {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
+            Layout.preferredHeight: 1.5 * implicitHeight
 
             visible: !(nickname == "")
-            height: visible ? 45 : 0
-            color: mouseNickname.pressed ? "gray" : "#eeeeee"
 
-            Behavior on color {
-                ColorAnimation {
-
+            Label {
+                id: label2
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 6
+                    verticalCenter: parent.verticalCenter
                 }
-            }
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignCenter
                 maximumLineCount: 2
-                id: messageTextWithNickname
+                elide: Text.ElideRight
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                 text: "<" + nickname + "> " + message
+            }
 
-                elide: Text.ElideRight
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                font.pointSize: settings.baseFontSize
-
-                MouseArea {
-                    id: mouseNickname
-                    anchors.fill: parent
-                    onClicked: {
-                        channelMessageActionMenuDialog.close()
-                        clipboardProxy.setText(parent.text)
-                    }
-                }
+            onClicked: {
+                channelMessageActionMenuDialog.close()
+                clipboardProxy.setText(label2.text)
             }
         }
-
-        Rectangle {
+        Button {
             clip: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
+            Layout.preferredHeight: 1.5 * implicitHeight
 
-            visible: true
-            height: 45
-            color: mouseText.pressed ? "gray" : "#eeeeee"
-
-            Behavior on color {
-                ColorAnimation {
-
+            Label {
+                id: label3
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 6
+                    verticalCenter: parent.verticalCenter
                 }
+                maximumLineCount: 2
+                elide: Text.ElideRight
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                text: message
             }
 
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignCenter
-                maximumLineCount: 2
-                id: messageText
-                visible: true
-                text: message
-
-                elide: Text.ElideRight
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                font.pointSize: settings.baseFontSize
-
-                MouseArea {
-                    id: mouseText
-                    anchors.fill: parent
-                    onClicked: {
-                        channelMessageActionMenuDialog.close()
-                        clipboardProxy.setText(parent.text)
-                    }
-                }
+            onClicked: {
+                channelMessageActionMenuDialog.close()
+                clipboardProxy.setText(label3.text)
             }
         }
     }
