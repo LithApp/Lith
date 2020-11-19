@@ -34,6 +34,27 @@ Rectangle {
     SystemPalette {
         id: palette
     }
+    MouseArea {
+        anchors.fill: parent
+        pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
+        hoverEnabled: false
+        acceptedButtons: (mobilePlatform ? Qt.LeftButton : 0) | Qt.RightButton
+        cursorShape: Qt.IBeamCursor
+        onPressAndHold: {
+            channelMessageActionMenu.show(messageModel.colorlessText,
+                                          messageModel.colorlessNickname,
+                                          messageModel.date)
+            mouse.accepted = true
+        }
+        onClicked: {
+            if (mouse.button === Qt.RightButton) {
+                channelMessageActionMenu.show(messageModel.colorlessText,
+                                              messageModel.colorlessNickname,
+                                              messageModel.date)
+                mouse.accepted = true
+            }
+        }
+    }
     RowLayout {
         id: messageRootLayout
         width: parent.width
@@ -100,28 +121,7 @@ Rectangle {
                 id: linkHoverMouse
                 anchors.fill: parent
                 acceptedButtons: Qt.NoButton
-                cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
-            }
-        }
-    }
-    MouseArea {
-        anchors.fill: parent
-        pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
-        hoverEnabled: false
-        acceptedButtons: (mobilePlatform ? Qt.LeftButton : 0) | Qt.RightButton
-        cursorShape: Qt.IBeamCursor
-        onPressAndHold: {
-            channelMessageActionMenu.show(messageModel.colorlessText,
-                                          messageModel.colorlessNickname,
-                                          messageModel.date)
-            mouse.accepted = true
-        }
-        onClicked: {
-            if (mouse.button === Qt.RightButton) {
-                channelMessageActionMenu.show(messageModel.colorlessText,
-                                              messageModel.colorlessNickname,
-                                              messageModel.date)
-                mouse.accepted = true
+                cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.IBeamCursor
             }
         }
     }
