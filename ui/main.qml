@@ -25,6 +25,8 @@ ApplicationWindow {
     height: 800
     title: "Lith"
 
+    property bool mobilePlatform: Qt.platform.os === "ios" || Qt.platform.os === "android"
+
     SystemPalette {
         id: palette
     }

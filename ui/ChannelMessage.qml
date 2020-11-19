@@ -34,31 +34,11 @@ Rectangle {
     SystemPalette {
         id: palette
     }
-
-    MouseArea {
-        anchors.fill: parent
-        pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
-        hoverEnabled: false
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onPressAndHold: {
-            channelMessageActionMenu.show(messageModel.colorlessText,
-                                          messageModel.colorlessNickname,
-                                          messageModel.date)
-        }
-        onClicked: {
-            if (mouse.button === Qt.RightButton) {
-                channelMessageActionMenu.show(messageModel.colorlessText,
-                                              messageModel.colorlessNickname,
-                                              messageModel.date)
-                mouse.accepted = true
-            }
-        }
-    }
     RowLayout {
         id: messageRootLayout
         width: parent.width
         spacing: 0
-        Text {
+        TextEdit {
             Layout.alignment: Qt.AlignTop
             visible: lith.settings.timestampFormat.length > 0
             text: messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
@@ -66,8 +46,11 @@ Rectangle {
             color: disabledPalette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
+            selectByMouse: true
+            persistentSelection: true
+            readOnly: true
         }
-        Text {
+        TextEdit {
             Layout.alignment: Qt.AlignTop
             font.bold: true
             text: {
@@ -94,9 +77,12 @@ Rectangle {
             color: palette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
+            selectByMouse: true
+            persistentSelection: true
+            readOnly: true
         }
 
-        Text {
+        TextEdit {
             text: "<span style='white-space: pre-wrap;'>" + messageModel.message + "</span>"
             Layout.fillWidth: true
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -107,11 +93,35 @@ Rectangle {
             onLinkActivated: {
                 linkHandler.show(link, root)
             }
+            selectByMouse: true
+            persistentSelection: true
+            readOnly: true
             MouseArea {
                 id: linkHoverMouse
                 anchors.fill: parent
                 acceptedButtons: Qt.NoButton
                 cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+            }
+        }
+    }
+    MouseArea {
+        anchors.fill: parent
+        pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
+        hoverEnabled: false
+        acceptedButtons: (mobilePlatform ? Qt.LeftButton : 0) | Qt.RightButton
+        cursorShape: Qt.IBeamCursor
+        onPressAndHold: {
+            channelMessageActionMenu.show(messageModel.colorlessText,
+                                          messageModel.colorlessNickname,
+                                          messageModel.date)
+            mouse.accepted = true
+        }
+        onClicked: {
+            if (mouse.button === Qt.RightButton) {
+                channelMessageActionMenu.show(messageModel.colorlessText,
+                                              messageModel.colorlessNickname,
+                                              messageModel.date)
+                mouse.accepted = true
             }
         }
     }

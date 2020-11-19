@@ -88,7 +88,7 @@ ColumnLayout {
 
     FileDialog {
         id: fileDialog
-        folder: StandardPaths.writableLocation(StandardPaths.PicturesLocation)
+        folder: StandardPaths.standardLocations(StandardPaths.PicturesLocation).slice(-1)[0]
         nameFilters: [ "Image files (*.jpg *.jpeg *.png)" ]
         onAccepted: {
             //inputField.text += " " + fileUrl
