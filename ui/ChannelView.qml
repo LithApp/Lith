@@ -88,12 +88,12 @@ ColumnLayout {
 
     FileDialog {
         id: fileDialog
-        folder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
-        nameFilters: [ "Image files (*.jpg *.png)" ]
+        folder: StandardPaths.writableLocation(StandardPaths.PicturesLocation)
+        nameFilters: [ "Image files (*.jpg *.jpeg *.png)" ]
         onAccepted: {
             //inputField.text += " " + fileUrl
             //imageButton.isBusy = false
-            uploader.upload(fileUrl)
+            uploader.upload(file)
             Qt.inputMethod.hide()
             inputBar.textInput.forceActiveFocus()
         }
