@@ -60,6 +60,7 @@ Rectangle {
         width: parent.width
         spacing: 0
         TextEdit {
+            enabled: false
             Layout.alignment: Qt.AlignTop
             visible: lith.settings.timestampFormat.length > 0
             text: messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
@@ -67,11 +68,12 @@ Rectangle {
             color: disabledPalette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
-            selectByMouse: !mobilePlatform
+            //selectByMouse: !mobilePlatform
             persistentSelection: true
             readOnly: true
         }
         TextEdit {
+            enabled: false
             Layout.alignment: Qt.AlignTop
             font.bold: true
             text: {
@@ -98,12 +100,13 @@ Rectangle {
             color: palette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
-            selectByMouse: !mobilePlatform
+            //selectByMouse: !mobilePlatform
             persistentSelection: true
             readOnly: true
         }
 
         TextEdit {
+            enabled: false
             text: "<span style='white-space: pre-wrap;'>" + messageModel.message + "</span>"
             Layout.fillWidth: true
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -114,7 +117,7 @@ Rectangle {
             onLinkActivated: {
                 linkHandler.show(link, root)
             }
-            selectByMouse: !mobilePlatform
+            //selectByMouse: !mobilePlatform
             persistentSelection: true
             readOnly: true
             MouseArea {
