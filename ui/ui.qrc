@@ -23,5 +23,6 @@
         <file>style/CheckBox.qml</file>
         <file>style/Switch.qml</file>
         <file>style/TextField.qml</file>
+        <file>style/BusyIndicator.qml</file>
     </qresource>
 </RCC>
