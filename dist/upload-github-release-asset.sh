@@ -48,8 +48,8 @@ if [[ "$tag" == 'LATEST' ]]; then
   GH_TAGS="$GH_REPO/releases/latest"
 fi
 
-if [[ "$renameto" != "" ]]; then
-  mv "$filename" "$renameto"
+if [[ "$renameto" != "" ]]; then  
+  cp "$filename" "$renameto"
   filename="$renameto"
 fi
 
