@@ -68,6 +68,10 @@ linux {
 
     INSTALLS += icon desktopfile appdatafile
 }
+win32 {
+    RC_ICONS = assets/icons/icon.ico
+}
+
 
 ios: {
   QMAKE_INFO_PLIST = dist/ios/Info.plist
