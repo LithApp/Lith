@@ -72,7 +72,7 @@ jobs:
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/Lith.ipa"
+            ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/Lith.ipa" renameto="Lith-iOS-${TAG_NAME}.ipa"
         fi
     - name: Upload to Testflight
       if: github.event_name == 'create'
@@ -114,7 +114,7 @@ jobs:
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)        
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk"
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk" renameto="Lith-android-${TAG_NAME}.apk"
         fi
 
   Windows-MSVC:
@@ -162,7 +162,7 @@ jobs:
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="Lith.zip"
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="Lith.zip" renameto="Lith-win64-${TAG_NAME}.zip"
         fi
 
 
@@ -212,7 +212,7 @@ jobs:
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="app.Lith.Lith.flatpak"
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="app.Lith.Lith.flatpak" renameto="Lith-linux-${TAG_NAME}.flatpak"
         fi
 
 
@@ -267,6 +267,6 @@ jobs:
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)        
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/Lith.dmg"
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/Lith.dmg" renameto="Lith-macOS-${TAG_NAME}.dmg"
         fi
 
