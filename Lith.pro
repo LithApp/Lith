@@ -26,6 +26,7 @@ SOURCES += \
     src/util/nicklistfilter.cpp \
     src/weechat.cpp
 
+
 INCLUDEPATH += \
     src
 
@@ -70,6 +71,17 @@ linux {
 }
 win32 {
     RC_ICONS = assets/icons/icon.ico
+}
+
+ios {
+    OBJECTIVE_HEADERS += \
+    src/iosclipboard.h
+    OBJECTIVE_SOURCES += \
+    src/iosclipboard.mm
+
+    QMAKE_LFLAGS += -F/System/Library/Frameworks
+    LIBS += -framework Foundation
+    LIBS += -framework UIKit
 }
 
 

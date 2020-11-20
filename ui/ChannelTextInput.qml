@@ -246,15 +246,14 @@ TextField {
     }
     Keys.onPressed: {
         if (event.matches(StandardKey.Paste)) {
-            if (event.key === Qt.Key_V) {
-                if (clipboardProxy.hasImage()) {
-                    uploader.uploadBinary(clipboardProxy.image())
-                }
-                else {
-                    inputField.paste()
-                }
-                event.accepted = true
+            if (clipboardProxy.hasImage()) {
+                uploader.uploadBinary(clipboardProxy.image())
             }
+            else {
+                // TODO always pastes at the end but i'm just too tired of macOS to fix this
+                inputField.text += clipboardProxy.text()
+            }
+            event.accepted = true
         }
 
         if (event.key === Qt.Key_Up) {
