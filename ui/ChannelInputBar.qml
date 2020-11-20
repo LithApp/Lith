@@ -61,7 +61,7 @@ Item {
             visible: settings.showGalleryButton
             Layout.preferredWidth: height
             property bool isBusy: uploader.working
-            icon.source: isBusy ? null : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
+            icon.source: isBusy ? "" : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
             enabled: !isBusy
             font.pointSize: settings.baseFontSize
             onClicked: {

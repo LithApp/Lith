@@ -19,7 +19,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
 Rectangle {
-    height: errorText.text.length > 0 ? 48 : 0
+    height: errorText.text.length > 0 ? 40 : 0
     width: parent.width
     //visible: height != 0
     gradient: Gradient {
@@ -33,8 +33,13 @@ Rectangle {
         }
     }
     RowLayout {
-        anchors.fill: parent
-        anchors.margins: 12
+        anchors {
+            left: parent.left
+            leftMargin: 12
+            right: parent.right
+            rightMargin: 12
+            verticalCenter: parent.verticalCenter
+        }
         spacing: 18
         Text {
             Layout.fillHeight: true
@@ -42,6 +47,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             id: errorText
             text: lith.errorString
+            elide: Text.ElideRight
         }
         Button {
             text: "x"
