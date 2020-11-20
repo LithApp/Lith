@@ -60,13 +60,6 @@ Drawer {
                 Button {
                     Layout.preferredWidth: height
                     font.pointSize: settings.baseFontSize * 1.25
-                    icon.source: "qrc:/navigation/"+currentTheme+"/screwdriver.png"
-                    onClicked: dataBrowser.open()
-                }
-
-                Button {
-                    Layout.preferredWidth: height
-                    font.pointSize: settings.baseFontSize * 1.25
                     icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
                     onClicked: settingsDialog.visible = true
                 }
