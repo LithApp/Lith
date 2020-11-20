@@ -27,6 +27,14 @@ ApplicationWindow {
 
     property bool mobilePlatform: Qt.platform.os === "ios" || Qt.platform.os === "android"
 
+    property real bottomSafeAreaHeight: 0.0
+    Component.onCompleted: {
+        bottomSafeAreaHeight = screenInfo.getBottomSafeAreaSize()
+    }
+    onWidthChanged: {
+        bottomSafeAreaHeight = screenInfo.getBottomSafeAreaSize()
+    }
+
     SystemPalette {
         id: palette
     }

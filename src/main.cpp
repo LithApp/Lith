@@ -20,6 +20,7 @@
 #include "datamodel.h"
 #include "settings.h"
 #include "lith.h"
+#include "screeninfo.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -30,7 +31,6 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QPalette>
-#include <QtGui/qpa/qplatformwindow.h>
 
 void setColorScheme(bool dark) {
     QPalette palette;
@@ -348,22 +348,10 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("uploader", new Uploader());
     engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
     engine.rootContext()->setContextProperty("currentTheme", determineDarkStyle() ? "dark" : "light");
+    engine.rootContext()->setContextProperty("screenInfo", new ScreenInfo());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     Lith::instance()->darkThemeSet(determineDarkStyle());
-
-    if (qApp->allWindows().count() > 0) {
-        auto window = qApp->allWindows().first();
-        QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window->handle());
-        QMargins margins = platformWindow->safeAreaMargins();
-        engine.rootContext()->setContextProperty("bottomSafeAreaHeight", margins.bottom());
-        engine.rootContext()->setContextProperty("topSafeAreaHeight", margins.top());
-    }
-    else {
-        engine.rootContext()->setContextProperty("bottomSafeAreaHeight", 0);
-        engine.rootContext()->setContextProperty("topSafeAreaHeight", 0);
-    }
-
 
     return app.exec();
 }

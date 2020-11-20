@@ -8,6 +8,7 @@ HEADERS += \
     src/lith.h \
     src/protocol.h \
     src/qmlobjectlist.h \
+    src/screeninfo.h \
     src/settings.h \
     src/uploader.h \
     src/util/nicklistfilter.h \
@@ -21,6 +22,7 @@ SOURCES += \
     src/datamodel.cpp \
     src/protocol.cpp \
     src/qmlobjectlist.cpp \
+    src/screeninfo.cpp \
     src/settings.cpp \
     src/uploader.cpp \
     src/util/nicklistfilter.cpp \
