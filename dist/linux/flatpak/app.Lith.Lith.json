@@ -1,5 +1,5 @@
 {
-    "id": "app.Lith.Lith",
+    "id": "app.lith.Lith",
     "base": "io.qt.qtwebkit.BaseApp",
     "base-version": "5.15",
     "runtime": "org.kde.Platform",
@@ -31,6 +31,9 @@
         {
             "name": "Lith",
             "buildsystem": "qmake",
+            "config-opts": [
+                "PREFIX=/app"
+            ],
             "sources": [
                 {
                     "type": "dir",

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component>
+    <id type="desktop">app.lith.Lith.desktop</id>
+    <project_license>GPL-2.0+</project_license>
+    <metadata_license>CC0-1.0</metadata_license>
+    <name>Lith</name>
+    <summary>WeeChat Relay Client</summary>
+    <description>
+        <p>With Lith, you can connect to your WeeChat instance from any device.</p>
+    </description>
+    <keywords>
+        <keyword>irc</keyword>
+        <keyword>weechat</keyword>
+        <keyword>relay</keyword>
+    </keywords>
+    <url type="homepage">https://lith.app</url>
+    <screenshots>
+        <screenshot type="default">https://lith.app/assets/main.png</screenshot>
+    </screenshots>
+    <update_contact>m@rtinbriza.cz</update_contact>
+    <content_rating type="oars-1.1"/>
+</component>
