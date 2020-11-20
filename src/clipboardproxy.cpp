@@ -55,7 +55,7 @@ QString ClipboardProxy::text() {
 
 QImage ClipboardProxy::image() {    
 #ifdef Q_OS_IOS
-    return getIosImage()
+    return getIosImage();
 #else // not iOS
     return m_clipboard->image();
 #endif
