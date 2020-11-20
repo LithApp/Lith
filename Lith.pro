@@ -42,6 +42,32 @@ QML_IMPORT_PATH =
 android {
     #include(<path/to/android_openssl/openssl.pri)
 }
+linux {
+    QT += dbus
+
+    icon.files += \
+        assets/icons/linux/
+        #assets/icons/linux/hicolor/16x16 \
+        #assets/icons/linux/hicolor/22x22 \
+        #assets/icons/linux/hicolor/24x24 \
+        #assets/icons/linux/hicolor/32x32 \
+        #assets/icons/linux/hicolor/48x48 \
+        #assets/icons/linux/hicolor/64x64 \
+        #assets/icons/linux/hicolor/96x96 \
+        #assets/icons/linux/hicolor/128x128 \
+        #assets/icons/linux/hicolor/192x192 \
+        #assets/icons/linux/hicolor/256x256 \
+        #assets/icons/linux/hicolor/512x512 \
+    icon.path = $${PREFIX}/share/icons
+
+    desktopfile.files = "dist/linux/app.lith.Lith.desktop"
+    desktopfile.path = "$${PREFIX}/share/applications/"
+
+    appdatafile.files = "dist/linux/app.lith.Lith.appdata.xml"
+    appdatafile.path = "$${PREFIX}/share/metainfo/"
+
+    INSTALLS += icon desktopfile appdatafile
+}
 
 ios: {
   QMAKE_INFO_PLIST = dist/ios/Info.plist
