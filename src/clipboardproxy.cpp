@@ -53,8 +53,12 @@ QString ClipboardProxy::text() {
 #endif
 }
 
-QImage ClipboardProxy::image() {
+QImage ClipboardProxy::image() {    
+#ifdef Q_OS_IOS
+    return getIosImage()
+#else // not iOS
     return m_clipboard->image();
+#endif
 }
 
 void ClipboardProxy::setText(const QString &text) {
