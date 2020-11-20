@@ -4,3 +4,4 @@ Name=Lith
 Icon=app.lith.Lith
 Exec=Lith
 Terminal=false
+Categories=Network;
