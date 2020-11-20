@@ -121,6 +121,11 @@ TextField {
     }
 
     Shortcut {
+        sequence: StandardKey.Paste
+        onActivated: channelTextInput.text += "ATTEMPT 2"
+    }
+
+    Shortcut {
         sequences: lith.settings.shortcutSearchBuffer
         onActivated: bufferDrawer.open()
     }
