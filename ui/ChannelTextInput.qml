@@ -121,11 +121,6 @@ TextField {
     }
 
     Shortcut {
-        sequence: StandardKey.Paste
-        onActivated: channelTextInput.text += "ATTEMPT 2"
-    }
-
-    Shortcut {
         sequences: lith.settings.shortcutSearchBuffer
         onActivated: bufferDrawer.open()
     }
@@ -250,7 +245,7 @@ TextField {
         onActivated: inputField.cursorPosition = inputField.text.length
     }
     Keys.onPressed: {
-        if (event.modifiers & Qt.ControlModifier) {
+        if (event.matches(StandardKey.Paste)) {
             if (event.key === Qt.Key_V) {
                 if (clipboardProxy.hasImage()) {
                     uploader.uploadBinary(clipboardProxy.image())

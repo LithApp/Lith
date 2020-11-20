@@ -108,11 +108,6 @@ Item {
         }
     }
 
-    Shortcut {
-        sequence: StandardKey.Paste
-        onActivated: channelTextInput.text += "ATTEMPT 1"
-    }
-
     Rectangle {
         anchors {
             top: parent.top
