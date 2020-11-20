@@ -67,7 +67,7 @@ Rectangle {
             color: disabledPalette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
-            selectByMouse: true
+            selectByMouse: !mobilePlatform
             persistentSelection: true
             readOnly: true
         }
@@ -98,7 +98,7 @@ Rectangle {
             color: palette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
-            selectByMouse: true
+            selectByMouse: !mobilePlatform
             persistentSelection: true
             readOnly: true
         }
@@ -114,7 +114,7 @@ Rectangle {
             onLinkActivated: {
                 linkHandler.show(link, root)
             }
-            selectByMouse: true
+            selectByMouse: !mobilePlatform
             persistentSelection: true
             readOnly: true
             MouseArea {
