@@ -78,8 +78,11 @@ Dialog {
             height: parent.height - 2
             anchors.centerIn: parent
         }
+
         BusyIndicator {
             anchors.centerIn: parent
+            width: parent.width / 4
+            height: width
             visible: delegateVideo.status === Multimedia.Video.Buffering ||
                      delegateVideo.status === Multimedia.Video.Loading
         }
@@ -206,10 +209,13 @@ Dialog {
                 }
             }
 
-            BusyIndicator {
-                anchors.centerIn: parent
-                visible: delegateImage.status === Image.Loading
-            }
+        }
+
+        BusyIndicator {
+            anchors.centerIn: parent
+            visible: delegateImage.status === Image.Loading
+            width: parent.width / 4
+            height: width
         }
         /*
         PinchArea {
