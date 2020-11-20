@@ -45,14 +45,12 @@ Rectangle {
             channelMessageActionMenu.show(messageModel.colorlessText,
                                           messageModel.colorlessNickname,
                                           messageModel.date)
-            mouse.accepted = true
         }
         onClicked: {
             if (mouse.button === Qt.RightButton) {
                 channelMessageActionMenu.show(messageModel.colorlessText,
                                               messageModel.colorlessNickname,
                                               messageModel.date)
-                mouse.accepted = true
             }
         }
     }
