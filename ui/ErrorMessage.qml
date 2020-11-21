@@ -19,6 +19,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
 Rectangle {
+    clip: true
     height: errorText.text.length > 0 ? 40 : 0
     width: parent.width
     //visible: height != 0

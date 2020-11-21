@@ -26,5 +26,6 @@
         <file>style/BusyIndicator.qml</file>
         <file>style/ApplicationWindow.qml</file>
         <file>style/Popup.qml</file>
+        <file>MainView.qml</file>
     </qresource>
 </RCC>

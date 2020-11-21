@@ -20,6 +20,7 @@ import QtQuick.Layouts 1.12
 
 ScrollView {
     id: root
+    clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     function onAccepted() {
