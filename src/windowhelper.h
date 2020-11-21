@@ -16,7 +16,7 @@ public:
     bool lightThemeGet() { return !darkThemeGet(); }
     void resetColorScheme();
 
-    qreal getBottomSafeAreaSize();
+    Q_INVOKABLE qreal getBottomSafeAreaSize();
 
 private:
     bool detectSystemDarkStyle();
