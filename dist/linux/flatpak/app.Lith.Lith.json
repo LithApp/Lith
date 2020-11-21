@@ -1,7 +1,5 @@
 {
     "id": "app.lith.Lith",
-    "base": "io.qt.qtwebkit.BaseApp",
-    "base-version": "5.15",
     "runtime": "org.kde.Platform",
     "runtime-version": "5.15",
     "sdk": "org.kde.Sdk",
