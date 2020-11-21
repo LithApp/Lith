@@ -52,6 +52,14 @@ TextField {
     property int matchedNickIndex: 0
     property variant matchedNicks: []
 
+    function pasteText(pasted) {
+        var left = text.slice(0, selectionStart)
+        //var mid = text.slice(selectionStart, selectionEnd)
+        var right = text.slice(selectionEnd)
+        text = left + pasted + right
+        cursorPosition = left.length + pasted.length
+    }
+
     function autocomplete() {
         // console.log("BEFORE matchedNicks = ", matchedNicks, "LAST=", lastCursorPos, "NOW=", cursorPosition);
 
@@ -118,6 +126,20 @@ TextField {
         }
 
         lastCursorPos = cursorPosition
+    }
+
+    Connections {
+        target: uploader
+        onSuccess: {
+            if (inputField.length !== 0 && !inputField.text.endsWith(" "))
+                inputField.pasteText(" ")
+            inputField.pasteText(url + " ")
+        }
+        onError: {
+            console.warn("IMAGE UPLOAD ERROR")
+            console.warn(message)
+            lith.errorString = message
+        }
     }
 
     Shortcut {
@@ -250,8 +272,7 @@ TextField {
                 uploader.uploadBinary(clipboardProxy.image())
             }
             else {
-                // TODO always pastes at the end but i'm just too tired of macOS to fix this
-                inputField.text += clipboardProxy.text()
+                pasteText(clipboardProxy.text())
             }
             event.accepted = true
         }

@@ -32,7 +32,6 @@ ListView {
         anchors.fill: mobilePlatform ? null : parent
     }
 
-    // TODO breaks time dragging from outside of the screen
     ScrollBar.vertical: ScrollBar {
         id: scrollBar
         hoverEnabled: true
@@ -40,7 +39,6 @@ ListView {
         rotation: 180
         orientation: Qt.Vertical
         parent: listView.parent
-        //size: root.height / root.contentHeight
         anchors.top: listView.top
         anchors.right: listView.right
         anchors.bottom: listView.bottom
@@ -55,21 +53,6 @@ ListView {
 
     ChannelMessageActionMenu {
         id: channelMessageActionMenu
-    }
-    //reuseItems: true
-
-    MouseArea {
-        id: messageListMouse
-        z: -1
-        enabled: false
-        anchors.fill: parent
-        anchors.leftMargin: 20
-        anchors.rightMargin: 20
-        hoverEnabled: true
-        drag.target: listView
-        drag.axis: Drag.XAxis
-        drag.maximumX: 0
-        drag.minimumX: timeMetrics.width + 6
     }
 
     function fillTopOfList() {
@@ -182,18 +165,5 @@ ListView {
                 }
             }
         }
-        /*
-        Rectangle {
-            anchors.centerIn: parent
-            z: -1
-            width: 100000
-            height: 100000
-            color: "#44000000"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: linkHandler.visible = false
-            }
-        }
-        */
     }
 }

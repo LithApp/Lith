@@ -73,21 +73,6 @@ Item {
                 anchors.fill: parent
                 scale: 0.7
             }
-            Connections {
-                target: uploader
-                onSuccess: {
-                    if (channelTextInput.length !== 0 && !channelTextInput.text.endsWith(" "))
-                        channelTextInput.text += " "
-                    channelTextInput.text += url
-                    channelTextInput.text += " "
-                }
-                onError: {
-                    console.warn("IMAGE UPLOAD ERROR")
-                    console.warn(message)
-                    lith.errorString = message
-                }
-            }
-
         }
 
         Item { width: 1; height: 1 }
