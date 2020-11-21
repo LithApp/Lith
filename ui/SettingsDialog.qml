@@ -35,15 +35,14 @@ Dialog {
     header: TabBar {
         id: tabBar
         width: parent.width
-        TabButton {
-            text: qsTr("Connection")
-        }
-        TabButton {
-            text: qsTr("Interface")
-        }
-        TabButton {
-            text: qsTr("Shortcuts")
-            visible: mobilePlatform
+
+        Repeater {
+            model: mobilePlatform ? [qsTr("Connection"), qsTr("Interface")]
+                                  : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
+
+            delegate: TabButton {
+                text: modelData
+            }
         }
     }
 
@@ -76,7 +75,7 @@ Dialog {
 
         SettingsShortcuts {
             id: settingsShortcuts
-            enabled: mobilePlatform
+            enabled: !mobilePlatform
         }
 
     }
