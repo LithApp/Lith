@@ -45,7 +45,7 @@ QML_IMPORT_PATH =
 android {
     #include(<path/to/android_openssl/openssl.pri)
 }
-linux {
+linux:!android {
     QT += dbus
 
     icon.files += \
