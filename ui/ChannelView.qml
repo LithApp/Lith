@@ -32,7 +32,7 @@ ColumnLayout {
         Layout.fillWidth: true
     }
 
-    Text {
+    Label {
         Layout.fillHeight: true
         Layout.fillWidth: true
         visible: !lith.selectedBuffer
@@ -44,11 +44,10 @@ ColumnLayout {
         }
         textFormat: Text.RichText
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-        color: palette.text
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
-    Text {
+    Label {
         visible: !lith.selectedBuffer
         Layout.fillWidth: true
         horizontalAlignment: Text.AlignHCenter
