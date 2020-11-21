@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QPalette>
+#include <QtMath>
 
 #include <QtGui/qpa/qplatformwindow.h>
 
