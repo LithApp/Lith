@@ -38,7 +38,6 @@ Rectangle {
         anchors.fill: parent
         pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
         hoverEnabled: true
-        propagateComposedEvents: true
         acceptedButtons: (mobilePlatform ? Qt.LeftButton : 0) | Qt.RightButton
         cursorShape: messageText.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.IBeamCursor
         onPressAndHold: {
