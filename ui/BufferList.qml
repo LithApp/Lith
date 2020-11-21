@@ -182,9 +182,10 @@ Drawer {
                             border.color: palette.text
                             border.width: 1
                             height: bufferName.height + 6
-                            width: height
+                            width: Math.max(height, hotListItemCount.width + 6)
                             radius: 2
                             Text {
+                                id: hotListItemCount
                                 text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
                                 font.pointSize: settings.baseFontSize
                                 anchors.centerIn: parent
