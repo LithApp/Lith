@@ -26,6 +26,7 @@ Dialog {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    width: parent.width / 1.5
 
     parent: Overlay.overlay
     x: Math.round((parent.width - width) / 2)
@@ -44,10 +45,6 @@ Dialog {
         horizontalAlignment: Qt.AlignCenter
         font.pointSize: settings.baseFontSize * 1.125
         font.bold: true
-    }
-
-    background: Rectangle {
-        color: "#eeeeee"
     }
 
     ListModel {
@@ -97,7 +94,6 @@ Dialog {
                     }
                     width: parent.fillWidth
                     Layout.fillWidth: true
-                    font.family: "Menlo"
                     font.pointSize: settings.baseFontSize * 1.125
                 }
             }

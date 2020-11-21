@@ -34,7 +34,6 @@ Drawer {
     }
 
     function openNickActionMenu(nick) {
-        console.warn("something, soon?");
         nickListActionMenu.visible = true
         nickListActionMenu.nickname = nick
     }
