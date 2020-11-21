@@ -7,14 +7,18 @@ QQC2.AbstractButton {
     implicitWidth: 40
     implicitHeight: 40
 
-    indicator: Rectangle {
+    indicator: Item {
         implicitWidth: 26
         implicitHeight: 26
         anchors.verticalCenter: parent.verticalCenter
         x: control.leftPadding
         y: parent.height / 2 - height / 2
-        radius: 2
-        color: palette.button
+        Rectangle {
+            radius: 2
+            anchors.fill: parent
+            color: palette.text
+            opacity: 0.06
+        }
 
         Item {
             anchors.centerIn: parent

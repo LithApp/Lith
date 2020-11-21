@@ -32,6 +32,8 @@ class Buffer;
 class BufferLine;
 class HotListItem;
 
+class WindowHelper;
+
 class Lith : public QObject {
     Q_OBJECT
 public:
@@ -46,7 +48,9 @@ public:
 private:
     PROPERTY(Status, status, UNCONFIGURED)
     Q_PROPERTY(QString errorString READ errorStringGet WRITE errorStringSet NOTIFY errorStringChanged)
-    PROPERTY_PTR(Settings, settings, new Settings(this))
+    PROPERTY_PTR(Settings, settings)
+    PROPERTY_PTR(WindowHelper, windowHelper)
+
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
     //Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
 
@@ -56,7 +60,6 @@ private:
     Q_PROPERTY(int selectedBufferIndex READ selectedBufferIndex WRITE selectedBufferIndexSet NOTIFY selectedBufferChanged)
     Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
 
-    PROPERTY(bool, darkTheme, false)
 
 public:
     static Lith *_self;

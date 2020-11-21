@@ -35,6 +35,9 @@ ScrollView {
         settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
         settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
         lith.settings.openLinksDirectlyInBrowser = openLinksDirectlyInBrowserSwitch.checked
+        settings.forceLightTheme = forceLightThemeCheckbox.checked
+        settings.forceDarkTheme = forceDarkThemeCheckbox.checked
+        settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -49,6 +52,9 @@ ScrollView {
         loopVideosByDefaultCheckbox.checked = settings.loopVideosByDefault
         openLinksDirectlyCheckbox.checked = settings.openLinksDirectly
         openLinksDirectlyInBrowserSwitch.checked = lith.settings.openLinksDirectlyInBrowser
+        forceLightThemeCheckbox.checked = settings.forceLightTheme
+        forceDarkThemeCheckbox.checked = settings.forceDarkTheme
+        useTrueBlackWithDarkThemeCheckbox.checked = settings.useTrueBlackWithDarkTheme
     }
 
     ColumnLayout {
@@ -96,6 +102,57 @@ ScrollView {
                     return qsTr("Disabled")
                 }
             }
+
+            ////////////////////////// COLOR THEME
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.base
+            }
+            Label {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("<b>Color theme</b> (Applied after restart)")
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            Label {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Force light theme")
+            }
+            CheckBox {
+                id: forceLightThemeCheckbox
+                checked: settings.forceLightTheme
+                Layout.alignment: Qt.AlignLeft
+                onCheckedChanged: {
+                    if (checked)
+                        forceDarkThemeCheckbox.checked = false
+                }
+            }
+            Label {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Force dark theme")
+            }
+            CheckBox {
+                id: forceDarkThemeCheckbox
+                checked: settings.forceDarkTheme
+                Layout.alignment: Qt.AlignLeft
+                onCheckedChanged: {
+                    if (checked)
+                        forceLightThemeCheckbox.checked = false
+                }
+            }
+            Label {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Use black in dark theme")
+            }
+            CheckBox {
+                id: useTrueBlackWithDarkThemeCheckbox
+                checked: settings.useTrueBlackWithDarkTheme
+                Layout.alignment: Qt.AlignLeft
+            }
+
 
             ////////////////////////// INPUT BAR
             Rectangle {

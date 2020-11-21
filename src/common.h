@@ -32,6 +32,14 @@ Q_DECLARE_METATYPE(pointer_t);
 
 #define STRINGIFY(x) #x
 
+#define PROPERTY_READONLY(type, name, ...) \
+    private: \
+        Q_PROPERTY(type name READ name ## Get NOTIFY name ## Changed) \
+        type m_ ## name { __VA_ARGS__ }; \
+    public: \
+        type name ## Get () const { return m_ ## name; } \
+        Q_SIGNAL void name ## Changed();
+
 #define PROPERTY_NOSETTER(type, name, ...) \
     private: \
         Q_PROPERTY(type name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \

@@ -20,6 +20,7 @@
 
 #include "weechat.h"
 #include "lith.h"
+#include "windowhelper.h"
 
 #include <QUrl>
 #include <QApplication>
@@ -102,7 +103,7 @@ QString Buffer::titleGet() const {
 
 void Buffer::titleSet(const QString &o) {
     auto copy = o;
-    if (lith()->darkThemeGet()) {
+    if (lith()->windowHelperGet()->darkThemeGet()) {
         for (auto i : darkModeColors.keys()) {
             copy.replace(i, darkModeColors[i]);
         }
@@ -294,7 +295,7 @@ QString BufferLine::prefixGet() const {
 
 void BufferLine::prefixSet(const QString &o) {
     auto copy = o;
-    if (lith() && lith()->darkThemeGet()) {
+    if (lith() && lith()->windowHelperGet()->darkThemeGet()) {
         for (auto i : darkModeColors.keys()) {
             copy.replace(i, darkModeColors[i]);
         }
@@ -374,7 +375,7 @@ void BufferLine::messageSet(const QString &o) {
         auto url = re.cap();
         copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
     }
-    if (lith() && lith()->darkThemeGet()) {
+    if (lith() && lith()->windowHelperGet()->darkThemeGet()) {
         for (auto i : darkModeColors.keys()) {
             copy.replace(i, darkModeColors[i]);
         }

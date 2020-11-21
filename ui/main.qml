@@ -26,13 +26,14 @@ ApplicationWindow {
     title: "Lith"
 
     property bool mobilePlatform: Qt.platform.os === "ios" || Qt.platform.os === "android"
+    property string currentTheme: lith.windowHelper.darkTheme ? "dark" : "light"
 
     property real bottomSafeAreaHeight: 0.0
     Component.onCompleted: {
-        bottomSafeAreaHeight = screenInfo.getBottomSafeAreaSize()
+        bottomSafeAreaHeight = lith.windowHelper.getBottomSafeAreaSize()
     }
     onWidthChanged: {
-        bottomSafeAreaHeight = screenInfo.getBottomSafeAreaSize()
+        bottomSafeAreaHeight = lith.windowHelper.getBottomSafeAreaSize()
     }
 
     SystemPalette {

@@ -31,9 +31,6 @@ Rectangle {
 
     color: messageModel.highlight ? "#22880000" : "transparent"
 
-    SystemPalette {
-        id: palette
-    }
     MouseArea {
         anchors.fill: parent
         pressAndHoldInterval: 400 // does this do anything? or is it just for signals?

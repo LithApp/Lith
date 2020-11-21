@@ -6,16 +6,22 @@ T.Switch {
     implicitWidth: 58
     implicitHeight: 40
 
-    indicator: Rectangle {
+    indicator: Item {
         implicitWidth: 48
         implicitHeight: 28
         x: 6
         y: 6
-        radius: height / 2
-        color: palette.button
+        Rectangle {
+            anchors.fill: parent
+
+            radius: height / 2
+            color: palette.text
+            opacity: 0.06
+        }
 
         Rectangle {
             x: control.checked ? parent.width - width : 0
+            Behavior on x { NumberAnimation { duration: 100 } }
             width: 28
             height: 28
             radius: 13

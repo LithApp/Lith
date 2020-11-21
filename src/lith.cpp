@@ -19,6 +19,7 @@
 
 #include "datamodel.h"
 #include "weechat.h"
+#include "windowhelper.h"
 
 #include <iostream>
 #include <QThread>
@@ -123,12 +124,15 @@ void Lith::networkErrorStringSet(const QString &o) {
 
 Lith::Lith(QObject *parent)
     : QObject(parent)
+    , m_settings(new Settings(this))
+    , m_windowHelper(new WindowHelper(this))
     , m_weechatThread(new QThread(this))
     , m_weechat(new Weechat(this))
     , m_buffers(QmlObjectList::create<Buffer>())
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
     , m_selectedBufferNicks(new NickListFilter(this))
 {
+
     connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::hasPassphraseChanged);
     connect(this, &Lith::selectedBufferChanged, [this](){
         if (selectedBuffer())

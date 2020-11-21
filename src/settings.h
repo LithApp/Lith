@@ -51,6 +51,10 @@ class Settings : public QObject {
     SETTING(int, nickCutoffThreshold, -1)
     SETTING(QString, timestampFormat, "hh:mm:ss")
 
+    SETTING(bool, forceDarkTheme, false)
+    SETTING(bool, forceLightTheme, false)
+    SETTING(bool, useTrueBlackWithDarkTheme, false)
+
     SETTING(bool, showSendButton, false)
     SETTING(bool, showAutocompleteButton, true)
     SETTING(bool, showGalleryButton, true)

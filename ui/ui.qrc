@@ -24,5 +24,7 @@
         <file>style/Switch.qml</file>
         <file>style/TextField.qml</file>
         <file>style/BusyIndicator.qml</file>
+        <file>style/ApplicationWindow.qml</file>
+        <file>style/Popup.qml</file>
     </qresource>
 </RCC>

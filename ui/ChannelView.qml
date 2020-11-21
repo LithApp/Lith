@@ -23,9 +23,6 @@ import lith 1.0
 
 ColumnLayout {
     spacing: 0
-    SystemPalette {
-        id: palette
-    }
 
     property bool inputBarHasFocus: inputBar.hasFocus
     property alias textInput: inputBar.textInput

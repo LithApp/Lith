@@ -8,12 +8,12 @@ HEADERS += \
     src/lith.h \
     src/protocol.h \
     src/qmlobjectlist.h \
-    src/screeninfo.h \
     src/settings.h \
     src/uploader.h \
     src/util/nicklistfilter.h \
     src/weechat.h \
-    src/common.h
+    src/common.h \
+    src/windowhelper.h
 
 SOURCES += \
     src/lith.cpp \
@@ -22,11 +22,11 @@ SOURCES += \
     src/datamodel.cpp \
     src/protocol.cpp \
     src/qmlobjectlist.cpp \
-    src/screeninfo.cpp \
     src/settings.cpp \
     src/uploader.cpp \
     src/util/nicklistfilter.cpp \
-    src/weechat.cpp
+    src/weechat.cpp \
+    src/windowhelper.cpp
 
 
 INCLUDEPATH += \
