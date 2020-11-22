@@ -19,6 +19,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
 Drawer {
+    id: root
     SystemPalette {
         id: palette
     }
@@ -67,6 +68,14 @@ Drawer {
             text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
             font.pointSize: settings.baseFontSize
             color: palette.windowText
+            onLinkActivated: {
+                linkHandler.show(link, this)
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+            }
         }
 
         Label {

@@ -21,6 +21,7 @@ import QtQuick.Controls 2.12
 import lith 1.0
 
 Frame {
+    id: root
     background: Rectangle {
         color: palette.window
         Rectangle {
@@ -41,7 +42,7 @@ Frame {
         Button {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
-            font.pointSize: settings.baseFontSize * 1.25
+            font.pointSize: settings.baseFontSize * 1.375
             icon.source: "qrc:/navigation/"+currentTheme+"/menu.png"
             onClicked: bufferDrawer.visible = !bufferDrawer.visible
         }
@@ -49,7 +50,7 @@ Frame {
             Layout.fillWidth: true
             Layout.fillHeight: true
             spacing: 0
-            Text {
+            Label {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
@@ -57,13 +58,12 @@ Frame {
                 font.bold: true
                 font.pointSize: lith.selectedBuffer && lith.selectedBuffer.title.length > 0 ? settings.baseFontSize * 0.875 :
                                                                                     settings.baseFontSize * 1.125
-                color: palette.windowText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: lith.selectedBuffer ? lith.selectedBuffer.name : ""
                 renderType: Text.NativeRendering
             }
-            Text {
+            Label {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: lith.selectedBuffer && lith.selectedBuffer.title.length > 0
@@ -76,14 +76,21 @@ Frame {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 renderType: Text.NativeRendering
-                color: palette.windowText
+                onLinkActivated: {
+                    linkHandler.show(link, root)
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.NoButton
+                    cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                }
             }
         }
         Item { width: 1 }
         Button {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
-            font.pointSize: settings.baseFontSize * 1.25
+            font.pointSize: settings.baseFontSize * 1.375
             visible: lith.status !== Lith.UNCONFIGURED
             enabled: lith.status === Lith.CONNECTED
             onClicked: nickDrawer.visible = !nickDrawer.visible

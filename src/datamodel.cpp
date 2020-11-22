@@ -102,7 +102,12 @@ QString Buffer::titleGet() const {
 }
 
 void Buffer::titleSet(const QString &o) {
+    QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     auto copy = o;
+    if (re.indexIn(copy) >= 0) {
+        auto url = re.cap();
+        copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
+    }
     if (lith()->windowHelperGet()->darkThemeGet()) {
         for (auto i : darkModeColors.keys()) {
             copy.replace(i, darkModeColors[i]);
