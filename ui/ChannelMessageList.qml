@@ -68,6 +68,21 @@ ListView {
     onContentHeightChanged: fillTopOfList()
     onModelChanged: fillTopOfList()
 
+    Button {
+        anchors {
+            top: parent.top
+            left: parent.left
+            margins: height / 2
+        }
+        width: height
+        flat: false
+        text: "v"
+        opacity: listView.yPosition > 0.0 ? 0.5 : 0.0
+        Behavior on opacity { NumberAnimation { duration: 100 } }
+        rotation: 180
+        onClicked: positionViewAtBeginning()
+    }
+
     Dialog {
         id: linkHandler
         z: 99999999

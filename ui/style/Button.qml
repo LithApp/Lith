@@ -1,7 +1,7 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12 as Controls
+import QtQuick.Templates 2.15 as T
 
-Controls.AbstractButton {
+T.Button {
     id: control
 
     implicitWidth: 100
@@ -9,11 +9,19 @@ Controls.AbstractButton {
 
     font.pointSize: lith.settings.baseFontSize
 
+    flat: true
+
     SystemPalette {
         id: palette
     }
 
     contentItem: Item {
+        Rectangle {
+            anchors.fill: parent
+            color: palette.button
+            radius: 2
+            visible: !control.flat
+        }
         Rectangle {
             anchors.fill: parent
             color: palette.text
