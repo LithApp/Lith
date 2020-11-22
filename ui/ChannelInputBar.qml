@@ -33,8 +33,9 @@ Item {
         width: parent.width
         id: inputBarLayout
 
-        spacing: 0
+        spacing: 3
         Button {
+            id: autocompleteButton
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
             font.pointSize: settings.baseFontSize
@@ -45,15 +46,11 @@ Item {
             }
         }
 
-        Item { width: 3; height: 1 }
-
         ChannelTextInput {
             id: channelTextInput
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
         }
-
-        Item { width: 3; height: 1 }
 
         Button {
             focusPolicy: Qt.NoFocus
@@ -74,8 +71,6 @@ Item {
                 scale: 0.7
             }
         }
-
-        Item { width: 1; height: 1 }
 
         Button {
             focusPolicy: Qt.NoFocus
