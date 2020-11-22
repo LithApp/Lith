@@ -76,7 +76,7 @@ ListView {
         }
         width: height
         flat: false
-        text: "v"
+        icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
         opacity: listView.yPosition > 0.0 ? 0.5 : 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }
         rotation: 180

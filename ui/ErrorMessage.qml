@@ -51,7 +51,7 @@ Rectangle {
             elide: Text.ElideRight
         }
         Button {
-            text: "x"
+            icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
             Layout.preferredWidth: 28
             Layout.preferredHeight: 36
             onClicked: lith.errorString = ""

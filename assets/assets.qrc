@@ -3,9 +3,11 @@
         <file>icon.png</file>
         <file>fonts/Inconsolata-Variable.ttf</file>
         <file>navigation/dark/album-folder.png</file>
+        <file>navigation/dark/close.png</file>
         <file>navigation/dark/cogwheel.png</file>
         <file>navigation/dark/copy.png</file>
         <file>navigation/dark/dizzy.png</file>
+        <file>navigation/dark/down-arrow.png</file>
         <file>navigation/dark/download.png</file>
         <file>navigation/dark/download-rotated.png</file>
         <file>navigation/dark/ellipsis.png</file>
@@ -31,9 +33,11 @@
         <file>navigation/dark/transfer.png</file>
         <file>navigation/dark/volume.png</file>
         <file>navigation/light/album-folder.png</file>
+        <file>navigation/light/close.png</file>
         <file>navigation/light/cogwheel.png</file>
         <file>navigation/light/copy.png</file>
         <file>navigation/light/dizzy.png</file>
+        <file>navigation/light/down-arrow.png</file>
         <file>navigation/light/download.png</file>
         <file>navigation/light/download-rotated.png</file>
         <file>navigation/light/ellipsis.png</file>
