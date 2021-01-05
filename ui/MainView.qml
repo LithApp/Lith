@@ -70,7 +70,7 @@ Item {
     BufferList {
         id: bufferDrawer
         leftPadding: root.leftMargin
-        y: root.y
+        y: position > 0 ? root.y : root.y + 80
         width: 0.66 * root.width + root.leftMargin
         height: root.height
     }
