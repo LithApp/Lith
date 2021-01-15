@@ -24,8 +24,8 @@ Rectangle {
     width: parent.width
     //visible: height != 0
     gradient: Gradient {
-        GradientStop { position: 0.0; color: "dark red" }
-        GradientStop { position: 0.22; color: "red" }
+        GradientStop { position: 0.0; color: lith.windowHelper.darkTheme ? "#881111" : "#bb2222" }
+        GradientStop { position: 0.22; color: lith.windowHelper.darkTheme ? "#aa1111" : "#dd3333" }
     }
     Behavior on height {
         NumberAnimation {
@@ -49,11 +49,12 @@ Rectangle {
             id: errorText
             text: lith.errorString
             elide: Text.ElideRight
+            color: palette.text
         }
         Button {
             icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
             Layout.preferredWidth: 28
-            Layout.preferredHeight: 36
+            Layout.preferredHeight: 28
             onClicked: lith.errorString = ""
         }
     }
