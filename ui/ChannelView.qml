@@ -36,9 +36,7 @@ ColumnLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
         visible: !lith.selectedBuffer
-        text: qsTr("Welcome to Lith") + "<br>" +
-              qsTr("Weechat status:") + " " + lith.status + "<br>" +
-              qsTr("Current error status:") + " " + (lith.errorString.length > 0 ? lith.errorString : qsTr("None")) + "<br>"
+        text: ""
         onLinkActivated: {
             Qt.openUrlExternally(link)
         }

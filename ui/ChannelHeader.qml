@@ -60,16 +60,22 @@ Frame {
                                                                                     settings.baseFontSize * 1.125
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: lith.selectedBuffer ? lith.selectedBuffer.name : ""
+                text: lith.selectedBuffer ? lith.selectedBuffer.name : "Lith"
                 renderType: Text.NativeRendering
             }
             Label {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: lith.selectedBuffer && lith.selectedBuffer.title.length > 0
+                visible: !lith.selectedBuffer || lith.selectedBuffer.title.length > 0
                 clip: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
+                text: lith.selectedBuffer ? lith.selectedBuffer.title :
+                      lith.status === Lith.UNCONFIGURED ? "Not configured" :
+                      lith.status === Lith.CONNECTING ? "Connecting" :
+                      lith.status === Lith.CONNECTED ? "Connected" :
+                      lith.status === Lith.DISCONNECTED ? "Disconnected" :
+                      lith.status === Lith.ERROR ? "Error: " + lith.errorString :
+                                                   ""
                 elide: Text.ElideRight
                 maximumLineCount: 2
                 font.pointSize: settings.baseFontSize * 0.75
