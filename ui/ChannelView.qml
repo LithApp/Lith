@@ -26,47 +26,52 @@ ColumnLayout {
 
     property bool inputBarHasFocus: inputBar.hasFocus
     property alias textInput: inputBar.textInput
+    property alias messageArea: messageArea
 
     ChannelHeader {
         id: channelHeader
         Layout.fillWidth: true
     }
 
-    Label {
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        visible: !lith.selectedBuffer
-        text: ""
-        onLinkActivated: {
-            Qt.openUrlExternally(link)
-        }
-        textFormat: Text.RichText
-        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-    }
-    Label {
-        visible: !lith.selectedBuffer
-        Layout.fillWidth: true
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        onLinkActivated: {
-            Qt.openUrlExternally(link)
-        }
-        textFormat: Text.RichText
-        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-        text: qsTr("Icons made by <a href=\"https://www.flaticon.com/authors/pixel-perfect\" title=\"Pixel perfect\">Pixel perfect</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a>")
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton
-            cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
-        }
-    }
-
     Item {
-        Layout.fillWidth: true
+        id: messageArea
         Layout.fillHeight: true
+        Layout.fillWidth: true
         clip: true
+
+        ColumnLayout {
+            visible: !lith.selectedBuffer
+            anchors.fill: parent
+            Label {
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                text: ""
+                onLinkActivated: {
+                    Qt.openUrlExternally(link)
+                }
+                textFormat: Text.RichText
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+            Label {
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                onLinkActivated: {
+                    Qt.openUrlExternally(link)
+                }
+                textFormat: Text.RichText
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                text: qsTr("Icons made by <a href=\"https://www.flaticon.com/authors/pixel-perfect\" title=\"Pixel perfect\">Pixel perfect</a> from <a href=\"https://www.flaticon.com/\" title=\"Flaticon\"> www.flaticon.com</a>")
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.NoButton
+                    cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                }
+            }
+        }
+
         ChannelMessageList {
             id: channelMessageList
             width: parent.width

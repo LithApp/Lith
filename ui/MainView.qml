@@ -70,18 +70,22 @@ Item {
     BufferList {
         id: bufferDrawer
         leftPadding: root.leftMargin
-        y: position > 0 ? root.y : root.y + 80
+        property bool isClosed: position === 0.0
+        dragMargin: 64
+        y: isClosed ? root.y + channelView.messageArea.y : root.y
+        height: isClosed ? channelView.messageArea.height : root.height
         width: 0.66 * root.width + root.leftMargin
-        height: root.height
     }
 
     NickList {
         id: nickDrawer
         edge: Qt.RightEdge
         rightPadding: root.rightMargin
-        y: root.y
+        property bool isClosed: position === 0.0
+        dragMargin: 64
+        y: isClosed ? root.y + channelView.messageArea.y : root.y
+        height: isClosed ? channelView.messageArea.height : root.height
         width: 0.66 * root.width + root.rightMargin
-        height: root.height
     }
 
     NickListActionMenu {

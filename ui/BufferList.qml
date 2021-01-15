@@ -21,7 +21,6 @@ import QtQuick.Layouts 1.3
 
 Drawer {
     id: root
-    dragMargin: 64
 
     onVisibleChanged: {
         bufferList.currentIndex = lith.selectedBufferIndex
