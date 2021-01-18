@@ -102,11 +102,19 @@ QString Buffer::titleGet() const {
 }
 
 void Buffer::titleSet(const QString &o) {
-    QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+    QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
     auto copy = o;
-    if (re.indexIn(copy) >= 0) {
-        auto url = re.cap();
-        copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
+    auto reIt = re.globalMatch(copy, 0, QRegularExpression::PartialPreferFirstMatch);
+    QSet<QString> urls;
+    // first generate a set of all URLs (handling duplicate URLs in this loop results in broken <a> tags)
+    while (reIt.hasNext()) {
+        auto reMatch = reIt.next();
+        auto url = reMatch.captured();
+        urls.insert(url);
+    }
+    // then replace all of them with actual links
+    for (auto &url : urls) {
+        copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
     }
     if (lith()->windowHelperGet()->darkThemeGet()) {
         for (auto i : darkModeColors.keys()) {
@@ -374,11 +382,19 @@ QString BufferLine::messageGet() const {
 void BufferLine::messageSet(const QString &o) {
     // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     // ; was added to handle &amp; escapes right
-    QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+    QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
     auto copy = o;
-    if (re.indexIn(copy) >= 0) {
-        auto url = re.cap();
-        copy.replace(re, "<a href=\""+url+"\">"+url+"</a>");
+    auto reIt = re.globalMatch(copy, 0, QRegularExpression::PartialPreferFirstMatch);
+    QSet<QString> urls;
+    // first generate a set of all URLs (handling duplicate URLs in this loop results in broken <a> tags)
+    while (reIt.hasNext()) {
+        auto reMatch = reIt.next();
+        auto url = reMatch.captured();
+        urls.insert(url);
+    }
+    // then replace all of them with actual links
+    for (auto &url : urls) {
+        copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
     }
     if (lith() && lith()->windowHelperGet()->darkThemeGet()) {
         for (auto i : darkModeColors.keys()) {
