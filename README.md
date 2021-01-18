@@ -56,3 +56,11 @@ qmake ..
 make # nmake on Windows
 ```
 Alternatively, you can just open the project file in Qt Creator.
+
+## Get in touch
+
+For bug reports and questions, feel free to use the Issues page here on GitHub.
+
+There's also an IRC channel: `#lith` on Freenode
+
+You can contact me directly on `m@rtinbriza.cz`
