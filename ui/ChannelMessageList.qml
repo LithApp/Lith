@@ -20,6 +20,13 @@ import QtQuick.Layouts 1.12
 
 ListView {
     id: listView
+
+    // ugh, this is an ugly hack to fix the button under the Drawer drag area
+    // Qt doesn't seem to care about this https://bugreports.qt.io/browse/QTBUG-59141
+    // note the whole widget is rotated by 180 degress so it has to be subtracted from the height
+    property real scrollToBottomButtonPosition: scrollToBottomButton.visible ? height - scrollToBottomButton.y - scrollToBottomButton.height
+                                                                             : height
+
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
@@ -69,6 +76,7 @@ ListView {
     onModelChanged: fillTopOfList()
 
     Button {
+        id: scrollToBottomButton
         anchors {
             top: parent.top
             left: parent.left
@@ -78,6 +86,7 @@ ListView {
         flat: false
         icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
         opacity: listView.yPosition > 0.0 ? 0.5 : 0.0
+        visible: opacity > 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }
         rotation: 180
         onClicked: positionViewAtBeginning()

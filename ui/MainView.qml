@@ -84,7 +84,7 @@ Item {
         property bool isClosed: position === 0.0
         dragMargin: 64
         y: isClosed ? root.y + channelView.messageArea.y : root.y
-        height: isClosed ? channelView.messageArea.height : root.height
+        height: isClosed ? channelView.scrollToBottomButtonPosition : root.height
         width: 0.66 * root.width + root.rightMargin
     }
 
