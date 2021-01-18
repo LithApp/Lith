@@ -26,15 +26,19 @@ Lith currently supports the following platforms:
 
 - Inline preview of images and videos
 - Fast buffer list filtering
+- Dark and light mode support
+- Native local notifications on desktop platforms
 
 ## Limitations
 
 - Handshake protocol (introduced in WeeChat 2.9) support is missing
 - Data compression support is missing
 - Message text is not selectable
+- Keyboard shortcuts can only be tweaked by editing the config file
 - Android: Builds are not signed
 - macOS: Builds are not signed + Some keyboard shortcuts are broken
 - Windows: Builds are not signed + There is no installer
+- More: https://github.com/LithApp/Lith/issues
 
 ## Future plans
 
