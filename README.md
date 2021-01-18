@@ -10,8 +10,7 @@ Lith is a project mostly focused on bringing a fast and user-friendly WeeChat cl
 Lith is supposed to be run in addition to an existing WeeChat instance. In case you're planning to run Lith on your desktop-type device, WeeChat can be running locally and in case of both of mobile and desktop systems, WeeChat can be connected to over the network. In this case, it's necessary for WeeChat server to be directly reachable from your Lith device directly over the network.
 
 Setup is necessary on the WeeChat side, please consult the following sources:
- - [WeeChat official documentation](https://weechat.org/files/doc/stable/weechat_user.en.html#relay_plugin)
- - [A simplified guide with just the necessary commands](https://gist.github.com/miblodelcarpio/20da48bcdfb55c0860c44fd42d1b9647)
+ - [WeeChat official user documentation](https://weechat.org/files/doc/stable/weechat_user.en.html#relay_plugin)
 
 ### Binary Packages
 
