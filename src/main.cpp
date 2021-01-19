@@ -44,15 +44,16 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle(":/style");
 
     QApplication app(argc, argv);
-#ifdef WIN32
+
+#if defined(Q_OS_IOS) || defined(Q_OS_MACOS)
+    QFont font("Menlo");
+#else
     QFontDatabase fdb;
     fdb.addApplicationFont(":/fonts/Inconsolata-Variable.ttf");
     QFont font("Inconsolata");
     font.setKerning(false);
     font.setHintingPreference(QFont::PreferNoHinting);
     font.setStyleHint(QFont::Monospace);
-#else
-    QFont font("Menlo");
 #endif
     app.setFont(font);
     app.setFont(font, "monospace");
