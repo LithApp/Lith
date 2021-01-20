@@ -33,6 +33,9 @@ public:
     Weechat(Lith *lith = nullptr);
     Lith *lith();
 
+    static QByteArray hashPassword(const QString &password, const QString &algo, const QByteArray &salt, int iterations);
+    static QByteArray randomString(int length);
+
 public slots:
     void init();
 
@@ -49,6 +52,8 @@ private slots:
     void onTimeout();
 
     void onConnectionSettingsChanged();
+    
+    void onHandshakeAccepted(const StringMap &data);
 
     void onConnected();
     void onDisconnected();
@@ -59,6 +64,7 @@ private slots:
 private:
     struct MessageNames {
         // these names actually correspond to slot names in Lith
+        inline static const QString c_handshake { "handleHandshake" };
         inline static const QString c_requestBuffers { "handleBufferInitialization" };
         inline static const QString c_requestFirstLine { "handleFirstReceivedLine" };
         inline static const QString c_requestHotlist { "handleHotlistInitialization" };
@@ -66,13 +72,15 @@ private:
     };
     enum Initialization {
         UNINITIALIZED = 0,
-        REQUEST_BUFFERS = 1 << 0,
-        REQUEST_FIRST_LINE = 1 << 1,
-        REQUEST_HOTLIST = 1 << 2,
-        REQUEST_NICKLIST = 1 << 3,
-        COMPLETE = REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST
+        HANDSHAKE = 1 << 0,
+        REQUEST_BUFFERS = 1 << 1,
+        REQUEST_FIRST_LINE = 1 << 2,
+        REQUEST_HOTLIST = 1 << 3,
+        REQUEST_NICKLIST = 1 << 4,
+        COMPLETE = HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST
     } m_initializationStatus { UNINITIALIZED };
     inline static const QMap<QString, Initialization> c_initializationMap {
+        { MessageNames::c_handshake, HANDSHAKE },
         { MessageNames::c_requestBuffers, REQUEST_BUFFERS },
         { MessageNames::c_requestFirstLine, REQUEST_FIRST_LINE },
         { MessageNames::c_requestHotlist, REQUEST_HOTLIST },

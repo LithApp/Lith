@@ -22,6 +22,10 @@
 
 #include <QThread>
 
+#include <QPasswordDigestor>
+#include <QCryptographicHash>
+#include <QRandomGenerator>
+
 Weechat::Weechat(Lith *lith)
     : QObject(nullptr)
     , m_lith(lith)
@@ -30,6 +34,48 @@ Weechat::Weechat(Lith *lith)
 
 Lith *Weechat::lith() {
     return m_lith;
+}
+
+const QStringList supportedHashAlgos {
+    "plain",
+    "sha256",
+    "sha512",
+    "pbkdf2+sha256",
+    "pbkdf2+sha512"
+};
+QByteArray Weechat::hashPassword(const QString &password, const QString &algo, const QByteArray &salt, int iterations) {
+    if (algo == "plain") {
+        return password.toUtf8();
+    }
+    else if (algo == "sha256") {
+        QCryptographicHash qch(QCryptographicHash::Sha256);
+        qch.addData(salt);
+        qch.addData(password.toUtf8());
+        return qch.result();
+    }
+    else if (algo == "sha512") {
+        QCryptographicHash qch(QCryptographicHash::Sha512);
+        qch.addData(salt);
+        qch.addData(password.toUtf8());
+        return qch.result();
+    }
+    else if (algo == "pbkdf2+sha256") {
+        return QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha256, password.toUtf8(), salt, iterations, 32);
+    }
+    else if (algo == "pbkdf2+sha512") {
+        return QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha512, password.toUtf8(), salt, iterations, 64);
+    }
+    return {};
+}
+
+QByteArray Weechat::randomString(int length) {
+    QByteArray alphabet { "0123456789ABCDEF"};
+    QByteArray result;
+    auto rg = QRandomGenerator::securelySeeded();
+    for (int i = 0; i < length; i++) {
+        result += alphabet[rg.bounded(0, alphabet.count())];
+    }
+    return result;
 }
 
 void Weechat::init() {
@@ -101,6 +147,34 @@ void Weechat::onConnectionSettingsChanged() {
     }
 }
 
+void Weechat::onHandshakeAccepted(const StringMap &data) {
+    auto algo = data["password_hash_algo"];
+    auto iterations = data["password_hash_iterations"].toInt();
+    auto serverNonce = QByteArray::fromHex(data["nonce"].toLocal8Bit());
+    auto clientNonce = QByteArray::fromHex(randomString(16));
+    auto pass = lith()->settingsGet()->passphraseGet();
+
+    auto salt = serverNonce + clientNonce;
+    auto hash = hashPassword(pass, algo, salt, iterations);
+
+    QString hashString;
+    if (algo == "plain")
+        hashString = "password=" + pass + ",compression=off";
+    else if (algo.startsWith("pbkdf2"))
+        hashString = "password_hash=" + algo + ':' + salt.toHex() + ':' + QString("%1").arg(iterations) + ':' + hash.toHex();
+    else
+        hashString = "password_hash=" + algo + ':' + salt.toHex() + ':' + hash.toHex();
+
+    m_initializationStatus = (Initialization) (m_initializationStatus | HANDSHAKE);
+
+    m_connection->write(("init " + hashString + "\n").toUtf8());
+    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables\n").arg(MessageNames::c_requestBuffers).toUtf8());
+    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n").arg(MessageNames::c_requestFirstLine).toUtf8());
+    m_connection->write(QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(MessageNames::c_requestHotlist).toUtf8());
+    m_connection->write("sync\n");
+    m_connection->write(QString("(%1) nicklist\n").arg(MessageNames::c_requestNicklist).toUtf8());
+}
+
 void Weechat::requestHotlist() {
     if (m_connection) {
         auto msg = QString("(handleHotlist;%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
@@ -152,6 +226,7 @@ void Weechat::onReadyRead() {
     // one message has been received in full, process it
     if (m_bytesRemaining == 0) {
         if (compressed) {
+            lith()->networkErrorStringSet("Compression is not supported yet");
             // TODO
         }
         guard = true;
@@ -172,13 +247,21 @@ void Weechat::onConnected() {
     lith()->networkErrorStringSet(QString());
 
     lith()->statusSet(Lith::CONNECTED);
-    auto pass = lith()->settingsGet()->passphraseGet();
-    m_connection->write(("init password=" + pass + ",compression=off\n").toUtf8());
-    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables\n").arg(MessageNames::c_requestBuffers).toUtf8());
-    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n").arg(MessageNames::c_requestFirstLine).toUtf8());
-    m_connection->write(QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(MessageNames::c_requestHotlist).toUtf8());
-    m_connection->write("sync\n");
-    m_connection->write(QString("(%1) nicklist\n").arg(MessageNames::c_requestNicklist).toUtf8());
+    QString hashAlgos;
+    for (auto &i : supportedHashAlgos) {
+        if (!hashAlgos.isEmpty())
+            hashAlgos.append(":");
+        hashAlgos.append(i);
+    }
+
+    if (lith()->settingsGet()->handshakeAuthGet()) {
+        m_connection->write(QString("(%1) handshake password_hash_algo=%2,compression=off\n").arg(MessageNames::c_handshake).arg(hashAlgos).toUtf8());
+    }
+    else {
+        StringMap data;
+        data["password_hash_algo"] = "plain";
+        onHandshakeAccepted(data);
+    }
 
     m_hotlistTimer->start();
 }
@@ -262,6 +345,12 @@ void Weechat::onMessageReceived(QByteArray &data) {
                 delete hda;
             }
         }
+    }
+    else if (QString(type) == "htb") {
+        Protocol::HashTable htb;
+        Protocol::parse(s, htb);
+
+        onHandshakeAccepted(htb.d);
     }
     else {
         qCritical() << "onMessageReceived is not handling type: " << type;

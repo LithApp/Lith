@@ -34,12 +34,14 @@ ScrollView {
         if (newPassphrase.length > 0)
             settings.passphrase = newPassphrase
         newPassphrase = ""
+        settings.handshakeAuth = handshakeAuthCheckbox.checked
     }
     function onRejected() {
         hostField.text = settings.host
         portField.text = settings.port
         encryptedCheckbox.checked = settings.encrypted
         passphraseField.text = ""
+        handshakeAuthCheckbox.checked = settings.handshakeAuth
     }
 
     ColumnLayout {
@@ -86,6 +88,21 @@ ScrollView {
                 placeholderText: lith.hasPassphrase ? "**********" : ""
                 echoMode: TextInput.Password
                 passwordCharacter: "*"
+            }
+            ColumnLayout {
+                spacing: 0
+                Label {
+                    text: "Use Handshake"
+                }
+                Label {
+                    text: "(More secure, available since WeeChat 2.9)"
+                    font.pointSize: settings.baseFontSize * 0.75
+                }
+            }
+            CheckBox {
+                id: handshakeAuthCheckbox
+                checked: settings.handshakeAuth
+                Layout.alignment: Qt.AlignLeft
             }
         }
         Item {
