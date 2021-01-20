@@ -159,7 +159,7 @@ void Weechat::onHandshakeAccepted(const StringMap &data) {
 
     QString hashString;
     if (algo == "plain")
-        hashString = "password=" + pass + ",compression=off";
+        hashString = "password=" + pass + ",compression=" + (lith()->settingsGet()->connectionCompressionGet() ? "zlib" : "off");
     else if (algo.startsWith("pbkdf2"))
         hashString = "password_hash=" + algo + ':' + salt.toHex() + ':' + QString("%1").arg(iterations) + ':' + hash.toHex();
     else
@@ -214,6 +214,10 @@ void Weechat::onReadyRead() {
         }
         m_bytesRemaining -= 5;
         m_fetchBuffer.clear();
+        // add a header to the data if compressed, containing the expected length of the data
+        // Qt doesn't seem to care if it's correct so just put 0 in there
+        if (compressed)
+            m_fetchBuffer.append(4, 0);
     }
 
     // continue in whatever message came before (be it from a previous readyRead or this one
@@ -226,8 +230,7 @@ void Weechat::onReadyRead() {
     // one message has been received in full, process it
     if (m_bytesRemaining == 0) {
         if (compressed) {
-            lith()->networkErrorStringSet("Compression is not supported yet");
-            // TODO
+            m_fetchBuffer = qUncompress(m_fetchBuffer);
         }
         guard = true;
         onMessageReceived(m_fetchBuffer);
@@ -255,7 +258,7 @@ void Weechat::onConnected() {
     }
 
     if (lith()->settingsGet()->handshakeAuthGet()) {
-        m_connection->write(QString("(%1) handshake password_hash_algo=%2,compression=off\n").arg(MessageNames::c_handshake).arg(hashAlgos).toUtf8());
+        m_connection->write(QString("(%1) handshake password_hash_algo=%2,compression=%3\n").arg(MessageNames::c_handshake).arg(hashAlgos).arg(lith()->settingsGet()->connectionCompressionGet() ? "zlib" : "off").toUtf8());
     }
     else {
         StringMap data;

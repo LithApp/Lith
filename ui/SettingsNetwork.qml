@@ -35,6 +35,7 @@ ScrollView {
             settings.passphrase = newPassphrase
         newPassphrase = ""
         settings.handshakeAuth = handshakeAuthCheckbox.checked
+        settings.connectionCompression = connectionCompressionCheckbox.checked
     }
     function onRejected() {
         hostField.text = settings.host
@@ -42,6 +43,7 @@ ScrollView {
         encryptedCheckbox.checked = settings.encrypted
         passphraseField.text = ""
         handshakeAuthCheckbox.checked = settings.handshakeAuth
+        connectionCompressionCheckbox.checked = settings.connectionCompression
     }
 
     ColumnLayout {
@@ -102,6 +104,14 @@ ScrollView {
             CheckBox {
                 id: handshakeAuthCheckbox
                 checked: settings.handshakeAuth
+                Layout.alignment: Qt.AlignLeft
+            }
+            Label {
+                text: "Use WeeChat compression"
+            }
+            CheckBox {
+                id: connectionCompressionCheckbox
+                checked: settings.connectionCompression
                 Layout.alignment: Qt.AlignLeft
             }
         }

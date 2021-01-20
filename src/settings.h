@@ -70,6 +70,7 @@ class Settings : public QObject {
     SETTING(bool, encrypted, true)
     SETTING(QString, passphrase)
     SETTING(bool, handshakeAuth, false)
+    SETTING(bool, connectionCompression, true)
 
     SETTING(bool, enableReadlineShortcuts, true)
     SETTING(QStringList, shortcutSearchBuffer, {"Alt+G"})
