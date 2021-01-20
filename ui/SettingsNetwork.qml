@@ -24,24 +24,20 @@ ScrollView {
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     function onAccepted() {
-        var newHost = hostField.text
-        var newPort = portField.text
-        var newEncrypted = encryptedCheckbox.checked
         var newPassphrase = passphraseField.text
-        settings.host = newHost
-        settings.port = newPort
-        settings.encrypted = newEncrypted
         if (newPassphrase.length > 0)
             settings.passphrase = newPassphrase
-        newPassphrase = ""
+        settings.host = hostField.text
+        settings.port = portField.text
+        settings.encrypted = encryptedCheckbox.checked
         settings.handshakeAuth = handshakeAuthCheckbox.checked
         settings.connectionCompression = connectionCompressionCheckbox.checked
     }
     function onRejected() {
+        passphraseField.text = ""
         hostField.text = settings.host
         portField.text = settings.port
         encryptedCheckbox.checked = settings.encrypted
-        passphraseField.text = ""
         handshakeAuthCheckbox.checked = settings.handshakeAuth
         connectionCompressionCheckbox.checked = settings.connectionCompression
     }

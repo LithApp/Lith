@@ -104,6 +104,7 @@ void Weechat::start() {
         m_connection->deleteLater();
         m_connection = nullptr;
     }
+    m_restarting = false;
     qCritical() << "Connecting";
 
     lith()->statusSet(Lith::CONNECTING);
@@ -143,11 +144,16 @@ void Weechat::onConnectionSettingsChanged() {
             m_connection->deleteLater();
             m_connection = nullptr;
         }
-        QTimer::singleShot(0, this, &Weechat::start);
+        if (!m_restarting)
+            QTimer::singleShot(50, this, &Weechat::start);
+        m_restarting = true;
     }
 }
 
 void Weechat::onHandshakeAccepted(const StringMap &data) {
+    if (!m_connection)
+        return;
+
     auto algo = data["password_hash_algo"];
     auto iterations = data["password_hash_iterations"].toInt();
     auto serverNonce = QByteArray::fromHex(data["nonce"].toLocal8Bit());

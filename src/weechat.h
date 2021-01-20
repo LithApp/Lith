@@ -88,6 +88,7 @@ private:
     };
 
     QSslSocket *m_connection { nullptr };
+    bool m_restarting { false };
 
     QByteArray m_fetchBuffer;
     int32_t m_bytesRemaining { 0 };
