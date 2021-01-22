@@ -22,6 +22,8 @@
 #include "lith.h"
 #include "windowhelper.h"
 
+#include "iostextinput.h"
+
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -65,6 +67,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<StringMap>();
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
+    qmlRegisterType<NativeTextInput>("lith", 1, 0, "NativeTextInput");
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
     qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");

@@ -20,19 +20,25 @@ import QtQuick.Controls 2.12
 
 import lith 1.0
 
-TextField {
+NativeTextInput {
     id: inputField
     clip: true
-    font.pointSize: settings.baseFontSize
+    //font.pointSize: settings.baseFontSize
     verticalAlignment: TextField.AlignVCenter
     focus: true
-    inputMethodHints: Qt.ImhMultiLine
-    renderType: TextInput.NativeRendering
+
+    fontName: "Menlo"
+    fontPointSize: lith.settings.baseFontSize
+    height: 40
+    text: "This is a test"
+    //inputMethodHints: Qt.ImhMultiLine
+    //renderType: TextInput.NativeRendering
 
     color: palette.text
 
     property alias inputFieldAlias: inputField
 
+    /*
     onAccepted: {
         if (text.length > 0) {
             if (lith.selectedBuffer.input(text)) {
@@ -40,6 +46,7 @@ TextField {
             }
         }
     }
+    */
 
     Connections {
         target: lith

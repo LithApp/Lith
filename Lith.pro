@@ -77,9 +77,11 @@ win32 {
 
 ios {
     OBJECTIVE_HEADERS += \
-    src/iosclipboard.h
+    src/iosclipboard.h \
+    src/iostextinput.h
     OBJECTIVE_SOURCES += \
-    src/iosclipboard.mm
+    src/iosclipboard.mm \
+    src/iostextinput.mm
 
     QMAKE_LFLAGS += -F/System/Library/Frameworks
     LIBS += -framework Foundation
@@ -101,4 +103,5 @@ ios: {
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = $${PREFIX}/bin
 !isEmpty(target.path): INSTALLS += target
+
 
