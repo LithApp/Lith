@@ -79,11 +79,16 @@ ios {
     OBJECTIVE_HEADERS += \
     src/iosclipboard.h
     OBJECTIVE_SOURCES += \
-    src/iosclipboard.mm
+    src/iosclipboard.mm \
+    src/iosnotifications.mm
 
     QMAKE_LFLAGS += -F/System/Library/Frameworks
     LIBS += -framework Foundation
     LIBS += -framework UIKit
+
+    MY_ENTITLEMENTS.name = CODE_SIGN_ENTITLEMENTS
+    MY_ENTITLEMENTS.value = $$PWD/dist/ios/notifications.entitlements
+    QMAKE_MAC_XCODE_SETTINGS += MY_ENTITLEMENTS
 }
 
 

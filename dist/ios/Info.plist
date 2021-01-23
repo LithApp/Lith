@@ -30,6 +30,10 @@
 	<string>Used to upload photos to the chat</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to upload photos to the chat</string>
+        <key>UIBackgroundModes</key>
+            <array>
+                <string>remote-notification</string>
+            </array>
 	<key>UILaunchStoryboardName</key>
         <string>LaunchScreen</string>
         <key>ITSAppUsesNonExemptEncryption</key>
