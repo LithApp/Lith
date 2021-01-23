@@ -15,6 +15,7 @@ class NativeTextInput : public QQuickItem
     Q_PROPERTY(float fontPointSize READ fontPointSize WRITE setFontPointSize NOTIFY fontChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
+    Q_PROPERTY(float keyboardHeight READ keyboardHeight NOTIFY keyboardDidShow)
 
     Q_PROPERTY(QColor iOSTintColor READ tintColor WRITE setTintColor NOTIFY tintColorChanged)
 
@@ -44,6 +45,7 @@ public:
     QColor color();
     QColor tintColor();
     QString text();
+    float keyboardHeight();
 
     HAlignment horizontalAlignment();
     VAlignment verticalAlignment();
@@ -61,11 +63,14 @@ signals:
     void textChanged();
     void colorChanged();
     void tintColorChanged();
+    void keyboardDidShow();
+    void accepted();
 
     void horizontalAlignmentChanged();
     void verticalAlignmentChanged();
 
 public slots:
+    void onKeyboardDidShow(const QRectF &r);
 
 protected slots:
     void initTextInput();

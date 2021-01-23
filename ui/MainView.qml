@@ -31,7 +31,7 @@ Item {
         return 0
     }
     property real bottomMargin:{
-        return 300
+        return channelView.textInput.keyboardHeight
         if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
             if (!channelView.inputBarHasFocus) {
                 if (Qt.platform.os === "ios") {

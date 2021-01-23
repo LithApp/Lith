@@ -27,10 +27,8 @@ NativeTextInput {
     verticalAlignment: TextField.AlignVCenter
     focus: true
 
-    fontName: "Menlo"
+    onKeyboardHeightChanged: console.log("HEIGHT: " + keyboardHeight)
     fontPointSize: lith.settings.baseFontSize
-    height: 40
-    text: "This is a test"
     //inputMethodHints: Qt.ImhMultiLine
     //renderType: TextInput.NativeRendering
 
@@ -38,7 +36,6 @@ NativeTextInput {
 
     property alias inputFieldAlias: inputField
 
-    /*
     onAccepted: {
         if (text.length > 0) {
             if (lith.selectedBuffer.input(text)) {
@@ -46,7 +43,6 @@ NativeTextInput {
             }
         }
     }
-    */
 
     Connections {
         target: lith

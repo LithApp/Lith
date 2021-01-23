@@ -13,6 +13,8 @@
 
 - (id) initWithTextInput: (NativeTextInput*) textInput;
 - (void) onTextChange;
+- (void) onKeyboardDidShowNotification: (NSNotification*)notification;
+- (void) onKeyboardDidHideNotification: (NSNotification*)notification;
 
 - (BOOL) textField: (UITextField*) textField
          shouldChangeCharactersInRange:(NSRange) range
@@ -41,6 +43,32 @@
 - (void) onTextChange
 {
     m_inputWrapper->textChanged();
+}
+
+- (void) onKeyboardDidShowNotification: (NSNotification*)notification
+{
+    QRectF r;
+
+    NSDictionary* keyboardInfo = [notification userInfo];
+    NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardFrameBeginRect = [keyboardFrameBegin CGRectValue];
+    UIView *view = static_cast<UIView *>(
+                        QGuiApplication::platformNativeInterface()
+                        ->nativeResourceForWindow("uiview", m_inputWrapper->window()));
+    CGRect keyboardFrameFixed = [view convertRect:keyboardFrameBeginRect fromView:view.window];
+
+    r.setTopLeft(QPointF(keyboardFrameFixed.origin.x, keyboardFrameFixed.origin.y));
+    r.setHeight(keyboardFrameFixed.size.height);
+    r.setWidth(keyboardFrameFixed.size.width);
+
+    m_inputWrapper->onKeyboardDidShow(r);
+}
+
+- (void) onKeyboardDidHideNotification: (NSNotification*)notification
+{
+    QRectF r;
+
+    m_inputWrapper->onKeyboardDidShow(r);
 }
 
 - (BOOL) textField: (UITextField*) textField
@@ -85,8 +113,8 @@
 
 - (BOOL) textFieldShouldReturn: (UITextField*) textField
 {
-    qApp->inputMethod()->hide();
-    [textField resignFirstResponder];
+    //[textField resignFirstResponder];
+    m_inputWrapper->accepted();
     return YES;
 }
 
@@ -104,6 +132,7 @@ void logViewHierarchy(UIView* view)
 struct NativeTextInputPrivate {
     UITextField* textInput;
     TextInputDelegate* delegate;
+    QRectF keyboardRect { 0, 0, 0, 0 };
 };
 
 NativeTextInput::NativeTextInput(QQuickItem *parent)
@@ -115,6 +144,7 @@ NativeTextInput::NativeTextInput(QQuickItem *parent)
 
     m_data->textInput = [[UITextField alloc] initWithFrame: CGRectMake(0, 0, 1, 1)];
     [m_data->textInput setReturnKeyType:UIReturnKeyDone];
+    //[m_data->textInput setUserInteractionEnabled:false];
 
     m_data->delegate = [[TextInputDelegate alloc] initWithTextInput: this];
     [m_data->textInput addTarget: m_data->delegate
@@ -122,7 +152,21 @@ NativeTextInput::NativeTextInput(QQuickItem *parent)
                        forControlEvents: UIControlEventEditingChanged];
     m_data->textInput.delegate = m_data->delegate;
 
-    m_data->textInput.text = QString("Hello NSWorld!").toNSString();
+    [[NSNotificationCenter defaultCenter] addObserver:m_data->delegate
+                        selector:@selector(onKeyboardDidShowNotification:)
+                        name:UIKeyboardWillChangeFrameNotification
+                        object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:m_data->delegate
+                        selector:@selector(onKeyboardDidHideNotification:)
+                        name:UIKeyboardWillHideNotification
+                        object:nil];
+
+    [m_data->textInput becomeFirstResponder];
+
+    m_data->textInput.text = QString("").toNSString();
+
+    setFontName("Menlo");
+    setHeight(40);
 
     if (window() && window()->openglContext())
         initTextInput();
@@ -161,6 +205,11 @@ void NativeTextInput::setFontPointSize(float pointSize)
 {
     m_data->textInput.font = [m_data->textInput.font fontWithSize: pointSize];
     emit fontChanged();
+}
+
+void NativeTextInput::onKeyboardDidShow(const QRectF &r) {
+    m_data->keyboardRect = r;
+    emit keyboardDidShow();
 }
 
 QColor NativeTextInput::color()
@@ -204,6 +253,10 @@ void NativeTextInput::setTintColor(QColor color)
 QString NativeTextInput::text()
 {
     return QString::fromNSString(m_data->textInput.text);
+}
+
+float NativeTextInput::keyboardHeight() {
+    return m_data->keyboardRect.height();
 }
 
 void NativeTextInput::setText(QString text)
