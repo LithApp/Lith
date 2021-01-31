@@ -30,8 +30,6 @@ Lith currently supports the following platforms:
 
 ## Limitations
 
-- Handshake protocol (introduced in WeeChat 2.9) support is missing
-- Data compression support is missing
 - Message text is not selectable
 - Keyboard shortcuts can only be tweaked by editing the config file
 - Android: Builds are not signed
