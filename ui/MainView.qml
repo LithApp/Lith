@@ -161,6 +161,11 @@ Item {
         function openCurrentLink(openPreview) {
             if (linkHandler.containsImage && openPreview)
                 previewPopup.showImage(linkHandler.currentLink)
+            else if (linkHandler.containsVideo
+                     && linkHandler.currentExtension.endsWith("webm")
+                     && Qt.platform.os === "ios"
+                     && settings.openWebmsInVlc)
+                Qt.openUrlExternally("vlc://" + linkHandler.currentLink)
             else if (linkHandler.containsVideo && openPreview)
                 previewPopup.showVideo(linkHandler.currentLink)
             else

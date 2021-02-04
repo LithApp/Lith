@@ -39,6 +39,7 @@ ScrollView {
         settings.forceLightTheme = forceLightThemeCheckbox.checked
         settings.forceDarkTheme = forceDarkThemeCheckbox.checked
         settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
+        settings.openWebmsInVlc = openWebmsInVlcCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -56,6 +57,7 @@ ScrollView {
         forceLightThemeCheckbox.checked = settings.forceLightTheme
         forceDarkThemeCheckbox.checked = settings.forceDarkTheme
         useTrueBlackWithDarkThemeCheckbox.checked = settings.useTrueBlackWithDarkTheme
+        openWebmsInVlcCheckbox.checked = settings.openWebmsInVlc
     }
 
     ColumnLayout {
@@ -277,6 +279,18 @@ ScrollView {
                     text: qsTr("In browser")
                     color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
                 }
+            }
+
+            Label {
+                visible: Qt.platform.os === "ios"
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Attempt to open webm files in VLC")
+            }
+            CheckBox {
+                visible: Qt.platform.os === "ios"
+                id: openWebmsInVlcCheckbox
+                checked: settings.openWebmsInVlc
+                Layout.alignment: Qt.AlignLeft
             }
 
             Label {
