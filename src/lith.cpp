@@ -126,7 +126,9 @@ Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_settings(new Settings(this))
     , m_windowHelper(new WindowHelper(this))
+#ifndef Q_OS_WASM
     , m_weechatThread(new QThread(this))
+#endif
     , m_weechat(new Weechat(this))
     , m_buffers(QmlObjectList::create<Buffer>())
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
@@ -140,9 +142,10 @@ Lith::Lith(QObject *parent)
         else
             m_selectedBufferNicks->setSourceModel(nullptr);
     });
-
+#ifndef Q_OS_WASM
     m_weechat->moveToThread(m_weechatThread);
     m_weechatThread->start();
+#endif
     QTimer::singleShot(1, m_weechat, &Weechat::init);
 }
 

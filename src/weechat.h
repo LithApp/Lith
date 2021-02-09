@@ -19,6 +19,7 @@
 
 #include "common.h"
 #include "settings.h"
+#include "util/sockethelper.h"
 
 #include <QSslSocket>
 #include <QDataStream>
@@ -57,9 +58,8 @@ private slots:
 
     void onConnected();
     void onDisconnected();
-    void onReadyRead();
-    void onError(QAbstractSocket::SocketError e);
-    void onSslErrors(const QList<QSslError> &errors);
+    void onDataReceived(const QByteArray &data);
+    void onError(const QString &message);
 
 private:
     struct MessageNames {
@@ -87,17 +87,16 @@ private:
         { MessageNames::c_requestNicklist, REQUEST_NICKLIST }
     };
 
-    QSslSocket *m_connection { nullptr };
+    SocketHelper m_connection;
     bool m_restarting { false };
 
     QByteArray m_fetchBuffer;
-    int32_t m_bytesRemaining { 0 };
+    qint32 m_bytesRemaining { 0 };
 
     QTimer *m_hotlistTimer { new QTimer(this) };
-    QTimer *m_reconnectTimer { new QTimer(this) };
     QTimer *m_timeoutTimer { new QTimer(this) };
 
-    int64_t m_messageOrder { 0 };
+    qint64 m_messageOrder { 0 };
 
     Lith *m_lith;
 };

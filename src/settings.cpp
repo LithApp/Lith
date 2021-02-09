@@ -20,18 +20,39 @@
 
 #include <QMetaObject>
 #include <QMetaProperty>
+#include <QTimer>
 
 Settings::Settings(QObject *parent)
     : QObject(parent)
+    , m_settings()
 {
-    QSettings s;
-    auto mo = Settings::metaObject();
-    for (int i = 0; i < mo->propertyCount(); i++) {
-        auto property = mo->property(i);
-        auto name = property.name();
-        auto defaultValue = property.read(this);
-        auto settingsValue = s.value(name, defaultValue);
-        if (defaultValue != settingsValue)
-            property.write(this, settingsValue);
-    }
+    // Code taken from qt-webassembly-examples
+
+    // m_settings will be ready at some later point in time - when
+    // QSettings::status() returns NoError. (apologies for the somewhat
+    // convoluted std::function and lambda use below)
+    auto settingsReady = [this](){
+        auto mo = Settings::metaObject();
+        for (int i = 0; i < mo->propertyCount(); i++) {
+            auto property = mo->property(i);
+            auto name = property.name();
+            auto defaultValue = property.read(this);
+            auto settingsValue = m_settings.value(name, defaultValue);
+            if (defaultValue != settingsValue) {
+                property.write(this, settingsValue);
+            }
+        }
+        emit ready();
+    };
+    std::function<void(void)> *testSettingsReady = new std::function<void(void)>();
+    *testSettingsReady = [=](){
+        if (m_settings.status() == QSettings::NoError) {
+            delete testSettingsReady;
+            settingsReady();
+        } else {
+            QTimer::singleShot(10, *testSettingsReady);
+        }
+    };
+    (*testSettingsReady)();
+
 }

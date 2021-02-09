@@ -32,6 +32,9 @@ ScrollView {
         settings.encrypted = encryptedCheckbox.checked
         settings.handshakeAuth = handshakeAuthCheckbox.checked
         settings.connectionCompression = connectionCompressionCheckbox.checked
+        if (typeof settings.useWebsockets !== "undefined") {
+            settings.useWebsockets = useWebsocketsCheckbox.checked
+        }
     }
     function onRejected() {
         passphraseField.text = ""
@@ -40,6 +43,9 @@ ScrollView {
         encryptedCheckbox.checked = settings.encrypted
         handshakeAuthCheckbox.checked = settings.handshakeAuth
         connectionCompressionCheckbox.checked = settings.connectionCompression
+        if (typeof settings.useWebsockets !== "undefined") {
+            useWebsocketsCheckbox.checked = settings.useWebsockets
+        }
     }
 
     ColumnLayout {
@@ -108,6 +114,16 @@ ScrollView {
             CheckBox {
                 id: connectionCompressionCheckbox
                 checked: settings.connectionCompression
+                Layout.alignment: Qt.AlignLeft
+            }
+            Label {
+                visible: typeof settings.useWebsockets !== "undefined"
+                text: "Use WebSockets to connect"
+            }
+            CheckBox {
+                visible: typeof settings.useWebsockets !== "undefined"
+                id: useWebsocketsCheckbox
+                checked: settings.useWebsockets
                 Layout.alignment: Qt.AlignLeft
             }
         }

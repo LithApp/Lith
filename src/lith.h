@@ -130,7 +130,9 @@ signals:
 private:
     explicit Lith(QObject *parent = 0);
 
+#ifndef Q_OS_WASM
     QThread *m_weechatThread { nullptr };
+#endif
     Weechat *m_weechat { nullptr };
     QmlObjectList *m_buffers { nullptr };
     ProxyBufferList *m_proxyBufferList { nullptr };

@@ -30,9 +30,8 @@
         void name ## Set (const type &o) { \
             if (m_ ## name != o) { \
                 m_ ## name = o; \
-                QSettings s; \
-                s.setValue(STRINGIFY(name), o); \
-                s.sync(); \
+                m_settings.setValue(STRINGIFY(name), o); \
+                m_settings.sync(); \
                 emit name ## Changed(); \
             } \
         }
@@ -71,6 +70,9 @@ class Settings : public QObject {
     SETTING(QString, passphrase)
     SETTING(bool, handshakeAuth, false)
     SETTING(bool, connectionCompression, true)
+#ifndef Q_OS_WASM
+    SETTING(bool, useWebsockets, false)
+#endif // Q_OS_WASM
 
     SETTING(bool, enableReadlineShortcuts, true)
     SETTING(QStringList, shortcutSearchBuffer, {"Alt+G"})
@@ -90,6 +92,9 @@ class Settings : public QObject {
     SETTING(QStringList, shortcutSwitchToBuffer10, {"Alt+0"})
 
     SETTING(QString, imgurApiKey, IMGUR_API_KEY)
+
+signals:
+    void ready();
 
 public:
     Settings(QObject *parent = nullptr);

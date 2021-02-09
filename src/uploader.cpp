@@ -19,7 +19,6 @@
 
 #include <QUrl>
 #include <QNetworkAccessManager>
-#include <QHttpPart>
 #include <QFile>
 #include <QJsonDocument>
 #include <QBuffer>

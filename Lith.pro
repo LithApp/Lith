@@ -1,4 +1,4 @@
-QT += qml quick widgets multimedia quickcontrols2 xml gui-private
+QT += qml quick widgets multimedia quickcontrols2 xml gui-private websockets
 
 CONFIG += c++17
 
@@ -13,7 +13,8 @@ HEADERS += \
     src/util/nicklistfilter.h \
     src/weechat.h \
     src/common.h \
-    src/windowhelper.h
+    src/windowhelper.h \
+    src/util/sockethelper.h
 
 SOURCES += \
     src/lith.cpp \
@@ -26,7 +27,8 @@ SOURCES += \
     src/uploader.cpp \
     src/util/nicklistfilter.cpp \
     src/weechat.cpp \
-    src/windowhelper.cpp
+    src/windowhelper.cpp \
+    src/util/sockethelper.cpp
 
 
 INCLUDEPATH += \
@@ -95,6 +97,11 @@ ios: {
 #  QMAKE_PROVISIONING_PROFILE=61f84d3f-1729-4bb5-a058-54896936692b
   QMAKE_ASSET_CATALOGS=$$PWD/assets/icons/Assets.xcassets
   QMAKE_ASSET_CATALOGS_APP_ICON = "AppIcon"
+}
+
+wasm {
+    QMAKE_WASM_PTHREAD_POOL_SIZE=3
+    QMAKE_LFLAGS_DEBUG += -g4
 }
 
 # Default rules for deployment.
