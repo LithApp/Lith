@@ -27,5 +27,6 @@
         <file>style/ApplicationWindow.qml</file>
         <file>style/Popup.qml</file>
         <file>MainView.qml</file>
+        <file>DropHandler.qml</file>
     </qresource>
 </RCC>

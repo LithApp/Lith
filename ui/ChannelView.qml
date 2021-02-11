@@ -79,6 +79,13 @@ ColumnLayout {
             height: parent.height
             visible: lith.selectedBuffer
         }
+
+        DropHandler {
+            id: dropHandler
+            anchors.fill: parent
+            onTextEntered: textInput.text += t
+            onUrlEntered: uploader.upload(u)
+        }
     }
 
     ChannelInputBar {
