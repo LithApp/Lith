@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<StringMap>();
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
+    qRegisterMetaType<Protocol::String>();
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
     qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");

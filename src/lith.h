@@ -112,6 +112,7 @@ public slots:
     void _buffer_line_added(Protocol::HData *hda);
     void _nicklist(Protocol::HData *hda);
     void _nicklist_diff(Protocol::HData *hda);
+    void _pong(const Protocol::String& str);
 
 protected:
     void addBuffer(pointer_t ptr, Buffer *b);
@@ -126,6 +127,8 @@ signals:
     void hasPassphraseChanged();
     void selectedBufferChanged();
     void errorStringChanged();
+
+    void pongReceived(qint64 id);
 
 private:
     explicit Lith(QObject *parent = 0);

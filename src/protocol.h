@@ -60,5 +60,6 @@ public:
 };
 Q_DECLARE_METATYPE(Protocol::HData);
 Q_DECLARE_METATYPE(Protocol::HData*);
+Q_DECLARE_METATYPE(Protocol::String);
 
 #endif // PROTOCOL_H

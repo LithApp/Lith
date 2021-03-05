@@ -48,9 +48,11 @@ public slots:
 
 private slots:
     void onMessageReceived(QByteArray &data);
+    void onPongReceived(qint64 id);
 
     void requestHotlist();
     void onTimeout();
+    void onPingTimeout();
 
     void onConnectionSettingsChanged();
     
@@ -95,8 +97,10 @@ private:
 
     QTimer *m_hotlistTimer { new QTimer(this) };
     QTimer *m_timeoutTimer { new QTimer(this) };
+    QTimer *m_pingTimer { new QTimer(this) };
 
     qint64 m_messageOrder { 0 };
+    qint64 m_lastReceivedPong { 0 };
 
     Lith *m_lith;
 };

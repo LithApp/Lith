@@ -34,6 +34,11 @@ Weechat::Weechat(Lith *lith)
     connect(&m_connection, &SocketHelper::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
     connect(&m_connection, &SocketHelper::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
     connect(&m_connection, &SocketHelper::errorOccurred, this, &Weechat::onError, Qt::QueuedConnection);
+
+    connect(lith, &Lith::pongReceived, this, &Weechat::onPongReceived, Qt::QueuedConnection);
+    connect(m_pingTimer, &QTimer::timeout, this, &Weechat::onPingTimeout, Qt::QueuedConnection);
+    m_pingTimer->setSingleShot(false);
+    m_pingTimer->start(5000);
 }
 
 Lith *Weechat::lith() {
@@ -270,6 +275,14 @@ void Weechat::onMessageReceived(QByteArray &data) {
 
         onHandshakeAccepted(htb.d);
     }
+    else if (QString(type) == "str") {
+        Protocol::String str;
+        Protocol::parse(s, str);
+
+        if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const Protocol::String&, str))) {
+            qWarning() << "Possible unhandled message:" << id.d;
+        }
+    }
     else {
         qCritical() << "onMessageReceived is not handling type: " << type;
     }
@@ -279,8 +292,28 @@ void Weechat::onMessageReceived(QByteArray &data) {
     }
 }
 
+void Weechat::onPongReceived(qint64 id) {
+    m_lastReceivedPong = id;
+}
+
 void Weechat::onTimeout() {
     m_connection.reset();
     lith()->statusSet(Lith::DISCONNECTED);
     start();
+}
+
+void Weechat::onPingTimeout() {
+    static qint64 previousPing = 0;
+    if (m_connection.isConnected()) {
+        if (previousPing != m_lastReceivedPong) {
+            restart();
+        }
+        previousPing = m_messageOrder++;
+        if (m_connection.write(QString("(%1) ping %1\n").arg(previousPing)) <= 0) {
+            restart();
+        }
+    }
+    else {
+        //restart();
+    }
 }

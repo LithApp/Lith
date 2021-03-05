@@ -508,6 +508,10 @@ void Lith::_nicklist_diff(Protocol::HData *hda) {
     delete hda;
 }
 
+void Lith::_pong(const Protocol::String &str) {
+    emit pongReceived(str.d.toLongLong());
+}
+
 void Lith::addBuffer(pointer_t ptr, Buffer *b) {
     m_bufferMap[ptr] = b;
     m_buffers->append(b);
