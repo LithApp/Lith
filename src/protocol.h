@@ -19,19 +19,38 @@
 
 #include "common.h"
 
-class Protocol {
-public:
-    struct Char { char d { 0 }; };
-    struct Integer { int32_t d { 0 }; };
-    struct LongInteger { int64_t d { 0 }; };
-    struct String { QString d {}; };
-    struct Buffer { QByteArray d {}; };
-    struct Pointer { pointer_t d { 0 }; };
-    struct Time { QString d {}; };
-    struct HashTable { StringMap d {}; };
+namespace Protocol {
+    class FormattedString : public QString {
+    public:
+        FormattedString() = default;
+        FormattedString(const char *d) : QString(d) {}
+        FormattedString(const QString &o) : QString(o) {}
+        FormattedString(QString &&o) : QString(std::move(o)) {}
+        FormattedString &operator=(const QString &o) {
+            QString::operator=(o);
+            return *this;
+        }
+        FormattedString &operator=(QString &&o) {
+            QString::operator=(std::move(o));
+            return *this;
+        }
+        FormattedString &operator=(const char *o) {
+            QString::operator=(o);
+            return *this;
+        }
+    };
+
+    using Char = char;
+    using Integer = qint32;
+    using LongInteger = qint64;
+    using String = FormattedString;
+    using Buffer = QByteArray;
+    using Pointer = pointer_t;
+    using Time = QString;
+    using HashTable = StringMap;
     struct HData {
         struct Item {
-            QList<pointer_t> pointers;
+            QList<Pointer> pointers;
             QMap<QString,QVariant> objects;
         };
 
@@ -41,23 +60,28 @@ public:
 
         QString toString() const;
     };
-    struct ArrayInt { QList<int> d {}; };
-    struct ArrayStr { QStringList d {}; };
+    using ArrayInt = QList<int>;
+    using ArrayStr = QStringList;
 
-    static bool parse(QDataStream &s, Char &r);
-    static bool parse(QDataStream &s, Integer &r);
-    static bool parse(QDataStream &s, LongInteger &r);
-    static bool parse(QDataStream &s, String &r, bool canContainHTML = false);
-    static bool parse(QDataStream &s, Buffer &r);
-    static bool parse(QDataStream &s, Pointer &r);
-    static bool parse(QDataStream &s, Time &r);
-    static bool parse(QDataStream &s, HashTable &r);
-    static bool parse(QDataStream &s, HData &r);
-    static bool parse(QDataStream &s, ArrayInt &r);
-    static bool parse(QDataStream &s, ArrayStr &r);
+    template <typename T> T parse(QDataStream &s, bool canContainHtml, bool *ok = nullptr);
+    template <typename T> T parse(QDataStream &s, bool *ok = nullptr);
 
-    static QString convertColorsToHtml(const QByteArray &data, bool canContainHTML);
+    template <> Char parse(QDataStream &s, bool *ok);
+    template <> Integer parse(QDataStream &s, bool *ok);
+    template <> LongInteger parse(QDataStream &s, bool *ok);
+    template <> String parse(QDataStream &s, bool canContainHTML, bool *ok);
+    template <> String parse(QDataStream &s, bool *ok);
+    template <> Buffer parse(QDataStream &s, bool *ok);
+    template <> Pointer parse(QDataStream &s, bool *ok);
+    template <> Time parse(QDataStream &s, bool *ok);
+    template <> HashTable parse(QDataStream &s, bool *ok);
+    template <> HData parse(QDataStream &s, bool *ok);
+    template <> ArrayInt parse(QDataStream &s, bool *ok);
+    template <> ArrayStr parse(QDataStream &s, bool *ok);
+
+    QString convertColorsToHtml(const QByteArray &data, bool canContainHTML);
 };
+
 Q_DECLARE_METATYPE(Protocol::HData);
 Q_DECLARE_METATYPE(Protocol::HData*);
 Q_DECLARE_METATYPE(Protocol::String);

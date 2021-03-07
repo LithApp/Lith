@@ -101,7 +101,7 @@ QString Buffer::titleGet() const {
     return m_title;
 }
 
-void Buffer::titleSet(const QString &o) {
+void Buffer::titleSet(const Protocol::String &o) {
     QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
     auto copy = o;
     auto reIt = re.globalMatch(copy, 0, QRegularExpression::PartialPreferFirstMatch);
@@ -117,12 +117,12 @@ void Buffer::titleSet(const QString &o) {
         copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
     }
     if (lith()->windowHelperGet()->darkThemeGet()) {
-        for (auto i : darkModeColors.keys()) {
+        for (auto &i : darkModeColors.keys()) {
             copy.replace(i, darkModeColors[i]);
         }
     }
     else {
-        for (auto i : lightModeColors.keys()) {
+        for (auto &i : lightModeColors.keys()) {
             copy.replace(i, lightModeColors[i]);
         }
     }
@@ -379,7 +379,7 @@ QString BufferLine::messageGet() const {
     return m_message;
 }
 
-void BufferLine::messageSet(const QString &o) {
+void BufferLine::messageSet(const Protocol::FormattedString &o) {
     // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     // ; was added to handle &amp; escapes right
     QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);

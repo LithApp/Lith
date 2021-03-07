@@ -20,6 +20,7 @@
 
 #include "common.h"
 #include "qmlobjectlist.h"
+#include "protocol.h"
 
 #include <QObject>
 #include <QDateTime>
@@ -54,10 +55,10 @@ public:
 class Buffer : public QObject {
     Q_OBJECT
     PROPERTY(int, number)
-    PROPERTY(QString, name)
+    PROPERTY(Protocol::String, name)
     PROPERTY(QString, short_name)
     ALIAS(QString, name, full_name)
-    Q_PROPERTY(QString title READ titleGet WRITE titleSet NOTIFY titleChanged)
+    Q_PROPERTY(Protocol::String title READ titleGet WRITE titleSet NOTIFY titleChanged)
     PROPERTY(StringMap, local_variables)
     Q_PROPERTY(QStringList local_variables_stringList READ local_variables_stringListGet NOTIFY local_variablesChanged)
 
@@ -83,7 +84,7 @@ public:
     void appendLine(BufferLine *line);
 
     QString titleGet() const;
-    void titleSet(const QString &o);
+    void titleSet(const Protocol::String &o);
 
     bool isAfterInitialFetch();
 
@@ -181,7 +182,7 @@ public:
     QString nickGet() const;
     QString nickColorGet() const;
     QString messageGet() const;
-    void messageSet(const QString &o);
+    void messageSet(const Protocol::FormattedString &o);
 
     bool isPrivMsgGet();
     bool isSelfMsgGet();

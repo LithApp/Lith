@@ -256,44 +256,38 @@ void Weechat::onMessageReceived(QByteArray &data) {
     //qCritical() << "Message!" << data;
     QDataStream s(&data, QIODevice::ReadOnly);
 
-    Protocol::String id;
-    Protocol::parse(s, id);
+    Protocol::String id = Protocol::parse<Protocol::String>(s);
 
     char type[4] = { 0 };
     s.readRawData(type, 3);
 
     if (QString(type) == "hda") {
-        Protocol::HData *hda = new Protocol::HData();
-        Protocol::parse(s, *hda);
+        Protocol::HData hda = Protocol::parse<Protocol::HData>(s);
 
-        if (c_initializationMap.contains(id.d)) {
+        if (c_initializationMap.contains(id)) {
             // wtf, why can't I write this as |= ?
-            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap.value(id.d, UNINITIALIZED));
-            if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData*, hda))) {
-                qWarning() << "Possible unhandled message:" << id.d;
-                delete hda;
+            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap.value(id, UNINITIALIZED));
+            if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData, hda))) {
+                qWarning() << "Possible unhandled message:" << id;
             }
         }
         else {
-            auto name = id.d.split(";").first();
-            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData*, hda))) {
+            auto name = id.split(";").first();
+            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData, hda))) {
                 qWarning() << "Possible unhandled message:" << name;
-                delete hda;
             }
         }
     }
     else if (QString(type) == "htb") {
-        Protocol::HashTable htb;
-        Protocol::parse(s, htb);
+        Protocol::HashTable htb = Protocol::parse<Protocol::HashTable>(s);
 
-        onHandshakeAccepted(htb.d);
+        onHandshakeAccepted(htb);
     }
     else if (QString(type) == "str") {
-        Protocol::String str;
-        Protocol::parse(s, str);
+        Protocol::String str = Protocol::parse<Protocol::String>(s);
 
-        if (!QMetaObject::invokeMethod(Lith::instance(), id.d.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const Protocol::String&, str))) {
-            qWarning() << "Possible unhandled message:" << id.d;
+        if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const Protocol::String&, str))) {
+            qWarning() << "Possible unhandled message:" << id;
         }
     }
     else {

@@ -31,7 +31,7 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QPalette>
-
+#include <QMetaType>
 
 int main(int argc, char *argv[])
 {
@@ -66,6 +66,10 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
     qRegisterMetaType<Protocol::String>();
+    qRegisterMetaType<Protocol::FormattedString>();
+    QMetaType::registerConverter<Protocol::FormattedString, QString>([](auto s){
+        return QString(s);
+    });
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
     qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");

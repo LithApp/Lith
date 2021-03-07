@@ -25,6 +25,8 @@
 #include <QAbstractEventDispatcher>
 #include <QStringLiteral>
 
+namespace Protocol {
+
 static const QVector<QString> weechatColors {
     "",
     "<black>",
@@ -80,174 +82,267 @@ static const QVector<QString> extendedColors {
     "#a8a8a8", "#b2b2b2", "#bcbcbc", "#c6c6c6", "#d0d0d0", "#dadada", "#e4e4e4", "#eeeeee"
 };
 
-bool Protocol::parse(QDataStream &s, Protocol::Char &r) {
-    s.readRawData(&r.d, 1);
-    return true;
+template <>
+Char parse(QDataStream &s, bool *ok) {
+    Char r;
+    s.readRawData(&r, 1);
+    if (ok)
+        *ok = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::Integer &r) {
+template <>
+Integer parse(QDataStream &s, bool *ok) {
+    Integer r;
     s.setByteOrder(QDataStream::BigEndian);
-    s >> r.d;
-    return true;
+    s >> r;
+    if (ok)
+        *ok = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::LongInteger &r) {
+template <>
+LongInteger parse(QDataStream &s, bool *ok) {
+    LongInteger r;
     quint8 length;
     s >> length;
     QByteArray buf((int) length + 1, 0);
     s.readRawData(buf.data(), length);
-    r.d = buf.toLongLong();
-    return true;
+    r = buf.toLongLong();
+    if (ok)
+        *ok = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::String &r, bool canContainHtml) {
+template <>
+String parse(QDataStream &s, bool canContainHtml, bool *ok) {
+    String r;
     uint32_t len;
-    r.d.clear();
+    r.clear();
     s >> len;
     if (len == uint32_t(-1))
-        r.d = QString();
+        r = String();
     else if (len == 0)
-        r.d = "";
+        r = "";
     else if (len > 0) {
         QByteArray buf(len + 1, 0);
         s.readRawData(buf.data(), len);
-        r.d = convertColorsToHtml(buf, canContainHtml);
+        r = convertColorsToHtml(buf, canContainHtml);
     }
-    return true;
+    if (ok)
+        *ok = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::Buffer &r) {
+template<>
+String parse(QDataStream &s, bool *ok) {
+    return parse<String>(s, false, ok);
+}
+
+template <>
+Buffer parse(QDataStream &s, bool *ok) {
+    Buffer r;
     uint32_t len;
-    r.d.clear();
+    r.clear();
     s >> len;
     if (len == 0)
-        r.d = "";
+        r = "";
     if (len > 0) {
-        r.d = QByteArray(len, 0);
-        s.readRawData(r.d.data(), len);
+        r = QByteArray(len, 0);
+        s.readRawData(r.data(), len);
     }
-    return true;
+    if (ok)
+        *ok = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::Pointer &r) {
+template <>
+Pointer parse(QDataStream &s, bool *ok) {
+    Pointer r;
     quint8 length;;
     s >> length;
     QByteArray buf((int) length + 1, 0);
     s.readRawData(buf.data(), length);
-    bool ok = false;
-    r.d = buf.toULongLong(&ok, 16);
-    if (!ok)
-        return false;
-    return true;
+    bool parseOk = false;
+    r = buf.toULongLong(&parseOk, 16);
+    if (ok)
+        *ok = parseOk;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::Time &r) {
+template <>
+Time parse(QDataStream &s, bool *ok) {
+    Time r;
     quint8 length;
     s >> length;
     QByteArray buf((int) length + 1, 0);
     s.readRawData(buf.data(), length);
-    r.d = buf;
-    return true;
+    r = buf;
+    if (ok)
+        *ok = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::HashTable &r) {
+template <>
+HashTable parse(QDataStream &s, bool *ok) {
+    HashTable r;
     char keyType[4] = { 0 }, valueType[4] = { 0 };
     s.readRawData(keyType, 3);
     if (QString(keyType) != "str") {
         qWarning() << "Hashtable currently supports only string keys";
-        return false;
+        if (ok)
+            *ok = false;
+        return r;
     }
     s.readRawData(valueType, 3);
     if (QString(valueType) != "str") {
         qWarning() << "Hashtable currently supports only string values";
-        return false;
+        if (ok)
+            *ok = false;
+        return r;
     }
     quint32 count = 0;
     s >> count;
-    r.d.clear();
+    r.clear();
     for (quint32 i = 0; i < count; i++) {
-        Protocol::String key, value;
-        parse(s, key);
-        parse(s, value);
-        r.d.insert(key.d, value.d);
+        auto key = parse<String>(s);
+        auto value = parse<String>(s);
+        r.insert(key, value);
     }
-    return true;
+    if (ok)
+        *ok = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::HData &r) {
-    Protocol::String hpath;
-    Protocol::String keys;
-    Protocol::Integer count;
-    parse(s, hpath);
-    parse(s, keys);
-    parse(s, count);
-    r.path = hpath.d.split("/");
-    r.keys = keys.d.split(",");
+template <>
+HData parse(QDataStream &s, bool *outerOk) {
+    HData r;
+    bool innerOk = false;
+    String hpath = parse<String>(s, &innerOk);
+    if (!innerOk) {
+        if (outerOk)
+            *outerOk = false;
+        return r;
+    }
+    String keys = parse<String>(s, &innerOk);
+    if (!innerOk) {
+        if (outerOk)
+            *outerOk = false;
+        return r;
+    }
+    Integer count = parse<Integer>(s, &innerOk);
+    if (!innerOk) {
+        if (outerOk)
+            *outerOk = false;
+        return r;
+    }
+    r.path = hpath.split("/");
+    r.keys = keys.split(",");
 
-    for (int i = 0; i < count.d; i++) {
-        Protocol::HData::Item item;
+    for (int i = 0; i < count; i++) {
+        HData::Item item;
         for (int j = 0; j < r.path.count(); j++) {
-            Protocol::Pointer ptr;
-            parse(s, ptr);
-            item.pointers.append(ptr.d);
+            Pointer ptr = parse<Pointer>(s, &innerOk);
+            if (!innerOk) {
+                if (outerOk)
+                    *outerOk = false;
+                return r;
+            }
+            item.pointers.append(ptr);
         }
         for (int j = 0; j < r.keys.count(); j++) {
             auto name = r.keys[j].split(":").first();
             auto type = r.keys[j].split(":").last();
             if (type == "int") {
-                Protocol::Integer i;
-                parse(s, i);
-                item.objects[name] = QVariant::fromValue(i.d);
+                Integer i = parse<Integer>(s, &innerOk);
+                if (!innerOk) {
+                    if (outerOk)
+                        *outerOk = false;
+                    return r;
+                }
+                item.objects[name] = QVariant::fromValue(i);
             }
             else if (type == "lon") {
-                Protocol::LongInteger l;
-                parse(s, l);
-                item.objects[name] = QVariant::fromValue(l.d);
+                LongInteger l = parse<LongInteger>(s, &innerOk);
+                if (!innerOk) {
+                    if (outerOk)
+                        *outerOk = false;
+                    return r;
+                }
+                item.objects[name] = QVariant::fromValue(l);
             }
             else if (type == "str" || type == "buf") {
-                Protocol::String str;
                 bool canContainHTML = false;
                 if (name == "message" || name == "title" || name == "prefix")
                     canContainHTML = true;
-                parse(s, str, canContainHTML);
-                item.objects[name] = QVariant::fromValue(str.d);
+                String str = parse<String>(s, canContainHTML, &innerOk);
+                if (!innerOk) {
+                    if (outerOk)
+                        *outerOk = false;
+                    return r;
+                }
+                item.objects[name] = QVariant::fromValue(str);
             }
             else if (type == "arr") {
                 char fieldType[4] = { 0 };
                 s.readRawData(fieldType, 3);
                 if (strcmp(fieldType, "int") == 0) {
-                    Protocol::ArrayInt a;
-                    parse(s, a);
-                    item.objects[name] = QVariant::fromValue(a.d);
+                    ArrayInt a = parse<ArrayInt>(s, &innerOk);
+                    if (!innerOk) {
+                        if (outerOk)
+                            *outerOk = false;
+                        return r;
+                    }
+                    item.objects[name] = QVariant::fromValue(a);
                 }
                 else if (strcmp(fieldType, "str") == 0) {
-                    Protocol::ArrayStr a;
-                    parse(s, a);
-                    item.objects[name] = QVariant::fromValue(a.d);
+                    ArrayStr a = parse<ArrayStr>(s, &innerOk);
+                    if (!innerOk) {
+                        if (outerOk)
+                            *outerOk = false;
+                        return r;
+                    }
+                    item.objects[name] = QVariant::fromValue(a);
                 }
                 else {
                     qCritical() << "Unhandled array item type:" << fieldType << "for field" << name;
                 }
             }
             else if (type == "tim") {
-                Protocol::Time t;
-                parse(s, t);
-                item.objects[name] = QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.d.toLongLong() * 1000));
+                Time t = parse<Time>(s, &innerOk);
+                if (!innerOk) {
+                    if (outerOk)
+                        *outerOk = false;
+                    return r;
+                }
+                item.objects[name] = QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.toLongLong() * 1000));
             }
             else if (type == "ptr") {
-                Protocol::Pointer p;
-                parse(s, p);
-                item.objects[name] = QVariant::fromValue(p.d);
+                Pointer p = parse<Pointer>(s, &innerOk);
+                if (!innerOk) {
+                    if (outerOk)
+                        *outerOk = false;
+                    return r;
+                }
+                item.objects[name] = QVariant::fromValue(p);
             }
             else if (type == "chr") {
-                Protocol::Char c;
-                parse(s, c);
-                item.objects[name] = QVariant::fromValue(c.d);
+                Char c = parse<Char>(s, &innerOk);
+                if (!innerOk) {
+                    if (outerOk)
+                        *outerOk = false;
+                    return r;
+                }
+                item.objects[name] = QVariant::fromValue(c);
             }
             else if (type == "htb") {
-                Protocol::HashTable htb;
-                parse(s, htb);
-                item.objects[name] = QVariant::fromValue(htb.d);
+                HashTable htb = parse<HashTable>(s, &innerOk);
+                if (!innerOk) {
+                    if (outerOk)
+                        *outerOk = false;
+                    return r;
+                }
+                item.objects[name] = QVariant::fromValue(htb);
             }
             else {
                 qCritical() << "!!! Unhandled type:" << type << "for field" << name;
@@ -255,32 +350,52 @@ bool Protocol::parse(QDataStream &s, Protocol::HData &r) {
         }
         r.data.append(item);
     }
-    return true;
+    if (outerOk)
+        *outerOk = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::ArrayInt &r) {
+template <>
+ArrayInt parse(QDataStream &s, bool *outerOk) {
+    ArrayInt r;
     uint32_t len;
     s >> len;
     for (uint32_t i = 0; i < len; i++) {
-        Protocol::Integer num;
-        parse(s, num);
-        r.d.append(num.d);
+        bool innerOk = false;
+        Integer num = parse<Integer>(s, &innerOk);
+        if (!innerOk) {
+            if (outerOk)
+                *outerOk = false;
+            return r;
+        }
+        r.append(num);
     }
-    return true;
+    if (outerOk)
+        *outerOk = true;
+    return r;
 }
 
-bool Protocol::parse(QDataStream &s, Protocol::ArrayStr &r) {
+template <>
+ArrayStr parse(QDataStream &s, bool *outerOk) {
+    ArrayStr r;
     uint32_t len;
     s >> len;
     for (uint32_t i = 0; i < len; i++) {
-        Protocol::String str;
-        parse(s, str);
-        r.d.append(str.d);
+        bool innerOk = false;
+        String str = parse<String>(s, &innerOk);
+        if (!innerOk) {
+            if (outerOk)
+                *outerOk = false;
+            return r;
+        }
+        r.append(str);
     }
-    return true;
+    if (outerOk)
+        *outerOk = true;
+    return r;
 }
 
-QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
+QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
     QString result;
     if (canContainHtml)
         result += "<html><body>";
@@ -613,7 +728,7 @@ QString Protocol::convertColorsToHtml(const QByteArray &data, bool canContainHtm
     return result;
 }
 
-QString Protocol::HData::toString() const {
+QString HData::toString() const {
     QString ret;
 
     ret += "HDATA\n";
@@ -641,3 +756,5 @@ QString Protocol::HData::toString() const {
     }
     return ret;
 }
+
+} // namespace Protocol
