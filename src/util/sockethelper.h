@@ -18,7 +18,6 @@ public:
 
 public slots:
     void reset();
-    void restart();
 
     void connectToWebsocket(const QString &hostname, int port, bool encrypted);
 #ifndef Q_OS_WASM
@@ -47,7 +46,6 @@ private slots:
 
     void onBinaryMessageReceived(const QByteArray &data);
 private:
-    QTimer *m_reconnectTimer { new QTimer(this) };
     QTimer *m_timeoutTimer { new QTimer(this) };
 
     QWebSocket *m_webSocket { nullptr };

@@ -5,10 +5,6 @@
 SocketHelper::SocketHelper(QObject *parent)
     : QObject(parent)
 {
-    m_reconnectTimer->setInterval(1000);
-    m_reconnectTimer->setSingleShot(true);
-
-    //connect(m_reconnectTimer, &QTimer::timeout, this, &SocketHelper::restart, Qt::QueuedConnection);
 }
 
 bool SocketHelper::isConnected() {
@@ -24,30 +20,27 @@ bool SocketHelper::isConnected() {
 
 void SocketHelper::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
-    if (m_reconnectTimer->interval() < 5000)
-        m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
-    m_reconnectTimer->start();
+#ifndef Q_OS_WASM
+    if (m_tcpSocket)
+        emit errorOccurred(m_tcpSocket->errorString());
+#endif
+    if (m_webSocket)
+        emit errorOccurred(m_webSocket->errorString());
 }
 
-void SocketHelper::onDisconnected()
-{
+void SocketHelper::onDisconnected() {
     qCritical() << "Disconnected";
 
-    if (m_reconnectTimer->interval() < 5000)
-        m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
-    m_reconnectTimer->start();
-    emit disconnect();
+    emit disconnected();
 }
 
 void SocketHelper::onConnected() {
-    m_reconnectTimer->stop();
     qCritical() << "Connected";
     emit connected();
 }
 
 void SocketHelper::connectToWebsocket(const QString &hostname, int port, bool encrypted) {
     reset();
-    m_reconnectTimer->stop();
     qCritical() << "Trying to connect to:" << QString("%1://%2:%3").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port);
     m_webSocket = new QWebSocket("weechat", QWebSocketProtocol::VersionLatest, this);
 
@@ -120,12 +113,6 @@ void SocketHelper::reset() {
         m_tcpSocket = nullptr;
     }
 #endif // Q_OS_WASM
-    m_reconnectTimer->stop();
-}
-
-void SocketHelper::restart()
-{
-
 }
 
 void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {

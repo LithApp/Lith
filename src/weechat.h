@@ -41,12 +41,13 @@ public slots:
     void init();
 
     void start();
-    void restart();
 
     bool input(pointer_t ptr, const QString &data);
     void fetchLines(pointer_t ptr, int count);
 
 private slots:
+    void restart();
+
     void onMessageReceived(QByteArray &data);
     void onPongReceived(qint64 id);
 
@@ -89,7 +90,7 @@ private:
         { MessageNames::c_requestNicklist, REQUEST_NICKLIST }
     };
 
-    SocketHelper m_connection;
+    SocketHelper *m_connection;
     bool m_restarting { false };
 
     QByteArray m_fetchBuffer;
@@ -98,6 +99,7 @@ private:
     QTimer *m_hotlistTimer { new QTimer(this) };
     QTimer *m_timeoutTimer { new QTimer(this) };
     QTimer *m_pingTimer { new QTimer(this) };
+    QTimer *m_reconnectTimer { new QTimer(this) };
 
     qint64 m_messageOrder { 0 };
     qint64 m_lastReceivedPong { 0 };

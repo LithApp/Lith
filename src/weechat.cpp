@@ -28,17 +28,22 @@
 
 Weechat::Weechat(Lith *lith)
     : QObject(nullptr)
+    , m_connection(new SocketHelper(this))
     , m_lith(lith)
 {
-    connect(&m_connection, &SocketHelper::dataReceived, this, &Weechat::onDataReceived, Qt::QueuedConnection);
-    connect(&m_connection, &SocketHelper::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
-    connect(&m_connection, &SocketHelper::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
-    connect(&m_connection, &SocketHelper::errorOccurred, this, &Weechat::onError, Qt::QueuedConnection);
+    connect(m_connection, &SocketHelper::dataReceived, this, &Weechat::onDataReceived, Qt::QueuedConnection);
+    connect(m_connection, &SocketHelper::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
+    connect(m_connection, &SocketHelper::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
+    connect(m_connection, &SocketHelper::errorOccurred, this, &Weechat::onError, Qt::QueuedConnection);
 
     connect(lith, &Lith::pongReceived, this, &Weechat::onPongReceived, Qt::QueuedConnection);
     connect(m_pingTimer, &QTimer::timeout, this, &Weechat::onPingTimeout, Qt::QueuedConnection);
     m_pingTimer->setSingleShot(false);
     m_pingTimer->start(5000);
+
+    connect(m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart, Qt::QueuedConnection);
+    m_reconnectTimer->setInterval(100);
+    m_reconnectTimer->setSingleShot(false);
 }
 
 Lith *Weechat::lith() {
@@ -106,7 +111,7 @@ void Weechat::init() {
 }
 
 void Weechat::start() {
-    m_connection.reset();
+    m_connection->reset();
     m_restarting = false;
     qCritical() << "Connecting";
 
@@ -116,15 +121,16 @@ void Weechat::start() {
 }
 
 void Weechat::restart() {
+    m_initializationStatus = UNINITIALIZED;
     auto host = lith()->settingsGet()->hostGet();
     auto port = lith()->settingsGet()->portGet();
     auto ssl = lith()->settingsGet()->encryptedGet();
 #ifndef Q_OS_WASM
     if (!lith()->settingsGet()->useWebsocketsGet())
-        m_connection.connectToTcpSocket(host, port, ssl);
+        m_connection->connectToTcpSocket(host, port, ssl);
     else // BEWARE
 #endif // Q_OS_WASM
-        m_connection.connectToWebsocket(host, port, ssl);
+        m_connection->connectToWebsocket(host, port, ssl);
     // BEWARE OF THE ELSE ABOVE
 }
 
@@ -133,7 +139,7 @@ void Weechat::onConnectionSettingsChanged() {
     auto pass = lith()->settingsGet()->passphraseGet();
     if (!host.isEmpty() && !pass.isEmpty()) {
         qCritical() << "CONNECTING";
-        m_connection.reset();
+        m_connection->reset();
         if (!m_restarting)
             QTimer::singleShot(50, this, &Weechat::start);
         m_restarting = true;
@@ -141,7 +147,7 @@ void Weechat::onConnectionSettingsChanged() {
 }
 
 void Weechat::onHandshakeAccepted(const StringMap &data) {
-    if (!m_connection.isConnected())
+    if (!m_connection->isConnected())
         return;
 
     auto algo = data["password_hash_algo"];
@@ -163,24 +169,28 @@ void Weechat::onHandshakeAccepted(const StringMap &data) {
 
     m_initializationStatus = (Initialization) (m_initializationStatus | HANDSHAKE);
 
-    m_connection.write(("init " + hashString + "\n").toUtf8());
-    m_connection.write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables\n").arg(MessageNames::c_requestBuffers).toUtf8());
-    m_connection.write(QString("(%1) hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n").arg(MessageNames::c_requestFirstLine).toUtf8());
-    m_connection.write(QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(MessageNames::c_requestHotlist).toUtf8());
-    m_connection.write("sync\n");
-    m_connection.write(QString("(%1) nicklist\n").arg(MessageNames::c_requestNicklist).toUtf8());
+    m_connection->write(("init " + hashString + "\n").toUtf8());
+    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables\n").arg(MessageNames::c_requestBuffers).toUtf8());
+    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n").arg(MessageNames::c_requestFirstLine).toUtf8());
+    m_connection->write(QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(MessageNames::c_requestHotlist).toUtf8());
+    m_connection->write("sync\n");
+    m_connection->write(QString("(%1) nicklist\n").arg(MessageNames::c_requestNicklist).toUtf8());
 }
 
 void Weechat::requestHotlist() {
-    if (m_connection.isConnected()) {
+    if (m_connection->isConnected()) {
         auto msg = QString("(handleHotlist;%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
-        m_connection.write(msg.toUtf8());
+        m_connection->write(msg.toUtf8());
     }
 }
 
 
 void Weechat::onConnected() {
     qCritical() << "Connected!";
+
+    m_reconnectTimer->stop();
+    m_reconnectTimer->setInterval(100);
+
     QTimer::singleShot(0, lith(), &Lith::resetData);
     lith()->networkErrorStringSet(QString());
 
@@ -193,7 +203,7 @@ void Weechat::onConnected() {
     }
 
     if (lith()->settingsGet()->handshakeAuthGet()) {
-        m_connection.write(QString("(%1) handshake password_hash_algo=%2,compression=%3\n").arg(MessageNames::c_handshake).arg(hashAlgos).arg(lith()->settingsGet()->connectionCompressionGet() ? "zlib" : "off").toUtf8());
+        m_connection->write(QString("(%1) handshake password_hash_algo=%2,compression=%3\n").arg(MessageNames::c_handshake).arg(hashAlgos).arg(lith()->settingsGet()->connectionCompressionGet() ? "zlib" : "off").toUtf8());
     }
     else {
         StringMap data;
@@ -210,6 +220,9 @@ void Weechat::onDisconnected() {
     m_fetchBuffer.clear();
     m_bytesRemaining = 0;
     m_hotlistTimer->stop();
+
+    m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
+    m_reconnectTimer->start();
 }
 
 void Weechat::onDataReceived(const QByteArray &data) {
@@ -227,7 +240,7 @@ bool Weechat::input(pointer_t ptr, const QString &data) {
     auto line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
     //qCritical() << "WRITING:" << line;
     auto message = line.toUtf8();
-    if (message.count() == m_connection.write(line.toUtf8()))
+    if (message.count() == m_connection->write(line.toUtf8()))
         return true;
     return false;
 }
@@ -235,7 +248,7 @@ bool Weechat::input(pointer_t ptr, const QString &data) {
 void Weechat::fetchLines(pointer_t ptr, int count) {
     auto line = QString("(handleFetchLines;%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
     //qCritical() << "WRITING:" << line;
-    m_connection.write(line.toUtf8());
+    m_connection->write(line.toUtf8());
     m_timeoutTimer->start(5000);
 }
 
@@ -297,19 +310,19 @@ void Weechat::onPongReceived(qint64 id) {
 }
 
 void Weechat::onTimeout() {
-    m_connection.reset();
+    m_connection->reset();
     lith()->statusSet(Lith::DISCONNECTED);
     start();
 }
 
 void Weechat::onPingTimeout() {
     static qint64 previousPing = 0;
-    if (m_connection.isConnected()) {
+    if (m_initializationStatus == COMPLETE) {
         if (previousPing != m_lastReceivedPong) {
             restart();
         }
         previousPing = m_messageOrder++;
-        if (m_connection.write(QString("(%1) ping %1\n").arg(previousPing)) <= 0) {
+        if (m_connection->write(QString("(%1) ping %1\n").arg(previousPing)) <= 0) {
             restart();
         }
     }
