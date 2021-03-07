@@ -149,10 +149,10 @@ Drawer {
                             width: bufferName.height + 6
                             height: width
                             color: "#22000000"
-                            opacity: buffer.number <= 10 && !buffer.isServer
+                            opacity: buffer && buffer.number <= 10 && !buffer.isServer ? 1 : 0
                             radius: 2
                             Text {
-                                text: buffer.number
+                                text: buffer ? buffer.number : ""
                                 anchors.centerIn: parent
                                 color: disabledPalette.text
                             }
