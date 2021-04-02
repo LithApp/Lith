@@ -67,7 +67,7 @@ Rectangle {
             Layout.alignment: Qt.AlignTop
             font.bold: true
             text: {
-                return messageModel.prefix.testHtml()
+                return messageModel.prefix.toTrimmedHtml(lith.settings.nickCutoffThreshold)
                 // ugh
                 if (lith.settings.nickCutoffThreshold < 0)
                     return messageModel.prefix + "\u00A0"

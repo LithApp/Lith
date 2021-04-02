@@ -33,6 +33,9 @@ public:
         };
 
         Part(const QString &text) : text(text) {}
+        bool containsHtml() { return foreground.index >= 0 || background.index >= 0 || hyperlink || bold || underline || italic; }
+        QString toHtml(const ColorTheme &theme) const;
+
         QString text {};
         Color foreground;
         Color background;
@@ -42,131 +45,45 @@ public:
         bool italic;
     };
 
-    FormattedString() : m_parts({QString()}) {}
-    FormattedString(const char *d) : m_parts({QString(d)}) {}
-    FormattedString(const QString &o) : m_parts({o}) {}
-    FormattedString(QString &&o) : m_parts({std::move(o)}) {}
-    FormattedString &operator=(const QString &o) {
-        m_parts = { o };
-        return *this;
-    }
-    FormattedString &operator=(QString &&o) {
-        m_parts = { std::move(o) };
-        return *this;
-    }
-    FormattedString &operator=(const char *o) {
-        m_parts = { QString(o) };
-        return *this;
-    }
+    FormattedString();
+    FormattedString(const char *d);
+    FormattedString(const QString &o);
+    FormattedString(QString &&o);
 
-    operator QString() const {
-        return toPlain();
-    }
+    FormattedString &operator=(const QString &o);
+    FormattedString &operator=(QString &&o);
+    FormattedString &operator=(const char *o);
 
-    bool operator==(const FormattedString &o) {
-        return toPlain() == o.toPlain();
-    }
-    bool operator!=(const FormattedString &o) {
-        return !operator==(o);
-    }
-    bool operator==(const QString &o) {
-        return toPlain() == o;
-    }
-    bool operator!=(const QString &o) {
-        return !operator==(o);
-    }
+    bool operator==(const FormattedString &o);
+    bool operator!=(const FormattedString &o);
+    bool operator==(const QString &o);
+    bool operator!=(const QString &o);
 
-    FormattedString &operator+=(const char *s) {
-        lastPart().text += s;
-        return *this;
-    }
-    FormattedString &operator+=(const QString &s) {
-        lastPart().text += s;
-        return *this;
-    }
+    // these methods append to the last available segment
+    FormattedString &operator+=(const char *s);
+    FormattedString &operator+=(const QString &s);
 
-    void clear() {
-        m_parts = {{}};
-    }
+    operator QString() const;
 
-    Q_INVOKABLE QString toPlain() const {
-        QString ret;
-        for (auto &i : m_parts) {
-            ret.append(i.text);
-        }
-        return ret;
-    }
-    Q_INVOKABLE QString testHtml() const {
-        return toHtml(lightTheme);
-    }
-    Q_INVOKABLE QString toHtml(const ColorTheme &theme) const {
-        QString ret { "<html><body>"};
-        for (auto &i : m_parts) {
-            if (i.bold)
-                ret.append("<b>");
-            if (i.underline)
-                ret.append("<u>");
-            if (i.foreground.index >= 0) {
-                ret.append("<font color=\"");
-                if (i.foreground.extended) {
-                    if (theme.extendedColors.count() > i.foreground.index)
-                        ret.append(theme.extendedColors[i.foreground.index]);
-                    else
-                        ret.append("pink");
-                }
-                else {
-                    if (theme.weechatColors.count() > i.foreground.index)
-                        ret.append(theme.weechatColors[i.foreground.index]);
-                    else
-                        ret.append("pink");
-                }
-                ret.append("\">");
-            }
-            ret.append(i.text);
-            if (i.foreground.index >= 0)
-                ret.append("</color>");
-            if (i.underline)
-                ret.append("</u>");
-            if (i.bold)
-                ret.append("</b>");
-        }
-        ret.append("</body></html>");
-        return ret;
-    }
+    Q_INVOKABLE QString toPlain() const;
+    Q_INVOKABLE QString testHtml() const;
+    Q_INVOKABLE QString toHtml(const ColorTheme &theme) const;
+    Q_INVOKABLE QString toTrimmedHtml(int n) const;
 
-    FormattedString &append(const Part &p = {{}}) {
-        m_parts.append(p);
-        return *this;
-    }
-    Part &lastPart() {
-        return m_parts.last();
-    }
-    void prune() {
-        auto it = m_parts.begin();
-        while (it != m_parts.end()) {
-            if (it->text.isEmpty())
-                it = m_parts.erase(it);
-            else
-                ++it;
-        }
-    }
+    bool containsHtml();
 
-    QStringList split(const QString &sep) const {
-        return toPlain().split(sep);
-    }
+    void clear();
 
-    qlonglong toLongLong(bool *ok = nullptr, int base = 10) const {
-        return toPlain().toLongLong(ok, base);
-    }
+    Part &addPart(const Part &p = {{}});
+    Part &lastPart();
+    // prune would potentially (not 100% done) remove all empty parts and merge the ones with the same formatting
+    void prune();
 
-    QString toLower() const {
-        return toPlain().toLower();
-    }
-
-    std::string toStdString() const {
-        return toPlain().toStdString();
-    }
-
+    // QString compatibility wrappers
+    QStringList split(const QString &sep) const;
+    qlonglong toLongLong(bool *ok = nullptr, int base = 10) const;
+    QString toLower() const;
+    std::string toStdString() const;
 
 private:
     QList<Part> m_parts {};

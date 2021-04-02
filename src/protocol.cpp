@@ -354,8 +354,7 @@ FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHtml)
     bool keep = false;
 
     auto carryOver = [&result, &foregroundColor, &foreground, &backgroundColor, &background, &bold, &reverse, &italic, &underline, &keep]() {
-        result.append();
-        auto &part = result.lastPart();
+        auto &part = result.addPart();
 
         if (foreground)
             part.foreground = foregroundColor;
