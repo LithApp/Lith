@@ -21,6 +21,9 @@ void WindowHelper::init() {
         m_darkTheme = detectSystemDarkStyle();
     emit darkThemeChanged();
 
+    connect(Lith::instance()->settingsGet(), &Settings::forceDarkThemeChanged, this, &WindowHelper::init);
+    connect(Lith::instance()->settingsGet(), &Settings::forceLightThemeChanged, this, &WindowHelper::init);
+
     resetColorScheme();
 }
 

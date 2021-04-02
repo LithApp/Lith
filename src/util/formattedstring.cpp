@@ -136,7 +136,7 @@ QString FormattedString::toTrimmedHtml(int n) const {
         if (n <= 0)
             break;
     }
-    while (n > 0) {
+    while (n >= 0) {
         ret.append("\u00A0");
         n--;
     }
