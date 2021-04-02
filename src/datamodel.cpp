@@ -54,34 +54,13 @@ void Buffer::appendLine(BufferLine *line) {
     m_lines->append(line);
 }
 
-QString Buffer::titleGet() const {
+FormattedString Buffer::titleGet() const {
     return m_title;
 }
 
-void Buffer::titleSet(const Protocol::String &o) {
-    QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
-    auto copy = o;
-    auto reIt = re.globalMatch(copy, 0, QRegularExpression::PartialPreferFirstMatch);
-    QSet<QString> urls;
-    // first generate a set of all URLs (handling duplicate URLs in this loop results in broken <a> tags)
-    while (reIt.hasNext()) {
-        auto reMatch = reIt.next();
-        auto url = reMatch.captured();
-        urls.insert(url);
-    }
-    // then replace all of them with actual links
-    for (auto &url : urls) {
-        // TODO COLOR
-        // copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
-    }
-    if (lith()->windowHelperGet()->darkThemeGet()) {
-        copy = o.toHtml(darkTheme);
-    }
-    else {
-        copy = o.toHtml(lightTheme);
-    }
-    if (copy != m_title) {
-        m_title = copy;
+void Buffer::titleSet(const FormattedString &o) {
+    if (m_title != o) {
+        m_title = o;
         emit titleChanged();
     }
 }

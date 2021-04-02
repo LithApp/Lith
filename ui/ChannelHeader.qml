@@ -69,7 +69,7 @@ Frame {
                 visible: !lith.selectedBuffer || lith.selectedBuffer.title.length > 0
                 clip: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                text: lith.selectedBuffer ? lith.selectedBuffer.title :
+                text: lith.selectedBuffer ? lith.selectedBuffer.title.toPlain() :
                       lith.status === Lith.UNCONFIGURED ? "Not configured" :
                       lith.status === Lith.CONNECTING ? "Connecting" :
                       lith.status === Lith.CONNECTED ? "Connected" :

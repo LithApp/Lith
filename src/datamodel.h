@@ -83,8 +83,8 @@ public:
     void prependLine(BufferLine *line);
     void appendLine(BufferLine *line);
 
-    QString titleGet() const;
-    void titleSet(const Protocol::String &o);
+    FormattedString titleGet() const;
+    void titleSet(const FormattedString &o);
 
     bool isAfterInitialFetch();
 
@@ -119,7 +119,7 @@ private:
     pointer_t m_ptr;
     bool m_afterInitialFetch { false };
     int m_lastRequestedCount { 0 };
-    QString m_title {};
+    FormattedString m_title {};
 };
 
 class BufferLineSegment : public QObject {

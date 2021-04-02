@@ -16,7 +16,8 @@
 
 #include "formattedstring.h"
 
-
+#include <QRegularExpression>
+#include <QDebug>
 
 QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
     QString ret;
@@ -40,7 +41,15 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
         }
         ret.append("\">");
     }
+    if (hyperlink) {
+        ret.append("<a href=\"");
+        ret.append(text);
+        ret.append("\">");
+    }
     ret.append(text);
+    if (hyperlink) {
+        ret.append("</a>");
+    }
     if (foreground.index >= 0)
         ret.append("</color>");
     if (underline)
@@ -135,7 +144,7 @@ QString FormattedString::toTrimmedHtml(int n) const {
     return ret;
 }
 
-bool FormattedString::containsHtml() {
+bool FormattedString::containsHtml() const {
     return m_parts.count() > 1 || m_parts.first().containsHtml();
 }
 
@@ -146,11 +155,43 @@ FormattedString::Part &FormattedString::lastPart() {
 void FormattedString::prune() {
     auto it = m_parts.begin();
     while (it != m_parts.end()) {
+        QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
+                              QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
+
+        auto reIt = re.globalMatch(it->text, 0, QRegularExpression::PartialPreferFirstMatch);
+        if (reIt.hasNext()) {
+            QList<Part> segments;
+            int previousEnd = 0;
+            while (reIt.hasNext()) {
+                auto reMatch = reIt.next();
+                Part prefix = { it->text.mid(previousEnd, reMatch.capturedStart() - previousEnd) };
+                Part url = { it->text.mid(reMatch.capturedStart(), reMatch.capturedLength()) };
+                url.hyperlink = true;
+                segments.append(prefix);
+                segments.append(url);
+                previousEnd = reMatch.capturedEnd();
+            }
+            if (previousEnd < it->text.count()) {
+                Part suffix = { it->text.mid(previousEnd, it->text.count() - previousEnd) };
+                segments.append(suffix);
+            }
+            it = m_parts.erase(it);
+            for (auto &i : segments) {
+                it = m_parts.insert(it, i);
+                ++it;
+            }
+        }
+        else {
+            ++it;
+        }
+    }
+    while (it != m_parts.end()) {
         if (it->text.isEmpty())
             it = m_parts.erase(it);
         else
             ++it;
     }
+    it = m_parts.begin();
 }
 
 QStringList FormattedString::split(const QString &sep) const {
@@ -167,6 +208,10 @@ QString FormattedString::toLower() const {
 
 std::string FormattedString::toStdString() const {
     return toPlain().toStdString();
+}
+
+int FormattedString::length() const {
+    return toPlain().length();
 }
 
 FormattedString &FormattedString::operator+=(const char *s) {

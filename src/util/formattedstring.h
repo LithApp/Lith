@@ -25,6 +25,7 @@
 
 class FormattedString {
     Q_GADGET
+    Q_PROPERTY(int length READ length CONSTANT)
 public:
     struct Part {
         struct Color {
@@ -33,7 +34,7 @@ public:
         };
 
         Part(const QString &text) : text(text) {}
-        bool containsHtml() { return foreground.index >= 0 || background.index >= 0 || hyperlink || bold || underline || italic; }
+        bool containsHtml() const { return foreground.index >= 0 || background.index >= 0 || hyperlink || bold || underline || italic; }
         QString toHtml(const ColorTheme &theme) const;
 
         QString text {};
@@ -70,7 +71,7 @@ public:
     Q_INVOKABLE QString toHtml(const ColorTheme &theme) const;
     Q_INVOKABLE QString toTrimmedHtml(int n) const;
 
-    bool containsHtml();
+    bool containsHtml() const;
 
     void clear();
 
@@ -84,6 +85,7 @@ public:
     qlonglong toLongLong(bool *ok = nullptr, int base = 10) const;
     QString toLower() const;
     std::string toStdString() const;
+    int length() const;
 
 private:
     QList<Part> m_parts {};

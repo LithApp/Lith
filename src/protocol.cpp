@@ -692,6 +692,8 @@ FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHtml)
     endColors();
     endAttrs();
 
+    result.prune();
+
     return result;
 }
 

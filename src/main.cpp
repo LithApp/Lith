@@ -68,8 +68,10 @@ int main(int argc, char *argv[])
     qRegisterMetaType<FormattedString>();
     qRegisterMetaType<Protocol::String>();
     qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "FormattedString", "");
-    QMetaType::registerConverter<FormattedString, QString>([](auto s){
-        return s.toHtml(lightTheme);
+    QMetaType::registerConverter<FormattedString, QString>([](const FormattedString &s){
+        if (s.containsHtml())
+            return s.toHtml(lightTheme);
+        return s.toPlain();
     });
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
