@@ -20,26 +20,6 @@
 #include "common.h"
 
 namespace Protocol {
-    class FormattedString : public QString {
-    public:
-        FormattedString() = default;
-        FormattedString(const char *d) : QString(d) {}
-        FormattedString(const QString &o) : QString(o) {}
-        FormattedString(QString &&o) : QString(std::move(o)) {}
-        FormattedString &operator=(const QString &o) {
-            QString::operator=(o);
-            return *this;
-        }
-        FormattedString &operator=(QString &&o) {
-            QString::operator=(std::move(o));
-            return *this;
-        }
-        FormattedString &operator=(const char *o) {
-            QString::operator=(o);
-            return *this;
-        }
-    };
-
     using Char = char;
     using Integer = qint32;
     using LongInteger = qint64;
@@ -79,11 +59,10 @@ namespace Protocol {
     template <> ArrayInt parse(QDataStream &s, bool *ok);
     template <> ArrayStr parse(QDataStream &s, bool *ok);
 
-    QString convertColorsToHtml(const QByteArray &data, bool canContainHTML);
+    FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHTML);
 };
 
 Q_DECLARE_METATYPE(Protocol::HData);
 Q_DECLARE_METATYPE(Protocol::HData*);
-Q_DECLARE_METATYPE(Protocol::String);
 
 #endif // PROTOCOL_H

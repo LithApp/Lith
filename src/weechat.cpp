@@ -286,7 +286,7 @@ void Weechat::onMessageReceived(QByteArray &data) {
     else if (QString(type) == "str") {
         Protocol::String str = Protocol::parse<Protocol::String>(s);
 
-        if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const Protocol::String&, str))) {
+        if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const FormattedString&, str))) {
             qWarning() << "Possible unhandled message:" << id;
         }
     }

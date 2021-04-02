@@ -27,61 +27,6 @@
 
 namespace Protocol {
 
-static const QVector<QString> weechatColors {
-    "",
-    "<black>",
-    "<dark gray>",
-    "<dark red>",
-    "<light red>",
-    "<dark green>",
-    "<light green>",
-    "<brown>",
-    "<yellow>",
-    "<dark blue>",
-    "<light blue>",
-    "<dark magenta>",
-    "<light magenta>",
-    "<dark cyan>",
-    "<light cyan>",
-    "<gray>",
-    "<white>"
-};
-
-static const QVector<QString> extendedColors {
-    "#000000", "#800000", "#008000", "#808000", "#000080", "#800080", "#008080", "#c0c0c0",
-    "#808080", "#ff0000", "#00ff00", "#ffff00", "#0000ff", "#ff00ff", "#00ffff", "#ffffff",
-    "#000000", "#00005f", "#000087", "#0000af", "#0000d7", "#0000ff", "#005f00", "#005f5f",
-    "#005f87", "#005faf", "#005fd7", "#005fff", "#008700", "#00875f", "#008787", "#0087af",
-    "#0087d7", "#0087ff", "#00af00", "#00af5f", "#00af87", "#00afaf", "#00afd7", "#00afff",
-    "#00d700", "#00d75f", "#00d787", "00d7af ", "#00d7d7", "#00d7ff", "#00ff00", "#00ff5f",
-    "#00ff87", "#00ffaf", "#00ffd7", "#00ffff", "#5f0000", "#5f005f", "#5f0087", "#5f00af",
-    "#5f00d7", "#5f00ff", "#5f5f00", "#5f5f5f", "#5f5f87", "#5f5faf", "#5f5fd7", "#5f5fff",
-    "#5f8700", "#5f875f", "#5f8787", "#5f87af", "#5f87d7", "#5f87ff", "#5faf00", "#5faf5f",
-    "#5faf87", "#5fafaf", "#5fafd7", "#5fafff", "#5fd700", "#5fd75f", "#5fd787", "#5fd7af",
-    "#5fd7d7", "#5fd7ff", "#5fff00", "#5fff5f", "#5fff87", "#5fffaf", "#5fffd7", "#5fffff",
-    "#870000", "#87005f", "#870087", "#8700af", "#8700d7", "#8700ff", "#875f00", "#875f5f",
-    "#875f87", "#875faf", "#875fd7", "#875fff", "#878700", "#87875f", "#878787", "#8787af",
-    "#8787d7", "#8787ff", "#87af00", "#87af5f", "#87af87", "#87afaf", "#87afd7", "#87afff",
-    "#87d700", "#87d75f", "#87d787", "#87d7af", "#87d7d7", "#87d7ff", "#87ff00", "#87ff5f",
-    "#87ff87", "#87ffaf", "#87ffd7", "#87ffff", "#af0000", "#af005f", "#af0087", "#af00af",
-    "#af00d7", "#af00ff", "#af5f00", "#af5f5f", "#af5f87", "#af5faf", "#af5fd7", "#af5fff",
-    "#af8700", "#af875f", "#af8787", "#af87af", "#af87d7", "#af87ff", "#afaf00", "#afaf5f",
-    "#afaf87", "#afafaf", "#afafd7", "#afafff", "#afd700", "#afd75f", "#afd787", "#afd7af",
-    "#afd7d7", "#afd7ff", "#afff00", "#afff5f", "#afff87", "#afffaf", "#afffd7", "#afffff",
-    "#d70000", "#d7005f", "#d70087", "#d700af", "#d700d7", "#d700ff", "#d75f00", "#d75f5f",
-    "#d75f87", "#d75faf", "#d75fd7", "#d75fff", "#d78700", "#d7875f", "#d78787", "#d787af",
-    "#d787d7", "#d787ff", "#d7af00", "#d7af5f", "#d7af87", "#d7afaf", "#d7afd7", "#d7afff",
-    "#d7d700", "#d7d75f", "#d7d787", "#d7d7af", "#d7d7d7", "#d7d7ff", "#d7ff00", "#d7ff5f",
-    "#d7ff87", "#d7ffaf", "#d7ffd7", "#d7ffff", "#ff0000", "#ff005f", "#ff0087", "#ff00af",
-    "#ff00d7", "#ff00ff", "#ff5f00", "#ff5f5f", "#ff5f87", "#ff5faf", "#ff5fd7", "#ff5fff",
-    "#ff8700", "#ff875f", "#ff8787", "#ff87af", "#ff87d7", "#ff87ff", "#ffaf00", "#ffaf5f",
-    "#ffaf87", "#ffafaf", "#ffafd7", "#ffafff", "#ffd700", "#ffd75f", "#ffd787", "#ffd7af",
-    "#ffd7d7", "#ffd7ff", "#ffff00", "#ffff5f", "#ffff87", "#ffffaf", "#ffffd7", "#ffffff",
-    "#080808", "#121212", "#1c1c1c", "#262626", "#303030", "#3a3a3a", "#444444", "#4e4e4e",
-    "#585858", "#626262", "#6c6c6c", "#767676", "#808080", "#8a8a8a", "#949494", "#9e9e9e",
-    "#a8a8a8", "#b2b2b2", "#bcbcbc", "#c6c6c6", "#d0d0d0", "#dadada", "#e4e4e4", "#eeeeee"
-};
-
 template <>
 Char parse(QDataStream &s, bool *ok) {
     Char r;
@@ -395,12 +340,12 @@ ArrayStr parse(QDataStream &s, bool *outerOk) {
     return r;
 }
 
-QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
-    QString result;
-    if (canContainHtml)
-        result += "<html><body>";
+FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
+    FormattedString result;
 
+    FormattedString::Part::Color foregroundColor;
     bool foreground = false;
+    FormattedString::Part::Color backgroundColor;
     bool background = false;
     bool bold = false;
     bool reverse = false;
@@ -408,20 +353,36 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
     bool underline = false;
     bool keep = false;
 
-    auto endColors = [&result, &foreground, &background]() {
+    auto carryOver = [&result, &foregroundColor, &foreground, &backgroundColor, &background, &bold, &reverse, &italic, &underline, &keep]() {
+        result.append();
+        auto &part = result.lastPart();
+
+        if (foreground)
+            part.foreground = foregroundColor;
+        if (background)
+            part.background = backgroundColor;
+        if (bold)
+            part.bold = true;
+        // if (reverse) TODO
+        if (italic)
+            part.italic = true;
+        if (underline)
+            part.underline = true;
+        // if (keep) TODO
+
+    };
+    auto endColors = [&carryOver, &foreground, &background]() {
         if (background) {
             background = false;
-            result += "</span>";
         }
-       if (foreground) {
-           foreground = false;
-           result += "</font>";
-       }
+        if (foreground) {
+            foreground = false;
+        }
+        carryOver();
     };
-    auto endAttrs = [&result, &bold, &reverse, &italic, &underline, &keep]() {
+    auto endAttrs = [&carryOver, &bold, &reverse, &italic, &underline, &keep]() {
        if (bold) {
            bold = false;
-           result += "</b>";
        }
        if (reverse) {
            reverse = false;
@@ -429,17 +390,16 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
        }
        if (italic) {
            italic = false;
-           result += "</i>";
        }
        if (underline) {
            underline = false;
-           result += "</u>";
        }
        if (keep) {
            // TODO
        }
+       carryOver();
     };
-    auto loadAttr = [&result, &bold, &reverse, &italic, &underline, &keep](QByteArray::const_iterator &it) {
+    auto loadAttr = [&carryOver, &bold, &reverse, &italic, &underline, &keep](QByteArray::const_iterator &it) {
        while (true) {
            switch(*it) {
            case 0x01: // fallthrough // TODO what the fuck weechat
@@ -447,28 +407,28 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
                if (bold)
                    break;
                bold = true;
-               result += "<b>";
+               carryOver();
                break;
            case 0x02: // fallthrough
            case '!':
                if (reverse)
                    break;
                reverse = true;
-               // TODO
+               carryOver();
                break;
            case 0x03: // fallthrough
            case '/':
                if (italic)
                    break;
                italic = true;
-               result += "<i>";
+               carryOver();
                break;
            case 0x04: // fallthrough
            case '_':
                if (underline)
                    break;
                underline = true;
-               result += "<u>";
+               carryOver();
                break;
            case '|':
                break;
@@ -484,35 +444,35 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
        }
     };
 
-    auto clearAttr = [&result, &bold, &reverse, &italic, &underline, &keep](QByteArray::const_iterator &it) {
+    auto clearAttr = [&carryOver, &bold, &reverse, &italic, &underline, &keep](QByteArray::const_iterator &it) {
        while (true) {
            switch(*it) {
            case 0x01: // fallthrough // TODO what the fuck weechat
            case '*':
                if (bold) {
                    bold = false;
-                   result += "</b>";
+                   carryOver();
                }
                break;
            case 0x02: // fallthrough
            case '!':
                if (reverse) {
                    reverse = false;
-                   // TODO
+                   carryOver();
                }
                break;
            case 0x03: // fallthrough
            case '/':
                if (italic) {
                    italic = false;
-                   result += "</i>";
+                   carryOver();
                }
                break;
            case 0x04: // fallthrough
            case '_':
                if (underline) {
                    underline = false;
-                   result += "</u>";
+                   carryOver();
                }
                break;
            case '|':
@@ -526,7 +486,7 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
            ++it;
        }
     };
-    auto loadStd = [&result, &foreground](QByteArray::const_iterator &it) {
+    auto loadStd = [&carryOver, &foreground, &foregroundColor](QByteArray::const_iterator &it) {
        while (*it == '@' || *it == '*' || *it == '!' || *it == '/' || *it == '_' || *it == '|')
            ++it;
        int code = 0;
@@ -539,38 +499,41 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
        }
        --it;
        if (foreground) {
-           result += "</font>";
            foreground = false;
        }
        if (code == 0) {
-           result += "<font color=\"<foreground>\">";
            foreground = true;
+           foregroundColor.extended = false;
+           foregroundColor.index = ColorTheme::FOREGROUND;
        }
-       else if (code > 0 && code < weechatColors.count()) {
-           result += "<font color=\""+weechatColors[code]+"\">";
+       else if (code > 0 && code < ColorTheme::_LAST_WEECHAT_COLOR) {
            foreground = true;
+           foregroundColor.extended = false;
+           foregroundColor.index = code;
        }
+       carryOver();
     };
-    auto loadExt = [&result, &foreground](QByteArray::const_iterator &it) {
-       while (*it == '@' || *it == '*' || *it == '!' || *it == '/' || *it == '_' || *it == '|')
+    auto loadExt = [&carryOver, &result, &foreground, &foregroundColor](QByteArray::const_iterator &it) {
+        while (*it == '@' || *it == '*' || *it == '!' || *it == '/' || *it == '_' || *it == '|')
            ++it;
-       int code = 0;
-       for (int i = 0; i < 5; i++) {
+        int code = 0;
+        for (int i = 0; i < 5; i++) {
            code *= 10;
            code += (*it) - '0';
            ++it;
-       }
-       --it;
-       if (foreground) {
-           result += "</font>";
+        }
+        --it;
+        if (foreground) {
            foreground = false;
-       }
-       if (code >= 0 && code < extendedColors.count()) {
-            result += "<font color=\""+extendedColors[code]+"\">";
+        }
+        if (code >= 0 && code < ColorTheme::ExtendedColorCount) {
             foreground = true;
-       }
+            foregroundColor.extended = true;
+            foregroundColor.index = code;
+        }
+        carryOver();
     };
-    auto loadBgStd = [&result, &background](QByteArray::const_iterator &it) {
+    auto loadBgStd = [&carryOver, &background, &backgroundColor](QByteArray::const_iterator &it) {
        while (*it == '@' || *it == '*' || *it == '!' || *it == '/' || *it == '_' || *it == '|' || *it == ',' || *it == '~')
            ++it;
        int code = 0;
@@ -580,18 +543,22 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
            ++it;
        }
        --it;
-       if (background)
-           result += "</span>";
+       if (background) {
+           background = false;
+       }
        if (code == 0) {
-           result += "<font color=\"<background>\">";
            background = true;
+           backgroundColor.extended = false;
+           backgroundColor.index = ColorTheme::BACKGROUND;
        }
-       else if (code >= 0 && code < weechatColors.count()) {
-           result += "<span style=\"background-color: "+weechatColors[code]+"\">";
+       else if (code >= 0 && code < ColorTheme::_LAST_WEECHAT_COLOR) {
            background = true;
+           backgroundColor.extended = false;
+           backgroundColor.index = code;
        }
+       carryOver();
     };
-    auto loadBgExt = [&result, &background](QByteArray::const_iterator &it) {
+    auto loadBgExt = [&carryOver, &background, &backgroundColor](QByteArray::const_iterator &it) {
        while (*it == '@' || *it == '*' || *it == '!' || *it == '/' || *it == '_' || *it == '|' || *it == ',' || *it == '~')
            ++it;
        int code = 0;
@@ -601,12 +568,15 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
            ++it;
        }
        --it;
-       if (background)
-           result += "</span>";
-       if (code >= 0 && code < extendedColors.count()) {
-           result += "<span style=\"background-color: "+extendedColors[code]+"\">";
-           background = true;
+       if (background) {
+           background = false;
        }
+       if (code >= 0 && code < ColorTheme::ExtendedColorCount) {
+           background = true;
+           backgroundColor.extended = true;
+           backgroundColor.index = code;
+       }
+       carryOver();
     };
     auto getChar = [](QByteArray::const_iterator &it) -> QString {
        if ((unsigned char) *it < 0x80) {
@@ -722,8 +692,6 @@ QString convertColorsToHtml(const QByteArray &data, bool canContainHtml) {
     }
     endColors();
     endAttrs();
-    if (canContainHtml)
-        result += "</body></html>";
 
     return result;
 }

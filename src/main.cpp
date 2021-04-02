@@ -65,10 +65,11 @@ int main(int argc, char *argv[])
     qRegisterMetaType<StringMap>();
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
+    qRegisterMetaType<FormattedString>();
     qRegisterMetaType<Protocol::String>();
-    qRegisterMetaType<Protocol::FormattedString>();
-    QMetaType::registerConverter<Protocol::FormattedString, QString>([](auto s){
-        return QString(s);
+    qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "FormattedString", "");
+    QMetaType::registerConverter<FormattedString, QString>([](auto s){
+        return s.toHtml(lightTheme);
     });
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");

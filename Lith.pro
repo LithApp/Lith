@@ -10,10 +10,12 @@ HEADERS += \
     src/qmlobjectlist.h \
     src/settings.h \
     src/uploader.h \
+    src/util/formattedstring.h \
     src/util/nicklistfilter.h \
     src/weechat.h \
     src/common.h \
     src/windowhelper.h \
+    src/util/colortheme.h \
     src/util/sockethelper.h
 
 SOURCES += \
@@ -25,9 +27,11 @@ SOURCES += \
     src/qmlobjectlist.cpp \
     src/settings.cpp \
     src/uploader.cpp \
+    src/util/formattedstring.cpp \
     src/util/nicklistfilter.cpp \
     src/weechat.cpp \
     src/windowhelper.cpp \
+    src/util/colortheme.cpp \
     src/util/sockethelper.cpp
 
 

@@ -112,7 +112,7 @@ public slots:
     void _buffer_line_added(const Protocol::HData &hda);
     void _nicklist(const Protocol::HData &hda);
     void _nicklist_diff(const Protocol::HData &hda);
-    void _pong(const Protocol::String& str);
+    void _pong(const FormattedString &str);
 
 protected:
     void addBuffer(pointer_t ptr, Buffer *b);

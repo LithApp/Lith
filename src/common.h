@@ -24,6 +24,8 @@
 
 #include "qmlobjectlist.h"
 
+#include "util/formattedstring.h"
+
 typedef QMap<QString, QString> StringMap;
 Q_DECLARE_METATYPE(StringMap);
 

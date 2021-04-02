@@ -487,7 +487,7 @@ void Lith::_nicklist_diff(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_pong(const Protocol::String &str) {
+void Lith::_pong(const FormattedString &str) {
     emit pongReceived(str.toLongLong());
 }
 

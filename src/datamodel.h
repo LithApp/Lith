@@ -55,10 +55,10 @@ public:
 class Buffer : public QObject {
     Q_OBJECT
     PROPERTY(int, number)
-    PROPERTY(Protocol::String, name)
+    PROPERTY(FormattedString, name)
     PROPERTY(QString, short_name)
     ALIAS(QString, name, full_name)
-    Q_PROPERTY(Protocol::String title READ titleGet WRITE titleSet NOTIFY titleChanged)
+    Q_PROPERTY(FormattedString title READ titleGet WRITE titleSet NOTIFY titleChanged)
     PROPERTY(StringMap, local_variables)
     Q_PROPERTY(QStringList local_variables_stringList READ local_variables_stringListGet NOTIFY local_variablesChanged)
 
@@ -157,7 +157,7 @@ class BufferLine : public QObject {
     Q_PROPERTY(QString nickAttributeColor READ nickAttributeColorGet NOTIFY prefixChanged)
     Q_PROPERTY(QString nick READ nickGet NOTIFY prefixChanged)
     Q_PROPERTY(QString nickColor READ nickColorGet NOTIFY prefixChanged)
-    Q_PROPERTY(QString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
+    Q_PROPERTY(FormattedString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(QString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
     Q_PROPERTY(bool isPrivMsg READ isPrivMsgGet NOTIFY tags_arrayChanged)
@@ -175,14 +175,14 @@ public:
 
     void setParent(Buffer *parent);
 
-    QString prefixGet() const;
-    void prefixSet(const QString &o);
+    FormattedString prefixGet() const;
+    void prefixSet(const FormattedString &o);
     QString nickAttributeGet() const;
     QString nickAttributeColorGet() const;
     QString nickGet() const;
     QString nickColorGet() const;
     QString messageGet() const;
-    void messageSet(const Protocol::FormattedString &o);
+    void messageSet(const FormattedString &o);
 
     bool isPrivMsgGet();
     bool isSelfMsgGet();
@@ -203,6 +203,7 @@ private slots:
 
 private:
     QString m_message;
+    FormattedString m_prefix;
     QString m_nickAttr;
     QString m_nick;
     QString m_nickAttrColor;

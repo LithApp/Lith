@@ -28,49 +28,6 @@
 #include <QXmlStreamReader>
 #include <QDomDocument>
 
-static const QMap<QString, QString> lightModeColors {
-    { "<foreground>",    "black" },
-    { "<background>",    "white" },
-    { "<black>",         "black" },
-    { "<dark gray>",     "#444444" },
-    { "<dark red>",      "#880000" },
-    { "<light red>",     "#ff4444" },
-    { "<dark green>",    "#008800" },
-    { "<light green>",   "#33cc33" },
-    { "<brown>",         "#d2691e" },
-    { "<yellow>",        "#dddd00" },
-    { "<dark blue>",     "#000088" },
-    { "<light blue>",    "#3333dd" },
-    { "<dark magenta>",  "#660066" },
-    { "<light magenta>", "#ff44ff" },
-    { "<dark cyan>",     "#006666" },
-    { "<light cyan>",    "#22aaaa" },
-    { "<gray>",          "#aaaaaa" },
-    { "<white>",         "#ffffff" }
-};
-
-static const QMap<QString, QString> darkModeColors {
-    { "<foreground>",    "white" },
-    { "<background>",    "black" },
-    { "<black>",         "black" },
-    { "<dark gray>",     "#444444" },
-    { "<dark red>",      "#880000" },
-    { "<light red>",     "#ff4444" },
-    { "<dark green>",    "#33dd33" },
-    { "<light green>",   "#55ff55" },
-    { "<brown>",         "#d2691e" },
-    { "<yellow>",        "#ffff00" },
-    { "<dark blue>",     "#4444ff" },
-    { "<light blue>",    "#9999ff" },
-    { "<dark magenta>",  "#ee44ee" },
-    { "<light magenta>", "#ff88ff" },
-    { "<dark cyan>",     "#22aaaa" },
-    { "<light cyan>",    "#44dddd" },
-    { "<gray>",          "#aaaaaa" },
-    { "<white>",         "#ffffff" }
-};
-
-
 Buffer::Buffer(Lith *parent, pointer_t pointer)
     : QObject(parent)
     , m_lines(QmlObjectList::create<BufferLine>(this))
@@ -114,17 +71,14 @@ void Buffer::titleSet(const Protocol::String &o) {
     }
     // then replace all of them with actual links
     for (auto &url : urls) {
-        copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
+        // TODO COLOR
+        // copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
     }
     if (lith()->windowHelperGet()->darkThemeGet()) {
-        for (auto &i : darkModeColors.keys()) {
-            copy.replace(i, darkModeColors[i]);
-        }
+        copy = o.toHtml(darkTheme);
     }
     else {
-        for (auto &i : lightModeColors.keys()) {
-            copy.replace(i, lightModeColors[i]);
-        }
+        copy = o.toHtml(lightTheme);
     }
     if (copy != m_title) {
         m_title = copy;
@@ -295,7 +249,8 @@ Lith *BufferLine::lith() {
     return nullptr;
 }
 
-QString BufferLine::prefixGet() const {
+FormattedString BufferLine::prefixGet() const {
+    return m_prefix;
     QString ret;
     if (nickAttributeGet().count() > 0) {
         ret += "<font color=\"" + nickAttributeColorGet() + "\">" + nickAttributeGet() + "</color>";
@@ -306,9 +261,17 @@ QString BufferLine::prefixGet() const {
     return ret;
 }
 
-void BufferLine::prefixSet(const QString &o) {
+void BufferLine::prefixSet(const FormattedString &o) {
+    if (m_prefix != o) {
+        m_prefix = o;
+        emit prefixChanged();
+    }
+    return;
+
     auto copy = o;
+    /* COLOR TODO
     if (lith() && lith()->windowHelperGet()->darkThemeGet()) {
+        copy =
         for (auto i : darkModeColors.keys()) {
             copy.replace(i, darkModeColors[i]);
         }
@@ -318,6 +281,7 @@ void BufferLine::prefixSet(const QString &o) {
             copy.replace(i, lightModeColors[i]);
         }
     }
+    */
     QXmlStreamReader xml(copy);
     QStringList colors;
     QStringList parts;
@@ -379,7 +343,7 @@ QString BufferLine::messageGet() const {
     return m_message;
 }
 
-void BufferLine::messageSet(const Protocol::FormattedString &o) {
+void BufferLine::messageSet(const FormattedString &o) {
     // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
     // ; was added to handle &amp; escapes right
     QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
@@ -392,19 +356,16 @@ void BufferLine::messageSet(const Protocol::FormattedString &o) {
         auto url = reMatch.captured();
         urls.insert(url);
     }
+    // COLOR TODO
     // then replace all of them with actual links
     for (auto &url : urls) {
-        copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
+        //copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
     }
     if (lith() && lith()->windowHelperGet()->darkThemeGet()) {
-        for (auto i : darkModeColors.keys()) {
-            copy.replace(i, darkModeColors[i]);
-        }
+        copy = o.toHtml(darkTheme);
     }
     else {
-        for (auto i : lightModeColors.keys()) {
-            copy.replace(i, lightModeColors[i]);
-        }
+        copy = o.toHtml(lightTheme);
     }
 
     if (copy != m_message) {
