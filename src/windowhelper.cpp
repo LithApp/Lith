@@ -27,6 +27,12 @@ void WindowHelper::init() {
     resetColorScheme();
 }
 
+const ColorTheme &WindowHelper::currentTheme() {
+    if (m_darkTheme)
+        return darkTheme;
+    return lightTheme;
+}
+
 qreal WindowHelper::getBottomSafeAreaSize() {
     if (qApp->allWindows().count() > 0) {
         auto window = qApp->allWindows().first();

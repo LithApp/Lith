@@ -8,12 +8,14 @@ class WindowHelper : public QObject
     Q_OBJECT
     PROPERTY_READONLY(bool, darkTheme, false)
     Q_PROPERTY(bool lightTheme READ lightThemeGet NOTIFY darkThemeChanged)
+    Q_PROPERTY(ColorTheme currentTheme READ currentTheme NOTIFY darkThemeChanged)
 public:
     explicit WindowHelper(QObject *parent = nullptr);
 
     void init();
 
     bool lightThemeGet() { return !darkThemeGet(); }
+    const ColorTheme &currentTheme();
     void resetColorScheme();
 
     Q_INVOKABLE qreal getBottomSafeAreaSize();

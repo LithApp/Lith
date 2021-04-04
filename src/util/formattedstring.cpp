@@ -16,6 +16,9 @@
 
 #include "formattedstring.h"
 
+#include "windowhelper.h"
+#include "lith.h"
+
 #include <QRegularExpression>
 #include <QDebug>
 
@@ -28,14 +31,14 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
     if (foreground.index >= 0) {
         ret.append("<font color=\"");
         if (foreground.extended) {
-            if (theme.extendedColors.count() > foreground.index)
-                ret.append(theme.extendedColors[foreground.index]);
+            if (theme.extendedColors().count() > foreground.index)
+                ret.append(theme.extendedColors()[foreground.index]);
             else
                 ret.append("pink");
         }
         else {
-            if (theme.weechatColors.count() > foreground.index)
-                ret.append(theme.weechatColors[foreground.index]);
+            if (theme.weechatColors().count() > foreground.index)
+                ret.append(theme.weechatColors()[foreground.index]);
             else
                 ret.append("pink");
         }
@@ -46,12 +49,14 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
         ret.append(text);
         ret.append("\">");
     }
-    ret.append(text);
+
+    ret.append(text.toHtmlEscaped());
+
     if (hyperlink) {
         ret.append("</a>");
     }
     if (foreground.index >= 0)
-        ret.append("</color>");
+        ret.append("</font>");
     if (underline)
         ret.append("</u>");
     if (bold)
@@ -93,6 +98,10 @@ FormattedString &FormattedString::operator+=(const QString &s) {
     return *this;
 }
 
+const ColorTheme &FormattedString::getCurrentTheme() {
+    return Lith::instance()->windowHelperGet()->currentTheme();
+}
+
 void FormattedString::clear() {
     m_parts = {{}};
 }
@@ -110,28 +119,24 @@ QString FormattedString::toPlain() const {
     return ret;
 }
 
-QString FormattedString::testHtml() const {
-    return toHtml(lightTheme);
-}
-
 QString FormattedString::toHtml(const ColorTheme &theme) const {
-    QString ret { "<html><body>"};
+    QString ret { "<html><body><span style='white-space: pre-wrap;'>" };
     for (auto &i : m_parts) {
         ret.append(i.toHtml(theme));
     }
-    ret.append("</body></html>");
+    ret.append("</span></body></html>");
     return ret;
 }
 
-QString FormattedString::toTrimmedHtml(int n) const {
+QString FormattedString::toTrimmedHtml(int n, const ColorTheme &theme) const {
     if (n <= 0)
-        return toHtml(lightTheme);
-    QString ret = "<html><body>";
+        return toHtml(theme);
+    QString ret = "<html><body><span style='white-space: pre-wrap;'>";
     for (auto &i : m_parts) {
         QString word = i.text.left(n);
         Part tempPart = i;
         tempPart.text = word;
-        ret.append(tempPart.toHtml(lightTheme));
+        ret.append(tempPart.toHtml(theme));
         n -= word.count();
         if (n <= 0)
             break;
@@ -140,7 +145,7 @@ QString FormattedString::toTrimmedHtml(int n) const {
         ret.append("\u00A0");
         n--;
     }
-    ret += "</body></html>";
+    ret += "</span></body></html>";
     return ret;
 }
 
@@ -158,7 +163,7 @@ void FormattedString::prune() {
         QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
                               QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
 
-        auto reIt = re.globalMatch(it->text, 0, QRegularExpression::PartialPreferFirstMatch);
+        auto reIt = re.globalMatch(it->text, 0, QRegularExpression::NormalMatch);
         if (reIt.hasNext()) {
             QList<Part> segments;
             int previousEnd = 0;

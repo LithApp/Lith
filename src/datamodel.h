@@ -56,8 +56,8 @@ class Buffer : public QObject {
     Q_OBJECT
     PROPERTY(int, number)
     PROPERTY(FormattedString, name)
-    PROPERTY(QString, short_name)
-    ALIAS(QString, name, full_name)
+    PROPERTY(FormattedString, short_name)
+    ALIAS(FormattedString, name, full_name)
     Q_PROPERTY(FormattedString title READ titleGet WRITE titleSet NOTIFY titleChanged)
     PROPERTY(StringMap, local_variables)
     Q_PROPERTY(QStringList local_variables_stringList READ local_variables_stringListGet NOTIFY local_variablesChanged)
@@ -158,7 +158,7 @@ class BufferLine : public QObject {
     Q_PROPERTY(QString nick READ nickGet NOTIFY prefixChanged)
     Q_PROPERTY(QString nickColor READ nickColorGet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
-    Q_PROPERTY(QString message READ messageGet WRITE messageSet NOTIFY messageChanged)
+    Q_PROPERTY(FormattedString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
     Q_PROPERTY(bool isPrivMsg READ isPrivMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(bool isSelfMsg READ isSelfMsgGet NOTIFY tags_arrayChanged)

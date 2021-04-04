@@ -29,7 +29,7 @@ class FormattedString {
 public:
     struct Part {
         struct Color {
-            int32_t index { 0 };
+            int32_t index { -1 };
             bool extended { false };
         };
 
@@ -38,12 +38,12 @@ public:
         QString toHtml(const ColorTheme &theme) const;
 
         QString text {};
-        Color foreground;
-        Color background;
+        Color foreground { -1, false };
+        Color background { -1, false };
         bool hyperlink { false };
         bool bold { false };
         bool underline { false };
-        bool italic;
+        bool italic { false };
     };
 
     FormattedString();
@@ -66,10 +66,11 @@ public:
 
     operator QString() const;
 
+    static const ColorTheme &getCurrentTheme();
+
     Q_INVOKABLE QString toPlain() const;
-    Q_INVOKABLE QString testHtml() const;
-    Q_INVOKABLE QString toHtml(const ColorTheme &theme) const;
-    Q_INVOKABLE QString toTrimmedHtml(int n) const;
+    Q_INVOKABLE QString toHtml(const ColorTheme &theme = getCurrentTheme()) const;
+    Q_INVOKABLE QString toTrimmedHtml(int n, const ColorTheme &theme = getCurrentTheme()) const;
 
     bool containsHtml() const;
 

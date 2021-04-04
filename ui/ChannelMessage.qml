@@ -75,7 +75,7 @@ Rectangle {
 
         Text {
             id: messageText
-            text: "<span style='white-space: pre-wrap;'>" + messageModel.message + "</span>"
+            text: messageModel.message
             Layout.fillWidth: true
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: palette.text

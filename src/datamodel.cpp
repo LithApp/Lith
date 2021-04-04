@@ -166,7 +166,7 @@ int Buffer::opsGet() const {
 
 QStringList Buffer::local_variables_stringListGet() const {
     QStringList ret;
-    for (auto i : m_local_variables.keys()) {
+    for (auto &i : m_local_variables.keys()) {
         ret.append(QString("%1: %2").arg(i).arg(m_local_variables[i]));
     }
     return ret;
@@ -187,7 +187,7 @@ bool Buffer::isPrivateGet() const {
 bool Buffer::input(const QString &data) {
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
         bool success = false;
-        QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr), Q_ARG(const QString&, data));
+        QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr), Q_ARG(QString, data));
         return success;
     }
     return false;
@@ -230,14 +230,6 @@ Lith *BufferLine::lith() {
 
 FormattedString BufferLine::prefixGet() const {
     return m_prefix;
-    QString ret;
-    if (nickAttributeGet().count() > 0) {
-        ret += "<font color=\"" + nickAttributeColorGet() + "\">" + nickAttributeGet() + "</color>";
-    }
-    if (nickGet().count() > 0) {
-        ret += "<font color=\"" + nickColorGet() + "\">" + nickGet() + "</color>";
-    }
-    return ret;
 }
 
 void BufferLine::prefixSet(const FormattedString &o) {
@@ -245,61 +237,6 @@ void BufferLine::prefixSet(const FormattedString &o) {
         m_prefix = o;
         emit prefixChanged();
     }
-    return;
-
-    auto copy = o;
-    /* COLOR TODO
-    if (lith() && lith()->windowHelperGet()->darkThemeGet()) {
-        copy =
-        for (auto i : darkModeColors.keys()) {
-            copy.replace(i, darkModeColors[i]);
-        }
-    }
-    else {
-        for (auto i : lightModeColors.keys()) {
-            copy.replace(i, lightModeColors[i]);
-        }
-    }
-    */
-    QXmlStreamReader xml(copy);
-    QStringList colors;
-    QStringList parts;
-    while (!xml.atEnd()) {
-        xml.readNextStartElement();
-        if (xml.attributes().count() >= 1 && xml.attributes().first().name() == "color") {
-            colors.append(xml.attributes().first().value().toString());
-            parts.append(xml.readElementText(QXmlStreamReader::IncludeChildElements));
-        }
-    }
-    bool changed = false;
-    if (parts.count() == 2 && colors.count() == 2) {
-        if (m_nickAttr != parts[0] || m_nickAttrColor != colors[0]) {
-            changed = true;
-            m_nickAttr = parts[0];
-            m_nickAttrColor = colors[0];
-        }
-        if (m_nick != parts[1] || m_nickColor != colors[1]) {
-            changed = true;
-            m_nick = parts[1];
-            m_nickColor = colors[1];
-        }
-    }
-    else if (parts.count() >= 1 && colors.count() >= 1){
-        if (m_nick != parts[0] || m_nickColor != colors[0]) {
-            changed = true;
-            m_nick = parts[0];
-            m_nickColor = colors[0];
-        }
-    }
-    else if (parts.count() == 1) {
-        if (m_nick != parts[0] || m_nickColor != "default") {
-            changed = true;
-            m_nick = parts[0];
-            m_nickColor = "default";
-        }
-    }
-    if (changed)
-        emit prefixChanged();
 }
 
 QString BufferLine::nickAttributeGet() const {

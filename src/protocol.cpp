@@ -512,7 +512,7 @@ FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHtml)
        }
        carryOver();
     };
-    auto loadExt = [&carryOver, &result, &foreground, &foregroundColor](QByteArray::const_iterator &it) {
+    auto loadExt = [&carryOver, &foreground, &foregroundColor](QByteArray::const_iterator &it) {
         while (*it == '@' || *it == '*' || *it == '!' || *it == '/' || *it == '_' || *it == '|')
            ++it;
         int code = 0;
@@ -675,16 +675,6 @@ FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHtml)
        else if (*it == 0x1B) {
            clearAttr(it);
        }
-       else if (canContainHtml && (*it == '<'))
-           result += "&lt;";
-       else if (canContainHtml && (*it == '>'))
-           result += "&gt;";
-       else if (canContainHtml && (*it == '&'))
-           result += "&amp;";
-       else if (canContainHtml && (*it == '"'))
-           result += "&quot;";
-       else if (canContainHtml && (*it == '\''))
-           result += "&apos;";
        else if (*it) {
            result += getChar(it);
        }

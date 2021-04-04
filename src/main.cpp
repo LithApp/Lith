@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
         }
         return s.toPlain();
     });
+    qmlRegisterUncreatableType<ColorTheme>("lith", 1, 0, "ColorTheme", "");
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qmlRegisterUncreatableType<BufferLineSegment>("lith", 1, 0, "LineSegment", "");
     qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");

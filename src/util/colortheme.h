@@ -1,14 +1,17 @@
 #ifndef COLORTHEME_H
 #define COLORTHEME_H
 
+#include <QObject>
 #include <QString>
 #include <QList>
 
-struct ColorTheme {
-    QString name;
-    QStringList weechatColors;
-    QStringList extendedColors;
-
+class ColorTheme {
+    Q_GADGET
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QStringList weechatColors READ weechatColors CONSTANT)
+    Q_PROPERTY(QStringList extendedColors READ extendedColors CONSTANT)
+public:
+    inline static const int ExtendedColorCount = 256;
     enum WeechatColorNames {
         DEFAULT = -1,
         FOREGROUND = 0,
@@ -31,13 +34,23 @@ struct ColorTheme {
         WHITE,
         _LAST_WEECHAT_COLOR
     };
-    inline static const int ExtendedColorCount = 256;
+
+    ColorTheme(const QString &name, const QStringList &weechatColors, const QStringList &extendedColors) : m_name(name), m_weechatColors(weechatColors), m_extendedColors(extendedColors) {}
+
+    QString name() const { return m_name; }
+    const QStringList &weechatColors() const { return m_weechatColors; }
+    const QStringList &extendedColors() const { return m_extendedColors; }
+
+private:
+    QString m_name;
+    QStringList m_weechatColors;
+    QStringList m_extendedColors;
 };
 
 static inline const ColorTheme lightTheme {
     "light",
     {
-        "black",   "white",   "black",   "#444444", "#880000", "#ff4444", "#008800", "#33cc33",
+        "black",   "white",   "#444444", "#880000", "#ff4444", "#008800", "#33cc33",
         "#d2691e", "#dddd00", "#000088", "#3333dd", "#660066", "#ff44ff", "#006666", "#22aaaa",
         "#aaaaaa", "#ffffff"
     },
@@ -81,7 +94,7 @@ static inline const ColorTheme lightTheme {
 static inline const ColorTheme darkTheme {
     "dark",
     {
-        "white",   "black",   "black",   "#444444",
+        "white",   "black",   "#444444",
         "#880000", "#ff4444", "#33dd33", "#55ff55",
         "#d2691e", "#ffff00", "#4444ff", "#9999ff",
         "#ee44ee", "#ff88ff", "#22aaaa", "#44dddd",

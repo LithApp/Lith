@@ -165,6 +165,7 @@ Drawer {
                             clip: true
                             text: buffer ? buffer.short_name === "" ? buffer.name : buffer.short_name
                                          : ""
+                            textFormat: Text.RichText
                             font.pointSize: settings.baseFontSize * 1.125
                             color: palette.windowText
                             MouseArea {
