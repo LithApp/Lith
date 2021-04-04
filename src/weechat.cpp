@@ -312,7 +312,7 @@ void Weechat::onTimeout() {
 void Weechat::onPingTimeout() {
     static qint64 previousPing = 0;
     if (m_initializationStatus == COMPLETE) {
-        if (previousPing != m_lastReceivedPong) {
+        if (previousPing < m_lastReceivedPong - 1) {
             restart();
         }
         previousPing = m_messageOrder++;
