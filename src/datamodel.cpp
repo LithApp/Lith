@@ -212,7 +212,7 @@ void Buffer::clearHotlist() {
 BufferLine::BufferLine(Buffer *parent)
     : QObject(parent)
 {
-    connect(this, &BufferLine::messageChanged, this, &BufferLine::onMessageChanged);
+    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
 }
 
 BufferLine::~BufferLine() {
@@ -239,53 +239,17 @@ void BufferLine::prefixSet(const FormattedString &o) {
     }
 }
 
-QString BufferLine::nickAttributeGet() const {
-    return m_nickAttr;
-}
-
-QString BufferLine::nickAttributeColorGet() const {
-    return m_nickAttrColor;
-}
-
 QString BufferLine::nickGet() const {
     return m_nick;
 }
 
-QString BufferLine::nickColorGet() const {
-    return m_nickColor;
-}
-
-QString BufferLine::messageGet() const {
+FormattedString BufferLine::messageGet() const {
     return m_message;
 }
 
 void BufferLine::messageSet(const FormattedString &o) {
-    // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
-    // ; was added to handle &amp; escapes right
-    QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))", QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
-    auto copy = o;
-    auto reIt = re.globalMatch(copy, 0, QRegularExpression::PartialPreferFirstMatch);
-    QSet<QString> urls;
-    // first generate a set of all URLs (handling duplicate URLs in this loop results in broken <a> tags)
-    while (reIt.hasNext()) {
-        auto reMatch = reIt.next();
-        auto url = reMatch.captured();
-        urls.insert(url);
-    }
-    // COLOR TODO
-    // then replace all of them with actual links
-    for (auto &url : urls) {
-        //copy.replace(url, "<a href=\""+url+"\">"+url+"</a>");
-    }
-    if (lith() && lith()->windowHelperGet()->darkThemeGet()) {
-        copy = o.toHtml(darkTheme);
-    }
-    else {
-        copy = o.toHtml(lightTheme);
-    }
-
-    if (copy != m_message) {
-        m_message = copy;
+    if (m_message != o) {
+        m_message = o;
         emit messageChanged();
     }
 }
@@ -309,35 +273,6 @@ QString BufferLine::colorlessTextGet() {
 
 QObject *BufferLine::bufferGet() {
     return parent();
-}
-
-QList<QObject *> BufferLine::segments() {
-    return m_segments;
-}
-
-void BufferLine::onMessageChanged() {
-    QRegExp re(R"((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$]))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
-    int lastIdx = 0;
-    int idx = -1;
-    if (lastIdx < messageGet().length() && (idx = re.indexIn(messageGet(), lastIdx)) >= 0) {
-        int length = idx - lastIdx;
-        auto leftPart = messageGet().mid(lastIdx, length).trimmed();
-        auto rightPart = re.cap().trimmed();
-        if (!leftPart.isEmpty())
-            m_segments.append(new BufferLineSegment(this, leftPart));
-        if (!rightPart.isEmpty())
-            m_segments.append(new BufferLineSegment(this, rightPart, BufferLineSegment::LINK));
-
-        lastIdx = idx + re.matchedLength();
-    }
-
-    if (lastIdx < messageGet().length()) {
-        auto rest = messageGet().mid(lastIdx).trimmed();
-        if (!rest.isEmpty())
-            m_segments.append(new BufferLineSegment(this, rest));
-    }
-
-    emit segmentsChanged();
 }
 
 Nick::Nick(Buffer *parent)
@@ -382,72 +317,4 @@ void HotListItem::onCountChanged() {
             bufferGet()->unreadMessagesSet(0);
         }
     }
-}
-
-BufferLineSegment::BufferLineSegment(BufferLine *parent, const QString &text, BufferLineSegment::Type type)
-    : QObject(parent)
-    , m_type(type)
-    , m_plainText(text)
-{
-    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLineSegment::summaryChanged);
-    auto url = QUrl(plainTextGet());
-    if (url.scheme().startsWith("http")) {
-        auto extension = url.fileName().split(".").last().toLower();
-        auto host = url.host();
-
-        if (QStringList{"png", "jpg", "gif"}.indexOf(extension) != -1)
-            m_type = IMAGE;
-        else if (QStringList{"avi", "mov", "mp4", "webm"}.indexOf(extension) != -1)
-            m_type = VIDEO;
-        else if (host.contains("youtube.com")) {
-            QRegExp re("[?]v[=]([0-9a-zA-Z-_]+)");
-            if (re.indexIn(plainTextGet()) != -1) {
-                m_embedUrl = "https://www.youtube.com/embed/" + re.cap(1);
-                m_type = EMBED;
-            }
-            else
-                m_type = LINK;
-        }
-        else
-            m_type = LINK;
-        // youtube: "https://www.youtube.com/embed/IDidIDidIDi"
-    }
-}
-QString BufferLineSegment::summaryGet()
-{
-    const auto threshold = Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet();
-    if (plainTextGet().size() < threshold) {
-        return plainTextGet();
-    }
-    auto url = QUrl(plainTextGet());
-    auto scheme = url.scheme();
-    auto host = url.host();
-    auto file = url.fileName();
-    auto query = url.query();
-    auto path = url.path();
-    // If we only have a hostname, we'll use it as is.
-    if (path.isEmpty() || path == "/") {
-        return plainTextGet();
-    }
-
-    // We'll show always show the host and the scheme.
-    const auto hostPrefix = scheme + "://" + host + "/";
-    const auto ellipsis = "\u2026";
-
-    // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
-    // ellipsis...
-    if (hostPrefix.length() > threshold) {
-        return hostPrefix + ellipsis;
-    }
-
-    // This is a "nice" url with just a hostname and then one path fragment. We'll let these slide, because these tend
-    // to look nice even if they're long. Something like https://host.domain/file.extension
-    if (path == "/" + file && !url.hasQuery()) {
-        return plainTextGet();
-    }
-
-    // Otherwise it's a weird link with multiple path fragments and queries and stuff. We'll just use the host and 10
-    // characters of the path.
-    const auto maxCharsToAppend = threshold - hostPrefix.length();
-    return hostPrefix + ellipsis + plainTextGet().right(maxCharsToAppend - 1);
 }

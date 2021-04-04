@@ -1,5 +1,6 @@
 // Lith
 // Copyright (C) 2021 Martin Bříza
+// Copyright (C) 2020 Václav Kubernát
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,6 +22,7 @@
 
 #include <QRegularExpression>
 #include <QDebug>
+#include <QUrl>
 
 QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
     QString ret;
@@ -50,7 +52,49 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
         ret.append("\">");
     }
 
-    ret.append(text.toHtmlEscaped());
+    QString finalText;
+    const auto urlThreshold = Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet();
+    if (urlThreshold > 0 && hyperlink && text.size() > urlThreshold) {
+        auto url = QUrl(text);
+        auto scheme = url.scheme();
+        auto host = url.host();
+        auto file = url.fileName();
+        auto query = url.query();
+        auto path = url.path();
+
+        // If we only have a hostname, we'll use it as is.
+        if (path.isEmpty() || path == "/") {
+            finalText = text;
+        }
+        else {
+            // We'll show always show the host and the scheme.
+            const auto hostPrefix = scheme + "://" + host + "/";
+            const auto ellipsis = "\u2026";
+
+            // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
+            // ellipsis...
+            if (hostPrefix.length() >= urlThreshold) {
+                finalText = hostPrefix + ellipsis;
+            }
+            else {
+                // This is a "nice" url with just a hostname and then one path fragment. We'll let these slide, because these tend
+                // to look nice even if they're long. Something like https://host.domain/file.extension
+                if (path == "/" + file && !url.hasQuery()) {
+                    finalText = text;
+                }
+                else {
+                    // Otherwise it's a weird link with multiple path fragments and queries and stuff. We'll just use the host and 10
+                    // characters of the path.
+                    const auto maxCharsToAppend = urlThreshold - hostPrefix.length();
+                    finalText = hostPrefix + ellipsis + path.right(maxCharsToAppend - 1);
+                }
+            }
+        }
+    }
+    else {
+        finalText = text;
+    }
+    ret.append(finalText.toHtmlEscaped());
 
     if (hyperlink) {
         ret.append("</a>");
@@ -160,6 +204,9 @@ FormattedString::Part &FormattedString::lastPart() {
 void FormattedString::prune() {
     auto it = m_parts.begin();
     while (it != m_parts.end()) {
+        // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
+        // ; was added to handle &amp; escapes right
+
         QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
                               QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
 

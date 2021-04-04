@@ -122,30 +122,6 @@ private:
     FormattedString m_title {};
 };
 
-class BufferLineSegment : public QObject {
-    Q_OBJECT
-public:
-    enum Type {
-        PLAIN,
-        LINK,
-        EMBED,
-        IMAGE,
-        VIDEO
-    }; Q_ENUMS(Type)
-    PROPERTY(Type, type)
-    PROPERTY(QString, plainText)
-    Q_PROPERTY(QString summary READ summaryGet NOTIFY summaryChanged)
-    PROPERTY(QString, embedUrl)
-public:
-    BufferLineSegment(BufferLine *parent = nullptr, const QString &text = QString(), Type type = PLAIN);
-
-signals:
-    void summaryChanged();
-
-private:
-    QString summaryGet();
-};
-
 class BufferLine : public QObject {
     Q_OBJECT
     PROPERTY(QDateTime, date)
@@ -153,10 +129,7 @@ class BufferLine : public QObject {
     PROPERTY(bool, highlight)
     PROPERTY(QStringList, tags_array)
 
-    Q_PROPERTY(QString nickAttribute READ nickAttributeGet NOTIFY prefixChanged)
-    Q_PROPERTY(QString nickAttributeColor READ nickAttributeColorGet NOTIFY prefixChanged)
     Q_PROPERTY(QString nick READ nickGet NOTIFY prefixChanged)
-    Q_PROPERTY(QString nickColor READ nickColorGet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
@@ -165,7 +138,6 @@ class BufferLine : public QObject {
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
     Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged) // used here because segments is already chopped up
     Q_PROPERTY(QObject *buffer READ bufferGet CONSTANT)
-    Q_PROPERTY(QList<QObject*> segments READ segments NOTIFY segmentsChanged)
 public:
     BufferLine(Buffer *parent);
     virtual ~BufferLine();
@@ -177,11 +149,8 @@ public:
 
     FormattedString prefixGet() const;
     void prefixSet(const FormattedString &o);
-    QString nickAttributeGet() const;
-    QString nickAttributeColorGet() const;
     QString nickGet() const;
-    QString nickColorGet() const;
-    QString messageGet() const;
+    FormattedString messageGet() const;
     void messageSet(const FormattedString &o);
 
     bool isPrivMsgGet();
@@ -199,16 +168,11 @@ signals:
     void prefixChanged();
 
 private slots:
-    void onMessageChanged();
 
 private:
-    QString m_message;
+    FormattedString m_message;
     FormattedString m_prefix;
-    QString m_nickAttr;
     QString m_nick;
-    QString m_nickAttrColor;
-    QString m_nickColor;
-    QList<QObject*> m_segments;
 };
 
 class HotListItem : public QObject {
