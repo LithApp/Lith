@@ -22,6 +22,11 @@ import lith 1.0
 
 Frame {
     id: root
+
+    SystemPalette {
+        id: palette
+    }
+
     background: Rectangle {
         color: palette.window
         Rectangle {
@@ -53,6 +58,7 @@ Frame {
             Label {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                color: palette.text
                 clip: true
                 height: 1
                 font.bold: true
@@ -66,6 +72,7 @@ Frame {
             Label {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                color: palette.text
                 visible: !lith.selectedBuffer || lith.selectedBuffer.title.length > 0
                 clip: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere

@@ -22,6 +22,10 @@ import QtQuick.Layouts 1.3
 Drawer {
     id: root
 
+    SystemPalette {
+        id: palette
+    }
+
     onVisibleChanged: {
         bufferList.currentIndex = lith.selectedBufferIndex
 
