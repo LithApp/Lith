@@ -239,6 +239,13 @@ FormattedString BufferLine::prefixGet() const {
 void BufferLine::prefixSet(const FormattedString &o) {
     if (m_prefix != o) {
         m_prefix = o;
+        // TODO this is probably wrong
+        if (m_prefix.toPlain().startsWith("@") || m_prefix.toPlain().startsWith("+")) {
+            m_nick = m_prefix.toPlain().mid(1);
+        }
+        else {
+            m_nick = m_prefix.toPlain();
+        }
         emit prefixChanged();
     }
 }

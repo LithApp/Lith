@@ -38,14 +38,14 @@ Rectangle {
         acceptedButtons: (mobilePlatform ? Qt.LeftButton : 0) | Qt.RightButton
         cursorShape: messageText.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.IBeamCursor
         onPressAndHold: {
-            channelMessageActionMenu.show(messageModel.colorlessText,
-                                          messageModel.colorlessNickname,
+            channelMessageActionMenu.show(messageModel.message.toPlain(),
+                                          messageModel.nick,
                                           messageModel.date)
         }
         onClicked: {
             if (mouse.button === Qt.RightButton) {
-                channelMessageActionMenu.show(messageModel.colorlessText,
-                                              messageModel.colorlessNickname,
+                channelMessageActionMenu.show(messageModel.message.toPlain(),
+                                              messageModel.nick,
                                               messageModel.date)
             }
         }
