@@ -281,19 +281,19 @@ TextField {
             channelMessageList.contentY += 30
         }
         if (event.key === Qt.Key_Down) {
-            if (channelMessageList.contentY > 30)
+            if (channelMessageList.contentY > 35)
                 channelMessageList.contentY -= 30
             else
-                channelMessageList.contentY = 0
+                channelMessageList.positionViewAtBeginning()
         }
         if (event.key === Qt.Key_PageUp) {
             channelMessageList.contentY += channelMessageList.height - 30
         }
         if (event.key === Qt.Key_PageDown) {
-            if (channelMessageList.contentY > channelMessageList.height - 30)
+            if (channelMessageList.contentY > channelMessageList.height - 35)
                 channelMessageList.contentY -= channelMessageList.height - 30
             else
-                channelMessageList.contentY = 0
+                channelMessageList.positionViewAtBeginning()
         }
         if (event.key === Qt.Key_End) {
             channelMessageList.contentY = 0
