@@ -39,6 +39,9 @@ ScrollView {
         settings.forceLightTheme = forceLightThemeCheckbox.checked
         settings.forceDarkTheme = forceDarkThemeCheckbox.checked
         settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
+        settings.hotlistEnabled = hotlistEnabledCheckbox.checked
+        settings.hotlistCompact = hotlistCompactCheckbox.checked
+        settings.hotlistShowUnreadCount = hotlistShowUnreadCountCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -56,6 +59,9 @@ ScrollView {
         forceLightThemeCheckbox.checked = settings.forceLightTheme
         forceDarkThemeCheckbox.checked = settings.forceDarkTheme
         useTrueBlackWithDarkThemeCheckbox.checked = settings.useTrueBlackWithDarkTheme
+        hotlistEnabledCheckbox.checked = settings.hotlistEnabled
+        hotlistCompactCheckbox.checked = settings.hotlistCompact
+        hotlistShowUnreadCountCheckbox.checked = settings.hotlistShowUnreadCount
     }
 
     ColumnLayout {
@@ -195,6 +201,53 @@ ScrollView {
             CheckBox {
                 id: showSendButtonCheckbox
                 checked: settings.showSendButton
+                Layout.alignment: Qt.AlignLeft
+            }
+
+            ////////////////////////// HOTLIST
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.base
+            }
+            Label {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("Hotlist")
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+            }
+
+            Label {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Enable hotlist")
+            }
+            CheckBox {
+                id: hotlistEnabledCheckbox
+                checked: settings.hotlistEnabled
+                Layout.alignment: Qt.AlignLeft
+            }
+            Label {
+                Layout.alignment: Qt.AlignRight
+                enabled: hotlistEnabledCheckbox.checked
+                text: qsTr("Show unread count")
+            }
+            CheckBox {
+                id: hotlistShowUnreadCountCheckbox
+                enabled: hotlistEnabledCheckbox.checked
+                checked: settings.hotlistShowUnreadCount
+                Layout.alignment: Qt.AlignLeft
+            }
+            Label {
+                Layout.alignment: Qt.AlignRight
+                enabled: hotlistEnabledCheckbox.checked
+                text: qsTr("Use compact layout")
+            }
+            CheckBox {
+                id: hotlistCompactCheckbox
+                enabled: hotlistEnabledCheckbox.checked
+                checked: settings.hotlistCompact
                 Layout.alignment: Qt.AlignLeft
             }
 

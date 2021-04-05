@@ -88,6 +88,14 @@ ColumnLayout {
         }
     }
 
+    HotList {
+        id: hotlist
+        Layout.fillWidth: true
+        Layout.preferredHeight: hotlist.itemSize
+        Layout.maximumHeight: hotlist.itemSize
+        Layout.minimumHeight: hotlist.itemSize
+    }
+
     ChannelInputBar {
         id: inputBar
         Layout.fillWidth: true

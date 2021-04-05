@@ -28,5 +28,6 @@
         <file>style/Popup.qml</file>
         <file>MainView.qml</file>
         <file>DropHandler.qml</file>
+        <file>HotList.qml</file>
     </qresource>
 </RCC>

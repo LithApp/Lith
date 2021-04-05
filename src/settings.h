@@ -91,6 +91,10 @@ class Settings : public QObject {
     SETTING(QStringList, shortcutSwitchToBuffer9, {"Alt+9"})
     SETTING(QStringList, shortcutSwitchToBuffer10, {"Alt+0"})
 
+    SETTING(bool, hotlistEnabled, true)
+    SETTING(bool, hotlistShowUnreadCount, true)
+    SETTING(bool, hotlistCompact, true)
+
     SETTING(QString, imgurApiKey, IMGUR_API_KEY)
 
 signals:
