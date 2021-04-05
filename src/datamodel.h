@@ -40,7 +40,7 @@ class Nick : public QObject {
     PROPERTY(char, visible)
     PROPERTY(char, group)
     PROPERTY(int, level)
-    PROPERTY(QString, name)
+    PROPERTY(FormattedString, name)
     PROPERTY(QString, color)
     PROPERTY(QString, prefix)
     PROPERTY(QString, prefix_color)
