@@ -90,6 +90,7 @@ ColumnLayout {
 
     HotList {
         id: hotlist
+        visible: lith.settings.hotlistEnabled
         Layout.fillWidth: true
         Layout.preferredHeight: hotlist.itemSize
         Layout.maximumHeight: hotlist.itemSize
