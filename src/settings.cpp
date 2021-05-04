@@ -47,8 +47,8 @@ Settings::Settings(QObject *parent)
     std::function<void(void)> *testSettingsReady = new std::function<void(void)>();
     *testSettingsReady = [=](){
         if (m_settings.status() == QSettings::NoError) {
-            delete testSettingsReady;
             settingsReady();
+            delete testSettingsReady;
         } else {
             QTimer::singleShot(10, *testSettingsReady);
         }
