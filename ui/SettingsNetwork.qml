@@ -100,7 +100,7 @@ ScrollView {
                 }
                 Label {
                     text: "(More secure, available since WeeChat 2.9)"
-                    font.pointSize: settings.baseFontSize * 0.75
+                    font.pointSize: font.pointSize * 0.75
                 }
             }
             CheckBox {
