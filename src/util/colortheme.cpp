@@ -28,8 +28,8 @@ QPalette ColorTheme::palette() const {
     // TODO very likely needs a bit of tweaking to differentiate button, window and base
     QColor windowText { m_weechatColors[0] };
     QColor button { m_weechatColors[1] };
-    QColor light = mix(windowText, button, 0.4);
-    QColor dark = mix(button, windowText, 0.4);
+    QColor light = mix(windowText, button, 0.4f);
+    QColor dark = mix(button, windowText, 0.4f);
     QColor mid = mix(light, dark);
     QColor text = windowText;
     QColor bright_text = text;
