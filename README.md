@@ -54,6 +54,8 @@ make # nmake on Windows
 ```
 Alternatively, you can just open the project file in Qt Creator.
 
+There is also a package for Arch Linux in the AUR: https://aur.archlinux.org/packages/lith-git
+
 ## Get in touch
 
 For bug reports and questions, feel free to use the Issues page here on GitHub.
