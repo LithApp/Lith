@@ -51,6 +51,7 @@ TextField {
     property int lastCursorPos: 0
     property int matchedNickIndex: 0
     property variant matchedNicks: []
+    property bool cursorWasAtStart: false // This is simpler than checking for ": " everytime, could be replaced though if you don't like it
 
     function pasteText(pasted) {
         var left = text.slice(0, selectionStart)
@@ -69,20 +70,20 @@ TextField {
 
         if(matchedNicks.length > 1) {
             if(lastCursorPos == cursorPosition) {
-                inputField.text = inputField.text.substring(0,
-                                                            (inputField.text.length) -
-                                                            (matchedNicks[matchedNickIndex == 0 ? matchedNicks.length-1 : matchedNickIndex - 1].length) -
-                                                            (inputField.text.endsWith(": ") ? 2 : 1)
-                                                            )
+                var prevNick = matchedNicks[matchedNickIndex == 0 ? matchedNicks.length - 1 : matchedNickIndex - 1]
+                var tmp_msg_str_before_nick = inputField.text.substring(0, cursorPosition - prevNick.length - 1 - (cursorWasAtStart ? 2 : 0))
+                var tmp_msg_str_after_nick = inputField.text.substring(cursorPosition, inputField.text.length)
 
-                inputField.text += matchedNicks[matchedNickIndex]
+                inputField.text = "" // reset field's text
+                inputField.text += tmp_msg_str_before_nick // add all the text before the tabbed nickname
+                inputField.text += matchedNicks[matchedNickIndex] + (cursorWasAtStart ? ": " : " ")   // add the tabbed nickname
+                lastCursorPos = cursorPosition // save the current position, it's where we should put the cursor back up
+                inputField.text += tmp_msg_str_after_nick // add the rest of the message after the tabbed nickname
 
-                // This needs to be on a seperate line as we are working based of the current cursor position AFTER adding the nickname, ugh
-                inputField.text += cursorPosition - matchedNicks[matchedNickIndex].length === 0 ? ": " : " "
-
+                // put the saved cursor position back in place, so we don't end up having the cursor after the appended text
+                cursorPosition = lastCursorPos
                 matchedNickIndex += 1
 
-                lastCursorPos = cursorPosition
                 return;
             }
             else {
@@ -90,41 +91,67 @@ TextField {
                 matchedNicks = []
                 matchedNickIndex = 0
                 lastCursorPos = 0
+                cursorWasAtStart = false
             }
         }
 
-        // TODO: refactor this, I want cursorPosition tabbing still :)
-        var i = inputField.text.lastIndexOf(" ");
-        var lastWord
-        if (i >= 0)
-            lastWord = inputField.text.substring(i+1, inputField.text.length).trim().toLocaleLowerCase();
-        else {
-            i = 0
-            lastWord = inputField.text.trim().toLocaleLowerCase()
+        var i = -1; // This is the starting position if the message is empty
+
+        // Like indexOf, but let's go backwards from the current curpos
+        for(var x = cursorPosition - 1; x >= 0; x--) // TODO: Accurate?
+        {
+            if(inputField.text.charAt(x) == " ")
+            {
+                i = x
+                break;
+            }
         }
 
+        var lastWord
+        if (i >= 0) {
+            lastWord = inputField.text.substring(i+1, cursorPosition).trim().toLocaleLowerCase()
+        }
+        else {
+            i = 0
+            lastWord = inputField.text.substring(i, cursorPosition).trim().toLocaleLowerCase()
+        }
         var nicks = lith.selectedBuffer.getVisibleNicks()
 
         for (var y = 0; y < nicks.length; y++) {
-            // console.warn("\"" + lastWord + "\" " + nicks[y])
             if (nicks[y].toLocaleLowerCase().startsWith(lastWord) && lastWord !== "") {
-                inputField.text = inputField.text.substring(0, i)
-                if (i !== 0) {
-                    inputField.text += " "
-                    inputField.text += nicks[y] + " "
-                }
-                else {
-                    inputField.text += nicks[y] + ": "
+                if(matchedNicks.length < 1) // We only want to add the first nick to the message for now
+                {
+                    var tmp_orig = inputField.text.substring(0, i)
+                    var tmp_to_add = ""; // Since we sometimes have ": " and " ", let's store it seperately for the cursorPosition hack
+
+                    if (i !== 0) {
+                        tmp_to_add += " "
+                        tmp_to_add += nicks[y] + " "
+                        cursorWasAtStart = false
+                    }
+                    else {
+                        tmp_to_add += nicks[y] + ": "
+                        cursorWasAtStart = true // this is just easier than grabbing ": " again
+                    }
+
+                    // Add the text before the tabbed "lastWord", then add the nickname and finally add the text that was there after the tabbed "lastWord"
+                    inputField.text = tmp_orig + tmp_to_add + inputField.text.substring(i + lastWord.length + (cursorWasAtStart ? 0 : 1), inputField.text.length)
+
+                    // Hack back the cursorPosition since we used inputField.text = which messed it up to the end
+                    cursorPosition = i + tmp_to_add.length
                 }
 
-                matchedNicks.push(nicks[y])
+                matchedNicks.push(nicks[y]) // But add all of them to the list to be used when Tab is used again
             }
         }
 
         if (matchedNicks.length == 1) {
-            matchedNicks = []; // Reset matchedNicks if there's just one match
+            matchedNicks = [] // Reset matchedNicks if there's just one match
         }
-
+        else
+        {
+            matchedNickIndex += 1 // We need to add + 1 to the index, since we already matched the first one (0) here ^^^^^
+        }
         lastCursorPos = cursorPosition
     }
 
