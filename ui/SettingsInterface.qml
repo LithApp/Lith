@@ -42,6 +42,7 @@ ScrollView {
         settings.hotlistEnabled = hotlistEnabledCheckbox.checked
         settings.hotlistCompact = hotlistCompactCheckbox.checked
         settings.hotlistShowUnreadCount = hotlistShowUnreadCountCheckbox.checked
+        settings.messageSpacing = messageSpacingSpinbox.value
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -62,6 +63,7 @@ ScrollView {
         hotlistEnabledCheckbox.checked = settings.hotlistEnabled
         hotlistCompactCheckbox.checked = settings.hotlistCompact
         hotlistShowUnreadCountCheckbox.checked = settings.hotlistShowUnreadCount
+        messageSpacingSpinbox.value = settings.messageSpacing
     }
 
     ColumnLayout {
@@ -348,6 +350,32 @@ ScrollView {
             CheckBox {
                 id: muteVideosByDefaultCheckbox
                 checked: settings.showSendButton
+                Layout.alignment: Qt.AlignLeft
+            }
+
+            ////////////////////////// ADVANCED TWEAKS
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.base
+            }
+
+            Label {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("Advanced tweaks")
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+            }
+
+            Label {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Message spacing")
+            }
+            SpinBox {
+                id: messageSpacingSpinbox
+                value: settings.messageSpacing
                 Layout.alignment: Qt.AlignLeft
             }
         }
