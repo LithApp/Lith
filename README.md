@@ -60,6 +60,6 @@ There is also a package for Arch Linux in the AUR: https://aur.archlinux.org/pac
 
 For bug reports and questions, feel free to use the Issues page here on GitHub.
 
-There's also an IRC channel: `#lith` on Freenode
+There's also an IRC channel: `#lith` on [libera.chat](https://libera.chat) (irc.libera.chat:6697 with SSL)
 
 You can contact me directly on `m@rtinbriza.cz`
