@@ -162,6 +162,10 @@ void Lith::resetData() {
     m_hotList.clear();
 }
 
+void Lith::reconnect() {
+    m_weechat->restart();
+}
+
 void Lith::handleBufferInitialization(const Protocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer

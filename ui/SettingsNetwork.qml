@@ -18,6 +18,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import lith 1.0
+
 ScrollView {
     id: root
     clip: true
@@ -125,6 +127,13 @@ ScrollView {
                 id: useWebsocketsCheckbox
                 checked: settings.useWebsockets
                 Layout.alignment: Qt.AlignLeft
+            }
+            Button {
+                Layout.alignment: Qt.AlignHCenter
+                ColumnLayout.columnSpan: 2
+                text: "Reconnect"
+                enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
+                onClicked: lith.reconnect()
             }
         }
         Item {

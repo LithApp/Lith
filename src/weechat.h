@@ -41,12 +41,12 @@ public slots:
     void init();
 
     void start();
+    void restart();
 
     bool input(pointer_t ptr, const QString &data);
     void fetchLines(pointer_t ptr, int count);
 
 private slots:
-    void restart();
 
     void onMessageReceived(QByteArray &data);
     void onPongReceived(qint64 id);

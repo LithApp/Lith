@@ -86,6 +86,7 @@ public:
 
 public slots:
     void resetData();
+    void reconnect();
 
     void handleBufferInitialization(const Protocol::HData &hda);
     void handleFirstReceivedLine(const Protocol::HData &hda);
