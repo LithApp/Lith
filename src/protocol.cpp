@@ -260,7 +260,7 @@ HData parse(QDataStream &s, bool *outerOk) {
                         *outerOk = false;
                     return r;
                 }
-                item.objects[name] = QVariant::fromValue(QDateTime::fromMSecsSinceEpoch(t.toLongLong() * 1000));
+                item.objects[name] = QVariant::fromValue(QDateTime::fromSecsSinceEpoch(t.toLocal8Bit().toULongLong(nullptr, 10)));
             }
             else if (type == "ptr") {
                 Pointer p = parse<Pointer>(s, &innerOk);
