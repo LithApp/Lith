@@ -23,7 +23,7 @@ import lith 1.0
 
 
 Item {
-    height: inputBarLayout.height
+    implicitHeight: inputBarLayout.height
 
     // TODO
     property alias textInput: channelTextInput
