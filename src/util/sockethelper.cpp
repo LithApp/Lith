@@ -57,7 +57,7 @@ void SocketHelper::connectToWebsocket(const QString &hostname, int port, bool en
 void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool encrypted) {
     reset();
     m_tcpSocket = new QSslSocket(this);
-    m_tcpSocket->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
+    //m_tcpSocket->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
     m_tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)

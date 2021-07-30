@@ -20,6 +20,8 @@
 #include "common.h"
 #include "settings.h"
 #include "protocol.h"
+#include "datamodel.h"
+#include "windowhelper.h"
 #include "util/nicklistfilter.h"
 
 #include <QSortFilterProxyModel>
@@ -31,8 +33,6 @@ class ProxyBufferList;
 class Buffer;
 class BufferLine;
 class HotListItem;
-
-class WindowHelper;
 
 class Lith : public QObject {
     Q_OBJECT
