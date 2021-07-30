@@ -52,10 +52,22 @@ void Uploader::upload(const QString &path) {
             transformation = imR.transformation();
         }
         QImage im(QUrl(path).toLocalFile());
-        if (transformation & QImageIOHandler::TransformationRotate90) {
+        if (transformation == QImageIOHandler::TransformationRotate90) {
             QTransform transform;
             transform.translate(im.size().width() / 2, im.size().height() / 2);
             transform.rotate(90);
+            im = im.transformed(transform);
+        }
+        else if (transformation == QImageIOHandler::TransformationRotate180) {
+            QTransform transform;
+            transform.translate(im.size().width() / 2, im.size().height() / 2);
+            transform.rotate(180);
+            im = im.transformed(transform);
+        }
+        else if (transformation == QImageIOHandler::TransformationRotate270) {
+            QTransform transform;
+            transform.translate(im.size().width() / 2, im.size().height() / 2);
+            transform.rotate(270);
             im = im.transformed(transform);
         }
         uploadBinary(im);
@@ -90,13 +102,13 @@ void Uploader::uploadBinary(QImage data) {
 
     workingSet(true);
 
-    if (data.size().width() > 2000) {
-        data = data.scaled(data.size() / 4);
+    if (data.size().width() > 2500) {
+        data = data.scaled(data.size() / 2);
     }
     QByteArray arr;
     QBuffer buffer(&arr);
     buffer.open(QIODevice::WriteOnly);
-    data.save(&buffer, "png");
+    data.save(&buffer, "PNG");
     buffer.close();
     auto reply = mgr->post(request, arr);
 
