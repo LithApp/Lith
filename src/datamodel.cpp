@@ -133,7 +133,7 @@ int Buffer::normalsGet() const {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() == "<html><body> </body></html>")
+            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'> </span></body></html>")
                 total++;
         }
     }
@@ -145,7 +145,7 @@ int Buffer::voicesGet() const {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body>+</body></html>")
+            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>+</span></body></html>")
                 total++;
         }
     }
@@ -157,7 +157,7 @@ int Buffer::opsGet() const {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body>@</body></html>")
+            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>@</span></body></html>")
                 total++;
         }
     }
