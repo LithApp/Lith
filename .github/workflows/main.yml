@@ -32,11 +32,17 @@ jobs:
         base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT }}" > Apple_Development_N952V7G2F5.p7b
         security import ./Apple_Development_N952V7G2F5.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
 
+        base64 -D <<< "${{ secrets.CERT_IOS_DEVELOPMENT }}" > Ios_Development_N952V7G2F5.p7b
+        security import ./Ios_Development_N952V7G2F5.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+
         base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" > Apple_Distribution_Z52EFCPL6D.p12
         security import ./Apple_Distribution_Z52EFCPL6D.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
 
         base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" > Apple_Development_N952V7G2F5.p12
         security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+
+        base64 -D <<< "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" > Ios_Development_N952V7G2F5.p12
+        security import ./Ios_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
 
         base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" > Developer_ID_Application_Z52EFCPL6D.p7b
         security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
@@ -50,6 +56,12 @@ jobs:
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp dist/ios/*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+    - name: Install Host Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{env.QT_VERSION}}
+        set-env: false
+        aqtversion: '==2.0.0'
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
@@ -62,6 +74,9 @@ jobs:
         pushd $Qt6_DIR
         patch -p1 < $GITHUB_WORKSPACE/dist/ios/qt-ios.patch
         popd
+        echo -e "[Paths]\nPrefix=.." > $Qt6_DIR/bin/qt.conf
+        sed -i .old 's/clang_64/macos/' $Qt6_DIR/bin/target_qt.conf
+        sed -i .old 's/clang_64/macos/' $Qt6_DIR/bin/qmake
     - name: Build the iOS binary
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
