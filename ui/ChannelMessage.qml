@@ -26,7 +26,6 @@ Rectangle {
     z: index
     width: ListView.view.width // + timeMetrics.width
     property var messageModel: null
-    rotation: 180
     height: messageRootLayout.height
 
     color: messageModel.highlight ? "#22880000" : "transparent"

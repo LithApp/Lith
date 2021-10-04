@@ -28,20 +28,20 @@ ListView {
             anchors.verticalCenter: parent.verticalCenter
             spacing: lith.settings.hotlistCompact ? 1 : 3
             Text {
-                font.pixelSize: textSize
+                font.pointSize: textSize
                 font.bold: true
                 text: modelData.number + (lith.settings.hotlistShowUnreadCount ? ":" : "")
                 color: palette.base
             }
             Text {
                 visible: false
-                font.pixelSize: textSize
+                font.pointSize: textSize
                 //visible: !lith.settings.hotlistShowUnreadCount && !lith.settings.hotlistCompact
                 text: modelData.short_name
                 elide: Text.ElideRight
             }
             Text {
-                font.pixelSize: textSize
+                font.pointSize: textSize
                 text: modelData.hotMessages > 0 ? modelData.hotMessages + "/" + modelData.unreadMessages : modelData.unreadMessages
                 color: palette.base
                 visible: lith.settings.hotlistShowUnreadCount

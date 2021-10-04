@@ -33,17 +33,11 @@ ListView {
         font.pointSize: settings.baseFontSize
     }
 
-    ScrollHelper {
-        flickable: mobilePlatform ? null : parent
-        reverse: true
-        anchors.fill: mobilePlatform ? null : parent
-    }
 
     ScrollBar.vertical: ScrollBar {
         id: scrollBar
         hoverEnabled: true
         active: hovered || pressed
-        rotation: 180
         orientation: Qt.Vertical
         parent: listView.parent
         anchors.top: listView.top
@@ -51,7 +45,8 @@ ListView {
         anchors.bottom: listView.bottom
     }
 
-    rotation: 180
+    verticalLayoutDirection: ListView.BottomToTop
+    orientation: Qt.Vertical
     spacing: lith.settings.messageSpacing
     model: lith.selectedBuffer ? lith.selectedBuffer.lines : null
     delegate: ChannelMessage {
@@ -65,7 +60,7 @@ ListView {
     function fillTopOfList() {
         if (!lith.selectedBuffer)
             return
-        if (yPosition + visibleArea.heightRatio > 0.65) {
+        if (yPosition - visibleArea.heightRatio < 0.25) {
             lith.selectedBuffer.fetchMoreLines()
         }
     }
@@ -75,20 +70,25 @@ ListView {
     onContentHeightChanged: fillTopOfList()
     onModelChanged: fillTopOfList()
 
+    property real absoluteYPosition: yPosition + visibleArea.heightRatio
+    onAbsoluteYPositionChanged: {
+        if (Qt.inputMethod.visible && absoluteYPosition < 1)
+            Qt.inputMethod.hide()
+    }
+
     Button {
         id: scrollToBottomButton
         anchors {
-            top: parent.top
-            left: parent.left
+            bottom: parent.bottom
+            right: parent.right
             margins: height / 2
         }
         width: height
         flat: false
         icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
-        opacity: listView.yPosition > 0.0 ? 0.5 : 0.0
+        opacity: listView.atYEnd ? 0.0 : 0.5
         visible: opacity > 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }
-        rotation: 180
         onClicked: positionViewAtBeginning()
     }
 }

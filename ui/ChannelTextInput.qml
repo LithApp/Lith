@@ -25,11 +25,19 @@ TextField {
     clip: true
     font.pointSize: settings.baseFontSize
     verticalAlignment: TextField.AlignVCenter
-    focus: true
+    focus: false
     inputMethodHints: Qt.ImhMultiLine
     renderType: TextInput.NativeRendering
 
     color: palette.text
+
+    Connections {
+        target: Qt.inputMethod
+        onVisibleChanged: {
+            if (!Qt.inputMethod.visible)
+                inputField.focus = false
+        }
+    }
 
     property alias inputFieldAlias: inputField
 
@@ -293,7 +301,7 @@ TextField {
         sequence: "Ctrl+E"
         onActivated: inputField.cursorPosition = inputField.text.length
     }
-    Keys.onPressed: {
+    Keys.onPressed: (event) => {
         if (event.matches(StandardKey.Paste)) {
             if (clipboardProxy.hasImage()) {
                 uploader.uploadBinary(clipboardProxy.image())
@@ -305,22 +313,22 @@ TextField {
         }
 
         if (event.key === Qt.Key_Up) {
-            channelMessageList.contentY += 30
+            channelMessageList.contentY -= 30
         }
         if (event.key === Qt.Key_Down) {
-            if (channelMessageList.contentY > 35)
-                channelMessageList.contentY -= 30
-            else
+            if (channelMessageList.height + channelMessageList.contentY > -25)
                 channelMessageList.positionViewAtBeginning()
+            else
+                channelMessageList.contentY += 30
         }
         if (event.key === Qt.Key_PageUp) {
-            channelMessageList.contentY += channelMessageList.height - 30
+            channelMessageList.contentY -= channelMessageList.height - 30
         }
         if (event.key === Qt.Key_PageDown) {
-            if (channelMessageList.contentY > channelMessageList.height - 35)
-                channelMessageList.contentY -= channelMessageList.height - 30
-            else
+            if (channelMessageList.height + channelMessageList.contentY > -(channelMessageList.height - 35))
                 channelMessageList.positionViewAtBeginning()
+            else
+                channelMessageList.contentY += channelMessageList.height - 30
         }
         if (event.key === Qt.Key_End) {
             channelMessageList.contentY = 0

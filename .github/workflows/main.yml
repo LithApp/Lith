@@ -50,7 +50,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: 5.15.1
+        version: 6.2.0
         target: ios
     - name: Patch Qt
       run: |
@@ -93,7 +93,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: 5.15.1
+        version: 6.2.0
         target: android
     - name: Get OpenSSL
       run: |
@@ -130,7 +130,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: 5.15.1
+        version: 6.2.0
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
     - name: Build the application
@@ -169,6 +169,7 @@ jobs:
 
   Linux:
     runs-on: ubuntu-20.04
+    if: false
     steps:
     - uses: actions/checkout@v1
       with:
@@ -189,6 +190,7 @@ jobs:
 
   Flatpak:
     runs-on: ubuntu-latest
+    if: false
     container:
       image: docker.io/bilelmoussaoui/flatpak-github-actions
       options: --privileged
@@ -249,7 +251,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: 5.15.1
+        version: 6.2.0
     - name: Build the application
       run: |
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh

@@ -17,7 +17,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
-import QtMultimedia 5.12 as Multimedia
+import QtMultimedia as Multimedia
 //import QtWebView 1.1
 
 Dialog {
@@ -47,8 +47,9 @@ Dialog {
     function showVideo(url) {
         currentUrl = url
         delegateVideo.source = url
-        delegateVideo.loops = lith.settings.loopVideosByDefault ? Multimedia.MediaPlayer.Infinite : 1
-        delegateVideo.volume = lith.settings.muteVideosByDefault ? 0.0 : 1.0
+        delegateVideo.infinite = lith.settings.loopVideosByDefault
+        delegateVideo.playedOnce = false
+        audio.volume = lith.settings.muteVideosByDefault ? 0.0 : 1.0
         videoWrapper.visible = true
         imageWrapper.visible = false
         root.open()
@@ -67,24 +68,47 @@ Dialog {
         anchors.fill: parent
         height: delegateVideo.height + 2
         visible: false
-        Multimedia.Video {
+
+        Multimedia.MediaPlayer {
             id: delegateVideo
+            property bool infinite: false
+            property bool playedOnce: false
+            onMediaStatusChanged: {
+                if (mediaStatus  == Multimedia.MediaPlayer.EndOfMedia) {
+                    if (infinite) {
+                        position = 0
+                        play()
+                    }
+                }
+                if (mediaStatus == Multimedia.MediaPlayer.LoadedMedia) {
+                    if (!playedOnce)
+                        play()
+                    playedOnce = true
+                }
+            }
+            videoOutput: video
+            audioOutput: audio
+        }
+
+        Multimedia.VideoOutput {
+            id: video
             x: 1
             y: 1
-            autoPlay: true
-            fillMode: Image.PreserveAspectFit
-            loops: Multimedia.MediaPlayer.Infinite
             width: parent.width - 2
             height: parent.height - 2
             anchors.centerIn: parent
+            fillMode: Image.PreserveAspectFit
+        }
+
+        Multimedia.AudioOutput {
+            id: audio
         }
 
         BusyIndicator {
             anchors.centerIn: parent
             width: parent.width / 4
             height: width
-            visible: delegateVideo.status === Multimedia.Video.Buffering ||
-                     delegateVideo.status === Multimedia.Video.Loading
+            visible: delegateVideo.bufferProgress < 1.0
         }
         MouseArea {
             anchors.fill: parent
@@ -110,8 +134,8 @@ Dialog {
 
                 opacity: 0.6
 
-                source: delegateVideo.loops === Multimedia.MediaPlayer.Infinite ? "qrc:/navigation/"+currentTheme+"/reload.png" :
-                                                                            "qrc:/navigation/"+currentTheme+"/reload-disabled.png"
+                source: delegateVideo.infinite ? "qrc:/navigation/"+currentTheme+"/reload.png" :
+                                                 "qrc:/navigation/"+currentTheme+"/reload-disabled.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -122,10 +146,7 @@ Dialog {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (delegateVideo.loops === Multimedia.MediaPlayer.Infinite)
-                                delegateVideo.loops = 1
-                            else
-                                delegateVideo.loops = Multimedia.MediaPlayer.Infinite
+                            delegateVideo.infinite = !delegateVideo.infinite
                         }
                     }
                 }
@@ -148,10 +169,15 @@ Dialog {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState)
+                            if (delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState) {
                                 delegateVideo.pause()
-                            else
+                            }
+                            else {
+                                if (delegateVideo.playedOnce) {
+                                    delegateVideo.position = 0
+                                }
                                 delegateVideo.play()
+                            }
                         }
                     }
                 }
@@ -162,7 +188,7 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: delegateVideo.hasAudio ? 0.6 : 0.0
-                source: delegateVideo.volume > 0.0 ? "qrc:/navigation/"+currentTheme+"/volume.png" : "qrc:/navigation/"+currentTheme+"/mute.png"
+                source: audio.volume > 0.0 ? "qrc:/navigation/"+currentTheme+"/volume.png" : "qrc:/navigation/"+currentTheme+"/mute.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -173,10 +199,10 @@ Dialog {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (delegateVideo.volume > 0.0)
-                                delegateVideo.volume = 0.0
+                            if (audio.volume > 0.0)
+                                audio.volume = 0.0
                             else
-                                delegateVideo.volume = 1.0
+                                audio.volume = 1.0
                         }
                     }
                 }
