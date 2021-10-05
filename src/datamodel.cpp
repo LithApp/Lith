@@ -187,8 +187,15 @@ bool Buffer::isPrivateGet() const {
 bool Buffer::input(const QString &data) {
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
         bool success = false;
-        QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr), Q_ARG(QString, data));
-        return success;
+        QList<bool> success_list;
+
+        auto data_split = data.split(QRegularExpression("\n|\r\n|\r"));
+
+        for (auto &data_single_line : data_split) {
+            QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr), Q_ARG(QString, data_single_line));
+            success_list.append(success);
+        }
+        return !success_list.contains(false);
     }
     return false;
     //Lith::instance()->weechat()->input(m_ptr, data);
