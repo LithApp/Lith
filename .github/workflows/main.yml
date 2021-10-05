@@ -104,7 +104,7 @@ jobs:
         fi
 
   Android-29:
-    if: github.event_name == 'create'
+    if: github.event_name == 'create' && false
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
