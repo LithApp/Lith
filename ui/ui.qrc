@@ -19,15 +19,16 @@
         <file>SettingsShortcuts.qml</file>
         <file>DataBrowser.qml</file>
         <file>ScrollHelper.qml</file>
-        <file>style/Button.qml</file>
-        <file>style/CheckBox.qml</file>
-        <file>style/Switch.qml</file>
-        <file>style/TextField.qml</file>
-        <file>style/BusyIndicator.qml</file>
-        <file>style/ApplicationWindow.qml</file>
-        <file>style/Popup.qml</file>
         <file>MainView.qml</file>
         <file>DropHandler.qml</file>
         <file>HotList.qml</file>
+        <file>LithStyle/ApplicationWindow.qml</file>
+        <file>LithStyle/BusyIndicator.qml</file>
+        <file>LithStyle/Button.qml</file>
+        <file>LithStyle/CheckBox.qml</file>
+        <file>LithStyle/Popup.qml</file>
+        <file>LithStyle/qmldir</file>
+        <file>LithStyle/Switch.qml</file>
+        <file>LithStyle/TextField.qml</file>
     </qresource>
 </RCC>

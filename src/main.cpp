@@ -62,6 +62,10 @@ int main(int argc, char *argv[])
     Lith::instance()->windowHelperGet()->init();
 
     QQmlApplicationEngine engine;
+    engine.addImportPath("qrc:///");
+    QQuickStyle::setStyle("LithStyle");
+    //QQuickStyle::setFallbackStyle("Material");
+
     qRegisterMetaType<StringMap>();
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
