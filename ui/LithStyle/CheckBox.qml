@@ -1,7 +1,7 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.4 as QQC2
+import QtQuick.Templates as T
 
-QQC2.AbstractButton {
+T.CheckBox {
     id: control
     checked: true
     implicitWidth: 40
@@ -41,7 +41,6 @@ QQC2.AbstractButton {
                 color: palette.windowText
                 visible: control.checked
             }
-
         }
     }
 
