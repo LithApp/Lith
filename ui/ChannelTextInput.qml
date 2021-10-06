@@ -165,12 +165,12 @@ TextField {
 
     Connections {
         target: uploader
-        function onSuccess() {
+        function onSuccess(url) {
             if (inputField.length !== 0 && !inputField.text.endsWith(" "))
                 inputField.pasteText(" ")
             inputField.pasteText(url + " ")
         }
-        function onError() {
+        function onError(message) {
             console.warn("IMAGE UPLOAD ERROR")
             console.warn(message)
             lith.errorString = message
