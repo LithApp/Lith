@@ -222,6 +222,7 @@ BufferLine::BufferLine(Buffer *parent)
     // connections to changed signals are required because FormattedString isn't directly connected to signals that can directly modify it
     // having it here results in fewer connections and that means lower cpu load when the signals are fired
     connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
+    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
     connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::messageChanged);
     connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::prefixChanged);
 }
