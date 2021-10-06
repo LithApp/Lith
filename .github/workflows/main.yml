@@ -67,7 +67,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         target: ios
-        modules: qtmultimedia qtwebsockets
+        modules: qtmultimedia qtwebsockets qtimageformats
         aqtversion: '==2.0.0'
     - name: Patch Qt
       run: |
@@ -115,7 +115,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         target: android
-        modules: qtmultimedia qtwebsockets
+        modules: qtmultimedia qtwebsockets qtimageformats
         aqtversion: '==2.0.0'
     - name: Get OpenSSL
       run: |
@@ -153,7 +153,7 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{env.QT_VERSION}}
-        modules: qtmultimedia qtwebsockets
+        modules: qtmultimedia qtwebsockets qtimageformats
         aqtversion: '==2.0.0'
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
@@ -205,7 +205,7 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{env.QT_VERSION}}
-        modules: qtmultimedia qtwebsockets
+        modules: qtmultimedia qtwebsockets qtimageformats
         aqtversion: '==2.0.0'
     - name: Build the application
       run: |
@@ -279,7 +279,7 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{env.QT_VERSION}}
-        modules: qtmultimedia qtwebsockets
+        modules: qtmultimedia qtwebsockets qtimageformats
         aqtversion: '==2.0.0'
     - name: Build the application
       run: |
