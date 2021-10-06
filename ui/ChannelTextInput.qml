@@ -33,7 +33,7 @@ TextField {
 
     Connections {
         target: Qt.inputMethod
-        onVisibleChanged: {
+        function onVisibleChanged() {
             if (!Qt.inputMethod.visible)
                 inputField.focus = false
         }
@@ -165,12 +165,12 @@ TextField {
 
     Connections {
         target: uploader
-        onSuccess: {
+        function onSuccess() {
             if (inputField.length !== 0 && !inputField.text.endsWith(" "))
                 inputField.pasteText(" ")
             inputField.pasteText(url + " ")
         }
-        onError: {
+        function onError() {
             console.warn("IMAGE UPLOAD ERROR")
             console.warn(message)
             lith.errorString = message

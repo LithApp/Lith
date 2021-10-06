@@ -29,8 +29,19 @@ Rectangle {
     height: messageRootLayout.height
 
     color: messageModel.highlight ? "#22880000" : "transparent"
+    Connections {
+        target: messageMouseArea
+        function onClicked(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                channelMessageActionMenu.show(messageModel.message.toPlain(),
+                                              messageModel.nick,
+                                              messageModel.date)
+            }
+        }
+    }
 
     MouseArea {
+        id: messageMouseArea
         anchors.fill: parent
         pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
         hoverEnabled: true
@@ -40,13 +51,6 @@ Rectangle {
             channelMessageActionMenu.show(messageModel.message.toPlain(),
                                           messageModel.nick,
                                           messageModel.date)
-        }
-        onClicked: {
-            if (mouse.button === Qt.RightButton) {
-                channelMessageActionMenu.show(messageModel.message.toPlain(),
-                                              messageModel.nick,
-                                              messageModel.date)
-            }
         }
     }
     RowLayout {

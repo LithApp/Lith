@@ -1,6 +1,4 @@
 module LithStyle
-#classname LithStyle
-#designersupported
 
 ApplicationWindow 1.0 ApplicationWindow.qml
 BusyIndicator 1.0 BusyIndicator.qml
