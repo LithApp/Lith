@@ -54,7 +54,8 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
 
     QString finalText;
     const auto urlThreshold = Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet();
-    if (urlThreshold > 0 && hyperlink && text.size() > urlThreshold) {
+    const auto urlShortenEnabled = Lith::instance()->settingsGet()->shortenLongUrlsGet();
+    if (urlThreshold > 0 && hyperlink && text.size() > urlThreshold && urlShortenEnabled) {
         auto url = QUrl(text);
         auto scheme = url.scheme();
         auto host = url.host();
