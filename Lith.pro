@@ -1,5 +1,10 @@
 QT += qml quick widgets multimedia quickcontrols2 xml gui-private websockets
 
+!versionAtLeast(QT_VERSION, 6.2.0) {
+    message("Cannot use Qt $${QT_VERSION}")
+    error("Use Qt 6.2 or newer")
+}
+
 CONFIG += c++17
 
 HEADERS += \
