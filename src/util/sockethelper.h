@@ -19,7 +19,7 @@ public:
 public slots:
     void reset();
 
-    void connectToWebsocket(const QString &hostname, int port, bool encrypted);
+    void connectToWebsocket(const QString &hostname, const QString &endpoint, int port, bool encrypted);
 #ifndef Q_OS_WASM
     void connectToTcpSocket(const QString &hostname, int port, bool encrypted);
 #endif // Q_OS_WASM

@@ -37,6 +37,9 @@ ScrollView {
         if (typeof settings.useWebsockets !== "undefined") {
             settings.useWebsockets = useWebsocketsCheckbox.checked
         }
+        if (typeof settings.websocketsEndpoint !== "undefined") {
+            settings.websocketsEndpoint = websocketsEndpointInput.text
+        }
     }
     function onRejected() {
         passphraseField.text = ""
@@ -47,6 +50,9 @@ ScrollView {
         connectionCompressionCheckbox.checked = settings.connectionCompression
         if (typeof settings.useWebsockets !== "undefined") {
             useWebsocketsCheckbox.checked = settings.useWebsockets
+        }
+        if (typeof settings.websocketsEndpoint !== "undefined") {
+            websocketsEndpointInput.text = settings.websocketsEndpoint
         }
     }
 
@@ -126,6 +132,17 @@ ScrollView {
                 visible: typeof settings.useWebsockets !== "undefined"
                 id: useWebsocketsCheckbox
                 checked: settings.useWebsockets
+                Layout.alignment: Qt.AlignLeft
+            }
+            Label {
+                visible: typeof settings.websocketsEndpoint !== "undefined"
+                text: "Websockets endpoint"
+            }
+            TextField {
+                enabled: useWebsocketsCheckbox.checked
+                visible: typeof settings.websocketsEndpoint !== "undefined"
+                id: websocketsEndpointInput
+                text: settings.websocketsEndpoint
                 Layout.alignment: Qt.AlignLeft
             }
             Button {

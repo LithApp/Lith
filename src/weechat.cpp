@@ -126,11 +126,12 @@ void Weechat::restart() {
     auto port = lith()->settingsGet()->portGet();
     auto ssl = lith()->settingsGet()->encryptedGet();
 #ifndef Q_OS_WASM
+    auto websocketEndpoint = lith()->settingsGet()->websocketsEndpointGet();
     if (!lith()->settingsGet()->useWebsocketsGet())
         m_connection->connectToTcpSocket(host, port, ssl);
     else // BEWARE
 #endif // Q_OS_WASM
-        m_connection->connectToWebsocket(host, port, ssl);
+        m_connection->connectToWebsocket(host, websocketEndpoint, port, ssl);
     // BEWARE OF THE ELSE ABOVE
 }
 

@@ -73,6 +73,7 @@ class Settings : public QObject {
     SETTING(bool, connectionCompression, true)
 #ifndef Q_OS_WASM
     SETTING(bool, useWebsockets, false)
+    SETTING(QString, websocketsEndpoint, "weechat")
 #endif // Q_OS_WASM
 
     SETTING(bool, enableReadlineShortcuts, true)

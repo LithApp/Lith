@@ -39,9 +39,9 @@ void SocketHelper::onConnected() {
     emit connected();
 }
 
-void SocketHelper::connectToWebsocket(const QString &hostname, int port, bool encrypted) {
+void SocketHelper::connectToWebsocket(const QString &hostname, const QString &endpoint, int port, bool encrypted) {
     reset();
-    qCritical() << "Trying to connect to:" << QString("%1://%2:%3").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port);
+    qCritical() << "Trying to connect to:" << QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint);
     m_webSocket = new QWebSocket("weechat", QWebSocketProtocol::VersionLatest, this);
 
     connect(m_webSocket, &QWebSocket::connected, this, &SocketHelper::onConnected);
@@ -50,7 +50,7 @@ void SocketHelper::connectToWebsocket(const QString &hostname, int port, bool en
 
     connect(m_webSocket, &QWebSocket::binaryMessageReceived, this, &SocketHelper::onBinaryMessageReceived);
 
-    m_webSocket->open(QString("%1://%2:%3/weechat").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port));
+    m_webSocket->open(QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
 }
 
 #ifndef Q_OS_WASM
