@@ -122,7 +122,7 @@ ScrollView {
             Label {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
-                text: qsTr("<b>Color theme</b> (Applied after restart)")
+                text: qsTr("<b>Color theme</b>")
                 horizontalAlignment: Text.AlignHCenter
             }
 
