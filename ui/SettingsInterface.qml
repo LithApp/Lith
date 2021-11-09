@@ -43,6 +43,7 @@ ScrollView {
         settings.hotlistCompact = hotlistCompactCheckbox.checked
         settings.hotlistShowUnreadCount = hotlistShowUnreadCountCheckbox.checked
         settings.messageSpacing = messageSpacingSpinbox.value
+        settings.showJoinPartQuitMessages = showJoinPartQuitMessagesCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -64,6 +65,7 @@ ScrollView {
         hotlistCompactCheckbox.checked = settings.hotlistCompact
         hotlistShowUnreadCountCheckbox.checked = settings.hotlistShowUnreadCount
         messageSpacingSpinbox.value = settings.messageSpacing
+        showJoinPartQuitMessagesCheckbox.checked = settings.showJoinPartQuitMessages
     }
 
     ColumnLayout {
@@ -94,6 +96,16 @@ ScrollView {
             TextField {
                 id: timestampFormatInput
                 text: lith.settings.timestampFormat
+            }
+
+            Label {
+                Layout.alignment: Qt.AlignRight
+                text: qsTr("Show join/part/quit messages")
+            }
+            CheckBox {
+                id: showJoinPartQuitMessagesCheckbox
+                checked: settings.showJoinPartQuitMessages
+                Layout.alignment: Qt.AlignLeft
             }
 
             Label {

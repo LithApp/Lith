@@ -281,6 +281,10 @@ bool BufferLine::isPrivMsgGet() {
     return m_tags_array.contains("irc_privmsg");
 }
 
+bool BufferLine::isJoinPartQuitMsgGet() {
+    return m_tags_array.contains("irc_quit") || m_tags_array.contains("irc_join") || m_tags_array.contains("irc_part");
+}
+
 QString BufferLine::colorlessNicknameGet() {
     return m_nick;
 }
