@@ -96,6 +96,7 @@ class Settings : public QObject {
     SETTING(bool, hotlistEnabled, true)
     SETTING(bool, hotlistShowUnreadCount, true)
     SETTING(bool, hotlistCompact, true)
+    SETTING(bool, showJoinPartQuitMessages, true)
 
     SETTING(QString, imgurApiKey, IMGUR_API_KEY)
 

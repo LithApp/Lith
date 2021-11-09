@@ -133,6 +133,7 @@ class BufferLine : public QObject {
     Q_PROPERTY(FormattedString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString message READ messageGet WRITE messageSet NOTIFY messageChanged)
 
+    Q_PROPERTY(bool isJoinPartQuitMsg READ isJoinPartQuitMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(bool isPrivMsg READ isPrivMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(bool isSelfMsg READ isSelfMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
@@ -153,6 +154,7 @@ public:
     FormattedString messageGet() const;
     void messageSet(const FormattedString &o);
 
+    bool isJoinPartQuitMsgGet();
     bool isPrivMsgGet();
     bool isSelfMsgGet();
     QString colorlessNicknameGet();
