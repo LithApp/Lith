@@ -68,6 +68,7 @@ class Settings : public QObject {
     SETTING(QString, host)
     SETTING(int, port, 9001)
     SETTING(bool, encrypted, true)
+    SETTING(bool, allowSelfSignedCertificates, false)
     SETTING(QString, passphrase)
     SETTING(bool, handshakeAuth, false)
     SETTING(bool, connectionCompression, true)

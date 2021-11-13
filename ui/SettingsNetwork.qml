@@ -32,6 +32,7 @@ ScrollView {
         settings.host = hostField.text
         settings.port = portField.text
         settings.encrypted = encryptedCheckbox.checked
+        settings.allowSelfSignedCertificates = selfSignedCertificateCheckbox.checked
         settings.handshakeAuth = handshakeAuthCheckbox.checked
         settings.connectionCompression = connectionCompressionCheckbox.checked
         if (typeof settings.useWebsockets !== "undefined") {
@@ -46,6 +47,7 @@ ScrollView {
         hostField.text = settings.host
         portField.text = settings.port
         encryptedCheckbox.checked = settings.encrypted
+        selfSignedCertificateCheckbox.checked = settings.allowSelfSignedCertificates
         handshakeAuthCheckbox.checked = settings.handshakeAuth
         connectionCompressionCheckbox.checked = settings.connectionCompression
         if (typeof settings.useWebsockets !== "undefined") {
@@ -89,6 +91,21 @@ ScrollView {
             CheckBox {
                 id: encryptedCheckbox
                 checked: settings.encrypted
+                Layout.alignment: Qt.AlignLeft
+            }
+            ColumnLayout {
+                spacing: 0
+                Label {
+                    text: "Allow self-signed certificates"
+                }
+                Label {
+                    text: "(Less secure, not recommended)"
+                    font.pointSize: lith.settings.baseFontSize * 0.75
+                }
+            }
+            CheckBox {
+                id: selfSignedCertificateCheckbox
+                checked: settings.allowSelfSignedCertificates
                 Layout.alignment: Qt.AlignLeft
             }
             Label {

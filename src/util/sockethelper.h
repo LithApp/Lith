@@ -9,12 +9,16 @@
 #include <QSslSocket>
 #endif // Q_OS_WASM
 
+class Weechat;
+
 class SocketHelper : public QObject {
     Q_OBJECT
 public:
-    SocketHelper(QObject *parent = nullptr);
+    SocketHelper(Weechat *parent = nullptr);
 
     bool isConnected();
+
+    Weechat *weechat();
 
 public slots:
     void reset();

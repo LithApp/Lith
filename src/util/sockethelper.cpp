@@ -1,8 +1,10 @@
 #include "sockethelper.h"
+#include "weechat.h"
+#include "lith.h"
 
 #include <QDataStream>
 
-SocketHelper::SocketHelper(QObject *parent)
+SocketHelper::SocketHelper(Weechat *parent)
     : QObject(parent)
 {
 }
@@ -16,6 +18,11 @@ bool SocketHelper::isConnected() {
         return true;
 #endif
     return false;
+}
+
+Weechat *SocketHelper::weechat()
+{
+    return qobject_cast<Weechat*>(parent());
 }
 
 void SocketHelper::onError(QAbstractSocket::SocketError e) {
@@ -50,6 +57,13 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
 
     connect(m_webSocket, &QWebSocket::binaryMessageReceived, this, &SocketHelper::onBinaryMessageReceived);
 
+    QList<QSslError> expectedSslErrors;
+    if (weechat()->lith()->settingsGet()->allowSelfSignedCertificatesGet()) {
+        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
+        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
+    }
+    m_tcpSocket->ignoreSslErrors(expectedSslErrors);
+
     m_webSocket->open(QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
 }
 
@@ -57,8 +71,14 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
 void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool encrypted) {
     reset();
     m_tcpSocket = new QSslSocket(this);
-    //m_tcpSocket->ignoreSslErrors({QSslError::UnableToGetLocalIssuerCertificate});
     m_tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
+    QList<QSslError> expectedSslErrors;
+    if (weechat()->lith()->settingsGet()->allowSelfSignedCertificatesGet()) {
+        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
+        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
+    }
+    m_tcpSocket->ignoreSslErrors(expectedSslErrors);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(m_tcpSocket, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &SocketHelper::onError, Qt::QueuedConnection);
@@ -149,7 +169,6 @@ void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
 
 #ifndef Q_OS_WASM
 void SocketHelper::onSslErrors(const QList<QSslError> &errors) {
-    m_tcpSocket->ignoreSslErrors(errors);
     for (auto i : errors) {
         qWarning() << "SSL Error!" << i.errorString();
     }
