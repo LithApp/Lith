@@ -28,12 +28,26 @@ Item {
     // TODO
     property alias textInput: channelTextInput
     property bool hasFocus: channelTextInput.activeFocus
+    property bool isSearching: false
 
     RowLayout {
         width: parent.width
         id: inputBarLayout
 
         spacing: 3
+
+        Button {
+            focusPolicy: Qt.NoFocus
+            id: searchButton
+            Layout.preferredWidth: height
+            icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
+            visible: settings.showSendButton
+            font.pointSize: settings.baseFontSize
+            onClicked: {
+                isSearching = !isSearching
+            }
+        }
+
         Button {
             id: autocompleteButton
             Layout.preferredWidth: height

@@ -100,7 +100,7 @@ ScrollView {
                 }
                 Label {
                     text: "(Less secure, not recommended)"
-                    font.pointSize: lith.settings.baseFontSize * 0.75
+                    font.pointSize: lith.settings.baseFontSize * 0.50
                 }
             }
             CheckBox {
@@ -125,7 +125,7 @@ ScrollView {
                 }
                 Label {
                     text: "(More secure, available since WeeChat 2.9)"
-                    font.pointSize: lith.settings.baseFontSize * 0.75
+                    font.pointSize: lith.settings.baseFontSize * 0.50
                 }
             }
             CheckBox {

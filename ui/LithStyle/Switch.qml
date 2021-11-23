@@ -15,8 +15,9 @@ T.Switch {
             anchors.fill: parent
 
             radius: height / 2
-            color: palette.text
-            opacity: 0.06
+            //color: palette.text
+            color: control.checked ? "#2ed058" : palette.text
+            opacity: control.checked ? 0.90 : 0.06
         }
 
         Rectangle {

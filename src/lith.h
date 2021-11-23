@@ -55,6 +55,7 @@ private:
     Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
     //Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
 
+    //Q_PROPERTY(MessageFilterList* selectedBuffer.messageFilterSearchList READ messageFilterSearchList CONSTANT)
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
     Q_PROPERTY(QmlObjectList* unfilteredBuffers READ unfilteredBuffers CONSTANT)
     Q_PROPERTY(Buffer* selectedBuffer READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedBufferChanged)
@@ -161,6 +162,5 @@ public:
 
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 };
-
 
 #endif // LITH_H

@@ -39,6 +39,8 @@ TextField {
         }
     }
 
+    onTextChanged: { console.log(lith.selectedBuffer.lines_filtered); }
+
     property alias inputFieldAlias: inputField
 
     onAccepted: {

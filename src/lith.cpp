@@ -574,4 +574,3 @@ bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex &source
     }
     return false;
 }
-
