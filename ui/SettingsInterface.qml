@@ -17,6 +17,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import QtQuick.Dialogs
 
 ScrollView {
     id: root
@@ -44,6 +45,7 @@ ScrollView {
         settings.hotlistShowUnreadCount = hotlistShowUnreadCountCheckbox.checked
         settings.messageSpacing = messageSpacingSpinbox.value
         settings.showJoinPartQuitMessages = showJoinPartQuitMessagesCheckbox.checked
+        settings.baseFontFamily = fontDialog.currentFont.family
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -66,6 +68,19 @@ ScrollView {
         hotlistShowUnreadCountCheckbox.checked = settings.hotlistShowUnreadCount
         messageSpacingSpinbox.value = settings.messageSpacing
         showJoinPartQuitMessagesCheckbox.checked = settings.showJoinPartQuitMessages
+        fontChangeButton.text = settings.baseFontFamily
+        fontChangeButton.font.family = settings.baseFontFamily
+        fontDialog.currentFont.family = settings.baseFontFamily
+    }
+
+    FontDialog {
+        id: fontDialog
+        currentFont.family: settings.baseFontFamily
+        flags: FontDialog.MonospacedFonts
+        onAccepted: {
+            fontChangeButton.text = fontDialog.selectedFont.family
+            fontChangeButton.font.family = fontDialog.selectedFont.family
+        }
     }
 
     ColumnLayout {
@@ -76,10 +91,26 @@ ScrollView {
         GridLayout {
             id: inputBarLayout
             columns: 2
+            //Layout.alignment: Qt.AlignLeft
             Layout.alignment: Qt.AlignHCenter
+            Label {
+                visible: !mobilePlatform
+                enabled: !mobilePlatform
+                Layout.alignment: Qt.AlignLeft
+                text: "Font family (requires restart)"
+            }
+            Button {
+                enabled: !mobilePlatform
+                visible: !mobilePlatform
+                id: fontChangeButton
+                text: settings.baseFontFamily
+                font: settings.baseFontSize
+                onClicked: fontDialog.open()
+                Layout.alignment: Qt.AlignRight
+            }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Message font size")
             }
             SpinBox {
@@ -87,35 +118,38 @@ ScrollView {
                 value: settings.baseFontSize
                 from: 6
                 to: 32
+                Layout.alignment: Qt.AlignRight
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Timestamp format")
             }
             TextField {
                 id: timestampFormatInput
                 text: lith.settings.timestampFormat
+                Layout.alignment: Qt.AlignRight
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Show join/part/quit messages")
             }
             CheckBox {
                 id: showJoinPartQuitMessagesCheckbox
                 checked: settings.showJoinPartQuitMessages
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Align nick length")
             }
             SpinBox {
                 id: nickCutoffThresholdSpinBox
                 from: -1
                 to: 100
+                Layout.alignment: Qt.AlignRight
                 value: settings.nickCutoffThreshold
                 textFromValue: function(value, locale) {
                     if (value >= 0)
@@ -134,44 +168,46 @@ ScrollView {
             Label {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
-                text: qsTr("<b>Color theme</b>")
+                text: qsTr("Color theme")
+                font.bold: true
+                font.capitalization: Font.AllUppercase
                 horizontalAlignment: Text.AlignHCenter
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Force light theme")
             }
             CheckBox {
                 id: forceLightThemeCheckbox
                 checked: settings.forceLightTheme
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
                 onCheckedChanged: {
                     if (checked)
                         forceDarkThemeCheckbox.checked = false
                 }
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Force dark theme")
             }
             CheckBox {
                 id: forceDarkThemeCheckbox
                 checked: settings.forceDarkTheme
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
                 onCheckedChanged: {
                     if (checked)
                         forceLightThemeCheckbox.checked = false
                 }
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Use black in dark theme")
             }
             CheckBox {
                 id: useTrueBlackWithDarkThemeCheckbox
                 checked: settings.useTrueBlackWithDarkTheme
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
 
 
@@ -188,34 +224,35 @@ ScrollView {
                 text: qsTr("Input bar")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
+                font.capitalization: Font.AllUppercase
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Show autocomplete button")
             }
             CheckBox {
                 id: showAutocompleteButtonCheckbox
                 checked: settings.showAutocompleteButton
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Show gallery button")
             }
             CheckBox {
                 id: showGalleryButtonCheckbox
                 checked: settings.showGalleryButton
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Show send button")
             }
             CheckBox {
                 id: showSendButtonCheckbox
                 checked: settings.showSendButton
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
 
             ////////////////////////// HOTLIST
@@ -229,21 +266,22 @@ ScrollView {
                 Layout.fillWidth: true
                 Layout.columnSpan: 2
                 text: qsTr("Hotlist")
-                horizontalAlignment: Text.AlignHCenter
+                horizontalAlignment: Text.AlignLeft
                 font.bold: true
+                font.capitalization: Font.AllUppercase
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Enable hotlist")
             }
             CheckBox {
                 id: hotlistEnabledCheckbox
                 checked: settings.hotlistEnabled
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 enabled: hotlistEnabledCheckbox.checked
                 text: qsTr("Show unread count")
             }
@@ -251,10 +289,10 @@ ScrollView {
                 id: hotlistShowUnreadCountCheckbox
                 enabled: hotlistEnabledCheckbox.checked
                 checked: settings.hotlistShowUnreadCount
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 enabled: hotlistEnabledCheckbox.checked
                 text: qsTr("Use compact layout")
             }
@@ -262,7 +300,7 @@ ScrollView {
                 id: hotlistCompactCheckbox
                 enabled: hotlistEnabledCheckbox.checked
                 checked: settings.hotlistCompact
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
 
             ////////////////////////// URL HANDLING
@@ -279,19 +317,20 @@ ScrollView {
                 text: qsTr("URL handling")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
+                font.capitalization: Font.AllUppercase
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Shortening Enabled")
             }
             CheckBox {
                 id: shortenLongUrlsCheckbox
                 checked: settings.shortenLongUrls
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Length threshold")
             }
             TextField {
@@ -317,20 +356,21 @@ ScrollView {
                 text: qsTr("Multimedia")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
+                font.capitalization: Font.AllUppercase
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Open links directly")
             }
             CheckBox {
                 id: openLinksDirectlyCheckbox
                 checked: settings.openLinksDirectly
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
                 visible: openLinksDirectlyCheckbox.checked
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Inside Lith (when possible)")
                 color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
             }
@@ -347,22 +387,22 @@ ScrollView {
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Loop videos by default")
             }
             CheckBox {
                 id: loopVideosByDefaultCheckbox
                 checked: settings.showSendButton
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Mute videos by default")
             }
             CheckBox {
                 id: muteVideosByDefaultCheckbox
                 checked: settings.showSendButton
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
 
             ////////////////////////// ADVANCED TWEAKS
@@ -379,16 +419,17 @@ ScrollView {
                 text: qsTr("Advanced tweaks")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
+                font.capitalization: Font.AllUppercase
             }
 
             Label {
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignLeft
                 text: qsTr("Message spacing")
             }
             SpinBox {
                 id: messageSpacingSpinbox
                 value: settings.messageSpacing
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
         }
     }

@@ -44,6 +44,7 @@
 class Settings : public QObject {
     Q_OBJECT
     SETTING(int, lastOpenBuffer, -1)
+    SETTING(QString, baseFontFamily, "Inconsolata")
     SETTING(qreal, baseFontSize, 10)
     SETTING(bool, shortenLongUrls, true)
     SETTING(int, shortenLongUrlsThreshold, 50)
