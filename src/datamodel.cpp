@@ -32,6 +32,7 @@ Buffer::Buffer(Lith *parent, pointer_t pointer)
     : QObject(parent)
     , m_lines(QmlObjectList::create<BufferLine>(this))
     , m_nicks(QmlObjectList::create<Nick>(this))
+    , m_proxyLinesFiltered(new MessageFilterList(this, m_lines))
     , m_ptr(pointer)
 {
 
@@ -182,6 +183,10 @@ bool Buffer::isChannelGet() const {
 
 bool Buffer::isPrivateGet() const {
     return m_local_variables.contains("type") && m_local_variables["type"] == "private";
+}
+
+MessageFilterList *Buffer::lines_filtered() {
+    return m_proxyLinesFiltered;
 }
 
 bool Buffer::input(const QString &data) {

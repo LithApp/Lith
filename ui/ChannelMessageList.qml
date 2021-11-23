@@ -48,7 +48,7 @@ ListView {
     verticalLayoutDirection: ListView.BottomToTop
     orientation: Qt.Vertical
     spacing: lith.settings.messageSpacing
-    model: lith.selectedBuffer ? lith.selectedBuffer.lines : null
+    model: lith.selectedBuffer ? lith.selectedBuffer.lines_filtered : null
     delegate: ChannelMessage {
         messageModel: modelData
     }

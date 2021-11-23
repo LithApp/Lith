@@ -21,6 +21,7 @@
 #include "common.h"
 #include "qmlobjectlist.h"
 #include "protocol.h"
+#include "util/messagelistfilter.h"
 
 #include <QObject>
 #include <QDateTime>
@@ -65,6 +66,7 @@ class Buffer : public QObject {
     PROPERTY(int, unreadMessages)
     PROPERTY(int, hotMessages)
 
+    Q_PROPERTY(MessageFilterList* lines_filtered READ lines_filtered CONSTANT)
     Q_PROPERTY(QmlObjectList *lines READ lines CONSTANT)
     Q_PROPERTY(QmlObjectList *nicks READ nicks CONSTANT)
     Q_PROPERTY(int normals READ normalsGet NOTIFY nicksChanged)
@@ -90,6 +92,7 @@ public:
 
     QmlObjectList *lines();
     QmlObjectList *nicks();
+    MessageFilterList *lines_filtered();
     Q_INVOKABLE Nick *getNick(pointer_t ptr);
     void addNick(pointer_t ptr, Nick* nick);
     void removeNick(pointer_t ptr);
@@ -116,6 +119,7 @@ public slots:
 private:
     QmlObjectList *m_lines { nullptr };
     QmlObjectList *m_nicks { nullptr };
+    MessageFilterList *m_proxyLinesFiltered { nullptr };
     pointer_t m_ptr;
     bool m_afterInitialFetch { false };
     int m_lastRequestedCount { 0 };

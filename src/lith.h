@@ -23,6 +23,7 @@
 #include "datamodel.h"
 #include "windowhelper.h"
 #include "util/nicklistfilter.h"
+#include "util/messagelistfilter.h"
 
 #include <QSortFilterProxyModel>
 #include <QPointer>
@@ -141,6 +142,7 @@ private:
     QmlObjectList *m_buffers { nullptr };
     ProxyBufferList *m_proxyBufferList { nullptr };
     NickListFilter *m_selectedBufferNicks { nullptr };
+    MessageFilterList *m_messageBufferList { nullptr };
     int m_selectedBufferIndex { -1 };
 
     QString m_lastNetworkError {};

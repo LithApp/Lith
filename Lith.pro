@@ -16,6 +16,7 @@ HEADERS += \
     src/settings.h \
     src/uploader.h \
     src/util/formattedstring.h \
+    src/util/messagelistfilter.h \
     src/util/nicklistfilter.h \
     src/weechat.h \
     src/common.h \
@@ -33,6 +34,7 @@ SOURCES += \
     src/settings.cpp \
     src/uploader.cpp \
     src/util/formattedstring.cpp \
+    src/util/messagelistfilter.cpp \
     src/util/nicklistfilter.cpp \
     src/weechat.cpp \
     src/windowhelper.cpp \

@@ -59,7 +59,6 @@ Rectangle {
         spacing: 0
         Text {
             Layout.alignment: Qt.AlignTop
-            visible: lith.settings.timestampFormat.length > 0 && (messageModel.isJoinPartQuitMsg ? settings.showJoinPartQuitMessages : true)
             text: messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
             font.pointSize: settings.baseFontSize
             color: disabledPalette.text
@@ -74,7 +73,6 @@ Rectangle {
             color: palette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
-            visible: messageModel.isJoinPartQuitMsg ? settings.showJoinPartQuitMessages : true
         }
 
         Text {
@@ -86,7 +84,6 @@ Rectangle {
             font.pointSize: settings.baseFontSize
             textFormat: Text.RichText
             renderType: Text.NativeRendering
-            visible: messageModel.isJoinPartQuitMsg ? settings.showJoinPartQuitMessages : true
             onLinkActivated: {
                 linkHandler.show(link, root)
             }
