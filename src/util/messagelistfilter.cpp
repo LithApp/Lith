@@ -1,5 +1,5 @@
 // Lith
-// Copyright (C) 2020 Martin Bříza
+// Copyright (C) 2021 Jakub Mach
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,9 +23,10 @@ MessageFilterList::MessageFilterList(QObject *parent, QAbstractListModel *parent
 {
     setSourceModel(parentModel);
     setFilterRole(Qt::UserRole);
-    //setDynamicSortFilter(true);
-    //connect(Lith::instance()->settingsGet(), &Settings::showJoinPartQuitMessagesChanged
-
+    connect(Lith::instance()->settingsGet(), &Settings::showJoinPartQuitMessagesChanged, [this]
+    {
+        invalidateFilter();
+    });
 }
 bool MessageFilterList::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
     if (!sourceModel())
