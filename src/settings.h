@@ -44,7 +44,11 @@
 class Settings : public QObject {
     Q_OBJECT
     SETTING(int, lastOpenBuffer, -1)
+#if defined(Q_OS_MACOS)
+    SETTING(QString, baseFontFamily, "Menlo")
+#else
     SETTING(QString, baseFontFamily, "Inconsolata")
+#endif
     SETTING(qreal, baseFontSize, 10)
     SETTING(bool, shortenLongUrls, true)
     SETTING(int, shortenLongUrlsThreshold, 50)

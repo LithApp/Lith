@@ -50,17 +50,19 @@ int main(int argc, char *argv[])
 
     auto fontFamilyFromSettings = Lith::instance()->settingsGet()->baseFontFamilyGet();
 
-#if defined(Q_OS_IOS) || defined(Q_OS_MACOS)
+#if defined(Q_OS_IOS)
     QFont font("Menlo");
 #else
     QFontDatabase fdb;
     fdb.addApplicationFont(":/fonts/Inconsolata-Variable.ttf");
-
+#if defined(Q_OS_MACOS)
+    QFont font("Menlo");
+#else
     QFont font("Inconsolata");
-    if(fontFamilyFromSettings.length() != 0) // fontFamilyFromSettings could be NULL (unlikely) or empty (very likely)
-    {
+#endif
+    if(fontFamilyFromSettings.length() != 0) // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
         font = QFont(fontFamilyFromSettings); // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
-    }
+
     font.setKerning(false);
     font.setHintingPreference(QFont::PreferNoHinting);
     font.setStyleHint(QFont::Monospace);
