@@ -39,7 +39,14 @@ TextField {
         }
     }
 
-    onTextChanged: { console.log(lith.selectedBuffer.lines_filtered); }
+    onTextChanged: {
+        if(parent.parent.isSearching)
+            lith.selectedBuffer.lines_filtered.filterWord = text
+
+        console.log(lith.selectedBuffer.lines_filtered);
+        console.log(lith.selectedBuffer.lines_filtered.filterWord);
+        console.log(parent.parent.isSearching);
+    }
 
     property alias inputFieldAlias: inputField
 

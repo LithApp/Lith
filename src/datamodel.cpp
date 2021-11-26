@@ -189,6 +189,10 @@ MessageFilterList *Buffer::lines_filtered() {
     return m_proxyLinesFiltered;
 }
 
+/*MessageFilterList *Buffer::lines_filtered() {
+    return m_proxyLinesFiltered;
+}*/
+
 bool Buffer::input(const QString &data) {
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
         bool success = false;

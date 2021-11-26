@@ -40,11 +40,20 @@ Item {
             focusPolicy: Qt.NoFocus
             id: searchButton
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
+            icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
             visible: settings.showSendButton
             font.pointSize: settings.baseFontSize
             onClicked: {
                 isSearching = !isSearching
+                if (isSearching)
+                {
+                    textInput.inputField.text = "asdf" // undefined, nefunguje
+                }
+
+                if (!isSearching) {
+                   textInput.inputField.text = ""
+                   lith.selectedBuffer.lines_filtered.filterWord = ""
+                }
             }
         }
 

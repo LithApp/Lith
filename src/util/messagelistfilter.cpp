@@ -30,6 +30,8 @@ MessageFilterList::MessageFilterList(QObject *parent, QAbstractListModel *parent
 
     connect(this, &MessageFilterList::filterWordChanged, [this] {
         setFilterFixedString(filterWordGet());
+        invalidateFilter();
+        qWarning() << "mrdka" << filterWordGet();
     });
 }
 bool MessageFilterList::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
@@ -40,11 +42,16 @@ bool MessageFilterList::filterAcceptsRow(int source_row, const QModelIndex &sour
     auto v = sourceModel()->data(index);
     auto b = qvariant_cast<BufferLine*>(v);
 
+    if (b) {
+        return b->colorlessTextGet().toLower().contains(filterWordGet().toLower());
+    }
+
     if (b && !Lith::instance()->settingsGet()->showJoinPartQuitMessagesGet()) {
         return !b->isJoinPartQuitMsgGet();
     }
-    else
+    else {
         return b;
+    }
 
     return false;
 }
