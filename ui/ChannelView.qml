@@ -17,7 +17,9 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
-import Qt.labs.platform 1.1
+//import Qt.labs.platform 1.1
+import QtQuick.Dialogs 6.2
+import QtCore
 
 import lith 1.0
 
@@ -104,12 +106,14 @@ ColumnLayout {
 
     FileDialog {
         id: fileDialog
-        folder: StandardPaths.standardLocations(StandardPaths.PicturesLocation).slice(-1)[0]
+        fileMode: FileDialog.OpenFile
+        currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation).slice(-1)[0]
         nameFilters: [ "Image files (*.jpg *.jpeg *.png)" ]
+
         onAccepted: {
             //inputField.text += " " + fileUrl
             //imageButton.isBusy = false
-            uploader.upload(file)
+            uploader.upload(fileDialog.selectedFile)
             Qt.inputMethod.hide()
             inputBar.textInput.forceActiveFocus()
         }
