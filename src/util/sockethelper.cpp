@@ -62,7 +62,7 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
     }
-    m_tcpSocket->ignoreSslErrors(expectedSslErrors);
+    m_webSocket->ignoreSslErrors(expectedSslErrors);
 
     m_webSocket->open(QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
 }
