@@ -49,7 +49,10 @@ Frame {
             Layout.preferredWidth: height
             font.pointSize: settings.baseFontSize * 1.375
             icon.source: "qrc:/navigation/"+currentTheme+"/menu.png"
-            onClicked: bufferDrawer.visible = !bufferDrawer.visible
+            onClicked: {
+                bufferDrawer.visible = !bufferDrawer.visible
+                if(!mobilePlatform) bufferDrawer.open()
+            }
         }
         ColumnLayout {
             Layout.fillWidth: true
@@ -106,7 +109,10 @@ Frame {
             font.pointSize: settings.baseFontSize * 1.375
             visible: lith.status !== Lith.UNCONFIGURED
             enabled: lith.status === Lith.CONNECTED
-            onClicked: nickDrawer.visible = !nickDrawer.visible
+            onClicked: {
+                nickDrawer.visible = !nickDrawer.visible
+                if(!mobilePlatform) nickDrawer.open()
+            }
             icon.source: lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+currentTheme+"/transfer.png" :
                          lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+currentTheme+"/smile.png" :
                          lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+currentTheme+"/no-wifi.png" :
