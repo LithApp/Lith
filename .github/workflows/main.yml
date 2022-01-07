@@ -99,8 +99,8 @@ jobs:
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            xcrun altool --validate-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
-            xcrun altool --upload-app --file build_ios/Lith.ipa --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+            xcrun altool --validate-app --file build_ios/Lith.ipa --type ios --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+            xcrun altool --upload-app --file build_ios/Lith.ipa --type ios --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
         fi
 
   Android-29:
