@@ -11,7 +11,7 @@ on:
       - '**'
 
 env:
-    QT_VERSION: '6.2.0'
+    QT_VERSION: '6.2.3'
 
 jobs:
   iOS:
