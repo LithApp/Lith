@@ -174,7 +174,7 @@ QString FormattedString::toHtml(const ColorTheme &theme) const {
 }
 
 QString FormattedString::toTrimmedHtml(int n, const ColorTheme &theme) const {
-    if (n <= 0)
+    if (n < 0)
         return toHtml(theme);
     QString ret = "<html><body><span style='white-space: pre-wrap;'>";
     for (auto &i : m_parts) {
@@ -186,7 +186,7 @@ QString FormattedString::toTrimmedHtml(int n, const ColorTheme &theme) const {
         if (n <= 0)
             break;
     }
-    while (n >= 0) {
+    while (n > 0) {
         ret.append("\u00A0");
         n--;
     }

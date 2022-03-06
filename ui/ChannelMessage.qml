@@ -68,7 +68,8 @@ Rectangle {
         Text {
             Layout.alignment: Qt.AlignTop
             font.bold: true
-            text: messageModel.prefix.toTrimmedHtml(lith.settings.nickCutoffThreshold)
+            visible: lith.settings.nickCutoffThreshold !== 0
+            text: messageModel.prefix.toTrimmedHtml(lith.settings.nickCutoffThreshold) + "\u00A0"
             font.pointSize: settings.baseFontSize
             color: palette.text
             textFormat: Text.RichText
