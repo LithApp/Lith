@@ -78,7 +78,7 @@ ColumnLayout {
         ChannelMessageList {
             id: channelMessageList
             width: parent.width
-            height: parent.height
+            height: parent.height - 1
             visible: lith.selectedBuffer
         }
 
