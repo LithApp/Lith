@@ -104,6 +104,8 @@ class Settings : public QObject {
     SETTING(bool, hotlistCompact, true)
     SETTING(bool, showJoinPartQuitMessages, true)
 
+    SETTING(bool, showBufferListOnStartup, false)
+
     SETTING(QString, imgurApiKey, IMGUR_API_KEY)
 
 signals:

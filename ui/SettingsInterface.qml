@@ -46,6 +46,7 @@ ScrollView {
         settings.messageSpacing = messageSpacingSpinbox.value
         settings.showJoinPartQuitMessages = showJoinPartQuitMessagesCheckbox.checked
         settings.baseFontFamily = fontDialog.currentFont.family
+        settings.showBufferListOnStartup = showBufferListOnStartupCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -71,6 +72,7 @@ ScrollView {
         fontChangeButton.text = settings.baseFontFamily
         fontChangeButton.font.family = settings.baseFontFamily
         fontDialog.currentFont.family = settings.baseFontFamily
+        showBufferListOnStartupCheckbox.checked = settings.showBufferListOnStartup
     }
 
     FontDialog {
@@ -301,6 +303,33 @@ ScrollView {
                 id: hotlistCompactCheckbox
                 enabled: hotlistEnabledCheckbox.checked
                 checked: settings.hotlistCompact
+                Layout.alignment: Qt.AlignRight
+            }
+
+            ////////////////////////// BUFFER LIST
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                height: 1
+                color: palette.base
+            }
+            Label {
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                text: qsTr("Buffer list")
+                horizontalAlignment: Text.AlignHCenter
+                font.bold: true
+                font.capitalization: Font.AllUppercase
+            }
+
+            Label {
+                Layout.alignment: Qt.AlignLeft
+                enabled: hotlistEnabledCheckbox.checked
+                text: qsTr("Show buffer list on startup")
+            }
+            CheckBox {
+                id: showBufferListOnStartupCheckbox
+                checked: settings.showBufferListOnStartup
                 Layout.alignment: Qt.AlignRight
             }
 

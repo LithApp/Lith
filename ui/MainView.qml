@@ -73,6 +73,12 @@ Item {
         height: root.height
         dragOutHandleTopMargin: channelView.messageArea.y
         dragOutHandleBottomMargin: height - channelView.messageArea.y - channelView.messageArea.height
+        Component.onCompleted: {
+            if (lith.settings.showBufferListOnStartup)
+                lastState = DynamicDrawer.State.Open
+            else
+                lastState = DynamicDrawer.State.Closed
+        }
 
         onIsClosedChanged: {
             bufferList.currentIndex = lith.selectedBufferIndex
