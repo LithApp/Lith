@@ -21,8 +21,9 @@ import QtQuick.Layouts 1.3
 import "LithStyle"
 
 ApplicationWindow {
+    id: window
     visible: true
-    width: 480
+    width: mobilePlatform ? 480 : 1024
     height: 800
     title: "Lith"
 

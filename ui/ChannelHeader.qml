@@ -42,6 +42,11 @@ Frame {
     }
     padding: 6
 
+    DragHandler {
+        onActiveChanged: if (active) window.startSystemMove();
+        target: null
+    }
+
     RowLayout {
         width: parent.width
         Button {
