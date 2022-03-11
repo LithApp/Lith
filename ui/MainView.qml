@@ -60,21 +60,32 @@ Item {
     ChannelView {
         id: channelView
         anchors {
-            left: parent.left
+            left: landscapeMode ? bufferDrawer.right : parent.left
             right: parent.right
             top: errorMessage.bottom
             bottom: parent.bottom
         }
     }
 
-    BufferList {
+
+    DynamicDrawer {
         id: bufferDrawer
-        leftPadding: root.leftMargin
-        property bool isClosed: position === 0.0
-        dragMargin: 64
-        y: isClosed ? root.y + channelView.messageArea.y : root.y
-        height: isClosed ? channelView.messageArea.height : root.height
-        width: 0.66 * root.width + root.leftMargin
+        height: root.height
+        dragOutHandleTopMargin: channelView.messageArea.y
+        dragOutHandleBottomMargin: height - channelView.messageArea.y - channelView.messageArea.height
+
+        onIsClosedChanged: {
+            bufferList.currentIndex = lith.selectedBufferIndex
+
+            if (!isClosed) {
+                bufferList.clear()
+            }
+        }
+
+        BufferList {
+            id: bufferList
+            anchors.fill: parent
+        }
     }
 
     NickList {

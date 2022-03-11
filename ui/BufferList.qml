@@ -19,164 +19,154 @@ import QtQuick 2.12
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
-Drawer {
+
+Rectangle {
     id: root
+    color: palette.window
+
+    property alias currentIndex: bufferList.currentIndex
+    function clear() {
+        filterField.clear()
+        if (mobilePlatform)
+            filterField.focus = false
+        else
+            filterField.focus = true
+    }
 
     SystemPalette {
         id: palette
     }
 
-    onVisibleChanged: {
-        bufferList.currentIndex = lith.selectedBufferIndex
-
-        if (visible) {
-            filterField.clear()
-            if (mobilePlatform)
-                filterField.focus = false
-            else
-                filterField.focus = true
-        }
-    }
-
-    Rectangle {
+    ColumnLayout {
         anchors.fill: parent
-        color: palette.window
+        anchors.margins: 3
 
-        ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 3
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.leftMargin: 3
+            Layout.topMargin: 3
+            Layout.rightMargin: 3
+            spacing: 6
 
-            RowLayout {
+            TextField {
+                id: filterField
                 Layout.fillWidth: true
-                Layout.leftMargin: 3
-                Layout.topMargin: 3
-                Layout.rightMargin: 3
-                spacing: 6
+                placeholderText: qsTr("Filter buffers")
+                text: lith.buffers.filterWord
+                onTextChanged: lith.buffers.filterWord = text
+                font.pointSize: settings.baseFontSize * 1.125
 
-                TextField {
-                    id: filterField
-                    Layout.fillWidth: true
-                    placeholderText: qsTr("Filter buffers")
-                    text: lith.buffers.filterWord
-                    onTextChanged: lith.buffers.filterWord = text
-                    font.pointSize: settings.baseFontSize * 1.125
-
-                    Keys.onPressed: {
-                        if (event.key === Qt.Key_Up) {
-                            bufferList.currentIndex--;
-                            event.accepted = true
-                        }
-                        if (event.key === Qt.Key_Down) {
-                            bufferList.currentIndex++;
-                            event.accepted = true
-                        }
-                        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                            lith.selectedBuffer = bufferList.currentItem.buffer
-                            filterField.text = ""
-                            root.close()
-                        }
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Up) {
+                        bufferList.currentIndex--;
+                        event.accepted = true
+                    }
+                    if (event.key === Qt.Key_Down) {
+                        bufferList.currentIndex++;
+                        event.accepted = true
+                    }
+                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                        lith.selectedBuffer = bufferList.currentItem.buffer
+                        filterField.text = ""
+                        root.close()
                     }
                 }
-                Button {
-                    Layout.preferredWidth: height
-                    font.pointSize: settings.baseFontSize * 1.25
-                    icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
-                    onClicked: settingsDialog.visible = true
-                }
+            }
+            Button {
+                Layout.preferredWidth: height
+                font.pointSize: settings.baseFontSize * 1.25
+                icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
+                onClicked: settingsDialog.visible = true
+            }
+        }
+
+        Rectangle {
+            height: 1
+            Layout.fillWidth: true
+            color: "dark gray"
+        }
+
+        ListView {
+            id: bufferList
+            clip: true
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            model: lith.buffers
+            currentIndex: lith.selectedBufferIndex
+            highlightMoveDuration: root.position > 0.0 ? 120 : 0
+
+            ScrollBar.vertical: ScrollBar {
+                id: scrollBar
+                hoverEnabled: true
+                active: hovered || pressed
+                orientation: Qt.Vertical
             }
 
-            Item {
-                height: 1
-            }
+            delegate: Rectangle {
+                width: ListView.view.width
+                height: childrenRect.height + 12
+                property var buffer: modelData
+                visible: buffer
+                color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : palette.base
 
-            Rectangle {
-                height: 1
-                Layout.fillWidth: true
-                color: "dark gray"
-            }
+                Behavior on color {
+                    ColorAnimation {
 
-
-            ListView {
-                id: bufferList
-                clip: true
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                model: lith.buffers
-                currentIndex: lith.selectedBufferIndex
-                highlightMoveDuration: root.position > 0.0 ? 120 : 0
-
-                ScrollBar.vertical: ScrollBar {
-                    id: scrollBar
-                    hoverEnabled: true
-                    active: hovered || pressed
-                    orientation: Qt.Vertical
-                }
-
-                delegate: Rectangle {
-                    width: ListView.view.width
-                    height: childrenRect.height + 12
-                    property var buffer: modelData
-                    visible: buffer
-                    color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : palette.base
-
-                    Behavior on color {
-                        ColorAnimation {
-
-                        }
                     }
+                }
 
-                    RowLayout {
-                        x: 3
-                        y: 6
-                        width: parent.width - 6
+                RowLayout {
+                    x: 3
+                    y: 6
+                    width: parent.width - 6
 
-                        Rectangle {
-                            width: bufferName.height + 6
-                            height: width
-                            color: "#22000000"
-                            opacity: buffer && buffer.number <= 10 && !buffer.isServer ? 1 : 0
-                            radius: 2
-                            Text {
-                                text: buffer ? buffer.number : ""
-                                anchors.centerIn: parent
-                                color: disabledPalette.text
-                            }
-                            Behavior on opacity { NumberAnimation { duration: 100 } }
-                        }
-
+                    Rectangle {
+                        width: bufferName.height + 6
+                        height: width
+                        color: "#22000000"
+                        opacity: buffer && buffer.number <= 10 && !buffer.isServer ? 1 : 0
+                        radius: 2
                         Text {
-                            id: bufferName
-                            Layout.fillWidth: true
-                            clip: true
-                            text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name
-                                         : ""
-                            textFormat: Text.RichText
-                            font.pointSize: settings.baseFontSize * 1.125
-                            color: palette.windowText
-                            MouseArea {
-                                id: bufferMouse
-                                anchors.fill: parent
-                                onClicked: {
-                                    lith.selectedBuffer = buffer
-                                    bufferDrawer.visible = false
-                                }
+                            text: buffer ? buffer.number : ""
+                            anchors.centerIn: parent
+                            color: disabledPalette.text
+                        }
+                        Behavior on opacity { NumberAnimation { duration: 100 } }
+                    }
+
+                    Text {
+                        id: bufferName
+                        Layout.fillWidth: true
+                        clip: true
+                        text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name
+                                     : ""
+                        textFormat: Text.RichText
+                        font.pointSize: settings.baseFontSize * 1.125
+                        color: palette.windowText
+                        MouseArea {
+                            id: bufferMouse
+                            anchors.fill: parent
+                            onClicked: {
+                                lith.selectedBuffer = buffer
+                                if (!window.landscapeMode)
+                                    bufferDrawer.hide()
                             }
                         }
-                        Rectangle {
-                            visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
-                            color: modelData.hotMessages ? "red" : palette.alternateBase
-                            border.color: palette.text
-                            border.width: 1
-                            height: bufferName.height + 6
-                            width: Math.max(height, hotListItemCount.width + 6)
-                            radius: 2
-                            Text {
-                                id: hotListItemCount
-                                text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
-                                font.pointSize: settings.baseFontSize
-                                anchors.centerIn: parent
-                                color: palette.windowText
-                            }
+                    }
+                    Rectangle {
+                        visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
+                        color: modelData.hotMessages ? "red" : palette.alternateBase
+                        border.color: palette.text
+                        border.width: 1
+                        height: bufferName.height + 6
+                        width: Math.max(height, hotListItemCount.width + 6)
+                        radius: 2
+                        Text {
+                            id: hotListItemCount
+                            text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
+                            font.pointSize: settings.baseFontSize
+                            anchors.centerIn: parent
+                            color: palette.windowText
                         }
                     }
                 }

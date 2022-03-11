@@ -55,8 +55,7 @@ Frame {
             font.pointSize: settings.baseFontSize * 1.375
             icon.source: "qrc:/navigation/"+currentTheme+"/menu.png"
             onClicked: {
-                bufferDrawer.visible = !bufferDrawer.visible
-                if(!mobilePlatform) bufferDrawer.open()
+                bufferDrawer.toggle()
             }
         }
         ColumnLayout {

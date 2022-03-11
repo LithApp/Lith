@@ -105,7 +105,7 @@ ScrollView {
                 visible: !mobilePlatform
                 id: fontChangeButton
                 text: settings.baseFontFamily
-                font: settings.baseFontSize
+                font.pointSize: settings.baseFontSize
                 onClicked: fontDialog.open()
                 Layout.alignment: Qt.AlignRight
             }

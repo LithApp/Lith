@@ -30,5 +30,6 @@
         <file>LithStyle/qmldir</file>
         <file>LithStyle/Switch.qml</file>
         <file>LithStyle/TextField.qml</file>
+        <file>DynamicDrawer.qml</file>
     </qresource>
 </RCC>

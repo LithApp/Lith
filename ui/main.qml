@@ -28,6 +28,7 @@ ApplicationWindow {
     title: "Lith"
 
     property bool mobilePlatform: Qt.platform.os === "ios" || Qt.platform.os === "android"
+    property bool landscapeMode: !mobilePlatform & width > height
     property string currentTheme: lith.windowHelper.darkTheme ? "dark" : "light"
 
 
