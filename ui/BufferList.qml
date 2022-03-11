@@ -48,66 +48,47 @@ Drawer {
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.leftMargin: 3
+                Layout.topMargin: 3
+                Layout.rightMargin: 3
+                spacing: 6
 
-                Item {
-                    width: 6
-                }
-                Text {
-                    font.pointSize: settings.baseFontSize * 1.5
-                    text: "Lith"
-                    color: palette.windowText
-                }
-                Item {
+                TextField {
+                    id: filterField
                     Layout.fillWidth: true
-                }
+                    placeholderText: qsTr("Filter buffers")
+                    text: lith.buffers.filterWord
+                    onTextChanged: lith.buffers.filterWord = text
+                    font.pointSize: settings.baseFontSize * 1.125
 
+                    Keys.onPressed: {
+                        if (event.key === Qt.Key_Up) {
+                            bufferList.currentIndex--;
+                            event.accepted = true
+                        }
+                        if (event.key === Qt.Key_Down) {
+                            bufferList.currentIndex++;
+                            event.accepted = true
+                        }
+                        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                            lith.selectedBuffer = bufferList.currentItem.buffer
+                            filterField.text = ""
+                            root.close()
+                        }
+                    }
+                }
                 Button {
                     Layout.preferredWidth: height
                     font.pointSize: settings.baseFontSize * 1.25
                     icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
                     onClicked: settingsDialog.visible = true
                 }
-                Item {
-                    width: 6
-                }
             }
 
             Item {
                 height: 1
             }
-            TextField {
-                id: filterField
-                Layout.fillWidth: true
-                placeholderText: qsTr("Filter buffers")
-                text: lith.buffers.filterWord
-                onTextChanged: lith.buffers.filterWord = text
-                font.pointSize: settings.baseFontSize * 1.125
 
-                Keys.onPressed: {
-                    if (event.key === Qt.Key_Up) {
-                        bufferList.currentIndex--;
-                        event.accepted = true
-                    }
-                    if (event.key === Qt.Key_Down) {
-                        bufferList.currentIndex++;
-                        event.accepted = true
-                    }
-                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                        lith.selectedBuffer = bufferList.currentItem.buffer
-                        filterField.text = ""
-                        root.close()
-                    }
-                }
-                /*
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        lith.selectedBufferIndex = -1
-                        bufferDrawer.close()
-                    }
-                }
-                */
-            }
             Rectangle {
                 height: 1
                 Layout.fillWidth: true
