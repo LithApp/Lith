@@ -18,6 +18,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "SettingsFields" as Fields
+
 ScrollView {
     id: root
     clip: true
@@ -32,67 +34,43 @@ ScrollView {
         width: parent.width
         implicitHeight: settingsPaneLayout.implicitHeight
 
-        GridLayout {
+        ColumnLayout {
             id: settingsPaneLayout
-            // shouldn't be hardcoded
-            columns: parent.width > 420 ? 2 : 1
-            width: columns === 2 ? Math.min(parent.width, implicitWidth) : parent.width
             anchors.horizontalCenter: parent.horizontalCenter
-            ColumnLayout {
-                Layout.alignment: Qt.AlignLeft
-                spacing: 0
-                Label {
-                    text: qsTr("Enable readline shortcuts")
-                }
-                Label {
-                    text: "(^W, ^D, etc.)"
-                    font.pointSize: lith.settings.baseFontSize * 0.50
-                }
+            width: window.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
+            spacing: -1
+
+            // BIG TODO, this whole layout is disabled
+            enabled: false
+
+            Fields.Header {
+                text: qsTr("Shortcuts")
             }
-            CheckBox {
-                enabled: false
+
+            Fields.Boolean {
+                summary: qsTr("Enable readline shortcuts")
+                details: "(^W, ^D, etc.)"
                 checked: lith.settings.enableReadlineShortcuts
-                Layout.alignment: Qt.AlignRight
             }
 
-            Label {
-                text: qsTr("Open buffer search")
-            }
-            TextField {
-                enabled: false
+            Fields.String {
+                summary: qsTr("Open buffer search")
                 text: lith.settings.shortcutSearchBuffer.join(", ")
-                Layout.preferredWidth: 176
-                Layout.alignment: Qt.AlignRight
             }
 
-            Label {
-                text: qsTr("Autocomplete")
-            }
-            TextField {
-                enabled: false
+            Fields.String {
+                summary: qsTr("Autocomplete")
                 text: lith.settings.shortcutAutocomplete.join(", ")
-                Layout.preferredWidth: 176
-                Layout.alignment: Qt.AlignRight
             }
 
-            Label {
-                text: qsTr("Switch to next buffer")
-            }
-            TextField {
-                enabled: false
+            Fields.String {
+                summary: qsTr("Switch to next buffer")
                 text: lith.settings.shortcutSwitchToNextBuffer.join(", ")
-                Layout.preferredWidth: 176
-                Layout.alignment: Qt.AlignRight
             }
 
-            Label {
-                text: qsTr("Switch to previous buffer")
-            }
-            TextField {
-                enabled: false
+            Fields.String {
+                summary: qsTr("Switch to previous buffer")
                 text: lith.settings.shortcutSwitchToPreviousBuffer.join(", ")
-                Layout.preferredWidth: 176
-                Layout.alignment: Qt.AlignRight
             }
         }
         Item {

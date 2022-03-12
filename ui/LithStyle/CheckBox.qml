@@ -4,15 +4,15 @@ import QtQuick.Templates as T
 T.CheckBox {
     id: control
     checked: true
-    implicitWidth: 40
-    implicitHeight: 40
+    implicitWidth: 30
+    implicitHeight: 30
 
     indicator: Item {
         implicitWidth: 26
         implicitHeight: 26
         anchors.verticalCenter: parent.verticalCenter
-        x: control.leftPadding
-        y: parent.height / 2 - height / 2
+        x: control.leftPadding + 2
+        y: parent.height / 2 - height / 2 + 2
         Rectangle {
             radius: 2
             anchors.fill: parent

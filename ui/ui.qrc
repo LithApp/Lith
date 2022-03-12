@@ -32,5 +32,12 @@
         <file>LithStyle/TextField.qml</file>
         <file>DynamicDrawer.qml</file>
         <file>LithStyle/TabButton.qml</file>
+        <file>SettingsFields/Base.qml</file>
+        <file>SettingsFields/Header.qml</file>
+        <file>SettingsFields/Boolean.qml</file>
+        <file>SettingsFields/Integer.qml</file>
+        <file>SettingsFields/String.qml</file>
+        <file>SettingsFields/IntSpinBox.qml</file>
+        <file>SettingsFields/Button.qml</file>
     </qresource>
 </RCC>

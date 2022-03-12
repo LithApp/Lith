@@ -19,6 +19,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Dialogs
 
+import "SettingsFields" as Fields
+
 ScrollView {
     id: root
     clip: true
@@ -89,75 +91,52 @@ ScrollView {
         width: parent.width
         implicitHeight: settingsPaneLayout.implicitHeight
 
-        GridLayout {
+        ColumnLayout {
             id: settingsPaneLayout
-            // shouldn't be hardcoded
-            columns: parent.width > 420 ? 2 : 1
-            width: columns === 2 ? Math.min(parent.width, implicitWidth) : parent.width
             anchors.horizontalCenter: parent.horizontalCenter
+            width: window.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
+            spacing: -1
 
-            ColumnLayout {
-                Layout.alignment: Qt.AlignLeft
-                spacing: 0
-                Label {
-                    text: "Font family"
-                }
-                Label {
-                    text: "(requires restart)"
-                    font.pointSize: lith.settings.baseFontSize * 0.50
-                }
+            Fields.Header {
+                text: qsTr("Message settings")
             }
-            Button {
-                enabled: !mobilePlatform
-                visible: !mobilePlatform
+
+            Fields.Button {
                 id: fontChangeButton
+                summary: "Font family"
+                details: "(requires restart)"
+                visible: !mobilePlatform
                 text: settings.baseFontFamily
-                font.pointSize: settings.baseFontSize
                 onClicked: fontDialog.open()
-                Layout.alignment: Qt.AlignRight
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Message font size")
-            }
-            SpinBox {
+            Fields.IntSpinBox {
                 id: baseFontSizeSpinBox
+                Layout.alignment: Qt.AlignLeft
+                summary: qsTr("Message font size")
                 value: settings.baseFontSize
                 from: 6
                 to: 32
-                Layout.alignment: Qt.AlignRight
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Timestamp format")
-            }
-            TextField {
+            Fields.String {
                 id: timestampFormatInput
+                Layout.alignment: Qt.AlignLeft
+                summary: qsTr("Timestamp format")
                 text: lith.settings.timestampFormat
-                Layout.alignment: Qt.AlignRight
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Show join/part messages")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: showJoinPartQuitMessagesCheckbox
                 checked: settings.showJoinPartQuitMessages
-                Layout.alignment: Qt.AlignRight
+                summary: qsTr("Show join/part messages")
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Align nick length")
-            }
-            SpinBox {
+            Fields.IntSpinBox {
                 id: nickCutoffThresholdSpinBox
+                summary: qsTr("Align nick length")
                 from: -1
                 to: 100
-                Layout.alignment: Qt.AlignRight
                 value: settings.nickCutoffThreshold
                 textFromValue: function(value, locale) {
                     if (value >= 0)
@@ -167,317 +146,187 @@ ScrollView {
             }
 
             ////////////////////////// COLOR THEME
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
-                height: 1
-                color: palette.base
-            }
-            Label {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
+            Fields.Header {
                 text: qsTr("Color theme")
-                font.bold: true
-                font.capitalization: Font.AllUppercase
-                horizontalAlignment: Text.AlignHCenter
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Force light theme")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: forceLightThemeCheckbox
+                summary: qsTr("Force light theme")
                 checked: settings.forceLightTheme
-                Layout.alignment: Qt.AlignRight
                 onCheckedChanged: {
                     if (checked)
                         forceDarkThemeCheckbox.checked = false
                 }
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Force dark theme")
-            }
-            CheckBox {
+
+            Fields.Boolean {
                 id: forceDarkThemeCheckbox
+                summary: qsTr("Force dark theme")
                 checked: settings.forceDarkTheme
-                Layout.alignment: Qt.AlignRight
                 onCheckedChanged: {
                     if (checked)
                         forceLightThemeCheckbox.checked = false
                 }
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Use black in dark theme")
-            }
-            CheckBox {
-                id: useTrueBlackWithDarkThemeCheckbox
-                checked: settings.useTrueBlackWithDarkTheme
-                Layout.alignment: Qt.AlignRight
-            }
 
+            Fields.Boolean {
+                id: useTrueBlackWithDarkThemeCheckbox
+                summary: qsTr("Use black in dark theme")
+                checked: settings.useTrueBlackWithDarkTheme
+            }
 
             ////////////////////////// INPUT BAR
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
-                height: 1
-                color: palette.base
-            }
-            Label {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
+            Fields.Header {
                 text: qsTr("Input bar")
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                font.capitalization: Font.AllUppercase
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Show autocomplete button")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: showAutocompleteButtonCheckbox
+                summary: qsTr("Show autocomplete button")
                 checked: settings.showAutocompleteButton
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Show gallery button")
-            }
-            CheckBox {
+
+            Fields.Boolean {
                 id: showGalleryButtonCheckbox
+                summary: qsTr("Show gallery button")
                 checked: settings.showGalleryButton
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Show send button")
-            }
-            CheckBox {
+
+            Fields.Boolean {
                 id: showSendButtonCheckbox
+                summary: qsTr("Show send button")
                 checked: settings.showSendButton
-                Layout.alignment: Qt.AlignRight
             }
 
             ////////////////////////// HOTLIST
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
-                height: 1
-                color: palette.base
-            }
-            Label {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
+            Fields.Header {
                 text: qsTr("Hotlist")
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                font.capitalization: Font.AllUppercase
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Enable hotlist")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: hotlistEnabledCheckbox
+                summary: qsTr("Enable hotlist")
                 checked: settings.hotlistEnabled
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                enabled: hotlistEnabledCheckbox.checked
-                text: qsTr("Show unread count")
-            }
-            CheckBox {
+
+            Fields.Boolean {
                 id: hotlistShowUnreadCountCheckbox
+                summary: qsTr("Show unread count")
                 enabled: hotlistEnabledCheckbox.checked
                 checked: settings.hotlistShowUnreadCount
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                enabled: hotlistEnabledCheckbox.checked
-                text: qsTr("Use compact layout")
-            }
-            CheckBox {
+
+            Fields.Boolean {
                 id: hotlistCompactCheckbox
+                summary: qsTr("Use compact layout")
                 enabled: hotlistEnabledCheckbox.checked
                 checked: settings.hotlistCompact
-                Layout.alignment: Qt.AlignRight
             }
 
             ////////////////////////// BUFFER LIST
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
-                height: 1
-                color: palette.base
-            }
-            Label {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
+            Fields.Header {
                 text: qsTr("Buffer list")
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                font.capitalization: Font.AllUppercase
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                enabled: hotlistEnabledCheckbox.checked
-                text: qsTr("Show buffer list on startup")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: showBufferListOnStartupCheckbox
+                summary: qsTr("Show buffer list on startup")
+                enabled: hotlistEnabledCheckbox.checked
                 checked: settings.showBufferListOnStartup
-                Layout.alignment: Qt.AlignRight
             }
 
             ////////////////////////// URL HANDLING
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
-                height: 1
-                color: palette.base
-            }
-
-            Label {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
+            Fields.Header {
                 text: qsTr("URL handling")
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                font.capitalization: Font.AllUppercase
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Shortening Enabled")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: shortenLongUrlsCheckbox
+                summary: qsTr("Shortening Enabled")
                 checked: settings.shortenLongUrls
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Length threshold")
-            }
-            TextField {
+
+            Fields.String {
                 id: shortenLongUrlsThreshold
+                summary: qsTr("Length threshold")
                 enabled: shortenLongUrlsCheckbox.checked
                 text: settings.shortenLongUrlsThreshold
                 inputMethodHints: Qt.ImhPreferNumbers
-                Layout.alignment: Qt.AlignRight
                 validator: IntValidator {
                     bottom: 0
                 }
             }
 
             ////////////////////////// MULTIMEDIA
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
-                height: 1
-                color: palette.base
-            }
-            Label {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
+            Fields.Header {
                 text: qsTr("Multimedia")
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                font.capitalization: Font.AllUppercase
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Open links directly")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: openLinksDirectlyCheckbox
+                summary: qsTr("Open links directly")
                 checked: settings.openLinksDirectly
-                Layout.alignment: Qt.AlignRight
-            }
-            Label {
-                visible: openLinksDirectlyCheckbox.checked
-                Layout.alignment: settingsPaneLayout.columns === 1 ? Qt.AlignHCenter : Qt.AlignLeft
-                text: qsTr("Inside Lith (when possible)")
-                color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
-            }
-            RowLayout {
-                Layout.alignment: settingsPaneLayout.columns === 1 ? Qt.AlignHCenter : Qt.AlignLeft
-                visible: openLinksDirectlyCheckbox.checked
-                Switch {
-                    id: openLinksDirectlyInBrowserSwitch
-                    checked: lith.settings.openLinksDirectlyInBrowser
-                    // Rotate the switch in 1-column layout because the options will be above and below
-                    rotation: settingsPaneLayout.columns === 1 ? 90 : 0
+                columnComponent: RowLayout {
+                    Layout.leftMargin: 15
+                    Layout.rightMargin: 15
+                    Layout.bottomMargin: 6
+                    Layout.fillWidth: true
+                    enabled: openLinksDirectlyCheckbox.checked
+                    // Layout balancing wrapper
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Label {
+                            anchors.fill: parent
+                            verticalAlignment: Label.AlignVCenter
+                            horizontalAlignment: Label.AlignRight
+                            elide: Label.ElideRight
+                            text: qsTr("Inside Lith (if possible)")
+                            color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
+                        }
+                    }
+                    Switch {
+                        id: openLinksDirectlyInBrowserSwitch
+                        checked: lith.settings.openLinksDirectlyInBrowser
+                    }
+                    // Layout balancing wrapper
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Label {
+                            anchors.fill: parent
+                            verticalAlignment: Label.AlignVCenter
+                            elide: Label.ElideRight
+                            text: qsTr("In a web browser")
+                            color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
+                        }
+                    }
                 }
-                // This item is duplicated, this one is shown in 2-column layout
-                Label {
-                    visible: settingsPaneLayout.columns !== 1
-                    text: qsTr("In browser")
-                    color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
-                }
-            }
-            // This item is duplicated, this one is shown in 1-column layout
-            Label {
-                Layout.alignment: settingsPaneLayout.columns === 1 ? Qt.AlignHCenter : Qt.AlignLeft
-                visible: settingsPaneLayout.columns === 1
-                text: qsTr("In browser")
-                color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Loop videos by default")
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: loopVideosByDefaultCheckbox
+                summary: qsTr("Loop videos by default")
                 checked: settings.showSendButton
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Mute videos by default")
-            }
-            CheckBox {
+
+            Fields.Boolean {
                 id: muteVideosByDefaultCheckbox
+                summary: qsTr("Mute videos by default")
                 checked: settings.showSendButton
-                Layout.alignment: Qt.AlignRight
             }
+
 
             ////////////////////////// ADVANCED TWEAKS
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
-                height: 1
-                color: palette.base
-            }
-
-            Label {
-                Layout.fillWidth: true
-                Layout.columnSpan: settingsPaneLayout.columns
+            Fields.Header {
                 text: qsTr("Advanced tweaks")
-                horizontalAlignment: Text.AlignHCenter
-                font.bold: true
-                font.capitalization: Font.AllUppercase
             }
 
-            Label {
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Message spacing")
-            }
-            SpinBox {
+            Fields.IntSpinBox {
                 id: messageSpacingSpinbox
+                summary: qsTr("Message spacing")
                 value: settings.messageSpacing
-                Layout.alignment: Qt.AlignRight
             }
         }
     }

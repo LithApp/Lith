@@ -18,6 +18,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "SettingsFields" as Fields
+
 import lith 1.0
 
 ScrollView {
@@ -62,123 +64,94 @@ ScrollView {
         width: parent.width
         implicitHeight: settingsPaneLayout.implicitHeight
 
-        GridLayout {
+        ColumnLayout {
             id: settingsPaneLayout
-            // shouldn't be hardcoded
-            columns: parent.width > 420 ? 2 : 1
-            width: columns === 2 ? Math.min(parent.width, implicitWidth) : parent.width
             anchors.horizontalCenter: parent.horizontalCenter
+            width: window.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
+            spacing: -1
 
-            Label {
-                text: qsTr("Hostname")
+            Fields.Header {
+                text: "Weechat connection"
             }
-            TextField {
+            Fields.String {
                 id: hostField
                 text: settings.host
+
+                summary: qsTr("Hostname")
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                text: qsTr("Port")
-            }
-            TextField {
+            Fields.Integer {
                 id: portField
                 text: settings.port
-                inputMethodHints: Qt.ImhPreferNumbers
+
+                summary: qsTr("Port")
                 validator: IntValidator {
                     bottom: 0
                     top: 65535
                 }
-                Layout.alignment: Qt.AlignRight
             }
-            Label {
-                text: "SSL"
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: encryptedCheckbox
                 checked: settings.encrypted
-                Layout.alignment: Qt.AlignRight
+
+                summary: qsTr("SSL")
             }
-            ColumnLayout {
-                spacing: 0
-                Label {
-                    text: "Allow self-signed certificates"
-                }
-                Label {
-                    text: "(Less secure, not recommended)"
-                    font.pointSize: lith.settings.baseFontSize * 0.50
-                }
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: selfSignedCertificateCheckbox
                 checked: settings.allowSelfSignedCertificates
-                Layout.alignment: Qt.AlignRight
+
+                summary: qsTr("Allow self-signed certificates")
+                details: "(Less secure, not recommended)"
             }
-            Label {
-                text: qsTr("Password")
-            }
-            TextField {
+            Fields.String {
                 id: passphraseField
-                color: palette.text
+                text: settings.host
+
+                summary: qsTr("Password")
                 placeholderText: lith.hasPassphrase ? "**********" : ""
                 echoMode: TextInput.Password
-                passwordCharacter: "*"
-                Layout.alignment: Qt.AlignRight
             }
-            ColumnLayout {
-                spacing: 0
-                Label {
-                    text: "Use Handshake"
-                }
-                Label {
-                    text: "(More secure, available since WeeChat 2.9)"
-                    font.pointSize: lith.settings.baseFontSize * 0.50
-                }
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: handshakeAuthCheckbox
                 checked: settings.handshakeAuth
-                Layout.alignment: Qt.AlignRight
+
+                summary: qsTr("Use Handshake")
+                details: "(More secure, available since WeeChat 2.9)"
             }
-            Label {
-                text: "Use WeeChat compression"
-            }
-            CheckBox {
+            Fields.Boolean {
                 id: connectionCompressionCheckbox
                 checked: settings.connectionCompression
-                Layout.alignment: Qt.AlignRight
+
+                summary: qsTr("Use WeeChat compression")
             }
-            Label {
-                visible: typeof settings.useWebsockets !== "undefined"
-                text: "Use WebSockets to connect"
+            Fields.Header {
+                text: "Websockets"
             }
-            CheckBox {
-                visible: typeof settings.useWebsockets !== "undefined"
+            Fields.Boolean {
                 id: useWebsocketsCheckbox
+                visible: typeof settings.useWebsockets !== "undefined"
                 checked: settings.useWebsockets
-                Layout.alignment: Qt.AlignRight
+
+                summary: qsTr("Use WebSockets to connect")
             }
-            Label {
-                visible: typeof settings.websocketsEndpoint !== "undefined"
-                text: "Websockets endpoint"
-            }
-            TextField {
-                enabled: useWebsocketsCheckbox.checked
-                visible: typeof settings.websocketsEndpoint !== "undefined"
+            Fields.String {
                 id: websocketsEndpointInput
+                visible: typeof settings.useWebsockets !== "undefined"
+                enabled: useWebsocketsCheckbox.checked
                 text: settings.websocketsEndpoint
-                Layout.alignment: Qt.AlignRight
+
+                summary: qsTr("Websockets endpoint")
             }
             Button {
+                Layout.topMargin: 24
                 Layout.alignment: Qt.AlignHCenter
-                ColumnLayout.columnSpan: settingsPaneLayout.columns
                 text: "Reconnect"
                 enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
                 onClicked: lith.reconnect()
             }
-        }
-        Item {
-            Layout.fillHeight: true
+            Item {
+                Layout.fillHeight: true
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ T.TextField {
                 margins: 6
             }
             verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: control.horizontalAlignment
             font.pointSize: control.font.pointSize
             color: control.placeholderTextColor
 
