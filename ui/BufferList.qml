@@ -124,7 +124,7 @@ Rectangle {
                 height: childrenRect.height + 12
                 property var buffer: modelData
                 visible: buffer
-                color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : palette.base
+                color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : bufferMouse.containsMouse ? "light gray" : palette.base
 
                 Behavior on color {
                     ColorAnimation {
@@ -133,6 +133,7 @@ Rectangle {
                 }
 
                 RowLayout {
+                    id: delegateLayout
                     x: 3
                     y: 6
                     width: parent.width - 6
@@ -160,15 +161,6 @@ Rectangle {
                         textFormat: Text.RichText
                         font.pointSize: settings.baseFontSize * 1.125
                         color: palette.windowText
-                        MouseArea {
-                            id: bufferMouse
-                            anchors.fill: parent
-                            onClicked: {
-                                lith.selectedBuffer = buffer
-                                if (!window.landscapeMode)
-                                    bufferDrawer.hide()
-                            }
-                        }
                     }
                     Rectangle {
                         visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
@@ -185,6 +177,16 @@ Rectangle {
                             anchors.centerIn: parent
                             color: palette.windowText
                         }
+                    }
+                }
+                MouseArea {
+                    id: bufferMouse
+                    anchors.fill: delegateLayout
+                    hoverEnabled: true
+                    onClicked: {
+                        lith.selectedBuffer = buffer
+                        if (!window.landscapeMode)
+                            bufferDrawer.hide()
                     }
                 }
             }
