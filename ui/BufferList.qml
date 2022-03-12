@@ -91,6 +91,7 @@ Rectangle {
         Rectangle {
             height: 1
             Layout.fillWidth: true
+            Layout.rightMargin: 1
             color: palette.text
             opacity: 0.5
         }
