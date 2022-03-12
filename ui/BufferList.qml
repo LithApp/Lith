@@ -39,13 +39,12 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 3
 
         RowLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 3
-            Layout.topMargin: 3
-            Layout.rightMargin: 3
+            Layout.leftMargin: 6
+            Layout.topMargin: 6
+            Layout.rightMargin: 6
             spacing: 6
 
             TextField {
@@ -92,8 +91,6 @@ Rectangle {
         Rectangle {
             height: 1
             Layout.fillWidth: true
-            Layout.leftMargin: -2
-            Layout.rightMargin: -2
             color: palette.text
             opacity: 0.5
         }
@@ -120,23 +117,23 @@ Rectangle {
             }
 
             delegate: Rectangle {
-                width: ListView.view.width
-                height: childrenRect.height + 12
+                width: ListView.view.width - 1
+                height: delegateLayout.height + 12
                 property var buffer: modelData
                 visible: buffer
                 color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : bufferMouse.containsMouse ? "light gray" : palette.base
 
                 Behavior on color {
                     ColorAnimation {
-
+                        duration: 100
                     }
                 }
 
                 RowLayout {
                     id: delegateLayout
-                    x: 3
+                    x: 6
                     y: 6
-                    width: parent.width - 6
+                    width: parent.width - 12
 
                     Rectangle {
                         width: bufferName.height + 6
@@ -181,7 +178,7 @@ Rectangle {
                 }
                 MouseArea {
                     id: bufferMouse
-                    anchors.fill: delegateLayout
+                    anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
                         lith.selectedBuffer = buffer
