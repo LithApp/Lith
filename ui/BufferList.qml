@@ -92,7 +92,10 @@ Rectangle {
         Rectangle {
             height: 1
             Layout.fillWidth: true
-            color: "dark gray"
+            Layout.leftMargin: -2
+            Layout.rightMargin: -2
+            color: palette.text
+            opacity: 0.5
         }
 
         ListView {

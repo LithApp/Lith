@@ -20,35 +20,37 @@ import QtQuick.Controls 2.12
 
 import lith 1.0
 
-Frame {
+Rectangle {
     id: root
+    color: palette.window
 
     SystemPalette {
         id: palette
     }
 
-    background: Rectangle {
-        color: palette.window
-        Rectangle {
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-            }
-            height: 1
-            color: palette.text
-            opacity: 0.3
-        }
-    }
-    padding: 6
+    height: headerLayout.height + 12
 
     DragHandler {
         onActiveChanged: if (active) window.startSystemMove();
         target: null
     }
 
+    Rectangle {
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        height: 1
+        color: palette.text
+        opacity: 0.5
+    }
+
     RowLayout {
-        width: parent.width
+        id: headerLayout
+        x: 6
+        y: 6
+        width: parent.width - 6
         Button {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
