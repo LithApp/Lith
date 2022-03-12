@@ -15,9 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
-import QtQuick 2.0
-import QtQuick.Controls 2.4
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+import "LithStyle" as LithStyle
 
 Dialog {
     modal: true
@@ -40,7 +42,8 @@ Dialog {
             model: mobilePlatform ? [qsTr("Connection"), qsTr("Interface")]
                                   : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
 
-            delegate: TabButton {
+            // TODO this is definitely wrong, the module specification is (but actually not) redundant
+            delegate: LithStyle.TabButton {
                 text: modelData
             }
         }

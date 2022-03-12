@@ -31,5 +31,6 @@
         <file>LithStyle/Switch.qml</file>
         <file>LithStyle/TextField.qml</file>
         <file>DynamicDrawer.qml</file>
+        <file>LithStyle/TabButton.qml</file>
     </qresource>
 </RCC>
