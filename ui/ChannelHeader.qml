@@ -50,7 +50,7 @@ Rectangle {
         id: headerLayout
         x: 6
         y: 6
-        width: parent.width - 6
+        width: parent.width - 12
         Button {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
