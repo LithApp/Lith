@@ -58,20 +58,25 @@ ScrollView {
         }
     }
 
-    ColumnLayout {
-        x: 6
-        y: 6
-        width: root.width - 12
+    Item {
+        width: parent.width
+        implicitHeight: settingsPaneLayout.implicitHeight
+
         GridLayout {
-            Layout.alignment: Qt.AlignHCenter
-            columns: 2
+            id: settingsPaneLayout
+            // shouldn't be hardcoded
+            columns: parent.width > 420 ? 2 : 1
+            width: columns === 2 ? Math.min(parent.width, implicitWidth) : parent.width
+            anchors.horizontalCenter: parent.horizontalCenter
+
             Label {
                 text: qsTr("Hostname")
             }
             TextField {
                 id: hostField
                 text: settings.host
-                inputMethodHints: Qt.ImhNoPredictiveText
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase
+                Layout.alignment: Qt.AlignRight
             }
             Label {
                 text: qsTr("Port")
@@ -84,6 +89,7 @@ ScrollView {
                     bottom: 0
                     top: 65535
                 }
+                Layout.alignment: Qt.AlignRight
             }
             Label {
                 text: "SSL"
@@ -91,7 +97,7 @@ ScrollView {
             CheckBox {
                 id: encryptedCheckbox
                 checked: settings.encrypted
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             ColumnLayout {
                 spacing: 0
@@ -106,7 +112,7 @@ ScrollView {
             CheckBox {
                 id: selfSignedCertificateCheckbox
                 checked: settings.allowSelfSignedCertificates
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
                 text: qsTr("Password")
@@ -117,6 +123,7 @@ ScrollView {
                 placeholderText: lith.hasPassphrase ? "**********" : ""
                 echoMode: TextInput.Password
                 passwordCharacter: "*"
+                Layout.alignment: Qt.AlignRight
             }
             ColumnLayout {
                 spacing: 0
@@ -131,7 +138,7 @@ ScrollView {
             CheckBox {
                 id: handshakeAuthCheckbox
                 checked: settings.handshakeAuth
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
                 text: "Use WeeChat compression"
@@ -139,7 +146,7 @@ ScrollView {
             CheckBox {
                 id: connectionCompressionCheckbox
                 checked: settings.connectionCompression
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
                 visible: typeof settings.useWebsockets !== "undefined"
@@ -149,7 +156,7 @@ ScrollView {
                 visible: typeof settings.useWebsockets !== "undefined"
                 id: useWebsocketsCheckbox
                 checked: settings.useWebsockets
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Label {
                 visible: typeof settings.websocketsEndpoint !== "undefined"
@@ -160,11 +167,11 @@ ScrollView {
                 visible: typeof settings.websocketsEndpoint !== "undefined"
                 id: websocketsEndpointInput
                 text: settings.websocketsEndpoint
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignRight
             }
             Button {
                 Layout.alignment: Qt.AlignHCenter
-                ColumnLayout.columnSpan: 2
+                ColumnLayout.columnSpan: settingsPaneLayout.columns
                 text: "Reconnect"
                 enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
                 onClicked: lith.reconnect()

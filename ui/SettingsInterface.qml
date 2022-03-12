@@ -85,22 +85,27 @@ ScrollView {
         }
     }
 
-    ColumnLayout {
-        x: 6
-        y: 6
-        width: root.width - 12
+    Item {
+        width: parent.width
+        implicitHeight: settingsPaneLayout.implicitHeight
 
         GridLayout {
-            id: inputBarLayout
-            columns: 2
-            //Layout.alignment: Qt.AlignLeft
-            Layout.alignment: Qt.AlignHCenter
+            id: settingsPaneLayout
+            // shouldn't be hardcoded
+            columns: parent.width > 420 ? 2 : 1
+            width: columns === 2 ? Math.min(parent.width, implicitWidth) : parent.width
+            anchors.horizontalCenter: parent.horizontalCenter
 
-            Label {
-                visible: !mobilePlatform
-                enabled: !mobilePlatform
+            ColumnLayout {
                 Layout.alignment: Qt.AlignLeft
-                text: "Font family (requires restart)"
+                spacing: 0
+                Label {
+                    text: "Font family"
+                }
+                Label {
+                    text: "(requires restart)"
+                    font.pointSize: lith.settings.baseFontSize * 0.50
+                }
             }
             Button {
                 enabled: !mobilePlatform
@@ -136,7 +141,7 @@ ScrollView {
 
             Label {
                 Layout.alignment: Qt.AlignLeft
-                text: qsTr("Show join/part/quit messages")
+                text: qsTr("Show join/part messages")
             }
             CheckBox {
                 id: showJoinPartQuitMessagesCheckbox
@@ -164,13 +169,13 @@ ScrollView {
             ////////////////////////// COLOR THEME
             Rectangle {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 height: 1
                 color: palette.base
             }
             Label {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 text: qsTr("Color theme")
                 font.bold: true
                 font.capitalization: Font.AllUppercase
@@ -217,13 +222,13 @@ ScrollView {
             ////////////////////////// INPUT BAR
             Rectangle {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 height: 1
                 color: palette.base
             }
             Label {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 text: qsTr("Input bar")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
@@ -261,13 +266,13 @@ ScrollView {
             ////////////////////////// HOTLIST
             Rectangle {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 height: 1
                 color: palette.base
             }
             Label {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 text: qsTr("Hotlist")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
@@ -309,13 +314,13 @@ ScrollView {
             ////////////////////////// BUFFER LIST
             Rectangle {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 height: 1
                 color: palette.base
             }
             Label {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 text: qsTr("Buffer list")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
@@ -336,14 +341,14 @@ ScrollView {
             ////////////////////////// URL HANDLING
             Rectangle {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 height: 1
                 color: palette.base
             }
 
             Label {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 text: qsTr("URL handling")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
@@ -368,6 +373,7 @@ ScrollView {
                 enabled: shortenLongUrlsCheckbox.checked
                 text: settings.shortenLongUrlsThreshold
                 inputMethodHints: Qt.ImhPreferNumbers
+                Layout.alignment: Qt.AlignRight
                 validator: IntValidator {
                     bottom: 0
                 }
@@ -376,13 +382,13 @@ ScrollView {
             ////////////////////////// MULTIMEDIA
             Rectangle {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 height: 1
                 color: palette.base
             }
             Label {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 text: qsTr("Multimedia")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
@@ -400,20 +406,32 @@ ScrollView {
             }
             Label {
                 visible: openLinksDirectlyCheckbox.checked
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: settingsPaneLayout.columns === 1 ? Qt.AlignHCenter : Qt.AlignLeft
                 text: qsTr("Inside Lith (when possible)")
                 color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
             }
             RowLayout {
+                Layout.alignment: settingsPaneLayout.columns === 1 ? Qt.AlignHCenter : Qt.AlignLeft
                 visible: openLinksDirectlyCheckbox.checked
                 Switch {
                     id: openLinksDirectlyInBrowserSwitch
                     checked: lith.settings.openLinksDirectlyInBrowser
+                    // Rotate the switch in 1-column layout because the options will be above and below
+                    rotation: settingsPaneLayout.columns === 1 ? 90 : 0
                 }
+                // This item is duplicated, this one is shown in 2-column layout
                 Label {
+                    visible: settingsPaneLayout.columns !== 1
                     text: qsTr("In browser")
                     color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
                 }
+            }
+            // This item is duplicated, this one is shown in 1-column layout
+            Label {
+                Layout.alignment: settingsPaneLayout.columns === 1 ? Qt.AlignHCenter : Qt.AlignLeft
+                visible: settingsPaneLayout.columns === 1
+                text: qsTr("In browser")
+                color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
             }
 
             Label {
@@ -438,14 +456,14 @@ ScrollView {
             ////////////////////////// ADVANCED TWEAKS
             Rectangle {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 height: 1
                 color: palette.base
             }
 
             Label {
                 Layout.fillWidth: true
-                Layout.columnSpan: 2
+                Layout.columnSpan: settingsPaneLayout.columns
                 text: qsTr("Advanced tweaks")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true

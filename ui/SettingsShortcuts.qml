@@ -28,28 +28,41 @@ ScrollView {
     function onRejected() {
     }
 
-    ColumnLayout {
-        x: 6
-        y: 6
-        width: root.width - 12
+    Item {
+        width: parent.width
+        implicitHeight: settingsPaneLayout.implicitHeight
+
         GridLayout {
-            Layout.alignment: Qt.AlignHCenter
-            columns: 2
-            Label {
-                text: qsTr("Enable readline shortcuts (^W, ^D, etc.)")
+            id: settingsPaneLayout
+            // shouldn't be hardcoded
+            columns: parent.width > 420 ? 2 : 1
+            width: columns === 2 ? Math.min(parent.width, implicitWidth) : parent.width
+            anchors.horizontalCenter: parent.horizontalCenter
+            ColumnLayout {
+                Layout.alignment: Qt.AlignLeft
+                spacing: 0
+                Label {
+                    text: qsTr("Enable readline shortcuts")
+                }
+                Label {
+                    text: "(^W, ^D, etc.)"
+                    font.pointSize: lith.settings.baseFontSize * 0.50
+                }
             }
             CheckBox {
                 enabled: false
                 checked: lith.settings.enableReadlineShortcuts
+                Layout.alignment: Qt.AlignRight
             }
 
             Label {
-                text: qsTr("Start buffer search and filtering")
+                text: qsTr("Open buffer search")
             }
             TextField {
                 enabled: false
                 text: lith.settings.shortcutSearchBuffer.join(", ")
                 Layout.preferredWidth: 176
+                Layout.alignment: Qt.AlignRight
             }
 
             Label {
@@ -59,6 +72,7 @@ ScrollView {
                 enabled: false
                 text: lith.settings.shortcutAutocomplete.join(", ")
                 Layout.preferredWidth: 176
+                Layout.alignment: Qt.AlignRight
             }
 
             Label {
@@ -68,6 +82,7 @@ ScrollView {
                 enabled: false
                 text: lith.settings.shortcutSwitchToNextBuffer.join(", ")
                 Layout.preferredWidth: 176
+                Layout.alignment: Qt.AlignRight
             }
 
             Label {
@@ -77,6 +92,7 @@ ScrollView {
                 enabled: false
                 text: lith.settings.shortcutSwitchToPreviousBuffer.join(", ")
                 Layout.preferredWidth: 176
+                Layout.alignment: Qt.AlignRight
             }
         }
         Item {

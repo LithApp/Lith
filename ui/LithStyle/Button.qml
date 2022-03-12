@@ -26,7 +26,7 @@ T.Button {
             anchors.fill: parent
             color: palette.text
             radius: 2
-            opacity: control.pressed ? 0.3 : control.hovered ? 0.1 : 0.0
+            opacity: control.pressed ? 0.3 : control.hovered ? 0.2 : 0.0
             Behavior on opacity { NumberAnimation { duration: 100 } }
         }
         Text {
