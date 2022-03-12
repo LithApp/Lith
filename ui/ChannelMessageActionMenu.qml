@@ -60,6 +60,10 @@ Dialog {
         horizontalAlignment: Label.AlignHCenter
     }
 
+    background: Rectangle {
+        color: palette.window
+    }
+
     ColumnLayout
     {
         spacing: 16
