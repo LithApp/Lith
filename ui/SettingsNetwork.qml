@@ -105,8 +105,6 @@ ScrollView {
             }
             Fields.String {
                 id: passphraseField
-                text: settings.host
-
                 summary: qsTr("Password")
                 placeholderText: lith.hasPassphrase ? "**********" : ""
                 echoMode: TextInput.Password
