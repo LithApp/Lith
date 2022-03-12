@@ -104,17 +104,24 @@ jobs:
         fi
 
   Android-29:
-    if: github.event_name == 'create' && false
+    if: github.event_name == 'create'
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 1
+        fetch-depth: 1        
+    - name: Install Host Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{env.QT_VERSION}}
+        set-env: false
+        aqtversion: '==2.0.0'
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{env.QT_VERSION}}
         target: android
+        arch: android_armv7
         modules: qtmultimedia qtwebsockets qtimageformats
         aqtversion: '==2.0.0'
     - name: Get OpenSSL
