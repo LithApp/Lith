@@ -45,7 +45,7 @@ T.TabButton {
             anchors.fill: parent
             color: palette.text
             radius: 2
-            opacity: control.pressed ? 0.4 : control.checked ? 0.3 : control.hovered ? 0.2 : 0.0
+            opacity: control.pressed ? 0.4 : control.checked ? 0.0 : control.hovered ? 0.2 : 0.3
             Behavior on opacity { NumberAnimation { duration: 100 } }
         }
         Rectangle {
