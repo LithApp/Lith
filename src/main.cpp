@@ -32,6 +32,7 @@
 #include <QFontDatabase>
 #include <QPalette>
 #include <QMetaType>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -106,5 +107,9 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
+    QPixmap iconPixmap(":/icon.png");
+    // Xorg didn't like the original 2k icon
+    QIcon icon(iconPixmap.scaled(QSize(256, 256)));
+    app.setWindowIcon(icon);
     return app.exec();
 }
