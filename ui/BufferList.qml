@@ -53,7 +53,11 @@ Rectangle {
                 Layout.fillWidth: true
                 placeholderText: qsTr("Filter buffers")
                 text: lith.buffers.filterWord
-                onTextChanged: lith.buffers.filterWord = text
+                onTextChanged: {
+                    lith.buffers.filterWord = text
+                    if (text === "")
+                        bufferList.currentIndex = lith.selectedBufferIndex
+                }
                 font.pointSize: settings.baseFontSize * 1.125
 
                 Keys.onPressed: {
@@ -68,7 +72,12 @@ Rectangle {
                     if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                         lith.selectedBuffer = bufferList.currentItem.buffer
                         filterField.text = ""
+                        bufferList.currentIndex = lith.selectedBufferIndex
                         root.close()
+                    }
+                    if (event.key === Qt.Key_Escape) {
+                        filterField.text = ""
+                        bufferList.currentIndex = lith.selectedBufferIndex
                     }
                 }
             }
@@ -94,6 +103,11 @@ Rectangle {
             model: lith.buffers
             currentIndex: lith.selectedBufferIndex
             highlightMoveDuration: root.position > 0.0 ? 120 : 0
+
+            Connections {
+                target: lith
+                onSelectedBufferIndexChanged: bufferList.currentIndex = lith.selectedBufferIndex
+            }
 
             ScrollBar.vertical: ScrollBar {
                 id: scrollBar
