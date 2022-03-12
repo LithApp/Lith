@@ -22,6 +22,7 @@ import QtQuick.Layouts
 import "LithStyle" as LithStyle
 
 Dialog {
+    id: root
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape
@@ -145,10 +146,18 @@ Dialog {
         Button {
             Layout.fillWidth: true
             text: qsTr("Ok")
+            onClicked: function() {
+                root.accepted()
+                root.visible = false
+            }
         }
         Button {
             Layout.fillWidth: true
             text: qsTr("Cancel")
+            onClicked: function() {
+                root.rejected()
+                root.visible = false
+            }
         }
     }
 }
