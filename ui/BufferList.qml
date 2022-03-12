@@ -51,10 +51,14 @@ Rectangle {
         spacing: 6
 
         Button {
+            id: settingsButton
             Layout.preferredWidth: height
             font.pointSize: settings.baseFontSize * 1.25
             icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
             onClicked: settingsDialog.visible = true
+            ToolTip.text: "Open settings"
+            ToolTip.visible: settingsButton.hovered
+            ToolTip.delay: 800
         }
         TextField {
             id: filterField

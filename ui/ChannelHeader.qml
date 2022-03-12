@@ -53,6 +53,7 @@ Rectangle {
         y: 6
         width: parent.width - 12
         Button {
+            id: bufferListButton
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
             font.pointSize: settings.baseFontSize * 1.375
@@ -60,6 +61,9 @@ Rectangle {
             onClicked: {
                 bufferDrawer.toggle()
             }
+            ToolTip.text: "Open buffer list,\nAccess configuration"
+            ToolTip.visible: bufferListButton.hovered
+            ToolTip.delay: 800
         }
         ColumnLayout {
             Layout.fillWidth: true
@@ -111,6 +115,7 @@ Rectangle {
         }
         Item { width: 1 }
         Button {
+            id: nickListButton
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
             font.pointSize: settings.baseFontSize * 1.375
@@ -125,6 +130,9 @@ Rectangle {
                          lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+currentTheme+"/no-wifi.png" :
                          lith.status === Lith.ERROR        ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
                                                              "qrc:/navigation/"+currentTheme+"/dizzy.png"
+            ToolTip.text: "Open channel information"
+            ToolTip.visible: nickListButton.hovered
+            ToolTip.delay: 800
         }
     }
 }

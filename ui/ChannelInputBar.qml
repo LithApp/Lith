@@ -44,6 +44,9 @@ Item {
             onClicked: {
                 channelTextInput.autocomplete();
             }
+            ToolTip.text: "Autocomplete nickname"
+            ToolTip.visible: autocompleteButton.hovered
+            ToolTip.delay: 800
         }
 
         ChannelTextInput {
@@ -64,6 +67,9 @@ Item {
             onClicked: {
                 fileDialog.open()
             }
+            ToolTip.text: "Upload a picture"
+            ToolTip.visible: imageButton.hovered
+            ToolTip.delay: 800
             BusyIndicator {
                 id: busy
                 visible: parent.isBusy
@@ -79,6 +85,9 @@ Item {
             icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
             visible: settings.showSendButton
             font.pointSize: settings.baseFontSize
+            ToolTip.text: "Send the message"
+            ToolTip.visible: sendButton.hovered
+            ToolTip.delay: 800
             onClicked: {
                 if (channelTextInput.inputFieldAlias.text.length > 0) {
                     lith.selectedBuffer.input(channelTextInput.inputFieldAlias.text)
