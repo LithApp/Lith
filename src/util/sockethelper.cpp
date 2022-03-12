@@ -13,7 +13,7 @@ bool SocketHelper::isConnected() {
     // TODO
     if (m_webSocket && m_webSocket->isValid())
         return true;
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     if (m_tcpSocket && m_tcpSocket->isValid())
         return true;
 #endif
@@ -27,7 +27,7 @@ Weechat *SocketHelper::weechat()
 
 void SocketHelper::onError(QAbstractSocket::SocketError e) {
     qWarning() << "Error!" << e;
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     if (m_tcpSocket)
         emit errorOccurred(m_tcpSocket->errorString());
 #endif
@@ -59,15 +59,19 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
 
     QList<QSslError> expectedSslErrors;
     if (weechat()->lith()->settingsGet()->allowSelfSignedCertificatesGet()) {
+#ifndef __EMSCRIPTEN__
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
+#endif // __EMSCRIPTEN__
     }
+#ifndef __EMSCRIPTEN__
     m_webSocket->ignoreSslErrors(expectedSslErrors);
+#endif
 
     m_webSocket->open(QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
 }
 
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
 void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool encrypted) {
     reset();
     m_tcpSocket = new QSslSocket(this);
@@ -96,7 +100,7 @@ void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool en
         m_tcpSocket->connectToHost(hostname, port);
 }
 
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__
 
 qint64 SocketHelper::write(const char *data) {
      return write(QByteArray(data));
@@ -111,11 +115,11 @@ qint64 SocketHelper::write(const QByteArray &data) {
     if (m_webSocket) {
         bytes = m_webSocket->sendTextMessage(data);
     }
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     if (m_tcpSocket) {
         bytes = m_tcpSocket->write(data);
     }
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__
     if (bytes != data.count()) {
         qWarning() << "fetchLines: Attempted to write" << data.count() << "but managed to write" << bytes;
     }
@@ -127,12 +131,12 @@ void SocketHelper::reset() {
         m_webSocket->deleteLater();
         m_webSocket = nullptr;
     }
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     if (m_tcpSocket) {
         m_tcpSocket->deleteLater();
         m_tcpSocket = nullptr;
     }
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__
 }
 
 void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
@@ -167,7 +171,7 @@ void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
     }
 }
 
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
 void SocketHelper::onSslErrors(const QList<QSslError> &errors) {
     for (auto i : errors) {
         qWarning() << "SSL Error!" << i.errorString();
@@ -235,4 +239,4 @@ void SocketHelper::onReadyRead() {
         onReadyRead();
     }
 }
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__

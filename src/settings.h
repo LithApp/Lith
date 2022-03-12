@@ -77,10 +77,10 @@ class Settings : public QObject {
     SETTING(QString, passphrase)
     SETTING(bool, handshakeAuth, false)
     SETTING(bool, connectionCompression, true)
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     SETTING(bool, useWebsockets, false)
+#endif // __EMSCRIPTEN__
     SETTING(QString, websocketsEndpoint, "weechat")
-#endif // Q_OS_WASM
 
     SETTING(bool, enableReadlineShortcuts, true)
     SETTING(QStringList, shortcutSearchBuffer, {"Alt+G"})

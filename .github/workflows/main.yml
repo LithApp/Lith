@@ -12,6 +12,7 @@ on:
 
 env:
     QT_VERSION: '6.2.3'
+    EM_VERSION: '2.0.14'
 
 jobs:
   iOS:
@@ -103,7 +104,7 @@ jobs:
             xcrun altool --upload-app --file build_ios/Lith.ipa --type ios --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
         fi
 
-  Android-29:
+  Android-30:
     if: github.event_name == 'create'
     runs-on: ubuntu-20.04
     steps:
@@ -145,6 +146,33 @@ jobs:
         if [[ "$TAG_NAME" != "" ]]; then
             ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk" renameto="Lith-android-${TAG_NAME}.apk"
         fi
+
+  Webassembly:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{env.QT_VERSION}}
+        target: desktop
+        arch: wasm_32
+        modules: qtmultimedia qtwebsockets qtimageformats
+        aqtversion: '==2.0.0'
+    - name: Install Host Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{env.QT_VERSION}}
+        set-env: false
+        aqtversion: '==2.0.0'
+    - uses: mymindstorm/setup-emsdk@v11
+      with:
+        version: ${{env.EM_VERSION}}
+    - name: Build the Emscripten binary
+      run: |
+        IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/wasm/build.sh
 
   Windows-MSVC:
     runs-on: windows-2019

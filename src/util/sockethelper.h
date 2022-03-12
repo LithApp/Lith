@@ -5,9 +5,10 @@
 #include <QTimer>
 
 #include <QtWebSockets/QWebSocket>
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
 #include <QSslSocket>
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__
+#include <QSslError>
 
 class Weechat;
 
@@ -24,9 +25,9 @@ public slots:
     void reset();
 
     void connectToWebsocket(const QString &hostname, const QString &endpoint, int port, bool encrypted);
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     void connectToTcpSocket(const QString &hostname, int port, bool encrypted);
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__
 
     qint64 write(const char *data);
     qint64 write(const QString &data);
@@ -43,21 +44,21 @@ private slots:
     void onDisconnected();
     void onConnected();
 
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     void onReadyRead();
     void onSslErrors(const QList<QSslError> &errors);
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__
 
     void onBinaryMessageReceived(const QByteArray &data);
 private:
     QTimer *m_timeoutTimer { new QTimer(this) };
 
     QWebSocket *m_webSocket { nullptr };
-#ifndef Q_OS_WASM
+#ifndef __EMSCRIPTEN__
     QSslSocket *m_tcpSocket { nullptr };
     QByteArray m_fetchBuffer;
     qint32 m_bytesRemaining { 0 };
-#endif // Q_OS_WASM
+#endif // __EMSCRIPTEN__
 };
 
 #endif // SOCKETHELPER_H
