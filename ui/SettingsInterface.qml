@@ -278,12 +278,22 @@ ScrollView {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Label {
+                            id: insideLithLabel
                             anchors.fill: parent
                             verticalAlignment: Label.AlignVCenter
                             horizontalAlignment: Label.AlignRight
                             elide: Label.ElideRight
                             text: qsTr("Inside Lith (if possible)")
                             color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
+                            MouseArea {
+                                id: insideLithMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+
+                                ToolTip.text: insideLithLabel.text
+                                ToolTip.visible: window.mobilePlatform ? insideLithMouse.containsPress : insideLithMouse.containsMouse
+                                ToolTip.delay: window.mobilePlatform ? 0 : 800
+                            }
                         }
                     }
                     Switch {
@@ -295,11 +305,21 @@ ScrollView {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Label {
+                            id: inBrowserLabel
                             anchors.fill: parent
                             verticalAlignment: Label.AlignVCenter
                             elide: Label.ElideRight
                             text: qsTr("In a web browser")
                             color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
+                            MouseArea {
+                                id: inBrowserMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+
+                                ToolTip.text: inBrowserLabel.text
+                                ToolTip.visible: window.mobilePlatform ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
+                                ToolTip.delay: window.mobilePlatform ? 0 : 800
+                            }
                         }
                     }
                 }
