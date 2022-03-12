@@ -38,6 +38,10 @@ Rectangle {
     }
     function open() {
         //x = 0
+        if (position > 0.999) {
+            lastState = DynamicDrawer.State.Open
+            return
+        }
         lastState = DynamicDrawer.State.None
         if (!dragOutHandleMouse.drag.active)
             drawer.x = -drawer.width
