@@ -25,7 +25,6 @@ Dialog {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape
-    standardButtons: Dialog.Ok | Dialog.Cancel
 
     padding: 0
     topPadding: 0
@@ -64,8 +63,16 @@ Dialog {
         settingsShortcuts.onRejected()
     }
 
+
     StackLayout {
-        anchors.fill: parent
+        id: stackLayout
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            bottom: dialogButtonLayout.top
+        }
+
         currentIndex: tabBar.currentIndex
 
         SettingsNetwork {
@@ -80,6 +87,68 @@ Dialog {
             id: settingsShortcuts
             enabled: !mobilePlatform
         }
+    }
 
+    // Separating gradient
+    Rectangle {
+        anchors {
+            top: stackLayout.top
+            left: parent.left
+            right: parent.right
+        }
+        height: 12
+        gradient: Gradient {
+            GradientStop { position: 0.1; color: palette.button }
+            GradientStop { position: 1.0; color: "transparent" }
+        }
+        Rectangle {
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: top.bottom
+            }
+            height: 1
+            color: palette.shadow
+        }
+    }
+
+    // Separating gradient
+    Rectangle {
+        anchors {
+            bottom: dialogButtonLayout.top
+            left: parent.left
+            right: parent.right
+        }
+        height: 12
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "transparent" }
+            GradientStop { position: 0.9; color: palette.button }
+        }
+        Rectangle {
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+            height: 1
+            color: palette.shadow
+        }
+    }
+
+    RowLayout {
+        id: dialogButtonLayout
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        Button {
+            Layout.fillWidth: true
+            text: qsTr("Ok")
+        }
+        Button {
+            Layout.fillWidth: true
+            text: qsTr("Cancel")
+        }
     }
 }
