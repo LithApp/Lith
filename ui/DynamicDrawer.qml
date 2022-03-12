@@ -7,7 +7,6 @@ Rectangle {
     property real dragOutHandleTopMargin: 0
     property real dragOutHandleBottomMargin: 0
 
-
     enum State {
         None,
         Open,
@@ -75,6 +74,7 @@ Rectangle {
     }
 
     Rectangle {
+        visible: !drawer.isClosed
         anchors {
             top: parent.top
             right: parent.right
@@ -109,7 +109,7 @@ Rectangle {
 
     Rectangle {
         id: dragHandle
-        visible: landscapeMode
+        visible: landscapeMode && !drawer.isClosed
         z: 1
         x: 320
         width: 11
