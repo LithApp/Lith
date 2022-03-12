@@ -28,7 +28,7 @@ Rectangle {
     property var messageModel: null
     height: messageRootLayout.height
 
-    color: messageModel.highlight ? "#22880000" : "transparent"
+    color: messageModel.highlight ? "#44aa3333" : "transparent"
     Connections {
         target: messageMouseArea
         function onClicked(mouse) {
