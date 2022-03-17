@@ -23,14 +23,27 @@ import "LithStyle"
 ApplicationWindow {
     id: window
     visible: true
-    width: mobilePlatform ? 480 : 1024
+    width: platform.mobile ? 480 : 1024
     height: 800
     title: "Lith"
 
-    property bool mobilePlatform: Qt.platform.os === "ios" || Qt.platform.os === "android"
-    property bool landscapeMode: !mobilePlatform & width > height
+    property bool landscapeMode: !platform.mobile & width > height
     property string currentTheme: lith.windowHelper.darkTheme ? "dark" : "light"
 
+    property alias platform: platform
+    QtObject {
+        id: platform
+        readonly property bool mobile: ios || android
+        readonly property bool desktop: windows || macos || linux || wasm
+        readonly property bool unknown: !mobile && !desktop
+
+        readonly property bool ios: Qt.platform.os === "ios"
+        readonly property bool android: Qt.platform.os === "android"
+        readonly property bool windows: Qt.platform.os === "windows"
+        readonly property bool macos: Qt.platform.os === "osx"
+        readonly property bool linux: Qt.platform.os === "linux"
+        readonly property bool wasm: Qt.platform.os === "wasm"
+    }
 
     SystemPalette {
         id: palette

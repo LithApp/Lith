@@ -24,11 +24,11 @@ Rectangle {
     id: root
     color: palette.window
 
-    readonly property bool controlRowOnBottom: (window.mobilePlatform && lith.settings.platformBufferControlPosition) || (!window.mobilePlatform && !lith.settings.platformBufferControlPosition)
+    readonly property bool controlRowOnBottom: (window.platform.mobile && lith.settings.platformBufferControlPosition) || (!window.platform.mobile && !lith.settings.platformBufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
     function clear() {
         filterField.clear()
-        if (mobilePlatform)
+        if (window.platform.mobile)
             filterField.focus = false
         else
             filterField.focus = true

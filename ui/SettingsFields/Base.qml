@@ -54,8 +54,8 @@ Rectangle {
                     hoverEnabled: true
 
                     ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
-                    ToolTip.visible: window.mobilePlatform ? baseMouse.containsPress : baseMouse.containsMouse
-                    ToolTip.delay: window.mobilePlatform ? 0 : 800
+                    ToolTip.visible: window.platform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
+                    ToolTip.delay: window.platform.mobile ? 0 : 800
                 }
             }
         }

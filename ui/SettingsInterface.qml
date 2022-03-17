@@ -112,7 +112,7 @@ ScrollView {
                 id: fontChangeButton
                 summary: "Font family"
                 details: "(requires restart)"
-                visible: !mobilePlatform
+                visible: !window.platform.mobile
                 text: settings.baseFontFamily
                 onClicked: fontDialog.open()
             }
@@ -244,7 +244,7 @@ ScrollView {
 
             Fields.Boolean {
                 id: platformBufferControlPositionCheckbox
-                summary: window.mobilePlatform ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
+                summary: window.platform.mobile ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
                 checked: settings.platformBufferControlPosition
             }
 
@@ -303,8 +303,8 @@ ScrollView {
                                 hoverEnabled: true
 
                                 ToolTip.text: insideLithLabel.text
-                                ToolTip.visible: window.mobilePlatform ? insideLithMouse.containsPress : insideLithMouse.containsMouse
-                                ToolTip.delay: window.mobilePlatform ? 0 : 800
+                                ToolTip.visible: window.platform.mobile ? insideLithMouse.containsPress : insideLithMouse.containsMouse
+                                ToolTip.delay: window.platform.mobile ? 0 : 800
                             }
                         }
                     }
@@ -329,8 +329,8 @@ ScrollView {
                                 hoverEnabled: true
 
                                 ToolTip.text: inBrowserLabel.text
-                                ToolTip.visible: window.mobilePlatform ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
-                                ToolTip.delay: window.mobilePlatform ? 0 : 800
+                                ToolTip.visible: window.platform.mobile ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
+                                ToolTip.delay: window.platform.mobile ? 0 : 800
                             }
                         }
                     }

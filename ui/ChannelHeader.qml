@@ -123,7 +123,7 @@ Rectangle {
             enabled: lith.status === Lith.CONNECTED
             onClicked: {
                 nickDrawer.visible = !nickDrawer.visible
-                if(!mobilePlatform) nickDrawer.open()
+                if(!window.platform.mobile) nickDrawer.open()
             }
             icon.source: lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+currentTheme+"/transfer.png" :
                          lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+currentTheme+"/smile.png" :

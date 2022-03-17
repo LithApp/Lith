@@ -39,8 +39,8 @@ Dialog {
         width: parent.width
 
         Repeater {
-            model: mobilePlatform ? [qsTr("Connection"), qsTr("Interface")]
-                                  : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
+            model: window.platform.mobile ? [qsTr("Connection"), qsTr("Interface")]
+                                          : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
 
             // TODO this is definitely wrong, the module specification is (but actually not) redundant
             delegate: LithStyle.TabButton {
@@ -86,7 +86,7 @@ Dialog {
 
         SettingsShortcuts {
             id: settingsShortcuts
-            enabled: !mobilePlatform
+            enabled: !window.platform.mobile
         }
     }
 

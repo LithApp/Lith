@@ -26,7 +26,7 @@ Drawer {
 
     onVisibleChanged: {
         if (visible) {
-            if (mobilePlatform)
+            if (window.platform.mobile)
                 nickFilter.focus = false
             else
                 nickFilter.focus = true
