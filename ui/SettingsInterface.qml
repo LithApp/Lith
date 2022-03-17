@@ -49,6 +49,7 @@ ScrollView {
         settings.showJoinPartQuitMessages = showJoinPartQuitMessagesCheckbox.checked
         settings.baseFontFamily = fontDialog.currentFont.family
         settings.showBufferListOnStartup = showBufferListOnStartupCheckbox.checked
+        settings.platformBufferControlPosition = platformBufferControlPositionCheckbox.checked
     }
     function onRejected() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
@@ -71,10 +72,16 @@ ScrollView {
         hotlistShowUnreadCountCheckbox.checked = settings.hotlistShowUnreadCount
         messageSpacingSpinbox.value = settings.messageSpacing
         showJoinPartQuitMessagesCheckbox.checked = settings.showJoinPartQuitMessages
-        fontChangeButton.text = settings.baseFontFamily
-        fontChangeButton.font.family = settings.baseFontFamily
+        try {
+            fontChangeButton.text = settings.baseFontFamily
+            fontChangeButton.font.family = settings.baseFontFamily
+        }
+        catch(e) {
+
+        }
         fontDialog.currentFont.family = settings.baseFontFamily
         showBufferListOnStartupCheckbox.checked = settings.showBufferListOnStartup
+        platformBufferControlPositionCheckbox.checked = settings.platformBufferControlPosition
     }
 
     FontDialog {
@@ -232,8 +239,13 @@ ScrollView {
             Fields.Boolean {
                 id: showBufferListOnStartupCheckbox
                 summary: qsTr("Show buffer list on startup")
-                enabled: hotlistEnabledCheckbox.checked
                 checked: settings.showBufferListOnStartup
+            }
+
+            Fields.Boolean {
+                id: platformBufferControlPositionCheckbox
+                summary: window.mobilePlatform ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
+                checked: settings.platformBufferControlPosition
             }
 
             ////////////////////////// URL HANDLING

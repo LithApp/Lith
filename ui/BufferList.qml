@@ -24,6 +24,7 @@ Rectangle {
     id: root
     color: palette.window
 
+    readonly property bool controlRowOnBottom: (window.mobilePlatform && lith.settings.platformBufferControlPosition) || (!window.mobilePlatform && !lith.settings.platformBufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
     function clear() {
         filterField.clear()
@@ -37,16 +38,14 @@ Rectangle {
         id: palette
     }
 
-
     RowLayout {
         id: controlRow
         anchors {
             left: parent.left
             right: parent.right
-            top: window.mobilePlatform ? undefined : parent.top
-            bottom: window.mobilePlatform ? parent.bottom : undefined
             margins: 6
         }
+        y: root.controlRowOnBottom ? parent.height - height - anchors.margins : anchors.margins
 
         spacing: 6
 
@@ -95,35 +94,18 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: separator
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: window.mobilePlatform ? controlRow.top : undefined
-            bottom: window.mobilePlatform ? undefined : controlRow.bottom
-            topMargin: -6
-            bottomMargin: -6
-        }
-
-        height: 1
-        color: palette.text
-        opacity: 0.5
-    }
-
     ListView {
         id: bufferList
+        clip: true
 
         anchors {
             left: parent.left
             right: parent.right
-            top: window.mobilePlatform ? parent.top : separator.bottom
-            bottom: window.mobilePlatform ? separator.top : parent.bottom
-            topMargin: 6
-            bottomMargin: 6
+            top: root.controlRowOnBottom ? parent.top : controlRow.bottom
+            topMargin: root.controlRowOnBottom ? 0 : 9
         }
+        height: parent.height - controlRow.height - 15
 
-        clip: true
         model: lith.buffers
         currentIndex: lith.selectedBufferIndex
         highlightMoveDuration: root.position > 0.0 ? 120 : 0
@@ -211,5 +193,19 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Rectangle {
+        id: separator
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: root.controlRowOnBottom ? controlRow.top : controlRow.bottom
+            bottomMargin: root.controlRowOnBottom ? 6 : -6
+        }
+
+        height: 1
+        color: palette.text
+        opacity: 0.5
     }
 }

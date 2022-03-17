@@ -105,6 +105,7 @@ class Settings : public QObject {
     SETTING(bool, showJoinPartQuitMessages, true)
 
     SETTING(bool, showBufferListOnStartup, false)
+    SETTING(bool, platformBufferControlPosition, true)
 
     SETTING(QString, imgurApiKey, IMGUR_API_KEY)
 
