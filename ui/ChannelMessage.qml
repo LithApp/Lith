@@ -26,7 +26,10 @@ Rectangle {
     z: index
     width: ListView.view.width // + timeMetrics.width
     property var messageModel: null
-    height: messageRootLayout.height
+    //property var previousMessageModel: ListView.view.contentItem.children[index-1].messageModel
+    //property var nextMessageModel: ListView.view.contentItem.children[index+1].messageModel
+
+    height: lith.settings.terminalLikeChat ? terminalLineLayout.height : messageBubble.height
 
     color: messageModel.highlight ? "#44aa3333" : "transparent"
     Connections {
@@ -53,8 +56,68 @@ Rectangle {
                                           messageModel.date)
         }
     }
+
+    Item {
+        id: messageBubble
+        visible: !lith.settings.terminalLikeChat
+        width: messageBubbleText.width + 30
+        height: messageBubbleText.height + 30
+
+        Rectangle {
+            visible: {
+                if (messageModel.isSelfMsg)
+                    return false
+                /*
+                if (nextMessageModel.nick == messageModel.nick)
+                    return false
+                */
+                return true
+            }
+            x: 3
+            y: 3
+            color: palette.dark
+            width: 36
+            height: 36
+            radius: height / 2
+            Text {
+                anchors.centerIn: parent
+                text: messageModel.colorlessNickname.substring(0, 2)
+                color: palette.window
+                textFormat: Text.RichText
+                renderType: Text.NativeRendering
+            }
+        }
+
+        Rectangle {
+            x: messageModel.isSelfMsg ? root.width - messageBubble.width : 46
+            y: 3
+            radius: 24
+            width: messageBubbleText.width + 24
+            height: messageBubbleText.height + 24
+            antialiasing: true
+            property color origColor: messageModel.nickColor
+            function noir(col) {
+                let newColor = col
+                newColor.hslLightness *= 0.6
+                return newColor
+            }
+            color: noir(origColor)
+            Text {
+                id: messageBubbleText
+                x: 12
+                y: 12
+                width: Math.min(implicitWidth, root.width - 75)
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                text: messageModel.message
+                color: palette.text
+                textFormat: Text.RichText
+                renderType: Text.NativeRendering
+            }
+        }
+    }
     RowLayout {
-        id: messageRootLayout
+        id: terminalLineLayout
+        visible: lith.settings.terminalLikeChat
         width: parent.width
         spacing: 0
         Text {

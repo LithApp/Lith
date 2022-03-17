@@ -17,6 +17,7 @@ public:
 
     bool lightThemeGet() { return !darkThemeGet(); }
     const ColorTheme &currentTheme();
+    const ColorTheme &inverseTheme();
 
     Q_INVOKABLE qreal getBottomSafeAreaSize();
 

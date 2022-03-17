@@ -156,6 +156,14 @@ FormattedString::Part &FormattedString::addPart(const FormattedString::Part &p) 
     return m_parts.last();
 }
 
+FormattedString::Part &FormattedString::firstPart() {
+    return m_parts.first();
+}
+
+const FormattedString::Part &FormattedString::firstPart() const {
+    return m_parts.first();
+}
+
 QString FormattedString::toPlain() const {
     QString ret;
     for (auto &i : m_parts) {
@@ -198,8 +206,20 @@ bool FormattedString::containsHtml() const {
     return m_parts.count() > 1 || m_parts.first().containsHtml();
 }
 
+int FormattedString::count() const {
+    return m_parts.count();
+}
+
 FormattedString::Part &FormattedString::lastPart() {
     return m_parts.last();
+}
+
+const FormattedString::Part &FormattedString::lastPart() const {
+    return m_parts.last();
+}
+
+const FormattedString::Part &FormattedString::at(int index) const {
+    return m_parts.at(index);
 }
 
 void FormattedString::prune() {
@@ -292,4 +312,22 @@ FormattedString &FormattedString::operator=(QString &&o) {
 FormattedString &FormattedString::operator=(const QString &o) {
     m_parts = { o };
     return *this;
+}
+
+QColor FormattedString::Part::Color::toQColor(const ColorTheme &theme) const {
+    if (index >= 0) {
+        if (extended) {
+            if (theme.extendedColors().count() > index)
+                return QColor(theme.extendedColors()[index]);
+            else
+                return QColor("pink");
+        }
+        else {
+            if (theme.weechatColors().count() > index)
+                return QColor(theme.weechatColors()[index]);
+            else
+                return QColor("pink");
+        }
+    }
+    return QColor("pink");
 }

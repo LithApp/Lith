@@ -107,6 +107,9 @@ class Settings : public QObject {
     SETTING(bool, showBufferListOnStartup, false)
     SETTING(bool, platformBufferControlPosition, true)
 
+    // This is hidden for now
+    SETTING(bool, terminalLikeChat, true)
+
     SETTING(QString, imgurApiKey, IMGUR_API_KEY)
 
 signals:

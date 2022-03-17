@@ -31,6 +31,7 @@ public:
         struct Color {
             int32_t index { -1 };
             bool extended { false };
+            QColor toQColor(const ColorTheme &theme = getCurrentTheme()) const;
         };
 
         Part(const QString &text) : text(text) {}
@@ -74,10 +75,15 @@ public:
 
     bool containsHtml() const;
 
+    int count() const;
     void clear();
 
     Part &addPart(const Part &p = {{}});
+    Part &firstPart();
+    const Part &firstPart() const;
     Part &lastPart();
+    const Part &lastPart() const;
+    const Part& at(int index) const;
     // prune would potentially (not 100% done) remove all empty parts and merge the ones with the same formatting
     void prune();
 

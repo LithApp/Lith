@@ -282,6 +282,12 @@ bool BufferLine::isSelfMsgGet() {
     return m_tags_array.contains("self_msg");
 }
 
+QColor BufferLine::nickColorGet() const {
+    if (m_prefix.count() > 0)
+        return m_prefix.at(2).foreground.toQColor(Lith::instance()->windowHelperGet()->inverseTheme());
+    return QColor();
+}
+
 bool BufferLine::isPrivMsgGet() {
     return m_tags_array.contains("irc_privmsg");
 }

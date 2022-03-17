@@ -140,6 +140,7 @@ class BufferLine : public QObject {
     Q_PROPERTY(bool isJoinPartQuitMsg READ isJoinPartQuitMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(bool isPrivMsg READ isPrivMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(bool isSelfMsg READ isSelfMsgGet NOTIFY tags_arrayChanged)
+    Q_PROPERTY(QColor nickColor READ nickColorGet NOTIFY messageChanged)
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
     Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged) // used here because segments is already chopped up
     Q_PROPERTY(QObject *buffer READ bufferGet CONSTANT)
@@ -161,15 +162,13 @@ public:
     bool isJoinPartQuitMsgGet();
     bool isPrivMsgGet();
     bool isSelfMsgGet();
+    QColor nickColorGet() const;
     QString colorlessNicknameGet();
     QString colorlessTextGet();
 
     QObject *bufferGet();
 
-    QList<QObject*> segments();
-
 signals:
-    void segmentsChanged();
     void messageChanged();
     void prefixChanged();
 

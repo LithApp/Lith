@@ -42,6 +42,15 @@ const ColorTheme &WindowHelper::currentTheme() {
     return lightTheme;
 }
 
+const ColorTheme &WindowHelper::inverseTheme() {
+    if (m_darkTheme) {
+        return lightTheme;
+    }
+    if (m_useBlack)
+        return blackTheme;
+    return darkTheme;
+}
+
 qreal WindowHelper::getBottomSafeAreaSize() {
     if (qApp->allWindows().count() > 0) {
         auto window = qApp->allWindows().first();
