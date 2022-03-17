@@ -283,7 +283,8 @@ bool BufferLine::isSelfMsgGet() {
 }
 
 QColor BufferLine::nickColorGet() const {
-    if (m_prefix.count() > 0)
+    // TODO this is suspicious at best
+    if (m_prefix.count() > 2)
         return m_prefix.at(2).foreground.toQColor(Lith::instance()->windowHelperGet()->inverseTheme());
     return QColor();
 }
