@@ -47,10 +47,13 @@ class Nick : public QObject {
     PROPERTY(QString, prefix_color)
 
     PROPERTY(pointer_t, ptr)
+
+    Q_PROPERTY(QString colorlessName READ colorlessName NOTIFY nameChanged)
 public:
     Nick(Buffer *parent = nullptr);
     virtual ~Nick();
 
+    QString colorlessName() const;
 };
 
 class Buffer : public QObject {

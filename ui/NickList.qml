@@ -144,7 +144,7 @@ Drawer {
                     anchors.fill: parent
                     onClicked: {
                         nickListView.currentIndex = index
-                        openNickActionMenu(modelData.name)
+                        openNickActionMenu(modelData.colorlessName)
                     }
                 }
 

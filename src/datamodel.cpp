@@ -319,6 +319,11 @@ Nick::Nick(Buffer *parent)
 Nick::~Nick() {
 }
 
+QString Nick::colorlessName() const
+{
+    return m_name.toPlain();
+}
+
 HotListItem::HotListItem(QObject *parent)
     : QObject(parent)
 {
