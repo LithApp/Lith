@@ -5,7 +5,8 @@ set -x
 mkdir build_ios
 cd build_ios
 
-$Qt6_DIR/bin/qmake .. VERSION=$TAG_NAME QMAKE_DEVELOPMENT_TEAM=Z52EFCPL6D IMGUR_API_KEY=$IMGUR_API_KEY
+export CMAKE_PREFIX_PATH=$Qt6_DIR/lib/cmake
+cmake .. -DCMAKE_BUILD_TYPE=Release -DVERSION=$TAG_NAME -DQMAKE_DEVELOPMENT_TEAM=Z52EFCPL6D -DIMGUR_API_KEY=$IMGUR_API_KEY
 
 xcodebuild -project Lith.xcodeproj -sdk iphoneos -configuration Release clean
 xcodebuild -project Lith.xcodeproj -scheme Lith -sdk iphoneos -configuration Release archive -archivePath Lith.xcarchive

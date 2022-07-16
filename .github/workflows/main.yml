@@ -12,7 +12,7 @@ on:
 
 env:
     QT_VERSION: '6.4.1'
-    ANDROID_QT_VERSION: '6.4.0'
+    ANDROID_QT_VERSION: '6.4.2'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
     EM_VERSION: '3.1.14'
 
@@ -115,7 +115,6 @@ jobs:
         fi
 
   Android:
-    if: github.event_name == 'create'
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
@@ -140,8 +139,7 @@ jobs:
         git clone https://github.com/KDAB/android_openssl.git --depth=1
     - name: Build the Android binary
       run: |
-        export ANDROID_NDK_ROOT=/usr/local/lib/android/sdk/ndk/25.1.8937393
-        export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+        export ANDROID_OPENSSL_SRCDIR="$(pwd)/android_openssl"
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/android/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
@@ -158,6 +156,7 @@ jobs:
         fi
 
   Webassembly:
+    if: github.event_name == 'create'
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -183,6 +182,7 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/wasm/build.sh
 
   Windows-MSVC:
+    if: github.event_name == 'create'
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v1
@@ -206,13 +206,14 @@ jobs:
         eval $(./dist/win/make-vs2019-env.bat)
         mkdir build_win
         cd build_win
-        $Qt6_DIR/bin/qmake.exe .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION=$TAG_NAME
-        nmake
+        export CMAKE_PREFIX_PATH=$Qt6_DIR/lib/cmake
+        cmake .. -DCMAKE_INSTALL_PREFIX=release -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$TAG_NAME
+        cmake --build . --config Release -- -m
+        cmake --install . --config Release -- -m
     - name: Windeployqt + zip
       shell: bash
       run: |
         cd build_win/release
-        rm *.cpp *.h *.obj
         $Qt6_DIR/bin/windeployqt.exe Lith.exe --verbose 2 --release --compiler-runtime --qmldir ../..
         cp /c/Program\ Files/OpenSSL-Win64/bin/*.dll .
         7z a ../../Lith.zip *
@@ -252,7 +253,8 @@ jobs:
       run: |
         mkdir build
         cd build
-        $Qt6_DIR/bin/qmake .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION=$TAG_NAME
+        export CMAKE_PREFIX_PATH=$Qt6_DIR/lib/cmake
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$TAG_NAME
         make -j5
 
 
@@ -287,6 +289,7 @@ jobs:
 
 
   macOS:
+    if: github.event_name == 'create'
     runs-on: macOS-latest
     steps:
     - name: Import signing keys
