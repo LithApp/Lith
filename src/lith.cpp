@@ -30,6 +30,10 @@
 
 #include <QUrl>
 
+#ifdef __linux
+#include <QDBusInterface>
+#endif // __linux
+
 Lith *Lith::_self = nullptr;
 Lith *Lith::instance() {
     if (!_self)
@@ -413,9 +417,6 @@ void Lith::_buffer_line_added(const Protocol::HData &hda) {
         buffer->prependLine(line);
         addLine(bufPtr, linePtr, line);
         if (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet())) {
-            static QIcon appIcon(":/icon.png");
-            static QSystemTrayIcon *icon = new QSystemTrayIcon(appIcon);
-            icon->show();
             QString title;
             if (buffer->isChannelGet() || buffer->isServerGet()) {
                 title = tr("New highlight in %1 from %2").arg(buffer->short_nameGet()).arg(line->colorlessNicknameGet());
@@ -423,7 +424,17 @@ void Lith::_buffer_line_added(const Protocol::HData &hda) {
             else {
                 title = tr("New message from %1").arg(buffer->short_nameGet());
             }
+
+#ifdef __linux
+            QDBusInterface notifications("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications", QDBusConnection::sessionBus());
+            auto reply = notifications.call("Notify", "Lith", 0U, "org.LithApp.Lith", title, line->colorlessTextGet(), QStringList{}, QVariantMap{}, -1);
+#else
+            static QIcon appIcon(":/icon.png");
+            static QSystemTrayIcon *icon = new QSystemTrayIcon(appIcon);
+            icon->show();
+
             icon->showMessage(title, line->colorlessTextGet(), appIcon);
+#endif // __linux
         }
     }
 }
