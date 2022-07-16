@@ -60,6 +60,7 @@ Dialog {
             delegateVideo.stop()
             delegateVideo.source = ""
             delegateImage.source = ""
+            controls.opacity = 1.0
         }
     }
 
@@ -225,6 +226,33 @@ Dialog {
                 rotation = 0
                 scale = 1
             }
+            opacity: {
+                if (delegateImage.scale > 1.0 || y > -100)
+                    return 1.0
+                else
+                    return (y + 200) / 100
+            }
+
+            NumberAnimation {
+                id: snapBackAnimation
+                target: delegateImage
+                property: "y"
+                to: 1
+                duration: 200
+                easing.type: Easing.OutQuad
+            }
+            NumberAnimation {
+                id: hideAnimation
+                target: delegateImage
+                property: "y"
+                to: -200
+                duration: Math.max(1, 400 + delegateImage.y * 2)
+                easing.type: Easing.OutQuad
+                onFinished: {
+                    imageWrapper.visible = false
+                    root.visible = false
+                }
+            }
 
             fillMode: Image.PreserveAspectFit
             width: parent.width - 2
@@ -268,15 +296,33 @@ Dialog {
                 }
             }
             drag.target: delegateImage
-            drag.axis: Drag.XAndYAxis
+            drag.axis: delegateImage.scale > 1.0 ? Drag.XAndYAxis : Drag.YAxis
+            drag.minimumY: delegateImage.scale > 1.0 ? -imageWrapper.height + 32 : -200
+            drag.maximumY: delegateImage.scale > 1.0 ? imageWrapper.height - 32 : 1
             drag.minimumX: -imageWrapper.width + 32
-            drag.maximumX: imageWrapper.width - 32
-            drag.minimumY: -imageWrapper.height + 32
-            drag.maximumY: imageWrapper.height - 32
+            drag.maximumX: imageWrapperWidth - 32
+            drag.onActiveChanged: {
+                if (delegateImage.scale === 1.0 && !drag.active) {
+                    if (delegateImage.y > -110)
+                        snapBackAnimation.start()
+                    else
+                        hideAnimation.start()
+                }
+            }
+
+            onDoubleClicked: {
+                if (delegateImage.scale < 1.5) {
+                    delegateImage.scale = 2.0
+                }
+                else {
+                    delegateImage.scale = 1.0
+                    delegateImage.x = 1
+                    delegateImage.y = 1
+                }
+            }
             onClicked: {
                 if (mouse.button == Qt.LeftButton || mouse.button == Qt.RightButton) {
-                    imageWrapper.visible = false
-                    root.visible = false
+                    controls.toggleVisibility()
                 }
                 else if (mouse.button == Qt.MiddleButton) {
                     if (mouse.modifiers & Qt.ShiftModifier) {
@@ -309,55 +355,113 @@ Dialog {
         }
     }
 
-    Rectangle {
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-        height: 96
+    Item {
+        id: controls
+        anchors.fill: parent
 
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.6; color: "#aa000000" }
+        function toggleVisibility() {
+            if (opacity > 0)
+                opacity = 0
+            else
+                opacity = 1
+        }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 200
+                easing.type: Easing.OutQuad
+            }
         }
 
-        ColumnLayout {
+        Rectangle {
+            id: topControlBar
+
             anchors {
-                bottom: parent.bottom
-                bottomMargin: 12
-                horizontalCenter: parent.horizontalCenter
+                left: parent.left
+                right: parent.right
+                top: parent.top
             }
-            spacing: 12
-            Text {
-                id: errorMsgText
-                visible: delegateImage.status === Image.Error || delegateVideo.errorString.length > 0
-                Layout.alignment: Qt.AlignHCenter
-                color: "red"
-                text: delegateImage.status === Image.Error ? qsTr("The picture could not be displayed") : delegateVideo.errorString
+            height: 96
+
+            gradient: Gradient {
+                GradientStop { position: 0.4; color: "#aa000000" }
+                GradientStop { position: 1.0; color: "transparent" }
             }
-            RowLayout {
-                spacing: 24
-                Layout.alignment: Qt.AlignHCenter
-                Button {
-                    focusPolicy: Qt.NoFocus
-                    font.pointSize: settings.baseFontSize
-                    Layout.preferredHeight: 40
-                    Layout.preferredWidth: height
-                    icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
-                    onClicked: {
-                        clipboardProxy.setText(root.currentUrl)
-                    }
+
+
+            Button {
+                focusPolicy: Qt.NoFocus
+                font.pointSize: settings.baseFontSize
+                anchors {
+                    right: parent.right
+                    margins: 32
+                    verticalCenter: parent.verticalCenter
                 }
-                Button {
-                    focusPolicy: Qt.NoFocus
-                    font.pointSize: settings.baseFontSize
-                    Layout.preferredHeight: 40
-                    Layout.preferredWidth: height
-                    onClicked: {
-                        Qt.openUrlExternally(root.currentUrl)
+                width: 40
+                height: width
+                onClicked: {
+                    videoWrapper.visible = false
+                    imageWrapper.visible = false
+                    root.visible = false
+                }
+                icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
+                icon.width: 12
+                icon.height: 12
+            }
+
+        }
+
+        Rectangle {
+            id: bottomControlBar
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+            height: 96
+
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "transparent" }
+                GradientStop { position: 0.6; color: "#aa000000" }
+            }
+
+            ColumnLayout {
+                anchors {
+                    bottom: parent.bottom
+                    bottomMargin: 12
+                    horizontalCenter: parent.horizontalCenter
+                }
+                spacing: 12
+                Text {
+                    id: errorMsgText
+                    visible: delegateImage.status === Image.Error || delegateVideo.errorString.length > 0
+                    Layout.alignment: Qt.AlignHCenter
+                    color: "red"
+                    text: delegateImage.status === Image.Error ? qsTr("The picture could not be displayed") : delegateVideo.errorString
+                }
+                RowLayout {
+                    spacing: 24
+                    Layout.alignment: Qt.AlignHCenter
+                    Button {
+                        focusPolicy: Qt.NoFocus
+                        font.pointSize: settings.baseFontSize
+                        Layout.preferredHeight: 40
+                        Layout.preferredWidth: height
+                        icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
+                        onClicked: {
+                            clipboardProxy.setText(root.currentUrl)
+                        }
                     }
-                    icon.source: "qrc:/navigation/"+currentTheme+"/resize.png"
+                    Button {
+                        focusPolicy: Qt.NoFocus
+                        font.pointSize: settings.baseFontSize
+                        Layout.preferredHeight: 40
+                        Layout.preferredWidth: height
+                        onClicked: {
+                            Qt.openUrlExternally(root.currentUrl)
+                        }
+                        icon.source: "qrc:/navigation/"+currentTheme+"/resize.png"
+                    }
                 }
             }
         }

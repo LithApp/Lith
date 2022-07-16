@@ -7,6 +7,9 @@ T.Button {
     implicitWidth: 100
     implicitHeight: 40
 
+    icon.width: 28
+    icon.height: 28
+
     font.pointSize: lith.settings.baseFontSize
 
     flat: true
@@ -42,9 +45,11 @@ T.Button {
         Image {
             mipmap: true
             antialiasing: true
-            anchors.fill: parent
+            anchors.centerIn: parent
             anchors.margins: 8
             source: control.icon.source
+            width: control.icon.width
+            height:control.icon.height
         }
     }
 
