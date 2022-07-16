@@ -4,4 +4,5 @@ build
 android_openssl
 build_android
 build_ios
+build_macos
 .DS_Store

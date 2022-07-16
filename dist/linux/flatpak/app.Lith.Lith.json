@@ -1,7 +1,7 @@
 {
     "id": "app.lith.Lith",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.15",
+    "runtime-version": "6.2",
     "sdk": "org.kde.Sdk",
     "command": "Lith",
     "finish-args": [
@@ -28,9 +28,9 @@
     "modules": [
         {
             "name": "Lith",
-            "buildsystem": "qmake",
+            "buildsystem": "cmake-ninja",
             "config-opts": [
-                "PREFIX=/app"
+                "CMAKE_INSTALL_PREFIX=/app"
             ],
             "sources": [
                 {

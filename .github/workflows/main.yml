@@ -13,7 +13,6 @@ env:
 
 jobs:
   iOS:
-    if: github.event_name == 'create'
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -68,13 +67,14 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
-        set-env: false
+        set-env: false¨
+        modules: ${{env.QT_MODULES}} qtquick3d
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
         target: ios
-        modules: ${{env.QT_MODULES}}
+        modules: ${{env.QT_MODULES}} qtquick3d
     - name: Patch Qt
       run: |
         pushd "$Qt6_DIR"
@@ -197,15 +197,16 @@ jobs:
         eval "$(./dist/win/make-vs2019-env.bat)"
         mkdir build_win
         cd build_win
-        "$Qt6_DIR"/bin/qmake.exe .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION="$TAG_NAME"
-        nmake
+        export CMAKE_PREFIX_PATH="$Qt6_DIR"/lib/cmake
+        cmake .. -DCMAKE_INSTALL_PREFIX=release -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$TAG_NAME
+        cmake --build . --config Release -- -m
+        cmake --install . --config Release -- -m
     - name: Windeployqt + zip
       shell: bash
       run: |
         cd build_win/release
-        rm ./*.cpp ./*.h ./*.obj
         "$Qt6_DIR"/bin/windeployqt.exe Lith.exe --verbose 2 --release --compiler-runtime --qmldir ../..
-        7z a ../../Lith.zip ./*
+        7z a ../../Lith.zip *
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
@@ -242,7 +243,8 @@ jobs:
       run: |
         mkdir build
         cd build
-        "$Qt6_DIR"/bin/qmake .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION="$TAG_NAME"
+        export CMAKE_PREFIX_PATH="$Qt6_DIR"/lib/cmake
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$TAG_NAME
         make -j5
 
 

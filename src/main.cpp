@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:///");
+    engine.addImportPath(":/qt/qml/LithUI/ui");
+    engine.addImportPath(":/qt/qml/LithStyle/ui/LithStyle");
     QQuickStyle::setStyle("LithStyle");
 
     // Register types
@@ -109,7 +111,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
     engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
-    engine.load(QUrl(QLatin1String("qrc:/main.qml")));
+    engine.load(QUrl(QLatin1String("qrc:/qt/qml/LithUI/ui/main.qml")));
 
     QPixmap iconPixmap(":/icon.png");
     // Xorg didn't like the original 2k icon
