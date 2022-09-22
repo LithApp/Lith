@@ -148,7 +148,10 @@ Item {
         property string currentExtension: lith.getLinkFileExtension(currentLink)
         property bool containsImage: currentExtension.endsWith("png") ||
                                      currentExtension.endsWith("jpg") ||
-                                     currentExtension.endsWith("jpeg")
+                                     currentExtension.endsWith("jpeg")||
+                                     currentExtension.endsWith("webp")||
+                                     currentExtension.endsWith("bmp") ||
+                                     currentExtension.endsWith("svg")
         property bool containsVideo: currentExtension.endsWith("avi") ||
                                      currentExtension.endsWith("mov") ||
                                      currentExtension.endsWith("mp4") ||
