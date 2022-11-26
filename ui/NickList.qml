@@ -24,6 +24,8 @@ Drawer {
         id: palette
     }
 
+    readonly property bool isClosed: position < 1
+
     onVisibleChanged: {
         if (visible) {
             if (window.platform.mobile)

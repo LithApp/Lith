@@ -59,6 +59,7 @@ Item {
 
     ChannelView {
         id: channelView
+        enabled: bufferDrawer.isClosed && nickDrawer.isClosed
         anchors {
             left: landscapeMode ? bufferDrawer.right : parent.left
             right: parent.right
