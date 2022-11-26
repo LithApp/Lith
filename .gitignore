@@ -1,5 +1,7 @@
 *.pro.user*
+CMakeLists.txt.user*
 build
 android_openssl
 build_android
 build_ios
+.DS_Store
