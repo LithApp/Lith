@@ -51,16 +51,21 @@ const ColorTheme &WindowHelper::inverseTheme() {
     return darkTheme;
 }
 
-qreal WindowHelper::getBottomSafeAreaSize() {
-    if (qApp->allWindows().count() > 0) {
-        auto window = qApp->allWindows().first();
-        QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window->handle());
-        QMargins margins = platformWindow->safeAreaMargins();
-        return margins.bottom();
+QVariantMap WindowHelper::getSafeAreaMargins(QQuickWindow *window) {
+    QVariantMap result {{"top", 0.0}, {"bottom", 0.0}, {"left", 0.0}, {"right", 0.0}};
+    if (!window) {
+        return result;
     }
-    else {
-        return 0.0;
+    QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window->handle());
+    if (!platformWindow) {
+        return result;
     }
+    QMargins margins = platformWindow->safeAreaMargins();
+    result["top"] = margins.top();
+    result["bottom"] = margins.bottom();
+    result["left"] = margins.left();
+    result["right"] = margins.right();
+    return result;
 }
 
 bool WindowHelper::detectSystemDarkStyle() {

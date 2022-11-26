@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#include <QQuickWindow>
+
 class WindowHelper : public QObject
 {
     Q_OBJECT
@@ -19,7 +21,7 @@ public:
     const ColorTheme &currentTheme();
     const ColorTheme &inverseTheme();
 
-    Q_INVOKABLE qreal getBottomSafeAreaSize();
+    Q_INVOKABLE QVariantMap getSafeAreaMargins(QQuickWindow *window);
 
 private:
     bool detectSystemDarkStyle();

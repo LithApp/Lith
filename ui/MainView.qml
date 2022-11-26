@@ -10,43 +10,83 @@ Item {
     width: parent.width - leftMargin - rightMargin
     height: parent.height - topMargin - bottomMargin
 
-    // TODO safe area handling for all sides of the screen
-    // (it doesn't really do anything as of now anyway)
-    property real bottomSafeAreaHeight: 0.0
+    QtObject {
+        id: safeAreaMargins
+        property real top: 0.0
+        property real bottom: 0.0
+        property real left: 0.0
+        property real right: 0.0
+        function refresh() {
+            var result = lith.windowHelper.getSafeAreaMargins(window)
+            top = result["top"]
+            bottom = result["bottom"]
+            left = result["left"]
+            right = result["right"]
+        }
+    }
+
     Component.onCompleted: {
-        bottomSafeAreaHeight = lith.windowHelper.getBottomSafeAreaSize()
+        safeAreaMargins.refresh()
     }
     onWidthChanged: {
-        bottomSafeAreaHeight = lith.windowHelper.getBottomSafeAreaSize()
+        safeAreaMargins.refresh()
     }
 
     property real topMargin: {
         if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
-            if (channelView.inputBarHasFocus) {
-                if (Qt.platform.os === "ios") {
-                    return Qt.inputMethod.keyboardRectangle.height
-                }
+            if (window.platform.ios) {
+                return Qt.inputMethod.keyboardRectangle.height + safeAreaMargins.top
             }
         }
-        return 0
+        return safeAreaMargins.top
     }
     property real bottomMargin:{
-        if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
-            if (!channelView.inputBarHasFocus) {
-                if (Qt.platform.os === "ios") {
-                    return Qt.inputMethod.keyboardRectangle.height - bottomSafeAreaHeight
-                }
+        if (window.platform.ios) {
+            if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
+                return 0
             }
         }
-        return 0
+        return safeAreaMargins.bottom
     }
-    property real leftMargin: 0
-    property real rightMargin: 0
+    property real leftMargin: safeAreaMargins.left
+    property real rightMargin: safeAreaMargins.right
 
     Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
     Behavior on bottomMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
     Behavior on leftMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
     Behavior on rightMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+
+    Rectangle {
+        z: 9999
+        y: -topMargin
+        width: parent.width
+        height: topMargin
+        color: palette.base
+    }
+
+    Rectangle {
+        z: 9999
+        y: parent.height
+        width: parent.width
+        height: topMargin
+        color: palette.base
+    }
+
+    Rectangle {
+        z: 9999
+        x: -leftMargin
+        width: leftMargin
+        height: parent.height
+        color: palette.base
+    }
+
+    Rectangle {
+        z: 9999
+        x: parent.width
+        width: leftMargin
+        height: parent.height
+        color: palette.base
+    }
 
     ErrorMessage {
         id: errorMessage
@@ -92,6 +132,7 @@ Item {
         BufferList {
             id: bufferList
             anchors.fill: parent
+            enabled: !bufferDrawer.isClosed
         }
     }
 

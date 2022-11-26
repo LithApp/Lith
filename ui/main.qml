@@ -27,6 +27,8 @@ ApplicationWindow {
     height: 800
     title: "Lith"
 
+    flags: platform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
+
     property bool landscapeMode: !platform.mobile & width > height
     property string currentTheme: lith.windowHelper.darkTheme ? "dark" : "light"
 

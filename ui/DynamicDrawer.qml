@@ -150,9 +150,9 @@ Rectangle {
             topMargin: drawer.dragOutHandleTopMargin
             bottomMargin: drawer.dragOutHandleBottomMargin
         }
-        x: parent.width
+        x: parent.width - 32
         property real threshold: 100
-        width: 32
+        width: 64
 
         MouseArea {
             id: dragOutHandleMouse
