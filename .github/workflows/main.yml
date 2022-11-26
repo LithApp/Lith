@@ -57,6 +57,7 @@ jobs:
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         base64 -D <<< "${{ secrets.IOS_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Testflight.mobileprovision
+        base64 -D <<< "${{ secrets.DEVELOPMENT_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Development.mobileprovision
     - name: Install Host Qt
       uses: jurplel/install-qt-action@v2
       with:
