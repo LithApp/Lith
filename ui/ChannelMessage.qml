@@ -57,6 +57,7 @@ Rectangle {
         }
     }
 
+    /* Disabled until this feature gets completed
     Item {
         id: messageBubble
         visible: !lith.settings.terminalLikeChat
@@ -67,10 +68,8 @@ Rectangle {
             visible: {
                 if (messageModel.isSelfMsg)
                     return false
-                /*
-                if (nextMessageModel.nick == messageModel.nick)
-                    return false
-                */
+                // if (nextMessageModel.nick == messageModel.nick)
+                //   return false
                 return true
             }
             x: 3
@@ -115,6 +114,8 @@ Rectangle {
             }
         }
     }
+    */
+
     RowLayout {
         id: terminalLineLayout
         visible: lith.settings.terminalLikeChat
