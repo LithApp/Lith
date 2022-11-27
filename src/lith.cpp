@@ -425,7 +425,7 @@ void Lith::_buffer_line_added(const Protocol::HData &hda) {
                 title = tr("New message from %1").arg(buffer->short_nameGet());
             }
 
-#ifdef __linux
+#if defined(__linux) && !defined(__ANDROID_API__)
             QDBusInterface notifications("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications", QDBusConnection::sessionBus());
             auto reply = notifications.call("Notify", "Lith", 0U, "org.LithApp.Lith", title, line->colorlessTextGet(), QStringList{}, QVariantMap{}, -1);
 #else

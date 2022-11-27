@@ -12,5 +12,5 @@ make -j5
 make apk_install_target
 #make install INSTALL_ROOT=/home/user/build/dist/
 
-${Qt6_DIR}/../gcc_64/bin/androiddeployqt --input android-Lith-deployment-settings.json --output android-build/ --android-platform 33 --deployment bundled --gradle --debug
+${Qt6_DIR}/../gcc_64/bin/androiddeployqt --input android-Lith-deployment-settings.json --output android-build/ --deployment bundled --gradle --debug
 
