@@ -27,6 +27,29 @@ ListView {
     property real scrollToBottomButtonPosition: scrollToBottomButton.visible ? height - scrollToBottomButton.y - scrollToBottomButton.height
                                                                              : height
 
+    // This is a hack to work around the view scrolling after the keyboard opens
+    // vvv
+    property bool lastPositionWasBottom: false
+    onHeightChanged: {
+        if (lastPositionWasBottom) {
+            positionViewAtBeginning()
+        }
+    }
+    Connections {
+        target: Qt.inputMethod
+        onVisibleChanged: {
+            console.warn(absoluteYPosition)
+            if (absoluteYPosition > 0.99) {
+                positionViewAtBeginning()
+                listView.lastPositionWasBottom = true
+            }
+            else {
+                listView.lastPositionWasBottom = false
+            }
+        }
+    }
+    /// ^^^ Hack over
+
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
@@ -72,8 +95,12 @@ ListView {
 
     property real absoluteYPosition: yPosition + visibleArea.heightRatio
     onAbsoluteYPositionChanged: {
+        /* FIXME
+           This would close the keyboard when the user starts scrolling through messages
+           This is now disabled because the ListView gets slightly scrolled when keyboard opens
         if (Qt.inputMethod.visible && absoluteYPosition < 1)
             Qt.inputMethod.hide()
+        */
     }
 
     Button {
