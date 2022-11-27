@@ -227,10 +227,10 @@ Dialog {
                 scale = 1
             }
             opacity: {
-                if (delegateImage.scale > 1.0 || y > -100)
+                if (delegateImage.scale > 1.0 || y < 100)
                     return 1.0
                 else
-                    return (y + 200) / 100
+                    return (200 - y) / 100
             }
 
             NumberAnimation {
@@ -245,8 +245,8 @@ Dialog {
                 id: hideAnimation
                 target: delegateImage
                 property: "y"
-                to: -200
-                duration: Math.max(1, 400 + delegateImage.y * 2)
+                to: 200
+                duration: Math.max(1, 400 - delegateImage.y * 2)
                 easing.type: Easing.OutQuad
                 onFinished: {
                     imageWrapper.visible = false
@@ -271,23 +271,11 @@ Dialog {
             width: parent.width / 4
             height: width
         }
-        /*
-        PinchArea {
-            anchors.fill: parent
-            pinch.target: delegateImage
-            pinch.dragAxis: Pinch.XAndYAxis
-            pinch.minimumX: -imageWrapper.width + 32
-            pinch.maximumX: imageWrapper.width - 32
-            pinch.minimumY: -imageWrapper.height + 32
-            pinch.maximumY: imageWrapper.height - 32
-            pinch.minimumScale: 0.001
-            pinch.maximumScale: 20
-        }*/
 
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-            onWheel: {
+            onWheel: (wheel) => {
                 if (wheel.modifiers & Qt.ShiftModifier) {
                     delegateImage.rotation += wheel.angleDelta.y / 12
                 }
@@ -297,13 +285,13 @@ Dialog {
             }
             drag.target: delegateImage
             drag.axis: delegateImage.scale > 1.0 ? Drag.XAndYAxis : Drag.YAxis
-            drag.minimumY: delegateImage.scale > 1.0 ? -imageWrapper.height + 32 : -200
-            drag.maximumY: delegateImage.scale > 1.0 ? imageWrapper.height - 32 : 1
+            drag.minimumY: delegateImage.scale > 1.0 ? -imageWrapper.height + 32 : -1
+            drag.maximumY: delegateImage.scale > 1.0 ? imageWrapper.height - 32 : 200
             drag.minimumX: -imageWrapper.width + 32
-            drag.maximumX: imageWrapperWidth - 32
+            drag.maximumX: imageWrapper.width - 32
             drag.onActiveChanged: {
                 if (delegateImage.scale === 1.0 && !drag.active) {
-                    if (delegateImage.y > -110)
+                    if (delegateImage.y < 90)
                         snapBackAnimation.start()
                     else
                         hideAnimation.start()
@@ -320,7 +308,7 @@ Dialog {
                     delegateImage.y = 1
                 }
             }
-            onClicked: {
+            onClicked: (mouse) => {
                 if (mouse.button == Qt.LeftButton || mouse.button == Qt.RightButton) {
                     controls.toggleVisibility()
                 }
