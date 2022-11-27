@@ -30,7 +30,7 @@
 
 #include <QUrl>
 
-#ifdef __linux
+#if defined(__linux) && !defined(__ANDROID_API__)
 #include <QDBusInterface>
 #endif // __linux
 
