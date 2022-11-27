@@ -72,14 +72,12 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         set-env: false
-        aqtversion: '==2.0.0'
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{env.QT_VERSION}}
         target: ios
         modules: qtmultimedia qtwebsockets qtimageformats
-        aqtversion: '==2.0.0'
     - name: Patch Qt
       run: |
         pushd $Qt6_DIR
@@ -127,7 +125,6 @@ jobs:
         host: 'linux'
         version: ${{env.QT_VERSION}}
         set-env: false
-        aqtversion: '==2.0.0'
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
@@ -136,7 +133,6 @@ jobs:
         target: android
         arch: android_armv7
         modules: qtmultimedia qtwebsockets qtimageformats
-        aqtversion: '==2.0.0'
     - name: Get OpenSSL
       run: |
         git clone https://github.com/KDAB/android_openssl.git --depth=1
@@ -172,13 +168,11 @@ jobs:
         target: desktop
         arch: wasm_32
         modules: qtmultimedia qtwebsockets qtimageformats
-        aqtversion: '==2.0.0'
     - name: Install Host Qt
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{env.QT_VERSION}}
         set-env: false
-        aqtversion: '==2.0.0'
     - uses: mymindstorm/setup-emsdk@v11
       with:
         version: ${{env.EM_VERSION}}
@@ -201,7 +195,6 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: qtmultimedia qtwebsockets qtimageformats
-        aqtversion: '==2.0.0'
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
     - name: Build the application
@@ -253,7 +246,6 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: qtmultimedia qtwebsockets qtimageformats
-        aqtversion: '==2.0.0'
     - name: Build the application
       run: |
         mkdir build
@@ -327,7 +319,6 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: qtmultimedia qtwebsockets qtimageformats
-        aqtversion: '==2.0.0'
     - name: Build the application
       run: |
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
