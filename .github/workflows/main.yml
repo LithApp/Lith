@@ -124,12 +124,14 @@ jobs:
     - name: Install Host Qt
       uses: jurplel/install-qt-action@v2
       with:
+        host: 'linux'
         version: ${{env.QT_VERSION}}
         set-env: false
         aqtversion: '==2.0.0'
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
+        host: 'linux'
         version: ${{env.QT_VERSION}}
         target: android
         arch: android_armv7
