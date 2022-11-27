@@ -12,6 +12,7 @@ on:
 
 env:
     QT_VERSION: '6.4.1'
+    QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
     EM_VERSION: '3.1.14'
 
 jobs:
@@ -68,16 +69,16 @@ jobs:
         base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE_2 }}" > ~/Library/MobileDevice/Provisioning\ Profiles/924f12c6-0542-4827-8c84-cfd0f137e270.mobileprovision
 
     - name: Install Host Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
         set-env: false
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
         target: ios
-        modules: qtmultimedia qtwebsockets qtimageformats
+        modules: ${{env.QT_MODULES}}
     - name: Patch Qt
       run: |
         pushd $Qt6_DIR
@@ -120,19 +121,19 @@ jobs:
       with:
         fetch-depth: 1        
     - name: Install Host Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         host: 'linux'
         version: ${{env.QT_VERSION}}
         set-env: false
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         host: 'linux'
         version: ${{env.QT_VERSION}}
         target: android
         arch: android_armv7
-        modules: qtmultimedia qtwebsockets qtimageformats
+        modules: ${{env.QT_MODULES}}
     - name: Get OpenSSL
       run: |
         git clone https://github.com/KDAB/android_openssl.git --depth=1
@@ -162,14 +163,14 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
         target: desktop
         arch: wasm_32
-        modules: qtmultimedia qtwebsockets qtimageformats
+        modules: ${{env.QT_MODULES}}
     - name: Install Host Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
         set-env: false
@@ -191,10 +192,10 @@ jobs:
       run: |
         choco install openssl
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
-        modules: qtmultimedia qtwebsockets qtimageformats
+        modules: ${{env.QT_MODULES}}
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
     - name: Build the application
@@ -242,10 +243,10 @@ jobs:
         sudo apt update
         sudo apt install make libxkbcommon-dev
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
-        modules: qtmultimedia qtwebsockets qtimageformats
+        modules: ${{env.QT_MODULES}}
     - name: Build the application
       run: |
         mkdir build
@@ -315,10 +316,10 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2
+      uses: jurplel/install-qt-action@v3
       with:
         version: ${{env.QT_VERSION}}
-        modules: qtmultimedia qtwebsockets qtimageformats
+        modules: ${{env.QT_MODULES}}
     - name: Build the application
       run: |
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
