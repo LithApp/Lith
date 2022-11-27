@@ -12,6 +12,7 @@ on:
 
 env:
     QT_VERSION: '6.4.1'
+    ANDROID_QT_VERSION: '6.4.0'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
     EM_VERSION: '3.1.14'
 
@@ -124,13 +125,13 @@ jobs:
       uses: jurplel/install-qt-action@v3
       with:
         host: 'linux'
-        version: ${{env.QT_VERSION}}
+        version: ${{env.ANDROID_QT_VERSION}}
         set-env: false
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
         host: 'linux'
-        version: ${{env.QT_VERSION}}
+        version: ${{env.ANDROID_QT_VERSION}}
         target: android
         arch: android_armv7
         modules: ${{env.QT_MODULES}}
