@@ -99,7 +99,13 @@ Item {
 
     ChannelView {
         id: channelView
-        enabled: bufferDrawer.isClosed && nickDrawer.isClosed
+        enabled: {
+            if (!nickDrawer.isClosed)
+                return false
+            if (!window.landscapeMode && !bufferDrawer.isClosed)
+                return false
+            return true
+        }
         anchors {
             left: landscapeMode ? bufferDrawer.right : parent.left
             right: parent.right
@@ -107,7 +113,6 @@ Item {
             bottom: parent.bottom
         }
     }
-
 
     DynamicDrawer {
         id: bufferDrawer
@@ -132,7 +137,6 @@ Item {
         BufferList {
             id: bufferList
             anchors.fill: parent
-            enabled: !bufferDrawer.isClosed
         }
     }
 
