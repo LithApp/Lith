@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 ListView {
     id: listView
@@ -27,38 +27,15 @@ ListView {
     property real scrollToBottomButtonPosition: scrollToBottomButton.visible ? height - scrollToBottomButton.y - scrollToBottomButton.height
                                                                              : height
 
-    // This is a hack to work around the view scrolling after the keyboard opens
-    // vvv
-    property bool lastPositionWasBottom: false
-    onHeightChanged: {
-        if (lastPositionWasBottom) {
-            positionViewAtBeginning()
-        }
-    }
-    Connections {
-        target: Qt.inputMethod
-        onVisibleChanged: {
-            console.warn(absoluteYPosition)
-            if (absoluteYPosition > 0.99) {
-                positionViewAtBeginning()
-                listView.lastPositionWasBottom = true
-            }
-            else {
-                listView.lastPositionWasBottom = false
-            }
-        }
-    }
-    /// ^^^ Hack over
-
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
         font.pointSize: settings.baseFontSize
     }
 
-
     ScrollBar.vertical: ScrollBar {
         id: scrollBar
+        rotation: 180
         hoverEnabled: true
         active: hovered || pressed
         orientation: Qt.Vertical
@@ -68,11 +45,12 @@ ListView {
         anchors.bottom: listView.bottom
     }
 
-    verticalLayoutDirection: ListView.BottomToTop
+    rotation: 180
     orientation: Qt.Vertical
     spacing: lith.settings.messageSpacing
     model: lith.selectedBuffer ? lith.selectedBuffer.lines_filtered : null
     delegate: ChannelMessage {
+        rotation: 180
         messageModel: modelData
     }
 
@@ -106,14 +84,15 @@ ListView {
     Button {
         id: scrollToBottomButton
         anchors {
-            bottom: parent.bottom
-            right: parent.right
+            top: parent.top
+            left: parent.left
             margins: height / 2
         }
+        rotation: 180
         width: height
         flat: false
         icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
-        opacity: listView.atYEnd ? 0.0 : 0.5
+        opacity: listView.atYBeginning	 ? 0.0 : 0.5
         visible: opacity > 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }
         onClicked: positionViewAtBeginning()
