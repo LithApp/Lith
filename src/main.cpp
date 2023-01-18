@@ -36,8 +36,6 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     QCoreApplication::setOrganizationName("Lith");
     QCoreApplication::setOrganizationDomain("ma.rtinbriza.cz");
     QCoreApplication::setApplicationName("Lith");
