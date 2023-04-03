@@ -116,7 +116,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 1        
+        fetch-depth: 1
     - name: Install Host Qt
       uses: jurplel/install-qt-action@v3
       with:
@@ -148,7 +148,7 @@ jobs:
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
-        TAG_NAME=$(./dist/get-tag-name.sh)        
+        TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
             ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk" renameto="Lith-android-${TAG_NAME}.apk"
         fi
@@ -332,7 +332,7 @@ jobs:
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
-        TAG_NAME=$(./dist/get-tag-name.sh)        
+        TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
             ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/Lith.dmg" renameto="Lith-macOS-${TAG_NAME}.dmg"
         fi
