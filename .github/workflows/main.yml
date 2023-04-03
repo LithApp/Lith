@@ -5,10 +5,6 @@ on:
     branches:
       - '**'
   create:
-    branches:
-      - 'master'
-    tags:
-      - '**'
 
 env:
     QT_VERSION: '6.4.1'
