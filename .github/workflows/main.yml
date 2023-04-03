@@ -14,7 +14,7 @@ env:
 jobs:
   iOS:
     if: github.event_name == 'create'
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
       with:
@@ -282,7 +282,7 @@ jobs:
 
 
   macOS:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
     - name: Import signing keys
       run: |
