@@ -78,12 +78,12 @@ jobs:
         modules: ${{env.QT_MODULES}}
     - name: Patch Qt
       run: |
-        pushd $Qt6_DIR
-        patch -p1 < $GITHUB_WORKSPACE/dist/ios/qt-ios.patch
+        pushd "$Qt6_DIR"
+        patch -p1 < "$GITHUB_WORKSPACE"/dist/ios/qt-ios.patch
         popd
-        echo -e "[Paths]\nPrefix=.." > $Qt6_DIR/bin/qt.conf
-        sed -i .old 's/clang_64/macos/' $Qt6_DIR/bin/target_qt.conf
-        sed -i .old 's/clang_64/macos/' $Qt6_DIR/bin/qmake
+        echo -e "[Paths]\nPrefix=.." > "$Qt6_DIR"/bin/qt.conf
+        sed -i .old 's/clang_64/macos/' "$Qt6_DIR"/bin/target_qt.conf
+        sed -i .old 's/clang_64/macos/' "$Qt6_DIR"bin/qmake
     - name: Build the iOS binary
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
@@ -198,20 +198,20 @@ jobs:
     - name: Build the application
       shell: bash
       run: |
-        TAG_NAME=$(./dist/get-tag-name.sh)
-        eval $(./dist/win/make-vs2019-env.bat)
+        TAG_NAME="$(./dist/get-tag-name.sh)"
+        eval "$(./dist/win/make-vs2019-env.bat)"
         mkdir build_win
         cd build_win
-        $Qt6_DIR/bin/qmake.exe .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION=$TAG_NAME
+        "$Qt6_DIR"/bin/qmake.exe .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION="$TAG_NAME"
         nmake
     - name: Windeployqt + zip
       shell: bash
       run: |
         cd build_win/release
-        rm *.cpp *.h *.obj
-        $Qt6_DIR/bin/windeployqt.exe Lith.exe --verbose 2 --release --compiler-runtime --qmldir ../..
+        rm ./*.cpp ./*.h ./*.obj
+        "$Qt6_DIR"/bin/windeployqt.exe Lith.exe --verbose 2 --release --compiler-runtime --qmldir ../..
         cp /c/Program\ Files/OpenSSL-Win64/bin/*.dll .
-        7z a ../../Lith.zip *
+        7z a ../../Lith.zip ./*
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
@@ -248,7 +248,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        $Qt6_DIR/bin/qmake .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION=$TAG_NAME
+        "$Qt6_DIR"/bin/qmake .. IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} VERSION="$TAG_NAME"
         make -j5
 
 
@@ -322,7 +322,7 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
     - name: Generate .dmg
       run: |
-        $Qt6_DIR/bin/macdeployqt build_macos/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
+        "$Qt6_DIR"/bin/macdeployqt build_macos/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
