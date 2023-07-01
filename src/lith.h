@@ -18,6 +18,7 @@
 #define LITH_H
 
 #include "common.h"
+#include "logger.h"
 #include "settings.h"
 #include "protocol.h"
 #include "datamodel.h"
@@ -60,6 +61,7 @@ private:
     Q_PROPERTY(Buffer* selectedBuffer READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedBufferChanged)
     Q_PROPERTY(int selectedBufferIndex READ selectedBufferIndex WRITE selectedBufferIndexSet NOTIFY selectedBufferChanged)
     Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
+    Q_PROPERTY(QAbstractItemModel* logger READ logger CONSTANT)
 
 
 public:
@@ -72,6 +74,15 @@ public:
     QString errorStringGet();
     void errorStringSet(const QString &o);
     void networkErrorStringSet(const QString &o);
+
+    QAbstractItemModel *logger();
+
+    void log(Logger::EventType type, QString summary) {
+        m_logger->log(Logger::Event{type, summary});
+    }
+    void log(Logger::EventType type, QString context, QString summary, QString details = QString()) {
+        m_logger->log(Logger::Event{type, context, summary, details});
+    }
 
     ProxyBufferList *buffers();
     QmlObjectList *unfilteredBuffers();
@@ -116,6 +127,11 @@ public slots:
     void _nicklist_diff(const Protocol::HData &hda);
     void _pong(const FormattedString &str);
 
+public:
+    const Buffer *getBuffer(pointer_t ptr) const;
+    const BufferLine *getLine(pointer_t bufPtr, pointer_t linePtr) const;
+    const HotListItem *getHotlist(pointer_t ptr) const;
+
 protected:
     void addBuffer(pointer_t ptr, Buffer *b);
     void removeBuffer(pointer_t ptr);
@@ -143,6 +159,8 @@ private:
     ProxyBufferList *m_proxyBufferList { nullptr };
     NickListFilter *m_selectedBufferNicks { nullptr };
     MessageFilterList *m_messageBufferList { nullptr };
+    Logger *m_logger { nullptr };
+    FilteredLogger *m_filteredLogger { nullptr };
     int m_selectedBufferIndex { -1 };
 
     QString m_lastNetworkError {};

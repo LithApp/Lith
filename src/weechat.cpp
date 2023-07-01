@@ -46,6 +46,10 @@ Weechat::Weechat(Lith *lith)
     m_reconnectTimer->setSingleShot(false);
 }
 
+const Lith *Weechat::lith() const {
+    return m_lith;
+}
+
 Lith *Weechat::lith() {
     return m_lith;
 }
@@ -113,10 +117,7 @@ void Weechat::init() {
 void Weechat::start() {
     m_connection->reset();
     m_restarting = false;
-    qCritical() << "Connecting";
-
     lith()->statusSet(Lith::CONNECTING);
-
     restart();
 }
 
@@ -138,8 +139,8 @@ void Weechat::restart() {
 void Weechat::onConnectionSettingsChanged() {
     auto host = lith()->settingsGet()->hostGet();
     auto pass = lith()->settingsGet()->passphraseGet();
+    lith()->log(Logger::Network, "Connection settings have changed, will reset the socket");
     if (!host.isEmpty() && !pass.isEmpty()) {
-        qCritical() << "CONNECTING";
         m_connection->reset();
         if (!m_restarting)
             QTimer::singleShot(50, this, &Weechat::start);
@@ -150,6 +151,8 @@ void Weechat::onConnectionSettingsChanged() {
 void Weechat::onHandshakeAccepted(const StringMap &data) {
     if (!m_connection->isConnected())
         return;
+
+    lith()->log(Logger::Protocol, "WeeChat handshake was accepted, authenticating");
 
     auto algo = data["password_hash_algo"];
     auto iterations = data["password_hash_iterations"].toInt();
@@ -187,10 +190,10 @@ void Weechat::requestHotlist() {
 
 
 void Weechat::onConnected() {
-    qCritical() << "Connected!";
-
     m_reconnectTimer->stop();
     m_reconnectTimer->setInterval(100);
+
+    lith()->log(Logger::Protocol, "Connected to WeeChat, starting handshake");
 
     QTimer::singleShot(0, lith(), &Lith::resetData);
     lith()->networkErrorStringSet(QString());
@@ -217,6 +220,8 @@ void Weechat::onConnected() {
 
 void Weechat::onDisconnected() {
     lith()->statusSet(Lith::DISCONNECTED);
+
+    lith()->log(Logger::Protocol, QString("WeeChat connection lost, will reconnect in %1ms").arg(m_reconnectTimer->interval() * 2));
 
     m_fetchBuffer.clear();
     m_bytesRemaining = 0;
@@ -247,14 +252,18 @@ bool Weechat::input(pointer_t ptr, const QString &data) {
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {
+    const auto* cLith = lith();
+    auto *buffer = cLith->getBuffer(ptr);
+    if (buffer)
+        lith()->log(Logger::Protocol, buffer->nameGet(), QString("Fetching %1 lines").arg(count));
+    else
+        lith()->log(Logger::Unexpected, "Attempted to fetch lines for buffer with invalid buffer");
     auto line = QString("(handleFetchLines;%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
-    //qCritical() << "WRITING:" << line;
     m_connection->write(line.toUtf8());
     m_timeoutTimer->start(5000);
 }
 
 void Weechat::onMessageReceived(QByteArray &data) {
-    //qCritical() << "Message!" << data;
     QDataStream s(&data, QIODevice::ReadOnly);
 
     Protocol::String id = Protocol::parse<Protocol::String>(s);
@@ -269,13 +278,13 @@ void Weechat::onMessageReceived(QByteArray &data) {
             // wtf, why can't I write this as |= ?
             m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap.value(id, UNINITIALIZED));
             if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData, hda))) {
-                qWarning() << "Possible unhandled message:" << id;
+                lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
             }
         }
         else {
             auto name = id.split(";").first();
             if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData, hda))) {
-                qWarning() << "Possible unhandled message:" << name;
+                lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(name));
             }
         }
     }
@@ -288,15 +297,15 @@ void Weechat::onMessageReceived(QByteArray &data) {
         Protocol::String str = Protocol::parse<Protocol::String>(s);
 
         if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const FormattedString&, str))) {
-            qWarning() << "Possible unhandled message:" << id;
+            lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
         }
     }
     else {
-        qCritical() << "onMessageReceived is not handling type: " << type;
+        lith()->log(Logger::Unexpected, QString("Was not able to handle message type: %1").arg(type));
     }
 
     if (!s.atEnd()) {
-        qCritical() << "STREAM WAS NOT AT END!!!";
+        lith()->log(Logger::Unexpected, QString("CRITICAL! Data seemingly ended but buffer is not empty"));
     }
 }
 
@@ -314,6 +323,7 @@ void Weechat::onPingTimeout() {
     static qint64 previousPing = 0;
     if (m_initializationStatus == COMPLETE) {
         if (previousPing < m_lastReceivedPong - 1) {
+            lith()->log(Logger::Unexpected, QString("Server didn't respond to ping in time, index: %1").arg(previousPing));
             restart();
         }
         previousPing = m_messageOrder++;

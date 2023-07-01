@@ -126,6 +126,11 @@ void Lith::networkErrorStringSet(const QString &o) {
     }
 }
 
+QAbstractItemModel *Lith::logger() {
+    //return m_logger;
+    return m_filteredLogger;
+}
+
 Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_settings(new Settings(this))
@@ -137,6 +142,8 @@ Lith::Lith(QObject *parent)
     , m_buffers(QmlObjectList::create<Buffer>())
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
     , m_selectedBufferNicks(new NickListFilter(this))
+    , m_logger(new Logger(this))
+    , m_filteredLogger(new FilteredLogger(this))
 {
 
     connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::hasPassphraseChanged);
@@ -151,6 +158,9 @@ Lith::Lith(QObject *parent)
     m_weechatThread->start();
 #endif
     QTimer::singleShot(1, m_weechat, &Weechat::init);
+    QTimer::singleShot(1, this, [this]() {
+        m_filteredLogger->setSourceModel(m_logger);
+    });
 }
 
 bool Lith::hasPassphrase() const {
@@ -406,6 +416,7 @@ void Lith::_buffer_line_added(const Protocol::HData &hda) {
         }
         auto line = getLine(bufPtr, linePtr);
         if (line) {
+            m_logger->log(Logger::Event{Logger::Unexpected, buffer->nameGet(), "Received a line that already existed", QString("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
             continue;
         }
         line = new BufferLine(buffer);
@@ -414,6 +425,7 @@ void Lith::_buffer_line_added(const Protocol::HData &hda) {
                 continue;
             line->setProperty(qPrintable(j), i.objects[j]);
         }
+        m_logger->log(Logger::Event{Logger::LineAdded, buffer->nameGet(), "Received a line", QString("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
         buffer->prependLine(line);
         addLine(bufPtr, linePtr, line);
         if (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet())) {
@@ -561,6 +573,26 @@ void Lith::addHotlist(pointer_t ptr, HotListItem *hotlist) {
 }
 
 HotListItem *Lith::getHotlist(pointer_t ptr) {
+    if (m_hotList.contains(ptr))
+        return m_hotList[ptr];
+    return nullptr;
+}
+
+const Buffer *Lith::getBuffer(pointer_t ptr) const {
+    if (m_bufferMap.contains(ptr))
+        return m_bufferMap[ptr];
+    return nullptr;
+}
+
+const BufferLine *Lith::getLine(pointer_t bufPtr, pointer_t linePtr) const {
+    auto ptr = bufPtr << 32 | linePtr;
+    if (m_lineMap.contains(ptr)) {
+        return m_lineMap[ptr];
+    }
+    return nullptr;
+}
+
+const HotListItem *Lith::getHotlist(pointer_t ptr) const {
     if (m_hotList.contains(ptr))
         return m_hotList[ptr];
     return nullptr;

@@ -11,7 +11,7 @@
 #include <QSslError>
 
 class Weechat;
-
+class Lith;
 class SocketHelper : public QObject {
     Q_OBJECT
 public:
@@ -20,6 +20,7 @@ public:
     bool isConnected();
 
     Weechat *weechat();
+    Lith *lith();
 
 public slots:
     void reset();

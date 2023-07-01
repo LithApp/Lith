@@ -32,6 +32,7 @@ public:
     Q_OBJECT
 public:
     Weechat(Lith *lith = nullptr);
+    const Lith *lith() const;
     Lith *lith();
 
     static QByteArray hashPassword(const QString &password, const QString &algo, const QByteArray &salt, int iterations);

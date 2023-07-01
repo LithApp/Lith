@@ -11,6 +11,7 @@ HEADERS += \
     src/clipboardproxy.h \
     src/datamodel.h \
     src/lith.h \
+    src/logger.h \
     src/protocol.h \
     src/qmlobjectlist.h \
     src/settings.h \
@@ -26,6 +27,7 @@ HEADERS += \
 
 SOURCES += \
     src/lith.cpp \
+    src/logger.cpp \
     src/main.cpp \
     src/clipboardproxy.cpp \
     src/datamodel.cpp \

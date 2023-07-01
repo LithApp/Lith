@@ -4,8 +4,8 @@ import QtQuick.Templates 2.15 as T
 T.Button {
     id: control
 
-    implicitWidth: 100
-    implicitHeight: 40
+    implicitWidth: Math.max(100, contentItem.implicitWidth)
+    implicitHeight: contentItem.implicitHeight
 
     icon.width: 28
     icon.height: 28
@@ -19,6 +19,8 @@ T.Button {
     }
 
     contentItem: Item {
+        implicitWidth: buttonLabel.implicitWidth + 24
+        implicitHeight: 40
         Rectangle {
             anchors.fill: parent
             color: palette.button
@@ -33,6 +35,7 @@ T.Button {
             Behavior on opacity { NumberAnimation { duration: 100 } }
         }
         Text {
+            id: buttonLabel
             text: control.text
             font: control.font
             anchors.centerIn: parent

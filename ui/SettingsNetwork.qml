@@ -147,6 +147,16 @@ ScrollView {
                 enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
                 onClicked: lith.reconnect()
             }
+            Button {
+                Layout.topMargin: 24
+                Layout.alignment: Qt.AlignHCenter
+                text: "Open debug log"
+                onClicked: debugDialog.visible = true
+
+                DebugDialog {
+                    id: debugDialog
+                }
+            }
             Item {
                 Layout.fillHeight: true
             }

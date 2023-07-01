@@ -43,5 +43,6 @@
         <file>SettingsFields/MultiLineString.qml</file>
         <file>DialogButtons.qml</file>
         <file>LithStyle/Dialog.qml</file>
+        <file>DebugDialog.qml</file>
     </qresource>
 </RCC>
