@@ -44,36 +44,11 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    Lith::instance();
-    Lith::instance()->windowHelperGet()->init();
-
-    auto fontFamilyFromSettings = Lith::instance()->settingsGet()->baseFontFamilyGet();
-
-#if defined(Q_OS_IOS)
-    QFont font("Menlo");
-#else
-    QFontDatabase fdb;
-    fdb.addApplicationFont(":/fonts/Inconsolata-Variable.ttf");
-#if defined(Q_OS_MACOS)
-    QFont font("Menlo");
-#else
-    QFont font("Inconsolata");
-#endif
-    if(fontFamilyFromSettings.length() != 0) // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
-        font = QFont(fontFamilyFromSettings); // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
-
-    font.setKerning(false);
-    font.setHintingPreference(QFont::PreferNoHinting);
-    font.setStyleHint(QFont::Monospace);
-#endif
-    app.setFont(font);
-    app.setFont(font, "monospace");
-
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:///");
     QQuickStyle::setStyle("LithStyle");
-    //QQuickStyle::setFallbackStyle("Material");
 
+    // Register types
     qRegisterMetaType<StringMap>();
     qRegisterMetaType<Protocol::HData>();
     qRegisterMetaType<Protocol::HData*>();
@@ -99,6 +74,26 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
     qmlRegisterUncreatableType<WindowHelper>("lith", 1, 0, "WindowHelper", "");
+
+    // Initialize UI helpers and fonts
+    Lith::instance();
+    Lith::instance()->windowHelperGet()->init();
+    auto fontFamilyFromSettings = Lith::instance()->settingsGet()->baseFontFamilyGet();
+#if defined(Q_OS_IOS) || defined(Q_OS_MACOS)
+    QFont font("Menlo");
+#else
+    QFontDatabase::addApplicationFont(":/fonts/Inconsolata-Variable.ttf");
+    QFont font("Inconsolata");
+#endif
+    if(fontFamilyFromSettings.length() != 0) // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
+        font = QFont(fontFamilyFromSettings); // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
+    font.setKerning(false);
+    font.setHintingPreference(QFont::PreferNoHinting);
+    font.setStyleHint(QFont::Monospace);
+    app.setFont(font);
+    app.setFont(font, "monospace");
+
+    // Inject properties and start the engine
     engine.rootContext()->setContextProperty("lith", Lith::instance());
     engine.rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
