@@ -11,7 +11,7 @@ Rectangle {
     property Item columnComponent
 
     onRowComponentChanged: if (rowComponent) rowComponent.parent = row
-    onColumnComponentChanged: if (rowComponent) columnComponent.parent = column
+    onColumnComponentChanged: if (columnComponent) columnComponent.parent = column
 
     Layout.fillWidth: true
     implicitWidth: column.implicitWidth
@@ -24,13 +24,17 @@ Rectangle {
     ColumnLayout {
         id: column
         spacing: 0
-        width: parent.width
+        anchors {
+            left: parent.left
+            right: parent.right
+            margins: 9
+        }
+        height: parent.height
         RowLayout {
             id: row
             Layout.minimumHeight: summary.font.pixelSize + 32
             Layout.fillWidth: true
-            Layout.leftMargin: 15
-            Layout.rightMargin: 9
+            Layout.leftMargin: 6
             spacing: 3
             Label {
                 id: summary
