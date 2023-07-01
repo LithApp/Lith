@@ -12,6 +12,7 @@ T.TextField {
     placeholderTextColor: disabledPalette.text
     verticalAlignment: Text.AlignVCenter
 
+    property color borderColor: "transparent"
     property color backgroundColor: "transparent"
     property real animationSpeed: 300
 
@@ -70,8 +71,12 @@ T.TextField {
         }
 
         Rectangle {
-            color: palette.text
-            opacity: 0.06
+            border {
+                color: control.borderColor
+                width: 1
+            }
+
+            color: Qt.rgba(palette.text.r, palette.text.g, palette.text.b, 0.06)
             anchors.fill: parent
         }
     }
