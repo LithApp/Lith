@@ -24,6 +24,9 @@
 #include <QDebug>
 #include <QUrl>
 
+const QRegularExpression urlRegExp(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
+                                 QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
+
 QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
     QString ret;
     if (bold)
@@ -228,10 +231,7 @@ void FormattedString::prune() {
         // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
         // ; was added to handle &amp; escapes right
 
-        QRegularExpression re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
-                              QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
-
-        auto reIt = re.globalMatch(it->text, 0, QRegularExpression::NormalMatch);
+        auto reIt = urlRegExp.globalMatch(it->text, 0, QRegularExpression::NormalMatch);
         if (reIt.hasNext()) {
             QList<Part> segments;
             int previousEnd = 0;
