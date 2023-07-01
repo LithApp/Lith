@@ -39,5 +39,7 @@
         <file>SettingsFields/String.qml</file>
         <file>SettingsFields/IntSpinBox.qml</file>
         <file>SettingsFields/Button.qml</file>
+        <file>DialogButtons.qml</file>
+        <file>LithStyle/Dialog.qml</file>
     </qresource>
 </RCC>

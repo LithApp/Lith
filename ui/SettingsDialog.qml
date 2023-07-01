@@ -25,14 +25,6 @@ Dialog {
     id: root
     modal: true
     focus: true
-    closePolicy: Popup.CloseOnEscape
-
-    padding: 0
-    topPadding: 0
-
-    SystemPalette {
-        id: palette
-    }
 
     header: TabBar {
         id: tabBar
@@ -47,10 +39,6 @@ Dialog {
                 text: modelData
             }
         }
-    }
-
-    background: Rectangle {
-        color: palette.window
     }
 
     onAccepted: {
@@ -71,7 +59,7 @@ Dialog {
             left: parent.left
             right: parent.right
             top: parent.top
-            bottom: dialogButtonLayout.top
+            bottom: dialogButtons.top
         }
 
         currentIndex: tabBar.currentIndex
@@ -116,7 +104,7 @@ Dialog {
     // Separating gradient
     Rectangle {
         anchors {
-            bottom: dialogButtonLayout.top
+            bottom: dialogButtons.top
             left: parent.left
             right: parent.right
         }
@@ -136,28 +124,13 @@ Dialog {
         }
     }
 
-    RowLayout {
-        id: dialogButtonLayout
+    DialogButtons {
+        id: dialogButtons
         anchors {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
         }
-        Button {
-            Layout.fillWidth: true
-            text: qsTr("Ok")
-            onClicked: function() {
-                root.accepted()
-                root.visible = false
-            }
-        }
-        Button {
-            Layout.fillWidth: true
-            text: qsTr("Cancel")
-            onClicked: function() {
-                root.rejected()
-                root.visible = false
-            }
-        }
+        dialog: root
     }
 }
