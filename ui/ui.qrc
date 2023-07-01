@@ -29,6 +29,7 @@
         <file>LithStyle/Popup.qml</file>
         <file>LithStyle/qmldir</file>
         <file>LithStyle/Switch.qml</file>
+        <file>LithStyle/TextArea.qml</file>
         <file>LithStyle/TextField.qml</file>
         <file>DynamicDrawer.qml</file>
         <file>LithStyle/TabButton.qml</file>
@@ -39,6 +40,7 @@
         <file>SettingsFields/String.qml</file>
         <file>SettingsFields/IntSpinBox.qml</file>
         <file>SettingsFields/Button.qml</file>
+        <file>SettingsFields/MultiLineString.qml</file>
         <file>DialogButtons.qml</file>
         <file>LithStyle/Dialog.qml</file>
     </qresource>
