@@ -9,6 +9,7 @@ Rectangle {
     property alias details: details.text
     property Item rowComponent
     property Item columnComponent
+    readonly property Item labelComponent: summary
 
     onRowComponentChanged: if (rowComponent) rowComponent.parent = row
     onColumnComponentChanged: if (columnComponent) columnComponent.parent = column
