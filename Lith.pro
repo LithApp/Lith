@@ -19,6 +19,7 @@ HEADERS += \
     src/util/formattedstring.h \
     src/util/messagelistfilter.h \
     src/util/nicklistfilter.h \
+    src/util/reflection.h \
     src/weechat.h \
     src/common.h \
     src/windowhelper.h \
@@ -38,6 +39,7 @@ SOURCES += \
     src/util/formattedstring.cpp \
     src/util/messagelistfilter.cpp \
     src/util/nicklistfilter.cpp \
+    src/util/reflection.cpp \
     src/weechat.cpp \
     src/windowhelper.cpp \
     src/util/colortheme.cpp \

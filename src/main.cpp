@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "lith.h"
 #include "windowhelper.h"
+#include "util/reflection.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -65,15 +66,21 @@ int main(int argc, char *argv[])
         return s.toPlain();
     });
     qmlRegisterUncreatableType<ColorTheme>("lith", 1, 0, "ColorTheme", "");
+    qRegisterMetaType<ColorTheme>();
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
+    qRegisterMetaType<BufferLine>();
     qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");
+    qRegisterMetaType<Lith>();
     qmlRegisterUncreatableType<Nick>("lith", 1, 0, "Nick", "");
+    qRegisterMetaType<Nick>();
     qmlRegisterUncreatableType<Buffer>("lith", 1, 0, "Buffer", "");
+    qRegisterMetaType<Buffer>();
     //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
     qmlRegisterUncreatableType<WindowHelper>("lith", 1, 0, "WindowHelper", "");
+    qmlRegisterType<Reflection>("lith", 1, 0, "Reflection");
 
     // Initialize UI helpers and fonts
     Lith::instance();
