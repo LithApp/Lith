@@ -55,6 +55,16 @@ T.TextField {
         implicitWidth: 200
         implicitHeight: 40
 
+        Rectangle {
+            border {
+                color: control.borderColor
+                width: 1
+            }
+
+            color: Qt.rgba(palette.text.r, palette.text.g, palette.text.b, 0.06)
+            anchors.fill: parent
+        }
+
         Text {
             visible: control.text.length === 0
             anchors {
@@ -68,16 +78,6 @@ T.TextField {
             color: control.placeholderTextColor
 
             text: control.placeholderText
-        }
-
-        Rectangle {
-            border {
-                color: control.borderColor
-                width: 1
-            }
-
-            color: Qt.rgba(palette.text.r, palette.text.g, palette.text.b, 0.06)
-            anchors.fill: parent
         }
     }
 }
