@@ -44,5 +44,6 @@
         <file>DialogButtons.qml</file>
         <file>LithStyle/Dialog.qml</file>
         <file>DebugDialog.qml</file>
+        <file>HotListItem.qml</file>
     </qresource>
 </RCC>

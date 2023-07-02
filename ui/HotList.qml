@@ -8,48 +8,27 @@ ListView {
     id: root
     model: lith.buffers
 
-    property int itemSize: lith.settings.hotlistCompact ? 18 : 32
-    property int textSize: lith.settings.hotlistCompact ? 9 : 16
-
-    height: itemSize
-    Layout.preferredHeight: itemSize
+    // TODO this should really be calculated from the size of the listview and the items but it isn't
+    // I don't really want to deal with this now though
+    implicitHeight: lith.settings.hotlistCompact ? 18 : 32
     spacing: lith.settings.hotlistCompact ? 3 : 6
 
+    Reflection {
+        id: reflection
+        className: "Buffer"
+    }
+
     orientation: ListView.Horizontal
-    delegate: Rectangle {
-        width: visible ? Math.max(itemLayout.width + 12, itemSize) : -root.spacing
-        height: itemSize
-        radius: 3
-        color: modelData.hotMessages > 0 ? "red" : palette.text
+    delegate: HotListItem {
+        id: delegateBody
+
+        onClicked: lith.selectedBufferIndex = index
+
+        required property var modelData
+        layoutSpacing: root.spacing
+        hot: modelData.hotMessages > 0
         visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
-        Row {
-            id: itemLayout
-            x: Math.max(6, (itemSize - width) / 2)
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: lith.settings.hotlistCompact ? 1 : 3
-            Text {
-                font.pointSize: textSize
-                font.bold: true
-                text: modelData.number + (lith.settings.hotlistShowUnreadCount ? ":" : "")
-                color: palette.base
-            }
-            Text {
-                visible: false
-                font.pointSize: textSize
-                //visible: !lith.settings.hotlistShowUnreadCount && !lith.settings.hotlistCompact
-                text: modelData.short_name
-                elide: Text.ElideRight
-            }
-            Text {
-                font.pointSize: textSize
-                text: modelData.hotMessages > 0 ? modelData.hotMessages + "/" + modelData.unreadMessages : modelData.unreadMessages
-                color: palette.base
-                visible: lith.settings.hotlistShowUnreadCount
-            }
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: lith.selectedBufferIndex = index
-        }
+
+        text: modelData.number + (lith.settings.hotlistShowUnreadCount ? (":" + (modelData.hotMessages > 0 ? modelData.hotMessages + "/" + modelData.unreadMessages : modelData.unreadMessages)) : "")
     }
 }
