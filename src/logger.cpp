@@ -1,4 +1,5 @@
 #include "logger.h"
+#include "lith.h"
 #include <QMetaEnum>
 
 Logger::Logger(QObject *parent) : QAbstractTableModel(parent) {
@@ -57,12 +58,14 @@ QHash<int, QByteArray> Logger::roleNames() const {
 }
 
 void Logger::log(Event event) {
-    beginInsertRows(QModelIndex(), m_events.count(), m_events.count());
-    event.summary = event.summary.trimmed();
-    event.context = event.context.trimmed();
-    event.details = event.details.trimmed();
-    m_events.append({QDateTime::currentDateTime(), event});
-    endInsertRows();
+    if (Lith::instance()->settingsGet()->enableLoggingGet()) {
+        beginInsertRows(QModelIndex(), m_events.count(), m_events.count());
+        event.summary = event.summary.trimmed();
+        event.context = event.context.trimmed();
+        event.details = event.details.trimmed();
+        m_events.append({QDateTime::currentDateTime(), event});
+        endInsertRows();
+    }
 }
 
 const QList<QPair<QDateTime, Logger::Event> > &Logger::events() const {

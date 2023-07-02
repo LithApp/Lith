@@ -46,9 +46,10 @@ public:
         DISCONNECTED,
         ERROR
     };
-    Q_ENUMS(Status)
+    Q_ENUM(Status)
 private:
     PROPERTY(Status, status, UNCONFIGURED)
+    Q_PROPERTY(QString statusString READ statusString NOTIFY statusChanged)
     Q_PROPERTY(QString errorString READ errorStringGet WRITE errorStringSet NOTIFY errorStringChanged)
     PROPERTY_PTR(Settings, settings)
     PROPERTY_PTR(WindowHelper, windowHelper)
@@ -63,13 +64,14 @@ private:
     Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
     Q_PROPERTY(QAbstractItemModel* logger READ logger CONSTANT)
 
-
 public:
     static Lith *_self;
     static Lith *instance();
 
     bool hasPassphrase() const;
     Weechat *weechat();
+
+    QString statusString() const;
 
     QString errorStringGet();
     void errorStringSet(const QString &o);

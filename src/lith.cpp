@@ -107,6 +107,13 @@ Weechat *Lith::weechat() {
     return m_weechat;
 }
 
+QString Lith::statusString() const {
+    auto key = QString(QMetaEnum::fromType<Status>().valueToKey(statusGet()));
+    key = key.toLower();
+    key.front() = key.front().toUpper();
+    return key;
+}
+
 QString Lith::errorStringGet() {
     return m_error;
 }

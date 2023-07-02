@@ -43,6 +43,7 @@ ScrollView {
         if (typeof settings.websocketsEndpoint !== "undefined") {
             settings.websocketsEndpoint = websocketsEndpointInput.text
         }
+        settings.enableLogging = enableLoggingCheckbox.checked
     }
     function onRejected() {
         passphraseField.text = ""
@@ -58,6 +59,7 @@ ScrollView {
         if (typeof settings.websocketsEndpoint !== "undefined") {
             websocketsEndpointInput.text = settings.websocketsEndpoint
         }
+        enableLoggingCheckbox.checked = settings.enableLogging
     }
 
     Item {
@@ -72,6 +74,13 @@ ScrollView {
 
             Fields.Header {
                 text: "Weechat connection"
+            }
+            Fields.Button {
+                summary: qsTr("Current status: %1").arg(lith.statusString)
+                details: lith.status == Lith.ERROR ? lith.errorString : ""
+                text: "Reconnect"
+                enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
+                onClicked: lith.reconnect()
             }
             Fields.String {
                 id: hostField
@@ -140,18 +149,18 @@ ScrollView {
 
                 summary: qsTr("Websockets endpoint")
             }
-            Button {
-                Layout.topMargin: 24
-                Layout.alignment: Qt.AlignHCenter
-                text: "Reconnect"
-                enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
-                onClicked: lith.reconnect()
+            Fields.Header {
+                text: "Logging"
             }
-            Button {
-                Layout.topMargin: 24
-                Layout.alignment: Qt.AlignHCenter
-                text: "Open debug log"
+            Fields.Button {
+                summary: qsTr("Debug log")
+                text: "Open"
                 onClicked: debugDialog.visible = true
+            }
+            Fields.Boolean {
+                id: enableLoggingCheckbox
+                checked: settings.enableLogging
+                summary: qsTr("Enable logging")
             }
             Item {
                 Layout.fillHeight: true

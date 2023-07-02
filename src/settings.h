@@ -110,6 +110,8 @@ class Settings : public QObject {
     SETTING(bool, showBufferListOnStartup, false)
     SETTING(bool, platformBufferControlPosition, true)
 
+    SETTING(bool, enableLogging, false)
+
     // This is hidden for now
     SETTING(bool, terminalLikeChat, true)
 
