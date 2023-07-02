@@ -44,7 +44,6 @@ ScrollView {
         settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
         settings.hotlistEnabled = hotlistEnabledCheckbox.checked
         settings.hotlistCompact = hotlistCompactCheckbox.checked
-        settings.hotlistShowUnreadCount = hotlistShowUnreadCountCheckbox.checked
         settings.messageSpacing = messageSpacingSpinbox.value
         settings.showJoinPartQuitMessages = showJoinPartQuitMessagesCheckbox.checked
         settings.baseFontFamily = fontDialog.currentFont.family
@@ -69,7 +68,6 @@ ScrollView {
         useTrueBlackWithDarkThemeCheckbox.checked = settings.useTrueBlackWithDarkTheme
         hotlistEnabledCheckbox.checked = settings.hotlistEnabled
         hotlistCompactCheckbox.checked = settings.hotlistCompact
-        hotlistShowUnreadCountCheckbox.checked = settings.hotlistShowUnreadCount
         messageSpacingSpinbox.value = settings.messageSpacing
         showJoinPartQuitMessagesCheckbox.checked = settings.showJoinPartQuitMessages
         try {
@@ -217,11 +215,16 @@ ScrollView {
                 checked: settings.hotlistEnabled
             }
 
-            Fields.Boolean {
-                id: hotlistShowUnreadCountCheckbox
-                summary: qsTr("Show unread count")
-                enabled: hotlistEnabledCheckbox.checked
-                checked: settings.hotlistShowUnreadCount
+            Fields.Button {
+                id: hotlistEditorButton
+                summary: qsTr("Hotlist format")
+                text: qsTr("Edit")
+                onClicked: hotlistEditor.open()
+
+
+                SettingsHotlistFormatEditor {
+                    id: hotlistEditor
+                }
             }
 
             Fields.Boolean {

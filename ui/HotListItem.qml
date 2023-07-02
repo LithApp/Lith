@@ -29,7 +29,6 @@ Rectangle {
             font.pointSize: textSize
             font.bold: true
             color: palette.base
-            Component.onCompleted: formatSplitter.fromStringList(lith.settings.hotlistFormat)
         }
     }
     MouseArea {

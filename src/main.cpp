@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "lith.h"
 #include "windowhelper.h"
+#include "util/formatstringsplitter.h"
 #include "util/reflection.h"
 
 #include <QApplication>
@@ -80,6 +81,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
     qmlRegisterUncreatableType<WindowHelper>("lith", 1, 0, "WindowHelper", "");
+    qmlRegisterType<FormatStringSplitter>("lith", 1, 0, "FormatStringSplitter");
     qmlRegisterType<Reflection>("lith", 1, 0, "Reflection");
 
     // Initialize UI helpers and fonts

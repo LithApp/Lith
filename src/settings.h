@@ -43,6 +43,9 @@
  */
 class Settings : public QObject {
     Q_OBJECT
+
+    static inline const QStringList c_hotlistDefaultFormat{"%1: %2/%3", "number", "hotMessages", "unreadMessages"};
+
     SETTING(int, lastOpenBuffer, -1)
 #if defined(Q_OS_MACOS)
     SETTING(QString, baseFontFamily, "Menlo")
@@ -100,7 +103,7 @@ class Settings : public QObject {
     SETTING(QStringList, shortcutSwitchToBuffer10, {"Alt+0"})
 
     SETTING(bool, hotlistEnabled, true)
-    SETTING(bool, hotlistShowUnreadCount, true)
+    SETTING(QStringList, hotlistFormat, c_hotlistDefaultFormat)
     SETTING(bool, hotlistCompact, true)
     SETTING(bool, showJoinPartQuitMessages, true)
 
@@ -112,12 +115,21 @@ class Settings : public QObject {
 
     SETTING(QString, imgurApiKey, IMGUR_API_KEY)
 
+    // UNUSED SETTINGS
+    // determine what to do about these later
+    SETTING(bool, hotlistShowUnreadCount, true) // Obsoleted by hotlistFormat
+    // END OF UNUSED SETTINGS
+
+public:
+    Q_PROPERTY(QStringList hotlistDefaultFormat MEMBER c_hotlistDefaultFormat CONSTANT)
+
 signals:
     void ready();
 
 public:
     Settings(QObject *parent = nullptr);
 private:
+    void migrate();
     QSettings m_settings;
 };
 

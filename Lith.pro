@@ -16,6 +16,7 @@ HEADERS += \
     src/qmlobjectlist.h \
     src/settings.h \
     src/uploader.h \
+    src/util/formatstringsplitter.h \
     src/util/formattedstring.h \
     src/util/messagelistfilter.h \
     src/util/nicklistfilter.h \
@@ -36,6 +37,7 @@ SOURCES += \
     src/qmlobjectlist.cpp \
     src/settings.cpp \
     src/uploader.cpp \
+    src/util/formatstringsplitter.cpp \
     src/util/formattedstring.cpp \
     src/util/messagelistfilter.cpp \
     src/util/nicklistfilter.cpp \

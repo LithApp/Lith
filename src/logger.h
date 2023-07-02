@@ -32,7 +32,8 @@ public:
         Unexpected,
         LineAdded,
         Network,
-        Protocol
+        Protocol,
+        FormatSplitter
     };
     Q_ENUM(EventType)
     struct Event {

@@ -42,6 +42,7 @@ Settings::Settings(QObject *parent)
                 property.write(this, settingsValue);
             }
         }
+        migrate();
         emit ready();
     };
     std::function<void(void)> *testSettingsReady = new std::function<void(void)>();
@@ -54,5 +55,15 @@ Settings::Settings(QObject *parent)
         }
     };
     (*testSettingsReady)();
+}
 
+void Settings::migrate() {
+    // When migrating another variable, it may be possible to come up with a smarter way to do this.
+    // I think checking that m_settings contains something that's not present in the metaobject should be enough
+    if (hotlistShowUnreadCountGet() == false) {
+        if (hotlistFormatGet() == c_hotlistDefaultFormat) {
+            hotlistShowUnreadCountSet(false);
+            hotlistFormatSet({"%1", "number"});
+        }
+    }
 }

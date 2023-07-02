@@ -29,6 +29,21 @@ ListView {
         hot: modelData.hotMessages > 0
         visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
 
-        text: modelData.number + (lith.settings.hotlistShowUnreadCount ? (":" + (modelData.hotMessages > 0 ? modelData.hotMessages + "/" + modelData.unreadMessages : modelData.unreadMessages)) : "")
+        text: formatSplitter.formattedData
+
+        FormatStringSplitter {
+            id: formatSplitter
+            allowedPropertyNames: reflection.stringProperties
+            dataSource: delegateBody.modelData
+        }
+        Connections {
+            target: lith.settings
+            function onHotlistFormatChanged() {
+                formatSplitter.fromStringList(lith.settings.hotlistFormat)
+            }
+        }
+        Component.onCompleted: {
+            formatSplitter.fromStringList(lith.settings.hotlistFormat)
+        }
     }
 }
