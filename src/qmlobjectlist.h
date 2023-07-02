@@ -55,13 +55,25 @@ public:
             removeRow(rowCount() - 1);
     }
 
-    Q_INVOKABLE inline QVariant at(const int& i) {
-        return QVariant::fromValue(mData.at(i));
+    Q_INVOKABLE QVariant at(const int& i);
+    Q_INVOKABLE inline QVariant first() {
+        return at(0);
+    }
+    Q_INVOKABLE inline QVariant last() {
+        return at(count() - 1);
     }
 
     template <typename T>
     inline T *get(const int &i) {
         return qobject_cast<T*>(mData.at(i).data());
+    }
+    template <typename T>
+    inline T *getLast() {
+        return qobject_cast<T*>(last().data());
+    }
+    template <typename T>
+    inline T *getFirst() {
+        return qobject_cast<T*>(first().data());
     }
 
 protected:

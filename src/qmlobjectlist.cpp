@@ -3,18 +3,21 @@
 #include <QQmlEngine>
 #include <QDebug>
 
+#include "lith.h"
+
 #define ValidateIndex(m_i) (m_i < 0 || m_i >= rowCount())
 
 void QmlObjectList::append(const QVariantMap& properties)
 {
     auto* newObj = mMetaObject.newInstance();
     if(newObj == Q_NULLPTR) {
-        qWarning("invalid constructor");
+        Lith::instance()->log(Logger::Unexpected, QString("Object model cannot instantiate %1, missing constructor").arg(mMetaObject.className()));
         return;
     }
     for(const QString& key : properties.keys()) {
-        if(!newObj->setProperty(key.toUtf8().data(), properties.value(key)))
-            qWarning()<<"append object with invalid property"<<key;
+        if(!newObj->setProperty(key.toUtf8().data(), properties.value(key))) {
+            Lith::instance()->log(Logger::Unexpected, QString("Object model cannot append object of type %1 with property %2").arg(mMetaObject.className()).arg(key));
+        }
     }
     append(newObj);
 }
@@ -67,6 +70,15 @@ bool QmlObjectList::removeItem(QObject *item) {
     return false;
 }
 
+QVariant QmlObjectList::at(const int &i)
+{
+    if (i < 0 || i >= mData.size()) {
+        Lith::instance()->log(Logger::Unexpected, QString("Attempted to access index %1 in object model of size %1").arg(i).arg(mData.size()));
+        return QVariant();
+    }
+    return QVariant::fromValue(mData.at(i));
+}
+
 QVariant QmlObjectList::data(const QModelIndex &index, int role) const
 {
     Q_UNUSED(role);
@@ -74,7 +86,7 @@ QVariant QmlObjectList::data(const QModelIndex &index, int role) const
         return QVariant();
     const auto& data = mData[index.row()];
     if(data.isNull()) {
-        qWarning()<<__FUNCTION__<<"data is null";
+        Lith::instance()->log(Logger::Unexpected, QString("Object model data accessor for type %1 at row %2 contains null data").arg(mMetaObject.className()).arg(index.row()));
         return QVariant();
     }
     return QVariant::fromValue(data.data());
@@ -101,3 +113,4 @@ void QmlObjectList::clear() {
     mData.clear();
     endResetModel();
 }
+
