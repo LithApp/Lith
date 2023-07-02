@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1
 
 Item {
-    id: root
+    id: mainView
 
     x: leftMargin
     y: topMargin
@@ -116,7 +116,7 @@ Item {
 
     DynamicDrawer {
         id: bufferDrawer
-        height: root.height
+        height: mainView.height
         dragOutHandleTopMargin: channelView.messageArea.y
         dragOutHandleBottomMargin: height - channelView.messageArea.y - channelView.messageArea.height
         Component.onCompleted: {
@@ -143,12 +143,12 @@ Item {
     NickList {
         id: nickDrawer
         edge: Qt.RightEdge
-        rightPadding: root.rightMargin
+        rightPadding: mainView.rightMargin
         property bool isClosed: position === 0.0
         dragMargin: 64
-        y: isClosed ? root.y + channelView.messageArea.y : root.y
-        height: isClosed ? channelView.scrollToBottomButtonPosition : root.height
-        width: 0.66 * root.width + root.rightMargin
+        y: isClosed ? mainView.y + channelView.messageArea.y : mainView.y
+        height: isClosed ? channelView.scrollToBottomButtonPosition : mainView.height
+        width: 0.66 * mainView.width + mainView.rightMargin
     }
 
     NickListActionMenu {
@@ -169,8 +169,8 @@ Item {
 
     PreviewPopup {
         id: previewPopup
-        topMargin: root.topMargin
-        bottomMargin: root.bottomMargin
+        topMargin: mainView.topMargin
+        bottomMargin: mainView.bottomMargin
 
         onVisibleChanged: {
             if (visible) {
@@ -187,10 +187,10 @@ Item {
     Dialog {
         id: linkHandler
         z: 99999999
-        width: root.width
+        width: mainView.width
         height: linkHandlerLayout.height + 12
         // Dialog doesn't allow anchors.verticalCenter, so we need to position it manually
-        x: -parent.mapToItem(root, 0, 0).x
+        x: -parent.mapToItem(mainView, 0, 0).x
         y: parent.height / 2 - height / 2
         visible: false
         padding: 0
@@ -212,7 +212,7 @@ Item {
 
         onVisibleChanged: {
             if (!visible)
-                parent = root
+                parent = mainView
         }
 
         function show(link, item) {
@@ -222,7 +222,7 @@ Item {
             }
             else {
                 if (item === null)
-                    parent = root
+                    parent = mainView
                 else
                     parent = item
                 currentLink = link
