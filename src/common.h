@@ -34,12 +34,19 @@ Q_DECLARE_METATYPE(pointer_t);
 
 #define STRINGIFY(x) #x
 
+#define PROPERTY_CONSTANT(type, name, ...) \
+private: \
+    Q_PROPERTY(type name READ name ## Get CONSTANT) \
+    type m_ ## name { __VA_ARGS__ }; \
+    public: \
+    const type& name ## Get () const { return m_ ## name; }
+
 #define PROPERTY_READONLY(type, name, ...) \
     private: \
         Q_PROPERTY(type name READ name ## Get NOTIFY name ## Changed) \
         type m_ ## name { __VA_ARGS__ }; \
     public: \
-        type name ## Get () const { return m_ ## name; } \
+        const type& name ## Get () const { return m_ ## name; } \
         Q_SIGNAL void name ## Changed();
 
 #define PROPERTY_NOSETTER(type, name, ...) \
@@ -47,21 +54,39 @@ Q_DECLARE_METATYPE(pointer_t);
         Q_PROPERTY(type name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \
         type m_ ## name { __VA_ARGS__ }; \
     public: \
-        type name ## Get () const { return m_ ## name; } \
+        const type& name ## Get () const { return m_ ## name; } \
         Q_SIGNAL void name ## Changed();
+
+#define SETTER_DEFINITION(type, name) \
+    void name ## Set (const type &o) { \
+            if (m_ ## name != o) { \
+                m_ ## name = o; \
+                emit name ## Changed(); \
+        } \
+    }
+
+#define PROPERTY_READONLY_PRIVATESETTER(type, name, ...) \
+private: \
+    Q_PROPERTY(type name READ name ## Get NOTIFY name ## Changed) \
+    type m_ ## name { __VA_ARGS__ }; \
+    SETTER_DEFINITION(type, name) \
+    public: \
+    const type& name ## Get () const { return m_ ## name; } \
+    Q_SIGNAL void name ## Changed();
 
 #define PROPERTY(type, name, ...) \
     PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
     public: \
-        void name ## Set (const type &o) { \
-            if (m_ ## name != o) { \
-                m_ ## name = o; \
-                emit name ## Changed(); \
-            } \
-        }
+    SETTER_DEFINITION(type, name)
 
 #define PROPERTY_PTR(type, name, ...) \
-    PROPERTY_NOSETTER(type*, name, __VA_ARGS__) \
+private: \
+    Q_PROPERTY(type* name READ name ## Get WRITE name ## Set NOTIFY name ## Changed) \
+    type* m_ ## name { __VA_ARGS__ }; \
+    public: \
+    type* name ## Get () { return m_ ## name; } \
+    const type* name ## Get () const { return m_ ## name; } \
+    Q_SIGNAL void name ## Changed(); \
     public: \
         void name ## Set (type *o) { \
             if (m_ ## name != o) { \

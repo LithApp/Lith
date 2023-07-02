@@ -128,6 +128,14 @@ FormattedString::FormattedString(QString &&o)
     : m_parts({std::move(o)})
 {}
 
+FormattedString::FormattedString(const FormattedString &o)
+    : m_parts({o.m_parts})
+{}
+
+FormattedString::FormattedString(FormattedString &&o)
+    : m_parts(std::move(o.m_parts))
+{}
+
 FormattedString &FormattedString::operator=(const char *o) {
     m_parts = { QString(o) };
     return *this;
@@ -311,6 +319,15 @@ FormattedString &FormattedString::operator=(QString &&o) {
 
 FormattedString &FormattedString::operator=(const QString &o) {
     m_parts = { o };
+    return *this;
+}
+FormattedString &FormattedString::operator=(FormattedString &&o) {
+    m_parts = { std::move(o.m_parts) };
+    return *this;
+}
+
+FormattedString &FormattedString::operator=(const FormattedString &o) {
+    m_parts = { o.m_parts };
     return *this;
 }
 

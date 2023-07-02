@@ -47,13 +47,17 @@ public:
         bool italic { false };
     };
 
-    FormattedString();
-    FormattedString(const char *d);
+    FormattedString(const FormattedString &o);
+    FormattedString(FormattedString &&o);
     FormattedString(const QString &o);
     FormattedString(QString &&o);
+    FormattedString(const char *d);
+    FormattedString();
 
     FormattedString &operator=(const QString &o);
     FormattedString &operator=(QString &&o);
+    FormattedString &operator=(const FormattedString &o);
+    FormattedString &operator=(FormattedString &&o);
     FormattedString &operator=(const char *o);
 
     bool operator==(const FormattedString &o);

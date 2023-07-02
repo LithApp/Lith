@@ -349,7 +349,7 @@ void Lith::_buffer_title_changed(const Protocol::HData &hda) {
         auto buf = getBuffer(bufPtr);
         if (!buf)
             continue;
-        buf->titleSet(i.objects["title"].toString());
+        buf->titleSet(qvariant_cast<FormattedString>(i.objects["title"]));
     }
 }
 
