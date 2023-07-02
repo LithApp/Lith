@@ -4,8 +4,6 @@ import QtQuick.Layouts
 
 Dialog {
     id: debugDialog
-    width: window.width
-    height: window.height
     anchors.centerIn: Overlay.overlay
 
     Rectangle {

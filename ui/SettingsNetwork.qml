@@ -152,10 +152,6 @@ ScrollView {
                 Layout.alignment: Qt.AlignHCenter
                 text: "Open debug log"
                 onClicked: debugDialog.visible = true
-
-                DebugDialog {
-                    id: debugDialog
-                }
             }
             Item {
                 Layout.fillHeight: true

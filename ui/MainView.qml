@@ -161,6 +161,12 @@ Item {
         height: parent.height
     }
 
+    DebugDialog {
+        id: debugDialog
+        width: parent.width
+        height: parent.height
+    }
+
     PreviewPopup {
         id: previewPopup
         topMargin: root.topMargin
