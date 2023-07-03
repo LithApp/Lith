@@ -151,7 +151,7 @@ ScrollView {
             Fields.String {
                 id: passphraseField
                 summary: qsTr("Password")
-                placeholderText: lith.hasPassphrase ? "**********" : ""
+                placeholderText: settings.passphrase.length > 0 ? "**********" : "No password was entered yet"
                 echoMode: TextInput.Password
             }
             Fields.Boolean {
