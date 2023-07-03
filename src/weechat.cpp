@@ -106,10 +106,7 @@ void Weechat::init() {
     m_hotlistTimer->setSingleShot(false);
 
     connect(lith()->settingsGet(), &Settings::ready, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
-    connect(lith()->settingsGet(), &Settings::hostChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
-    connect(lith()->settingsGet(), &Settings::passphraseChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
-    connect(lith()->settingsGet(), &Settings::portChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
-    connect(lith()->settingsGet(), &Settings::encryptedChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
+    connect(lith()->settingsGet(), &Settings::networkSettingsChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
 
     onConnectionSettingsChanged();
 }

@@ -27,13 +27,15 @@
 #define SETTING(type, name, ...) \
     PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
     public: \
-        void name ## Set (const type &o) { \
+        bool name ## Set (const type &o) { \
             if (m_ ## name != o) { \
                 m_ ## name = o; \
                 m_settings.setValue(STRINGIFY(name), o); \
                 m_settings.sync(); \
                 emit name ## Changed(); \
+                return true; \
             } \
+            return false; \
         }
 
 /*
@@ -125,7 +127,13 @@ class Settings : public QObject {
 public:
     Q_PROPERTY(QStringList hotlistDefaultFormat MEMBER c_hotlistDefaultFormat CONSTANT)
 
+public slots:
+    void saveNetworkSettings(const QString host, int port, bool encrypted, bool allowSelfSignedCertificates,
+                             const QString& passphrase, bool handshakeAuth, bool connectionCompression,
+                             bool useWebsockets, const QString& websocketsEndpoint);
+
 signals:
+    void networkSettingsChanged();
     void ready();
 
 public:

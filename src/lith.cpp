@@ -153,7 +153,6 @@ Lith::Lith(QObject *parent)
     , m_filteredLogger(new FilteredLogger(this))
 {
 
-    connect(settingsGet(), &Settings::passphraseChanged, this, &Lith::hasPassphraseChanged);
     connect(this, &Lith::selectedBufferChanged, [this](){
         if (selectedBuffer())
             m_selectedBufferNicks->setSourceModel(selectedBuffer()->nicks());
@@ -168,10 +167,6 @@ Lith::Lith(QObject *parent)
     QTimer::singleShot(1, this, [this]() {
         m_filteredLogger->setSourceModel(m_logger);
     });
-}
-
-bool Lith::hasPassphrase() const {
-    return !settingsGet()->passphraseGet().isEmpty();
 }
 
 void Lith::resetData() {

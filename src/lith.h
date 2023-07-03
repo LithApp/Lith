@@ -54,9 +54,6 @@ private:
     PROPERTY_PTR(Settings, settings)
     PROPERTY_PTR(WindowHelper, windowHelper)
 
-    Q_PROPERTY(bool hasPassphrase READ hasPassphrase NOTIFY hasPassphraseChanged)
-    //Q_PROPERTY(Weechat* weechat READ weechat CONSTANT)
-
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
     Q_PROPERTY(QmlObjectList* unfilteredBuffers READ unfilteredBuffers CONSTANT)
     Q_PROPERTY(Buffer* selectedBuffer READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedBufferChanged)
@@ -68,7 +65,6 @@ public:
     static Lith *_self;
     static Lith *instance();
 
-    bool hasPassphrase() const;
     Weechat *weechat();
 
     QString statusString() const;
@@ -144,7 +140,6 @@ protected:
     HotListItem *getHotlist(pointer_t ptr);
 
 signals:
-    void hasPassphraseChanged();
     void selectedBufferChanged();
     void errorStringChanged();
 

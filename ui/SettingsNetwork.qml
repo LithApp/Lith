@@ -27,25 +27,43 @@ ScrollView {
     clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
+    property bool networkSettingsChanged: {
+        if (passphraseField.text.length > 0)
+            return true
+        if (settings.host !== hostField.text)
+            return true
+        if (settings.port !== parseInt(portField.text))
+            return true
+        if (settings.encrypted !== encryptedCheckbox.checked)
+            return true
+        if (settings.allowSelfSignedCertificates !== selfSignedCertificateCheckbox.checked)
+            return true
+        if (settings.handshakeAuth !== handshakeAuthCheckbox.checked)
+            return true
+        if (settings.connectionCompression !== connectionCompressionCheckbox.checked)
+            return true
+        if (typeof settings.useWebsockets !== "undefined") {
+            if (settings.useWebsockets !== useWebsocketsCheckbox.checked)
+                return true
+        }
+        if (typeof settings.websocketsEndpoint !== "undefined") {
+            if (settings.websocketsEndpoint !== websocketsEndpointInput.text)
+                return true
+        }
+        return false
+    }
+
     function onAccepted() {
         save()
     }
     function save() {
-        var newPassphrase = passphraseField.text
-        if (newPassphrase.length > 0)
-            settings.passphrase = newPassphrase
-        settings.host = hostField.text
-        settings.port = portField.text
-        settings.encrypted = encryptedCheckbox.checked
-        settings.allowSelfSignedCertificates = selfSignedCertificateCheckbox.checked
-        settings.handshakeAuth = handshakeAuthCheckbox.checked
-        settings.connectionCompression = connectionCompressionCheckbox.checked
-        if (typeof settings.useWebsockets !== "undefined") {
-            settings.useWebsockets = useWebsocketsCheckbox.checked
-        }
-        if (typeof settings.websocketsEndpoint !== "undefined") {
-            settings.websocketsEndpoint = websocketsEndpointInput.text
-        }
+        // Network-resetting settings need to be changed at once to not reset the connection for each changed property
+        settings.saveNetworkSettings(
+            hostField.text, portField.text, encryptedCheckbox.checked, selfSignedCertificateCheckbox.checked,
+            passphraseField.text, handshakeAuthCheckbox.checked, connectionCompressionCheckbox.checked,
+            (typeof settings.useWebsockets !== "undefined" ? useWebsocketsCheckbox.checked : false),
+            (typeof settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
+        )
         settings.enableLogging = enableLoggingCheckbox.checked
     }
     function onRejected() {
@@ -81,12 +99,24 @@ ScrollView {
             Fields.Header {
                 text: "Weechat connection"
             }
-            Fields.Button {
+            Fields.Base {
                 summary: qsTr("Current status: %1").arg(lith.statusString)
                 details: lith.status == Lith.ERROR ? lith.errorString : ""
-                text: "Reconnect"
                 enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
-                onClicked: lith.reconnect()
+                rowComponent: ColumnLayout {
+                    spacing: 1
+                    Button {
+                        Layout.alignment: Qt.AlignRight
+                        text: "Reconnect"
+                        onClicked: lith.reconnect()
+                    }
+                    Label {
+                        Layout.alignment: Qt.AlignRight
+                        visible: text.length > 0
+                        text: root.networkSettingsChanged ? qsTr("Recent changes were not saved yet") : ""
+                        font.pixelSize: 11
+                    }
+                }
             }
             Fields.String {
                 id: hostField

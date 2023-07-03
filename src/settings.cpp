@@ -67,3 +67,33 @@ void Settings::migrate() {
         }
     }
 }
+
+void Settings::saveNetworkSettings(const QString host, int port, bool encrypted, bool allowSelfSignedCertificates,
+                                   const QString &passphrase, bool handshakeAuth, bool connectionCompression,
+                                   bool useWebsockets, const QString &websocketsEndpoint) {
+    bool changed = false;
+
+    if (hostSet(host))
+        changed = true;
+    if (portSet(port))
+        changed = true;
+    if (encryptedSet(encrypted))
+        changed = true;
+    if (allowSelfSignedCertificatesSet(allowSelfSignedCertificates))
+        changed = true;
+    if (!passphrase.isEmpty() && passphraseSet(passphrase))
+        changed = true;
+    if (handshakeAuthSet(handshakeAuth))
+        changed = true;
+    if (connectionCompressionSet(connectionCompression))
+        changed = true;
+#ifndef __EMSCRIPTEN__
+    if (useWebsocketsSet(useWebsockets))
+        changed = true;
+#endif
+    if (websocketsEndpointSet(websocketsEndpoint))
+        changed = true;
+
+    if (changed)
+        emit networkSettingsChanged();
+}
