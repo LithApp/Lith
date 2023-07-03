@@ -68,6 +68,7 @@ class Buffer : public QObject {
 
     PROPERTY(int, unreadMessages)
     PROPERTY(int, hotMessages)
+    Q_PROPERTY(int totalUnreadMessages READ totalUnreadMessagesGet NOTIFY totalUnreadMessagesChanged)
 
     Q_PROPERTY(MessageFilterList* lines_filtered READ lines_filtered CONSTANT)
     Q_PROPERTY(QmlObjectList *lines READ lines CONSTANT)
@@ -110,9 +111,12 @@ public:
     bool isChannelGet() const;
     bool isPrivateGet() const;
 
+    int totalUnreadMessagesGet() const;
+
 signals:
     void nicksChanged();
     void titleChanged();
+    void totalUnreadMessagesChanged();
 
 public slots:
     bool input(const QString &data);

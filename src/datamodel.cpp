@@ -35,7 +35,8 @@ Buffer::Buffer(Lith *parent, pointer_t pointer)
     , m_proxyLinesFiltered(new MessageFilterList(this, m_lines))
     , m_ptr(pointer)
 {
-
+    connect(this, &Buffer::hotMessagesChanged, this, &Buffer::totalUnreadMessagesChanged);
+    connect(this, &Buffer::unreadMessagesChanged, this, &Buffer::totalUnreadMessagesChanged);
 }
 
 Buffer::~Buffer() {
@@ -183,6 +184,10 @@ bool Buffer::isChannelGet() const {
 
 bool Buffer::isPrivateGet() const {
     return m_local_variables.contains("type") && m_local_variables["type"] == "private";
+}
+
+int Buffer::totalUnreadMessagesGet() const {
+    return hotMessagesGet() + unreadMessagesGet();
 }
 
 MessageFilterList *Buffer::lines_filtered() {

@@ -22,9 +22,12 @@ ListView {
     delegate: HotListItem {
         id: delegateBody
 
-        onClicked: lith.selectedBufferIndex = index
+        onClicked: {
+            lith.selectedBufferIndex = index
+        }
 
         required property var modelData
+        required property int index
         layoutSpacing: root.spacing
         hot: modelData.hotMessages > 0
         visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
