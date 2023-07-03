@@ -3,7 +3,7 @@ import QtQuick
 Rectangle {
     id: drawer
     property bool isClosed: position === 0.0
-    width: visible ? landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * root.width + root.leftMargin : 0
+    width: visible ? landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainView.width + mainView.leftMargin : 0
     property real dragOutHandleTopMargin: 0
     property real dragOutHandleBottomMargin: 0
 
