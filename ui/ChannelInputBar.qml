@@ -23,19 +23,21 @@ import lith 1.0
 
 
 Item {
-    implicitHeight: inputBarLayout.height
+    implicitHeight: inputBarLayout.implicitHeight
 
     // TODO
     property alias textInput: channelTextInput
     property bool hasFocus: channelTextInput.activeFocus
 
     RowLayout {
-        width: parent.width
         id: inputBarLayout
+        height: parent.height
+        width: parent.width
 
-        spacing: 3
+        spacing: 6
         Button {
             id: autocompleteButton
+            Layout.fillHeight: true
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
             font.pointSize: settings.baseFontSize
@@ -52,13 +54,14 @@ Item {
         ChannelTextInput {
             id: channelTextInput
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
+            Layout.fillHeight: true
         }
 
         Button {
             focusPolicy: Qt.NoFocus
             id: imageButton
             visible: settings.showGalleryButton
+            Layout.fillHeight: true
             Layout.preferredWidth: height
             property bool isBusy: uploader.working
             icon.source: isBusy ? "" : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
@@ -81,6 +84,7 @@ Item {
         Button {
             focusPolicy: Qt.NoFocus
             id: sendButton
+            Layout.fillHeight: true
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
             visible: settings.showSendButton

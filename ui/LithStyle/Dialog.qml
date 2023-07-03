@@ -5,6 +5,8 @@ T.Dialog {
     padding: 0
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
+    property bool borderless: false
+
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             contentWidth + leftPadding + rightPadding,
                             implicitHeaderWidth,
@@ -21,7 +23,7 @@ T.Dialog {
     background: Rectangle {
         color: palette.window
 
-        border.width: 1
+        border.width: borderless ? 0 : 1
         border.color: palette.light
     }
 

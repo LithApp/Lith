@@ -18,7 +18,7 @@ Rectangle {
     implicitWidth: visible ? Math.max(itemLayout.width + 12, itemSize) : -layoutSpacing
     implicitHeight: itemSize
     radius: 3
-    color: hot > 0 ? "#bb6666" : palette.text
+    color: hot > 0 ? palette.highlight : palette.text
     Row {
         id: itemLayout
         x: Math.max(6, (itemSize - width) / 2)
@@ -28,7 +28,7 @@ Rectangle {
             id: theLabel
             font.pointSize: textSize
             font.bold: true
-            color: palette.base
+            color: hot ? palette.highlightedText : palette.window
         }
     }
     MouseArea {

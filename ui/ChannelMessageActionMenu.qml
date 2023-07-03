@@ -73,7 +73,9 @@ Dialog {
         Button {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 1.5 * implicitHeight
+            Layout.preferredHeight: 4 * implicitHeight
+            Layout.topMargin: 16
+            flat: true
 
             Label {
                 id: label1
@@ -86,7 +88,7 @@ Dialog {
                 maximumLineCount: 2
                 elide: Text.ElideRight
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                text: timestamp.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + " <" + nickname + "> " + message
+                text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
             }
 
             visible: !(nickname == "")
@@ -99,7 +101,8 @@ Dialog {
         Button {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 1.5 * implicitHeight
+            Layout.preferredHeight: 4 * implicitHeight
+            flat: true
 
             visible: !(nickname == "")
 
@@ -126,7 +129,9 @@ Dialog {
             clip: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 1.5 * implicitHeight
+            Layout.preferredHeight: 4 * implicitHeight
+            Layout.bottomMargin: 16
+            flat: true
 
             Label {
                 id: label3

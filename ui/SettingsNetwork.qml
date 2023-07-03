@@ -28,6 +28,9 @@ ScrollView {
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     function onAccepted() {
+        save()
+    }
+    function save() {
         var newPassphrase = passphraseField.text
         if (newPassphrase.length > 0)
             settings.passphrase = newPassphrase
@@ -46,6 +49,9 @@ ScrollView {
         settings.enableLogging = enableLoggingCheckbox.checked
     }
     function onRejected() {
+        restore()
+    }
+    function restore() {
         passphraseField.text = ""
         hostField.text = settings.host
         portField.text = settings.port
@@ -64,7 +70,7 @@ ScrollView {
 
     Item {
         width: parent.width
-        implicitHeight: settingsPaneLayout.implicitHeight
+        implicitHeight: settingsPaneLayout.implicitHeight + 12
 
         ColumnLayout {
             id: settingsPaneLayout

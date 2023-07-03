@@ -114,8 +114,8 @@ Dialog {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton
-            onClicked: {
-                if (mouse.button == Qt.LeftButton) {
+            onClicked: (mouse) => {
+                if (mouse.button === Qt.LeftButton) {
                     videoWrapper.visible = false
                     root.visible = false
                 }

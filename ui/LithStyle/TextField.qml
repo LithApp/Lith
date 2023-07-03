@@ -3,13 +3,16 @@ import QtQuick.Templates 2.12 as T
 
 T.TextField {
     id: control
-    implicitWidth: 200
-    implicitHeight: 40
+
+    implicitWidth: implicitBackgroundWidth + leftInset + rightInset
+                   || contentWidth + leftPadding + rightPadding
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             contentHeight + topPadding + bottomPadding)
 
     padding: 6
     color: palette.text
     selectionColor: palette.highlight
-    placeholderTextColor: disabledPalette.text
+    placeholderTextColor: colorUtils.setAlpha(disabledPalette.text, 0.5)
     verticalAlignment: Text.AlignVCenter
 
     property color borderColor: "transparent"
@@ -51,32 +54,37 @@ T.TextField {
         }
     }
 
-    background: Item {
+    background: Rectangle {
         implicitWidth: 200
         implicitHeight: 40
 
-        Rectangle {
-            border {
-                color: control.borderColor
-                width: 1
-            }
-
-            color: Qt.rgba(palette.text.r, palette.text.g, palette.text.b, 0.06)
-            anchors.fill: parent
+        property color actualBorderColor: {
+            if (control.borderColor != Qt.color("transparent"))
+                return control.borderColor
+            if (control.activeFocus)
+                return palette.midlight
+            return palette.button
         }
 
+        border {
+            color: actualBorderColor
+            width: 1
+        }
+
+        color: palette.alternateBase
+        anchors.fill: parent
+
         Text {
-            visible: control.text.length === 0
-            anchors {
-                fill: parent
-                margins: 6
-                leftMargin: 7
-            }
-            verticalAlignment: Text.AlignVCenter
+            visible: control.text.length === 0 && !control.activeFocus
+            width: parent.width
+            height: parent.height
+            elide: Text.ElideRight
+            verticalAlignment: control.verticalAlignment
             horizontalAlignment: control.horizontalAlignment
+            leftPadding: control.leftPadding
+            rightPadding: control.rightPadding
             font.pointSize: control.font.pointSize
             color: control.placeholderTextColor
-
             text: control.placeholderText
         }
     }

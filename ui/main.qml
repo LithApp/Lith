@@ -47,6 +47,34 @@ ApplicationWindow {
         readonly property bool wasm: Qt.platform.os === "wasm"
     }
 
+    // TODO find a more sensible place for this
+    QtObject {
+        id: colorUtils
+        function mixColors(a, b, ratio) {
+            var c = Qt.color()
+            c.r = a.r * ratio + b.r * (1 - ratio)
+            c.g = a.g * ratio + b.g * (1 - ratio)
+            c.b = a.b * ratio + b.b * (1 - ratio)
+            c.a = a.a * ratio + b.a * (1 - ratio)
+            return c
+        }
+        function setAlpha(c, alpha) {
+            var modified = Qt.color(c)
+            modified.a = alpha
+            return modified
+        }
+        function darken(c, ratio) {
+            var modified = Qt.color(c)
+            modified.hslLightness = Math.min(Math.max(modified.hslLightness / ratio, 0.0), 1.0)
+            return modified
+        }
+        function lighten(c, ratio) {
+            var modified = Qt.color(c)
+            modified.hslLightness = Math.min(Math.max(modified.hslLightness * ratio, 0.0), 1.0)
+            return modified
+        }
+    }
+
     SystemPalette {
         id: palette
     }

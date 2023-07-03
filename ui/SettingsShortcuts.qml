@@ -26,13 +26,19 @@ ScrollView {
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     function onAccepted() {
+        save()
+    }
+    function save() {
     }
     function onRejected() {
+        restore()
+    }
+    function restore() {
     }
 
     Item {
         width: parent.width
-        implicitHeight: settingsPaneLayout.implicitHeight
+        implicitHeight: settingsPaneLayout.implicitHeight + 12
 
         ColumnLayout {
             id: settingsPaneLayout

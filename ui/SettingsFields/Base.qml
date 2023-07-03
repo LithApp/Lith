@@ -15,8 +15,8 @@ Rectangle {
     onColumnComponentChanged: if (columnComponent) columnComponent.parent = column
 
     Layout.fillWidth: true
-    implicitWidth: column.implicitWidth
-    implicitHeight: column.implicitHeight
+    implicitWidth: column.implicitWidth + column.anchors.margins * 2
+    implicitHeight: column.implicitHeight + column.y * 2
 
     color: "transparent"
     border.width: 1
@@ -30,12 +30,12 @@ Rectangle {
             right: parent.right
             margins: 9
         }
-        height: parent.height
+        y: 3
+        height: parent.height - 2 * y
         RowLayout {
             id: row
             Layout.minimumHeight: summary.font.pixelSize + 32
             Layout.fillWidth: true
-            Layout.leftMargin: 6
             spacing: 3
             Label {
                 id: summary

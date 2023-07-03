@@ -4,20 +4,40 @@ import QtQuick.Templates as T
 T.CheckBox {
     id: control
     checked: true
-    implicitWidth: 30
-    implicitHeight: 30
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Math.max(implicitContentWidth, indicator.width) + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding,
+                             implicitIndicatorHeight + topPadding + bottomPadding)
+
+    spacing: 0
+    padding: 6
+
+    background: Item {}
 
     indicator: Item {
         implicitWidth: 26
         implicitHeight: 26
         anchors.verticalCenter: parent.verticalCenter
-        x: control.leftPadding + 2
-        y: parent.height / 2 - height / 2 + 2
         Rectangle {
-            radius: 2
+            radius: 3
             anchors.fill: parent
-            color: palette.text
-            opacity: 0.06
+            color: palette.button
+            Rectangle {
+                id: shadow
+                visible: control.enabled
+                anchors.fill: parent
+                radius: parent.radius
+                opacity: control.pressed ? 0.12 : control.hovered ? 0.08 : 0.06
+                property color startColor: control.pressed ? "black" : "white"
+                Behavior on startColor { ColorAnimation { duration: 100 } }
+                property color endColor: control.hovered && !control.pressed ? "white" : "transparent"
+                Behavior on endColor { ColorAnimation { duration: 100 } }
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: shadow.startColor }
+                    GradientStop { position: 0.6; color: shadow.endColor }
+                }
+            }
         }
 
         Item {
@@ -44,12 +64,14 @@ T.CheckBox {
         }
     }
 
-    contentItem: Text {
+    contentItem: Label {
+        leftPadding: visible && control.indicator && !control.mirrored ? control.indicator.width + control.spacing : 0
+        rightPadding: visible && control.indicator && control.mirrored ? control.indicator.width + control.spacing : 0
+        visible: text.length > 0
         text: control.text
         font: control.font
         opacity: enabled ? 1.0 : 0.3
         color: palette.windowText
         verticalAlignment: Text.AlignVCenter
-        leftPadding: control.indicator.width + control.spacing
     }
 }

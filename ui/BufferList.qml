@@ -112,7 +112,9 @@ Rectangle {
 
         Connections {
             target: lith
-            onSelectedBufferIndexChanged: bufferList.currentIndex = lith.selectedBufferIndex
+            function onSelectedBufferIndexChanged() {
+                bufferList.currentIndex = lith.selectedBufferIndex
+            }
         }
 
         ScrollBar.vertical: ScrollBar {
@@ -127,7 +129,7 @@ Rectangle {
             height: delegateLayout.height + 12
             property var buffer: modelData
             visible: buffer
-            color: index == bufferList.currentIndex ? "#bb6666" : bufferMouse.pressed ? "gray" : bufferMouse.containsMouse ? "light gray" : palette.base
+            color: index == bufferList.currentIndex ? colorUtils.setAlpha(palette.highlight, 0.5) : bufferMouse.pressed ? "gray" : bufferMouse.containsMouse ? "light gray" : palette.base
 
             Behavior on color {
                 ColorAnimation {
@@ -167,7 +169,7 @@ Rectangle {
                 }
                 Rectangle {
                     visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
-                    color: modelData.hotMessages ? "red" : palette.alternateBase
+                    color: modelData.hotMessages ? colorUtils.darken(palette.highlight, 1.3) : palette.alternateBase
                     border.color: palette.text
                     border.width: 1
                     height: bufferName.height + 6

@@ -47,5 +47,7 @@
         <file>DebugDialog.qml</file>
         <file>util/PaletteSwitch.qml</file>
         <file>HotListItem.qml</file>
+        <file>LithStyle/Label.qml</file>
+        <file>LithStyle/SpinBox.qml</file>
     </qresource>
 </RCC>

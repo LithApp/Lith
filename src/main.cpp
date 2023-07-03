@@ -42,8 +42,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("ma.rtinbriza.cz");
     QCoreApplication::setApplicationName("Lith");
 
-    QQuickStyle::setStyle(":/style");
-
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
@@ -56,7 +54,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Protocol::HData*>();
     qRegisterMetaType<FormattedString>();
     qRegisterMetaType<Protocol::String>();
-    qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "FormattedString", "");
+    qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "formattedString", "");
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString &s){
         if (s.containsHtml()) {
             if (Lith::instance()->windowHelperGet()->lightThemeGet())
@@ -66,7 +64,7 @@ int main(int argc, char *argv[])
         }
         return s.toPlain();
     });
-    qmlRegisterUncreatableType<ColorTheme>("lith", 1, 0, "ColorTheme", "");
+    qmlRegisterUncreatableType<ColorTheme>("lith", 1, 0, "colorTheme", "");
     qRegisterMetaType<ColorTheme>();
     qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
     qRegisterMetaType<BufferLine>();

@@ -19,12 +19,11 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "LithStyle" as LithStyle
-
 Dialog {
     id: root
     modal: true
     focus: true
+    borderless: true
 
     header: TabBar {
         id: tabBar
@@ -34,11 +33,21 @@ Dialog {
             model: window.platform.mobile ? [qsTr("Connection"), qsTr("Interface")]
                                           : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
 
-            // TODO this is definitely wrong, the module specification is (but actually not) redundant
-            delegate: LithStyle.TabButton {
+            delegate: TabButton {
                 text: modelData
             }
         }
+    }
+
+    function save() {
+        settingsNetwork.save()
+        settingsInterface.save()
+        settingsShortcuts.save()
+    }
+    function restore() {
+        settingsNetwork.restore()
+        settingsInterface.restore()
+        settingsShortcuts.restore()
     }
 
     onAccepted: {
@@ -78,52 +87,6 @@ Dialog {
         }
     }
 
-    // Separating gradient
-    Rectangle {
-        anchors {
-            top: stackLayout.top
-            left: parent.left
-            right: parent.right
-        }
-        height: 12
-        gradient: Gradient {
-            GradientStop { position: 0.1; color: palette.button }
-            GradientStop { position: 1.0; color: "transparent" }
-        }
-        Rectangle {
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: top.bottom
-            }
-            height: 1
-            color: palette.shadow
-        }
-    }
-
-    // Separating gradient
-    Rectangle {
-        anchors {
-            bottom: dialogButtons.top
-            left: parent.left
-            right: parent.right
-        }
-        height: 12
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.9; color: palette.button }
-        }
-        Rectangle {
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-            }
-            height: 1
-            color: palette.shadow
-        }
-    }
-
     DialogButtons {
         id: dialogButtons
         anchors {
@@ -132,5 +95,10 @@ Dialog {
             bottom: parent.bottom
         }
         dialog: root
+        acceptText: qsTr("Save and close")
+        additionalButton: Button {
+            text: qsTr("Save")
+            onClicked: root.save()
+        }
     }
 }

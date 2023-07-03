@@ -31,7 +31,7 @@ Rectangle {
 
     height: lith.settings.terminalLikeChat ? terminalLineLayout.height : messageBubble.height
 
-    color: messageModel.highlight ? "#44aa3333" : "transparent"
+    color: messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : "transparent"
     Connections {
         target: messageMouseArea
         function onClicked(mouse) {
@@ -149,7 +149,7 @@ Rectangle {
             font.pointSize: settings.baseFontSize
             textFormat: Text.RichText
             renderType: Text.NativeRendering
-            onLinkActivated: {
+            onLinkActivated: (link) => {
                 linkHandler.show(link, root)
             }
         }

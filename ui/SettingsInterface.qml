@@ -27,6 +27,9 @@ ScrollView {
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     function onAccepted() {
+        save()
+    }
+    function save() {
         settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
         settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
         settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
@@ -51,6 +54,9 @@ ScrollView {
         settings.platformBufferControlPosition = platformBufferControlPositionCheckbox.checked
     }
     function onRejected() {
+        restore()
+    }
+    function restore() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
         shortenLongUrlsThreshold.text = settings.shortenLongUrlsThreshold
         showAutocompleteButtonCheckbox.checked = settings.showAutocompleteButton
@@ -94,7 +100,7 @@ ScrollView {
 
     Item {
         width: parent.width
-        implicitHeight: settingsPaneLayout.implicitHeight
+        implicitHeight: settingsPaneLayout.implicitHeight + 12
 
         ColumnLayout {
             id: settingsPaneLayout
@@ -292,11 +298,14 @@ ScrollView {
                     Item {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        Layout.minimumHeight: insideLithLabel.implicitHeight
                         Label {
                             id: insideLithLabel
-                            anchors.fill: parent
+                            width: parent.width
                             verticalAlignment: Label.AlignVCenter
                             horizontalAlignment: Label.AlignRight
+                            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                            maximumLineCount: 2
                             elide: Label.ElideRight
                             text: qsTr("Inside Lith (if possible)")
                             color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
@@ -314,16 +323,20 @@ ScrollView {
                     Switch {
                         id: openLinksDirectlyInBrowserSwitch
                         checked: lith.settings.openLinksDirectlyInBrowser
+                        onColor: offColor
                     }
                     // Layout balancing wrapper
                     Item {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        Layout.minimumHeight: inBrowserLabel.implicitHeight
                         Label {
                             id: inBrowserLabel
                             anchors.fill: parent
                             verticalAlignment: Label.AlignVCenter
                             elide: Label.ElideRight
+                            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                            maximumLineCount: 2
                             text: qsTr("In a web browser")
                             color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
                             MouseArea {

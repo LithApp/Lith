@@ -27,15 +27,15 @@ QPalette ColorTheme::palette() const {
 
     // TODO very likely needs a bit of tweaking to differentiate button, window and base
     QColor windowText { m_weechatColors[0] };
-    QColor button { m_weechatColors[1] };
+    QColor base = { m_weechatColors[1] };
+    QColor button = mix(windowText, base, 0.1f);
     QColor light = mix(windowText, button, 0.4f);
-    QColor dark = mix(button, windowText, 0.4f);
+    QColor dark = mix(base, windowText, 0.4f);
     QColor mid = mix(light, dark);
     QColor text = windowText;
     QColor bright_text = text;
-    QColor base = button;
-    QColor window = button;
-    return QPalette {
+    QColor window = base;
+    QPalette palette {
         windowText,
         button,
         light,
@@ -46,4 +46,7 @@ QPalette ColorTheme::palette() const {
         base,
         window
     };
+    palette.setBrush(QPalette::Highlight, QColor("#dd4444"));
+    palette.setBrush(QPalette::HighlightedText, Qt::black);
+    return palette;
 }
