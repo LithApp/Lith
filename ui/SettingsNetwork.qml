@@ -65,6 +65,7 @@ ScrollView {
             (typeof settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
         )
         settings.enableLogging = enableLoggingCheckbox.checked
+        passphraseField.text = ""
     }
     function onRejected() {
         restore()
