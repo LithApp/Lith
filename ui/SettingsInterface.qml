@@ -154,6 +154,11 @@ ScrollView {
                         return Number(value)
                     return qsTr("Disabled")
                 }
+                valueFromText: function(value, locale) {
+                    if (value === qsTr("Disabled"))
+                        return -1
+                    return Number(value)
+                }
             }
 
             ////////////////////////// COLOR THEME
