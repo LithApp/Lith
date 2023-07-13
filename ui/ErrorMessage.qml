@@ -20,7 +20,7 @@ import QtQuick.Controls 2.12
 
 Rectangle {
     clip: true
-    height: errorText.text.length > 0 ? 40 : 0
+    height: errorText.text.length > 0 ? 46 : 0
     width: parent.width
     //visible: height != 0
     gradient: Gradient {
@@ -42,19 +42,21 @@ Rectangle {
             verticalCenter: parent.verticalCenter
         }
         spacing: 18
-        Text {
+        Label {
+            id: errorText
             Layout.fillHeight: true
             Layout.fillWidth: true
-            verticalAlignment: Text.AlignVCenter
-            id: errorText
+            verticalAlignment: Label.AlignVCenter
             text: lith.errorString
+            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+            maximumLineCount: 2
             elide: Text.ElideRight
             color: palette.text
         }
         Button {
             icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
-            Layout.preferredWidth: 28
-            Layout.preferredHeight: 28
+            Layout.preferredWidth: 32
+            Layout.preferredHeight: 32
             onClicked: lith.errorString = ""
         }
     }

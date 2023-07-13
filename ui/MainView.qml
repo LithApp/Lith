@@ -116,7 +116,8 @@ Item {
 
     DynamicDrawer {
         id: bufferDrawer
-        height: mainView.height
+        y: errorMessage.height
+        height: mainView.height - y
         dragOutHandleTopMargin: channelView.messageArea.y
         dragOutHandleBottomMargin: height - channelView.messageArea.y - channelView.messageArea.height
         Component.onCompleted: {
