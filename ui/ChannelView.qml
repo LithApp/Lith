@@ -94,6 +94,7 @@ ColumnLayout {
         id: hotlist
         visible: lith.settings.hotlistEnabled
         Layout.fillWidth: true
+        Layout.preferredHeight: visible ? implicitHeight : 0
     }
 
     ChannelInputBar {

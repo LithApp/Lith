@@ -54,7 +54,7 @@ T.TextArea {
         implicitWidth: 200
         implicitHeight: 40
 
-        Text {
+        Label {
             visible: control.text.length === 0
             anchors {
                 fill: parent

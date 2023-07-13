@@ -74,7 +74,7 @@ T.TextField {
         color: palette.alternateBase
         anchors.fill: parent
 
-        Text {
+        Label {
             visible: control.text.length === 0 && !control.activeFocus
             width: parent.width
             height: parent.height

@@ -52,7 +52,6 @@ Rectangle {
         Button {
             id: settingsButton
             Layout.preferredWidth: height
-            font.pointSize: settings.baseFontSize * 1.25
             icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
             onClicked: settingsDialog.visible = true
             ToolTip.text: "Open settings"
@@ -69,7 +68,6 @@ Rectangle {
                 if (text === "")
                     bufferList.currentIndex = lith.selectedBufferIndex
             }
-            font.pointSize: settings.baseFontSize * 1.125
 
             Keys.onPressed: {
                 if (event.key === Qt.Key_Up) {
@@ -148,8 +146,9 @@ Rectangle {
                     height: width
                     color: buffer && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
                     radius: 2
-                    Text {
+                    Label {
                         text: buffer ? buffer.number : ""
+                        size: Label.Small
                         anchors.centerIn: parent
                         color: disabledPalette.text
                         opacity: buffer && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
@@ -157,14 +156,14 @@ Rectangle {
                     Behavior on opacity { NumberAnimation { duration: 100 } }
                 }
 
-                Text {
+                Label {
                     id: bufferName
                     Layout.fillWidth: true
                     clip: true
                     text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name
                                  : ""
                     textFormat: Text.RichText
-                    font.pointSize: settings.baseFontSize * 1.125
+                    size: Label.Medium
                     color: palette.windowText
                 }
                 Rectangle {
@@ -175,10 +174,9 @@ Rectangle {
                     height: bufferName.height + 6
                     width: Math.max(height, hotListItemCount.width + 6)
                     radius: 2
-                    Text {
+                    Label {
                         id: hotListItemCount
                         text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
-                        font.pointSize: settings.baseFontSize
                         anchors.centerIn: parent
                         color: palette.windowText
                     }
@@ -201,6 +199,13 @@ Rectangle {
                             if (!window.landscapeMode)
                                 bufferDrawer.hide()
                         }
+                    }
+                }
+                onPressAndHold: {
+                    if (lith.selectedBuffer === buffer) {
+                        lith.selectedBuffer = null
+                        if (!window.landscapeMode)
+                            bufferDrawer.hide()
                     }
                 }
             }

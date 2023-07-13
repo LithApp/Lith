@@ -78,7 +78,7 @@ Rectangle {
             width: 36
             height: 36
             radius: height / 2
-            Text {
+            Label {
                 anchors.centerIn: parent
                 text: messageModel.colorlessNickname.substring(0, 2)
                 color: palette.window
@@ -101,7 +101,7 @@ Rectangle {
                 return newColor
             }
             color: noir(origColor)
-            Text {
+            Label {
                 id: messageBubbleText
                 x: 12
                 y: 12
@@ -121,32 +121,28 @@ Rectangle {
         visible: lith.settings.terminalLikeChat
         width: parent.width
         spacing: 0
-        Text {
+        Label {
             Layout.alignment: Qt.AlignTop
             text: messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
-            font.pointSize: settings.baseFontSize
             color: disabledPalette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
         }
-        Text {
+        Label {
             Layout.alignment: Qt.AlignTop
             font.bold: true
             visible: lith.settings.nickCutoffThreshold !== 0
             text: messageModel.prefix.toTrimmedHtml(lith.settings.nickCutoffThreshold) + "\u00A0"
-            font.pointSize: settings.baseFontSize
             color: palette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
         }
-
-        Text {
+        Label {
             id: messageText
             text: messageModel.message
             Layout.fillWidth: true
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             color: palette.text
-            font.pointSize: settings.baseFontSize
             textFormat: Text.RichText
             renderType: Text.NativeRendering
             onLinkActivated: (link) => {

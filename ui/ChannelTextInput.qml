@@ -22,7 +22,6 @@ import lith 1.0
 
 TextField {
     id: inputField
-    font.pointSize: settings.baseFontSize
     verticalAlignment: TextField.AlignVCenter
     focus: false
     inputMethodHints: Qt.ImhMultiLine

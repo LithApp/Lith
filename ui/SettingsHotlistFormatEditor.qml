@@ -162,7 +162,7 @@ Dialog {
 
                         Label {
                             Layout.fillWidth: true
-                            Layout.minimumHeight: font.pixelSize + 16
+                            Layout.minimumHeight: fontInfo.pixelSize + 16
                             Layout.leftMargin: 6
                             verticalAlignment: Label.AlignVCenter
                             elide: Label.ElideRight

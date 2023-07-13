@@ -246,18 +246,16 @@ Item {
             x: 6
             width: parent.width - 12
             spacing: 9
-            Text {
+            Label {
                 id: linkText
                 Layout.fillWidth: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 horizontalAlignment: Text.AlignHCenter
-                font.pointSize: lith.settings.baseFontSize
                 textFormat: Text.RichText
                 text: "<a href=\""+linkHandler.currentLink+"\">"+linkHandler.currentLink+"</a>"
             }
             Button {
                 focusPolicy: Qt.NoFocus
-                font.pointSize: settings.baseFontSize
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
@@ -268,7 +266,6 @@ Item {
             }
             Button {
                 focusPolicy: Qt.NoFocus
-                font.pointSize: settings.baseFontSize
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {
@@ -281,7 +278,6 @@ Item {
                 visible: linkHandler.containsImage || linkHandler.containsVideo
                 focusPolicy: Qt.NoFocus
                 icon.source: "qrc:/navigation/"+currentTheme+"/image.png"
-                font.pointSize: settings.baseFontSize
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {

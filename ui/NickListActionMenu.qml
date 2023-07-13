@@ -43,7 +43,7 @@ Dialog {
         id: nickActionNicknameText
         text: nickname
         horizontalAlignment: Qt.AlignCenter
-        font.pointSize: settings.baseFontSize * 1.125
+        size: Label.Medium
         font.bold: true
     }
 
@@ -74,8 +74,6 @@ Dialog {
     }
 
     ColumnLayout {
-        /*Layout.alignment: Qt.AlignHCenter*/
-
         width: parent.width
         anchors.centerIn: parent
         GridLayout {
@@ -94,7 +92,6 @@ Dialog {
                     }
                     width: parent.fillWidth
                     Layout.fillWidth: true
-                    font.pointSize: settings.baseFontSize * 1.125
                 }
             }
         }

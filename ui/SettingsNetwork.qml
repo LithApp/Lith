@@ -115,7 +115,6 @@ ScrollView {
                         Layout.alignment: Qt.AlignRight
                         visible: text.length > 0
                         text: root.networkSettingsChanged ? qsTr("Recent changes were not saved yet") : ""
-                        font.pixelSize: 11
                     }
                 }
             }

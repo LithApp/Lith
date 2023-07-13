@@ -56,7 +56,6 @@ Rectangle {
             id: bufferListButton
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
-            font.pointSize: settings.baseFontSize * 1.375
             icon.source: "qrc:/navigation/"+currentTheme+"/menu.png"
             onClicked: {
                 bufferDrawer.toggle()
@@ -76,8 +75,6 @@ Rectangle {
                 clip: true
                 height: 1
                 font.bold: true
-                font.pointSize: lith.selectedBuffer && lith.selectedBuffer.title.length > 0 ? settings.baseFontSize * 0.875 :
-                                                                                    settings.baseFontSize * 1.125
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: lith.selectedBuffer ? lith.selectedBuffer.name : "Lith"
@@ -99,7 +96,7 @@ Rectangle {
                                                    ""
                 elide: Text.ElideRight
                 maximumLineCount: 2
-                font.pointSize: settings.baseFontSize * 0.75
+                size: Label.Tiny
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 renderType: Text.NativeRendering
@@ -118,7 +115,6 @@ Rectangle {
             id: nickListButton
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
-            font.pointSize: settings.baseFontSize * 1.375
             visible: lith.status !== Lith.UNCONFIGURED
             enabled: lith.status === Lith.CONNECTED
             onClicked: {

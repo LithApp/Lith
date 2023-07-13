@@ -56,7 +56,7 @@ Drawer {
             horizontalAlignment: Label.AlignHCenter
             Layout.fillWidth: true
             text: lith.selectedBuffer ? lith.selectedBuffer.full_name : ""
-            font.pointSize: settings.baseFontSize * 1.125
+            size: Label.Medium
             color: palette.windowText
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
@@ -68,7 +68,6 @@ Drawer {
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
             text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
-            font.pointSize: settings.baseFontSize
             color: palette.windowText
             onLinkActivated: {
                 linkHandler.show(link, this)
@@ -86,7 +85,7 @@ Drawer {
             horizontalAlignment: Label.AlignHCenter
             visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
             text: lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(lith.selectedBuffer.normals).arg(lith.selectedBuffer.voices).arg(lith.selectedBuffer.ops).arg(lith.selectedBuffer.normals + lith.selectedBuffer.voices + lith.selectedBuffer.ops) : ""
-            font.pointSize: settings.baseFontSize * 0.75
+            size: Label.Tiny
             color: palette.windowText
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
@@ -104,7 +103,6 @@ Drawer {
                     right: parent.right
                     margins: 3
                 }
-                font.pointSize: settings.baseFontSize * 1
                 onTextChanged: lith.selectedBufferNicks.filterWord = text
 
                 Keys.onPressed: {
@@ -160,11 +158,11 @@ Drawer {
                     x: 3
                     y: 6
                     width: parent.width - 6
-                    Text {
+                    Label {
                         id: nickTextItem
                         clip: true
                         text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
-                        font.pointSize: settings.baseFontSize * 1.125
+                        size: Label.Medium
                         color: palette.windowText
                     }
                 }

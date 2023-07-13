@@ -40,7 +40,6 @@ Item {
             Layout.fillHeight: true
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
-            font.pointSize: settings.baseFontSize
             focusPolicy: Qt.NoFocus
             visible: settings.showAutocompleteButton
             onClicked: {
@@ -66,7 +65,6 @@ Item {
             property bool isBusy: uploader.working
             icon.source: isBusy ? "" : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
             enabled: !isBusy
-            font.pointSize: settings.baseFontSize
             onClicked: {
                 fileDialog.open()
             }
@@ -88,7 +86,6 @@ Item {
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
             visible: settings.showSendButton
-            font.pointSize: settings.baseFontSize
             ToolTip.text: "Send the message"
             ToolTip.visible: sendButton.hovered
             ToolTip.delay: 800

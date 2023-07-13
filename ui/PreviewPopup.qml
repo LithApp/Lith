@@ -379,7 +379,6 @@ Dialog {
 
             Button {
                 focusPolicy: Qt.NoFocus
-                font.pointSize: settings.baseFontSize
                 anchors {
                     right: parent.right
                     margins: 32
@@ -421,7 +420,7 @@ Dialog {
                     horizontalCenter: parent.horizontalCenter
                 }
                 spacing: 12
-                Text {
+                Label {
                     id: errorMsgText
                     visible: delegateImage.status === Image.Error || delegateVideo.errorString.length > 0
                     Layout.alignment: Qt.AlignHCenter
@@ -433,7 +432,6 @@ Dialog {
                     Layout.alignment: Qt.AlignHCenter
                     Button {
                         focusPolicy: Qt.NoFocus
-                        font.pointSize: settings.baseFontSize
                         Layout.preferredHeight: 40
                         Layout.preferredWidth: height
                         icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
@@ -443,7 +441,6 @@ Dialog {
                     }
                     Button {
                         focusPolicy: Qt.NoFocus
-                        font.pointSize: settings.baseFontSize
                         Layout.preferredHeight: 40
                         Layout.preferredWidth: height
                         onClicked: {
