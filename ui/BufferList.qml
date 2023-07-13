@@ -188,10 +188,20 @@ Rectangle {
                 id: bufferMouse
                 anchors.fill: parent
                 hoverEnabled: true
-                onClicked: {
-                    lith.selectedBuffer = buffer
-                    if (!window.landscapeMode)
-                        bufferDrawer.hide()
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.LeftButton) {
+                        lith.selectedBuffer = buffer
+                        if (!window.landscapeMode)
+                            bufferDrawer.hide()
+                    }
+                    else if (mouse.button === Qt.RightButton) {
+                        if (lith.selectedBuffer === buffer) {
+                            lith.selectedBuffer = null
+                            if (!window.landscapeMode)
+                                bufferDrawer.hide()
+                        }
+                    }
                 }
             }
         }
