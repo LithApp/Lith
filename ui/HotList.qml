@@ -10,7 +10,8 @@ ListView {
 
     // TODO this should really be calculated from the size of the listview and the items but it isn't
     // I don't really want to deal with this now though
-    implicitHeight: lith.settings.hotlistCompact ? 18 : 32
+    implicitWidth: contentItem.childrenRect.width
+    implicitHeight: contentItem.childrenRect.height
     spacing: lith.settings.hotlistCompact ? 3 : 6
 
     Reflection {

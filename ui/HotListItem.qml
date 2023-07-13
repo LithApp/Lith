@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 
 import lith 1.0
 
@@ -10,19 +11,19 @@ Rectangle {
     property bool hot: false
 
     property real layoutSpacing
-    readonly property real itemSize: lith.settings.hotlistCompact ? 18 : 32
     readonly property real textSize: lith.settings.hotlistCompact ? 9 : 16
+    readonly property real padding: lith.settings.hotlistCompact ? 8 : 16
 
     signal clicked
 
-    implicitWidth: visible ? Math.max(itemLayout.width + 12, itemSize) : -layoutSpacing
-    implicitHeight: itemSize
+    implicitWidth: visible ? Math.max(itemLayout.width + root.padding, implicitHeight) : -layoutSpacing
+    implicitHeight: textSize + root.padding
     radius: 3
     color: hot > 0 ? palette.highlight : palette.text
     Row {
         id: itemLayout
-        x: Math.max(6, (itemSize - width) / 2)
         anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
         spacing: lith.settings.hotlistCompact ? 1 : 3
         Text {
             id: theLabel
