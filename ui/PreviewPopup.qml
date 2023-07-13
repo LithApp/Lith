@@ -61,6 +61,7 @@ Dialog {
             delegateVideo.source = ""
             delegateImage.source = ""
             controls.opacity = 1.0
+            errorMsgText.text = ""
         }
     }
 
