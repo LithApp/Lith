@@ -28,6 +28,11 @@ public:
     MessageFilterList(QObject *parent = nullptr, QAbstractListModel *parentModel = nullptr);
 
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+
+    // Mimic QmlObjectList here
+    Q_INVOKABLE int count();
+    Q_INVOKABLE QVariant at(const int& i);
+
 };
 
 #endif // MESSAGELISTFILTER_H

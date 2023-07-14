@@ -26,7 +26,7 @@ public:
 
     bool insert(const int& i, QObject *object);
 
-    int count();
+    Q_INVOKABLE int count();
 
     void clear();
 

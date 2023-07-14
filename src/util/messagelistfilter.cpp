@@ -44,3 +44,14 @@ bool MessageFilterList::filterAcceptsRow(int source_row, const QModelIndex &sour
 
     return false;
 }
+
+int MessageFilterList::count() {
+    return rowCount();
+}
+
+QVariant MessageFilterList::at(const int &i) {
+    if (i >= 0 && i < rowCount()) {
+        return data(index(i, 0), Qt::UserRole);
+    }
+    return QVariant();
+}
