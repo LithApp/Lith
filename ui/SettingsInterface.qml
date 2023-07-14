@@ -292,11 +292,13 @@ ScrollView {
             Fields.Boolean {
                 id: openLinksDirectlyCheckbox
                 summary: qsTr("Open links directly")
+                details: checked ? qsTr("Lith will either show media (images, video) directly with a built-in player or open your default browser (unsupported media, other link types)") : qsTr("Lith will show a popup allowing you to choose between copying the URL, opening it in your default browser or showing it inside Lith if supported (images, video)")
                 checked: settings.openLinksDirectly
                 columnComponent: RowLayout {
                     Layout.leftMargin: 15
                     Layout.rightMargin: 15
                     Layout.bottomMargin: 6
+                    Layout.topMargin: 6
                     Layout.fillWidth: true
                     enabled: openLinksDirectlyCheckbox.checked
                     // Layout balancing wrapper

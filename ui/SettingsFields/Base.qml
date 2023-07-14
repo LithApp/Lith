@@ -41,30 +41,35 @@ Rectangle {
             Layout.minimumHeight: summary.font.pixelSize + 32
             Layout.fillWidth: true
             spacing: 3
-            Label {
-                id: summary
+            ColumnLayout {
                 Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                elide: Label.ElideRight
+                Label {
+                    id: summary
+                    Layout.topMargin: details.visible ? 6 : 0
+                    Layout.fillWidth: true
+                    elide: Label.ElideRight
+
+                    MouseArea {
+                        id: baseMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
+                        ToolTip.visible: window.platform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
+                        ToolTip.delay: window.platform.mobile ? 0 : 800
+                    }
+                }
                 Label {
                     id: details
-                    width: parent.width
+                    Layout.fillWidth: true
+                    Layout.bottomMargin: visible ? 6 : 0
+                    Layout.rightMargin: visible ? 6 : 0
                     elide: Label.ElideRight
                     font.pointSize: summary.font.pointSize * 0.7
                     opacity: 0.8
                     visible: text.length > 0
-                    anchors.top: summary.bottom
-                    anchors.topMargin: -1
-                }
-
-                MouseArea {
-                    id: baseMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-
-                    ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
-                    ToolTip.visible: window.platform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
-                    ToolTip.delay: window.platform.mobile ? 0 : 800
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                    maximumLineCount: 3
                 }
             }
         }
