@@ -179,7 +179,9 @@ void Lith::resetData() {
 }
 
 void Lith::reconnect() {
-    m_weechat->restart();
+    // Network code lives in a different thread
+    // TODO use signals/slots to make it cleaner
+    QMetaObject::invokeMethod(m_weechat, "restart", Qt::QueuedConnection);
 }
 
 void Lith::handleBufferInitialization(const Protocol::HData &hda) {
