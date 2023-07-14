@@ -79,6 +79,9 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
     qmlRegisterUncreatableType<WindowHelper>("lith", 1, 0, "WindowHelper", "");
+    qmlRegisterUncreatableType<BaseNetworkProxy>("lith", 1, 0, "NetworkProxy", "");
+    qmlRegisterUncreatableType<ReplayProxy>("lith", 1, 0, "ReplayProxy", "");
+    qmlRegisterUncreatableType<RecordProxy>("lith", 1, 0, "RecordProxy", "");
     qmlRegisterType<FormatStringSplitter>("lith", 1, 0, "FormatStringSplitter");
     qmlRegisterType<Reflection>("lith", 1, 0, "Reflection");
 

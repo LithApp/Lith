@@ -19,6 +19,7 @@
 
 #include "common.h"
 #include "settings.h"
+#include "replayproxy.h"
 #include "util/sockethelper.h"
 
 #include <QSslSocket>
@@ -31,7 +32,7 @@ class Weechat : public QObject {
 public:
     Q_OBJECT
 public:
-    Weechat(Lith *lith = nullptr);
+    Weechat(BaseNetworkProxy *networkProxy, Lith *lith = nullptr);
     const Lith *lith() const;
     Lith *lith();
 
@@ -91,7 +92,8 @@ private:
         { MessageNames::c_requestNicklist, REQUEST_NICKLIST }
     };
 
-    SocketHelper *m_connection;
+    SocketHelper *m_connection { nullptr };
+    BaseNetworkProxy *m_networkProxy { nullptr };
     bool m_restarting { false };
 
     QByteArray m_fetchBuffer;

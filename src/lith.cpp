@@ -145,13 +145,18 @@ Search *Lith::search() {
     return m_search;
 }
 
+BaseNetworkProxy *Lith::networkProxy() {
+    return m_networkProxy;
+}
+
 Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_windowHelper(new WindowHelper(this))
 #ifndef Q_OS_WASM
     , m_weechatThread(new QThread(this))
 #endif
-    , m_weechat(new Weechat(this))
+    , m_networkProxy(BaseNetworkProxy::create(this))
+    , m_weechat(new Weechat(m_networkProxy, this))
     , m_buffers(QmlObjectList::create<Buffer>())
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
     , m_selectedBufferNicks(new NickListFilter(this))

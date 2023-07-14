@@ -24,6 +24,7 @@
 #include "datamodel.h"
 #include "windowhelper.h"
 #include "search.h"
+#include "replayproxy.h"
 #include "util/nicklistfilter.h"
 #include "util/messagelistfilter.h"
 
@@ -36,6 +37,7 @@ class ProxyBufferList;
 class Buffer;
 class BufferLine;
 class HotListItem;
+class BaseNetworkProxy;
 
 class Lith : public QObject {
     Q_OBJECT
@@ -63,6 +65,7 @@ private:
     Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
     Q_PROPERTY(QAbstractItemModel* logger READ logger CONSTANT)
     Q_PROPERTY(Search* search READ search CONSTANT)
+    Q_PROPERTY(BaseNetworkProxy* networkProxy READ networkProxy CONSTANT)
 
 public:
     static Lith *_self;
@@ -79,6 +82,7 @@ public:
     Settings* settingsGet();
     QAbstractItemModel *logger();
     Search* search();
+    BaseNetworkProxy *networkProxy();
 
     void log(Logger::EventType type, QString summary) {
         m_logger->log(Logger::Event{type, summary});
@@ -156,6 +160,7 @@ private:
 #ifndef Q_OS_WASM
     QThread *m_weechatThread { nullptr };
 #endif
+    BaseNetworkProxy *m_networkProxy { nullptr };
     Weechat *m_weechat { nullptr };
     QmlObjectList *m_buffers { nullptr };
     ProxyBufferList *m_proxyBufferList { nullptr };

@@ -69,17 +69,67 @@ Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
             spacing: 0
-            Label {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                color: palette.text
-                clip: true
-                height: 1
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: lith.selectedBuffer ? lith.selectedBuffer.name : "Lith"
-                renderType: Text.NativeRendering
+            RowLayout {
+                spacing: 0
+                Item {
+                    // Wrapper around the title so recording info can be placed next to it and title still stays in center
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    Label {
+                        id: bufferNameLabel
+                        // First part is calculated as half of the area the parent item got, second part is putting the label to the right side of its parent (when space runs out)
+                        x: Math.min((parent.width - width + replayInfoLayout.width) / 2, parent.width - width)
+                        color: palette.text
+                        font.bold: true
+                        text: lith.selectedBuffer ? lith.selectedBuffer.name : "Lith"
+                        renderType: Text.NativeRendering
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: Math.min(implicitWidth, parent.width)
+                        elide: Label.ElideRight
+                    }
+                }
+
+                RowLayout {
+                    id: replayInfoLayout
+                    visible: lith.networkProxy.recording || lith.status === Lith.REPLAY
+                    Layout.alignment: Qt.AlignRight
+                    Label {
+                        size: Label.Tiny
+                        Layout.alignment: Qt.AlignVCenter
+                        text: {
+                            if (lith.networkProxy.recording)
+                                return ("Recording into slot %1").arg(lith.networkProxy.slot)
+                            else if (lith.networkProxy.replaying)
+                                return ("Replaying event %1/%2").arg(lith.networkProxy.currentEvent).arg(lith.networkProxy.totalEvents)
+                            else if (lith.status === Lith.REPLAY)
+                                return ("Replayed %1 events").arg(lith.networkProxy.totalEvents)
+                            else
+                                return ""
+                        }
+                        SequentialAnimation on color {
+                            id: breathingAnimation
+                            running: lith.networkProxy.recording
+                            loops: Animation.Infinite
+                            property color firstColor: palette.text
+                            onFirstColorChanged: breathingAnimation.restart()
+                            property color secondColor: colorUtils.mixColors(palette.text, palette.highlight, 0.5)
+                            onSecondColorChanged: breathingAnimation.restart()
+                            property real animationDuration: 3000
+                            ColorAnimation { from: breathingAnimation.firstColor; to: breathingAnimation.secondColor; duration: breathingAnimation.animationDuration }
+                            ColorAnimation { from: breathingAnimation.secondColor; to: breathingAnimation.firstColor; duration: breathingAnimation.animationDuration }
+                        }
+                    }
+                    Rectangle {
+                        color: "red"
+                        Layout.alignment: Qt.AlignVCenter
+                        visible: lith.networkProxy.recording
+
+                        width: lith.settings.baseFontSize * 1.25
+                        height: width
+                        radius: width / 2
+                    }
+                }
             }
             Label {
                 Layout.fillWidth: true
@@ -94,6 +144,7 @@ Rectangle {
                       lith.status === Lith.CONNECTED ? "Connected" :
                       lith.status === Lith.DISCONNECTED ? "Disconnected" :
                       lith.status === Lith.ERROR ? "Error: " + lith.errorString :
+                      lith.status === Lith.REPLAY ? "Replaying a recording" :
                                                    ""
                 elide: Text.ElideRight
                 maximumLineCount: 2
@@ -127,6 +178,7 @@ Rectangle {
                          lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+currentTheme+"/smile.png" :
                          lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+currentTheme+"/no-wifi.png" :
                          lith.status === Lith.ERROR        ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
+                         lith.status === Lith.REPLAY       ? (lith.networkProxy.replaying ? "qrc:/navigation/"+currentTheme+"/play-color.png" : "qrc:/navigation/"+currentTheme+"/pause-color.png") :
                                                              "qrc:/navigation/"+currentTheme+"/dizzy.png"
             ToolTip.text: "Open channel information"
             ToolTip.visible: nickListButton.hovered

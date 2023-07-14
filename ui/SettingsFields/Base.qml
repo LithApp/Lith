@@ -69,7 +69,7 @@ Rectangle {
                     opacity: 0.8
                     visible: text.length > 0
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    maximumLineCount: 3
+                    maximumLineCount: 4
                 }
             }
         }

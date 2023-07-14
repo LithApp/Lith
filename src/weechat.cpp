@@ -26,24 +26,32 @@
 #include <QCryptographicHash>
 #include <QRandomGenerator>
 
-Weechat::Weechat(Lith *lith)
+Weechat::Weechat(BaseNetworkProxy *networkProxy, Lith *lith)
     : QObject(nullptr)
     , m_connection(new SocketHelper(this))
+    , m_networkProxy(networkProxy)
     , m_lith(lith)
 {
-    connect(m_connection, &SocketHelper::dataReceived, this, &Weechat::onDataReceived, Qt::QueuedConnection);
-    connect(m_connection, &SocketHelper::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
-    connect(m_connection, &SocketHelper::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
-    connect(m_connection, &SocketHelper::errorOccurred, this, &Weechat::onError, Qt::QueuedConnection);
+    connect(m_connection, &SocketHelper::dataReceived, m_networkProxy, &BaseNetworkProxy::onDataReceived, Qt::QueuedConnection);
+    connect(m_networkProxy, &BaseNetworkProxy::dataReceived, this, &Weechat::onDataReceived, Qt::QueuedConnection);
 
-    connect(lith, &Lith::pongReceived, this, &Weechat::onPongReceived, Qt::QueuedConnection);
-    connect(m_pingTimer, &QTimer::timeout, this, &Weechat::onPingTimeout, Qt::QueuedConnection);
-    m_pingTimer->setSingleShot(false);
-    m_pingTimer->start(5000);
+    if (m_networkProxy->mode() == BaseNetworkProxy::Replay) {
+        lith->statusSet(Lith::REPLAY);
+    }
+    else {
+        connect(m_connection, &SocketHelper::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
+        connect(m_connection, &SocketHelper::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
+        connect(m_connection, &SocketHelper::errorOccurred, this, &Weechat::onError, Qt::QueuedConnection);
 
-    connect(m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart, Qt::QueuedConnection);
-    m_reconnectTimer->setInterval(100);
-    m_reconnectTimer->setSingleShot(false);
+        connect(lith, &Lith::pongReceived, this, &Weechat::onPongReceived, Qt::QueuedConnection);
+        connect(m_pingTimer, &QTimer::timeout, this, &Weechat::onPingTimeout, Qt::QueuedConnection);
+        m_pingTimer->setSingleShot(false);
+        m_pingTimer->start(5000);
+
+        connect(m_reconnectTimer, &QTimer::timeout, this, &Weechat::restart, Qt::QueuedConnection);
+        m_reconnectTimer->setInterval(100);
+        m_reconnectTimer->setSingleShot(false);
+    }
 }
 
 const Lith *Weechat::lith() const {
@@ -105,13 +113,15 @@ void Weechat::init() {
     m_hotlistTimer->setInterval(10000);
     m_hotlistTimer->setSingleShot(false);
 
-    connect(lith()->settingsGet(), &Settings::ready, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
+    connect(lith()->settingsGet(), &Settings::readyChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
     connect(lith()->settingsGet(), &Settings::networkSettingsChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
 
     onConnectionSettingsChanged();
 }
 
 void Weechat::start() {
+    if (m_networkProxy->mode() == ReplayProxy::Replay)
+        return;
     m_connection->reset();
     m_restarting = false;
     lith()->statusSet(Lith::CONNECTING);
@@ -119,6 +129,9 @@ void Weechat::start() {
 }
 
 void Weechat::restart() {
+    if (m_networkProxy->mode() == ReplayProxy::Replay)
+        return;
+
     if (m_reconnectTimer->isActive())
         m_reconnectTimer->stop();
     m_initializationStatus = UNINITIALIZED;

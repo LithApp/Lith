@@ -14,6 +14,7 @@ HEADERS += \
     src/logger.h \
     src/protocol.h \
     src/qmlobjectlist.h \
+    src/replayproxy.h \
     src/search.h \
     src/settings.h \
     src/uploader.h \
@@ -36,6 +37,7 @@ SOURCES += \
     src/datamodel.cpp \
     src/protocol.cpp \
     src/qmlobjectlist.cpp \
+    src/replayproxy.cpp \
     src/search.cpp \
     src/settings.cpp \
     src/uploader.cpp \

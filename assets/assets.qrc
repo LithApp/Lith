@@ -22,7 +22,9 @@
         <file>navigation/dark/paper-plane.png</file>
         <file>navigation/dark/paste.png</file>
         <file>navigation/dark/pause.png</file>
+        <file>navigation/dark/pause-color.png</file>
         <file>navigation/dark/play.png</file>
+        <file>navigation/dark/play-color.png</file>
         <file>navigation/dark/photo.png</file>
         <file>navigation/dark/reload.png</file>
         <file>navigation/dark/reload-disabled.png</file>
@@ -54,7 +56,9 @@
         <file>navigation/light/paper-plane.png</file>
         <file>navigation/light/paste.png</file>
         <file>navigation/light/pause.png</file>
+        <file>navigation/light/pause-color.png</file>
         <file>navigation/light/play.png</file>
+        <file>navigation/light/play-color.png</file>
         <file>navigation/light/photo.png</file>
         <file>navigation/light/reload.png</file>
         <file>navigation/light/reload-disabled.png</file>

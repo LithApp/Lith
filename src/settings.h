@@ -120,6 +120,7 @@ class Settings : public QObject {
     SETTING(bool, platformBufferControlPosition, true)
 
     SETTING(bool, enableLogging, false)
+    SETTING(bool, enableReplayRecording, false)
 
     // This is hidden for now
     SETTING(bool, terminalLikeChat, true)

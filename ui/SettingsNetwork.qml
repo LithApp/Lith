@@ -65,6 +65,7 @@ ScrollView {
             (typeof settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
         )
         settings.enableLogging = enableLoggingCheckbox.checked
+        settings.enableReplayRecording = enableReplayRecordingCheckbox.checked
         passphraseField.text = ""
     }
     function onRejected() {
@@ -85,6 +86,7 @@ ScrollView {
             websocketsEndpointInput.text = settings.websocketsEndpoint
         }
         enableLoggingCheckbox.checked = settings.enableLogging
+        enableReplayRecordingCheckbox.checked = settings.enableReplayRecording
     }
 
     Item {
@@ -94,7 +96,7 @@ ScrollView {
         ColumnLayout {
             id: settingsPaneLayout
             anchors.horizontalCenter: parent.horizontalCenter
-            width: window.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
+            width: window.landscapeMode ? Math.min(Math.min(480, 1.33 * implicitWidth), parent.width) : parent.width
             spacing: -1
 
             Fields.Header {
@@ -197,6 +199,12 @@ ScrollView {
                 id: enableLoggingCheckbox
                 checked: settings.enableLogging
                 summary: qsTr("Enable logging")
+            }
+            Fields.Boolean {
+                id: enableReplayRecordingCheckbox
+                checked: settings.enableReplayRecording
+                summary: qsTr("Record network data")
+                details: qsTr("(Developer only, restart required)\nLith will record all data coming from WeeChat for debugging purposes. Personal data such as message contents and encryption negotiation will be logged.")
             }
             Item {
                 Layout.fillHeight: true
