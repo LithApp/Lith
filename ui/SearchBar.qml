@@ -117,15 +117,13 @@ Item {
                 Label {
                     size: Label.Small
                     text: qsTr("Total: %1 lines").arg(lith.selectedBuffer ? lith.selectedBuffer.lines.count : "N/A")
+                    opacity: 0.7
                 }
                 Label {
                     size: Label.Small
-                    text: qsTr("Matched: %1 lines").arg(search.matches.length)
-                }
-                Label {
-                    size: Label.Small
-                    text: search.highlightedMatchIndex >= 0 ? qsTr("Showing match no. %1").arg(search.highlightedMatchIndex + 1)
-                                                            : qsTr("Not showing a match")
+                    text: search.term.length === 0 ? qsTr("Start typing to search")
+                                                   : search.highlightedMatchIndex >= 0 ? qsTr("Showing match %1 of %2").arg(search.highlightedMatchIndex + 1).arg(search.matches.length)
+                                                                                       : qsTr("Matched: %1 lines").arg(search.matches.length)
                 }
             }
             Button {
