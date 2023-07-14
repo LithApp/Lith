@@ -34,12 +34,11 @@ Dialog {
         text: qsTr("Hotlist format editor")
 
         Button {
-            text: help.visible ? "<" : "?"
+            text: help.visible ? qsTr("Back") : qsTr("Help")
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.bottom: parent.bottom
-            anchors.margins: 9
-            width: height
+            anchors.margins: 6
             onClicked: help.visible = !help.visible
         }
     }
@@ -266,15 +265,17 @@ Dialog {
                 summary: qsTr("Use a preset")
                 details: qsTr("Recommended")
                 rowComponent: ColumnLayout {
+                    id: presetLayout
+
                     Button {
                         text: qsTr("Default")
                         onClicked: formatSplitter.fromStringList(lith.settings.hotlistDefaultFormat)
-                        Layout.preferredWidth: implicitWidth * 1.2
+                        Layout.preferredWidth: 180
                     }
                     Button {
                         text: qsTr("Buffer Number")
                         onClicked: formatSplitter.fromStringList(["%1", "number"])
-                        Layout.preferredWidth: implicitWidth * 1.2
+                        Layout.preferredWidth: 180
                     }
                 }
             }

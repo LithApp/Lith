@@ -56,6 +56,7 @@ Rectangle {
             id: bufferListButton
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
+            flat: true
             icon.source: "qrc:/navigation/"+currentTheme+"/menu.png"
             onClicked: {
                 bufferDrawer.toggle()
@@ -115,6 +116,7 @@ Rectangle {
             id: nickListButton
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
+            flat: true
             visible: lith.status !== Lith.UNCONFIGURED
             enabled: lith.status === Lith.CONNECTED
             onClicked: {

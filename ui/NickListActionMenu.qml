@@ -40,6 +40,7 @@ Dialog {
 
     header: Label {
         topPadding: 20
+        bottomPadding: 10
         id: nickActionNicknameText
         text: nickname
         horizontalAlignment: Qt.AlignCenter
@@ -76,23 +77,18 @@ Dialog {
     ColumnLayout {
         width: parent.width
         anchors.centerIn: parent
-        GridLayout {
-            width: parent.fillWidth
-            columns: 1
-            rowSpacing: 12
-
-            Repeater {
-                model: nicklistActionMenuModel
-                delegate: Button {
-                    text: name
-                    onClicked: {
-                        lith.selectedBuffer.input("/" + operation + " " + nickname)
-                        nickListActionMenuDialog.close()
-                        nickDrawer.close()
-                    }
-                    width: parent.fillWidth
-                    Layout.fillWidth: true
+        Repeater {
+            model: nicklistActionMenuModel
+            delegate: Button {
+                Layout.margins: 9
+                text: name
+                onClicked: {
+                    lith.selectedBuffer.input("/" + operation + " " + nickname)
+                    nickListActionMenuDialog.close()
+                    nickDrawer.close()
                 }
+                width: parent.fillWidth
+                Layout.fillWidth: true
             }
         }
         Item {

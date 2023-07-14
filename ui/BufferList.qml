@@ -53,6 +53,7 @@ Rectangle {
         Button {
             id: settingsButton
             Layout.preferredWidth: height
+            flat: true
             icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
             onClicked: settingsDialog.visible = true
             ToolTip.text: "Open settings"

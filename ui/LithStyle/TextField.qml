@@ -9,14 +9,14 @@ T.TextField {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              contentHeight + topPadding + bottomPadding)
 
-    padding: 6
+    padding: 9
     color: palette.text
     selectionColor: palette.highlight
     placeholderTextColor: colorUtils.setAlpha(disabledPalette.text, 0.5)
     verticalAlignment: Text.AlignVCenter
 
     property color borderColor: "transparent"
-    property color backgroundColor: "transparent"
+    property color backgroundColor: colorUtils.mixColors(palette.text, palette.window, 0.05)
     property real animationSpeed: 300
 
     cursorDelegate: Item {
@@ -55,9 +55,6 @@ T.TextField {
     }
 
     background: Rectangle {
-        implicitWidth: 200
-        implicitHeight: 40
-
         property color actualBorderColor: {
             if (control.borderColor != Qt.color("transparent"))
                 return control.borderColor
@@ -71,7 +68,7 @@ T.TextField {
             width: 1
         }
 
-        color: palette.alternateBase
+        color: control.backgroundColor
         anchors.fill: parent
 
         Label {

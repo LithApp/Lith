@@ -41,6 +41,7 @@ Item {
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
             focusPolicy: Qt.NoFocus
+            flat: true
             visible: settings.showAutocompleteButton
             onClicked: {
                 channelTextInput.autocomplete();
@@ -57,7 +58,6 @@ Item {
         }
 
         Button {
-            focusPolicy: Qt.NoFocus
             id: imageButton
             visible: settings.showGalleryButton
             Layout.fillHeight: true
@@ -65,6 +65,8 @@ Item {
             property bool isBusy: uploader.working
             icon.source: isBusy ? "" : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
             enabled: !isBusy
+            focusPolicy: Qt.NoFocus
+            flat: true
             onClicked: {
                 fileDialog.open()
             }
@@ -80,12 +82,13 @@ Item {
         }
 
         Button {
-            focusPolicy: Qt.NoFocus
             id: sendButton
             Layout.fillHeight: true
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
             visible: settings.showSendButton
+            focusPolicy: Qt.NoFocus
+            flat: true
             ToolTip.text: "Send the message"
             ToolTip.visible: sendButton.hovered
             ToolTip.delay: 800
@@ -105,7 +108,6 @@ Item {
             right: parent.right
         }
         height: 1
-        color: palette.text
-        opacity: 0.3
+        color: colorUtils.mixColors(palette.text, palette.window, 0.3)
     }
 }

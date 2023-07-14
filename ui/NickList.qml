@@ -106,7 +106,7 @@ Drawer {
                 }
                 onTextChanged: lith.selectedBufferNicks.filterWord = text
 
-                Keys.onPressed: {
+                Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Up) {
                         nickListView.currentIndex--;
                         event.accepted = true

@@ -27,6 +27,7 @@ TextField {
     inputMethodHints: Qt.ImhMultiLine
     renderType: TextInput.NativeRendering
 
+    borderColor: backgroundColor
     color: palette.text
 
     Connections {

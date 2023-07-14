@@ -51,7 +51,7 @@ ApplicationWindow {
     QtObject {
         id: colorUtils
         function mixColors(a, b, ratio) {
-            var c = Qt.color()
+            var c = Qt.color(a)
             c.r = a.r * ratio + b.r * (1 - ratio)
             c.g = a.g * ratio + b.g * (1 - ratio)
             c.b = a.b * ratio + b.b * (1 - ratio)

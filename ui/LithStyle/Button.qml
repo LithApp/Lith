@@ -11,8 +11,8 @@ T.Button {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    horizontalPadding: text.length > 0 ? 12 : 8
-    verticalPadding: 6
+    horizontalPadding: text.length > 0 ? 12 : 6
+    verticalPadding: text.length > 0 ? 12 : 6
     spacing: 6
 
     icon.width: 28
