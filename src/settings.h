@@ -49,7 +49,7 @@ PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
 class Settings : public QObject {
     Q_OBJECT
 
-    static inline const QStringList c_hotlistDefaultFormat{"%1: %2/%3", "number", "hotMessages", "unreadMessages"};
+    static inline const QStringList c_hotlistDefaultFormat{"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
 
     SETTING(int, lastOpenBuffer, -1)
 #if defined(Q_OS_MACOS)
