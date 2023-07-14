@@ -33,6 +33,7 @@ Rectangle {
         else
             filterField.focus = true
     }
+    signal close
 
     SystemPalette {
         id: palette
@@ -69,7 +70,7 @@ Rectangle {
                     bufferList.currentIndex = lith.selectedBufferIndex
             }
 
-            Keys.onPressed: {
+            Keys.onPressed: (event) => {
                 if (event.key === Qt.Key_Up) {
                     bufferList.currentIndex--;
                     event.accepted = true
@@ -122,91 +123,66 @@ Rectangle {
             orientation: Qt.Vertical
         }
 
-        delegate: Rectangle {
-            width: ListView.view.width - 1
-            height: delegateLayout.height + 12
+        delegate: ItemDelegate {
+            id: bufferDelegate
+            width: bufferList.width
+
+            checked: lith.selectedBuffer == buffer
+            highlighted: bufferList.currentIndex === index
+
+            required property var modelData
+            required property int index
             property var buffer: modelData
-            visible: buffer
-            color: index == bufferList.currentIndex ? colorUtils.setAlpha(palette.highlight, 0.5) : bufferMouse.pressed ? "gray" : bufferMouse.containsMouse ? "light gray" : palette.base
+            text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name : ""
 
-            Behavior on color {
-                ColorAnimation {
-                    duration: 100
+            onClicked: {
+                lith.selectedBuffer = buffer
+                root.close()
+            }
+            onPressAndHold: {
+                if (lith.selectedBuffer === buffer) {
+                    lith.selectedBuffer = null
+                    root.close()
                 }
             }
 
-            RowLayout {
-                id: delegateLayout
-                x: 6
-                y: 6
-                width: parent.width - 12
+            leftPadding: horizontalPadding + numberIndicator.width + spacing
+            rightPadding: horizontalPadding + (hotMessageIndicator.visible ? hotMessageIndicator.width + spacing : 0)
 
-                Rectangle {
-                    width: bufferName.height + 6
-                    height: width
-                    color: buffer && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
-                    radius: 2
-                    Label {
-                        text: buffer ? buffer.number : ""
-                        size: Label.Small
-                        anchors.centerIn: parent
-                        color: disabledPalette.text
-                        opacity: buffer && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
-                    }
-                    Behavior on opacity { NumberAnimation { duration: 100 } }
-                }
-
+            Rectangle {
+                id: numberIndicator
+                x: bufferDelegate.horizontalPadding
+                height: parent.height - 16
+                width: height
+                anchors.verticalCenter: parent.verticalCenter
+                color: buffer && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
+                radius: 2
                 Label {
-                    id: bufferName
-                    Layout.fillWidth: true
-                    clip: true
-                    text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name
-                                 : ""
-                    textFormat: Text.RichText
-                    size: Label.Medium
-                    color: palette.windowText
+                    text: buffer ? buffer.number : ""
+                    size: Label.Small
+                    anchors.centerIn: parent
+                    color: disabledPalette.text
+                    opacity: buffer && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
                 }
-                Rectangle {
-                    visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
-                    color: modelData.hotMessages ? colorUtils.darken(palette.highlight, 1.3) : palette.alternateBase
-                    border.color: palette.text
-                    border.width: 1
-                    height: bufferName.height + 6
-                    width: Math.max(height, hotListItemCount.width + 6)
-                    radius: 2
-                    Label {
-                        id: hotListItemCount
-                        text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
-                        anchors.centerIn: parent
-                        color: palette.windowText
-                    }
-                }
+                Behavior on opacity { NumberAnimation { duration: 100 } }
             }
-            MouseArea {
-                id: bufferMouse
-                anchors.fill: parent
-                hoverEnabled: true
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                onClicked: (mouse) => {
-                    if (mouse.button === Qt.LeftButton) {
-                        lith.selectedBuffer = buffer
-                        if (!window.landscapeMode)
-                            bufferDrawer.hide()
-                    }
-                    else if (mouse.button === Qt.RightButton) {
-                        if (lith.selectedBuffer === buffer) {
-                            lith.selectedBuffer = null
-                            if (!window.landscapeMode)
-                                bufferDrawer.hide()
-                        }
-                    }
-                }
-                onPressAndHold: {
-                    if (lith.selectedBuffer === buffer) {
-                        lith.selectedBuffer = null
-                        if (!window.landscapeMode)
-                            bufferDrawer.hide()
-                    }
+            Rectangle {
+                id: hotMessageIndicator
+                visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
+                color: modelData.hotMessages ? colorUtils.darken(palette.highlight, 1.3) : palette.alternateBase
+                border.color: palette.text
+                border.width: 1
+                height: parent.height - 16
+                width: Math.max(height, hotListItemCount.width + 6)
+                anchors.verticalCenter: bufferDelegate.verticalCenter
+                anchors.right: bufferDelegate.right
+                anchors.rightMargin: bufferDelegate.horizontalPadding
+                radius: 2
+                Label {
+                    id: hotListItemCount
+                    text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
+                    anchors.centerIn: parent
+                    color: modelData.hotMessages > 0 ? palette.highlightedText : palette.windowText
                 }
             }
         }

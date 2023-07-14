@@ -138,6 +138,10 @@ Item {
         BufferList {
             id: bufferList
             anchors.fill: parent
+            onClose: {
+                if (!landscapeMode)
+                    bufferDrawer.hide()
+            }
         }
     }
 
@@ -149,7 +153,7 @@ Item {
         dragMargin: 64
         y: isClosed ? mainView.y + channelView.messageArea.y : mainView.y
         height: isClosed ? channelView.scrollToBottomButtonPosition : mainView.height
-        width: 0.66 * mainView.width + mainView.rightMargin
+        width: Math.min(0.66 * mainView.width, 400) + mainView.rightMargin
     }
 
     NickListActionMenu {

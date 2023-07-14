@@ -87,6 +87,7 @@ Drawer {
             text: lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(lith.selectedBuffer.normals).arg(lith.selectedBuffer.voices).arg(lith.selectedBuffer.ops).arg(lith.selectedBuffer.normals + lith.selectedBuffer.voices + lith.selectedBuffer.ops) : ""
             size: Label.Tiny
             color: palette.windowText
+            opacity: 0.7
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
 
@@ -131,40 +132,14 @@ Drawer {
             model: lith.selectedBufferNicks
             currentIndex: 0
 
-            delegate: Rectangle {
+            delegate: ItemDelegate {
                 width: ListView.view.width
                 visible: modelData.visible && modelData.level === 0
-                height: visible ? nickTextItem.height + 12 : 0
-                color: index === nickListView.currentIndex ? "#bb6666" : nickItemMouse.pressed ? "gray" : palette.base
-
-                property var nick: modelData
-
-                MouseArea {
-                    id: nickItemMouse
-                    anchors.fill: parent
-                    onClicked: {
-                        nickListView.currentIndex = index
-                        openNickActionMenu(modelData.colorlessName)
-                    }
-                }
-
-                Behavior on color {
-                    ColorAnimation {
-
-                    }
-                }
-
-                RowLayout {
-                    x: 3
-                    y: 6
-                    width: parent.width - 6
-                    Label {
-                        id: nickTextItem
-                        clip: true
-                        text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
-                        size: Label.Medium
-                        color: palette.windowText
-                    }
+                height: visible ? implicitHeight : 0
+                text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
+                onClicked: {
+                    nickListView.currentIndex = index
+                    openNickActionMenu(modelData.colorlessName)
                 }
             }
         }

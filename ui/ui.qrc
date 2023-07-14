@@ -49,5 +49,6 @@
         <file>HotListItem.qml</file>
         <file>LithStyle/Label.qml</file>
         <file>LithStyle/SpinBox.qml</file>
+        <file>LithStyle/ItemDelegate.qml</file>
     </qresource>
 </RCC>

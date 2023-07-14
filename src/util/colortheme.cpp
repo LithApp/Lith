@@ -46,7 +46,7 @@ QPalette ColorTheme::palette() const {
         base,
         window
     };
-    palette.setBrush(QPalette::Highlight, QColor("#dd4444"));
-    palette.setBrush(QPalette::HighlightedText, Qt::black);
+    palette.setBrush(QPalette::Highlight, QColor("#cc3333"));
+    palette.setBrush(QPalette::HighlightedText, Qt::white);
     return palette;
 }
