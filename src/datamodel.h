@@ -79,6 +79,8 @@ class Buffer : public QObject {
     Q_PROPERTY(bool isServer READ isServerGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isChannel READ isChannelGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isPrivate READ isPrivateGet NOTIFY local_variablesChanged)
+
+    PROPERTY(QString, lastUserInput, "")
 public:
     Buffer(Lith *parent, pointer_t pointer);
     virtual ~Buffer();

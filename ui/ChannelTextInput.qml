@@ -48,10 +48,21 @@ TextField {
         }
     }
 
+    property var previousBuffer: null
     Connections {
         target: lith
         function onSelectedBufferChanged() {
             inputField.focus = true
+
+            if (lith.settings.useLocalInputBar) {
+                if (previousBuffer)
+                    previousBuffer.lastUserInput = inputField.text
+                if (lith.selectedBuffer)
+                    inputField.text = lith.selectedBuffer.lastUserInput
+                else
+                    inputField.text = ""
+                previousBuffer = lith.selectedBuffer
+            }
         }
     }
 

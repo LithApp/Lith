@@ -72,6 +72,7 @@ class Settings : public QObject {
     SETTING(bool, showAutocompleteButton, true)
     SETTING(bool, showGalleryButton, true)
     SETTING(bool, showSearchButton, true)
+    SETTING(bool, useLocalInputBar, true)
 
     SETTING(bool, muteVideosByDefault, true)
     SETTING(bool, loopVideosByDefault, true)

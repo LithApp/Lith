@@ -32,6 +32,7 @@ ScrollView {
     function save() {
         settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
         settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
+        settings.useLocalInputBar = useLocalInputBarCheckbox.checked
         settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
         settings.showGalleryButton = showGalleryButtonCheckbox.checked
         settings.showSendButton = showSendButtonCheckbox.checked
@@ -60,6 +61,7 @@ ScrollView {
     function restore() {
         shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
         shortenLongUrlsThreshold.text = settings.shortenLongUrlsThreshold
+        useLocalInputBarCheckbox.checked = settings.useLocalInputBar
         showAutocompleteButtonCheckbox.checked = settings.showAutocompleteButton
         showGalleryButtonCheckbox.checked = settings.showGalleryButton
         showSendButtonCheckbox.checked = settings.showSendButton
@@ -203,6 +205,13 @@ ScrollView {
             ////////////////////////// INPUT BAR
             Fields.Header {
                 text: qsTr("Input bar")
+            }
+
+            Fields.Boolean {
+                id: useLocalInputBarCheckbox
+                summary: qsTr("Use local input bar")
+                details: checked ? qsTr("Last input will be remembered in each buffer") : qsTr("Input contents won't change when switching buffers")
+                checked: settings.useLocalInputBar
             }
 
             Fields.Boolean {
