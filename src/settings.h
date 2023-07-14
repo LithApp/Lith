@@ -49,6 +49,8 @@ PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
 class Settings : public QObject {
     Q_OBJECT
 
+    Q_PROPERTY(bool isReady READ isReady NOTIFY readyChanged)
+
     static inline const QStringList c_hotlistDefaultFormat{"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
 
     SETTING(int, lastOpenBuffer, -1)
@@ -139,13 +141,16 @@ public slots:
 
 signals:
     void networkSettingsChanged();
-    void ready();
+    void readyChanged();
 
 public:
-    Settings(QObject *parent = nullptr);
+    static Settings* instance();
+    bool isReady() const;
 private:
+    Settings(QObject *parent = nullptr);
     void migrate();
     QSettings m_settings;
+    bool m_ready = false;
 };
 
 #endif // SETTINGS_H

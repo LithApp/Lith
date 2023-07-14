@@ -132,6 +132,10 @@ void Lith::networkErrorStringSet(const QString &o) {
     }
 }
 
+Settings *Lith::settingsGet() {
+    return Settings::instance();
+}
+
 QAbstractItemModel *Lith::logger() {
     //return m_logger;
     return m_filteredLogger;
@@ -143,7 +147,6 @@ Search *Lith::search() {
 
 Lith::Lith(QObject *parent)
     : QObject(parent)
-    , m_settings(new Settings(this))
     , m_windowHelper(new WindowHelper(this))
 #ifndef Q_OS_WASM
     , m_weechatThread(new QThread(this))

@@ -43,7 +43,8 @@ Settings::Settings(QObject *parent)
             }
         }
         migrate();
-        emit ready();
+        m_ready = true;
+        emit readyChanged();
     };
     std::function<void(void)> *testSettingsReady = new std::function<void(void)>();
     *testSettingsReady = [=](){
@@ -97,4 +98,14 @@ void Settings::saveNetworkSettings(const QString host, int port, bool encrypted,
 
     if (changed)
         emit networkSettingsChanged();
+}
+
+bool Settings::isReady() const {
+    return m_ready;
+}
+
+Settings *Settings::instance()
+{
+    static Settings self;
+    return &self;
 }

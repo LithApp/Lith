@@ -45,14 +45,15 @@ public:
         CONNECTING,
         CONNECTED,
         DISCONNECTED,
-        ERROR
+        ERROR,
+        REPLAY
     };
     Q_ENUM(Status)
 private:
     PROPERTY(Status, status, UNCONFIGURED)
     Q_PROPERTY(QString statusString READ statusString NOTIFY statusChanged)
     Q_PROPERTY(QString errorString READ errorStringGet WRITE errorStringSet NOTIFY errorStringChanged)
-    PROPERTY_PTR(Settings, settings)
+    Q_PROPERTY(Settings* settings READ settingsGet CONSTANT)
     PROPERTY_PTR(WindowHelper, windowHelper)
 
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
@@ -75,6 +76,7 @@ public:
     void errorStringSet(const QString &o);
     void networkErrorStringSet(const QString &o);
 
+    Settings* settingsGet();
     QAbstractItemModel *logger();
     Search* search();
 

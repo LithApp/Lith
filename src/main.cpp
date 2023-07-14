@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Reflection>("lith", 1, 0, "Reflection");
 
     // Initialize UI helpers and fonts
+    Settings::instance();
     Lith::instance();
     Lith::instance()->windowHelperGet()->init();
     auto fontFamilyFromSettings = Lith::instance()->settingsGet()->baseFontFamilyGet();
