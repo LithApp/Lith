@@ -35,7 +35,7 @@ T.Button {
 
     background: Rectangle {
         clip: true
-        color: !control.flat || control.hovered || control.pressed ? palette.button : palette.window
+        color: !control.flat || (control.hovered && control.enabled) || control.pressed ? palette.button : palette.window
         Behavior on color { ColorAnimation { duration: 100 } }
         radius: 3
 
