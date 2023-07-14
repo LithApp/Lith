@@ -103,7 +103,7 @@ ScrollView {
             Fields.Base {
                 summary: qsTr("Current status: %1").arg(lith.statusString)
                 details: lith.status == Lith.ERROR ? lith.errorString : ""
-                enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING
+                enabled: lith.status == Lith.CONNECTED || lith.status == Lith.CONNECTING || lith.status == Lith.ERROR
                 rowComponent: ColumnLayout {
                     spacing: 1
                     Button {
