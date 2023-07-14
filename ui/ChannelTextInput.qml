@@ -38,8 +38,6 @@ TextField {
         }
     }
 
-    property alias inputFieldAlias: inputField
-
     onAccepted: {
         if (text.length > 0) {
             if (lith.selectedBuffer.input(text)) {

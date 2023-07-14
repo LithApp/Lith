@@ -117,9 +117,9 @@ Item {
             ToolTip.visible: sendButton.hovered
             ToolTip.delay: 800
             onClicked: {
-                if (channelTextInput.inputFieldAlias.text.length > 0) {
-                    lith.selectedBuffer.input(channelTextInput.inputFieldAlias.text)
-                    channelTextInput.inputFieldAlias.text = ""
+                if (channelTextInput.text.length > 0) {
+                    lith.selectedBuffer.input(channelTextInput.text)
+                    channelTextInput.text = ""
                 }
             }
         }
