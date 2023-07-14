@@ -226,7 +226,8 @@ void Weechat::onDisconnected() {
     m_bytesRemaining = 0;
     m_hotlistTimer->stop();
 
-    m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
+    if (m_reconnectTimer->interval() < 15000)
+        m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
     m_reconnectTimer->start();
 }
 
