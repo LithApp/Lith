@@ -25,18 +25,21 @@
 #include <QKeySequence>
 
 #define SETTING(type, name, ...) \
-    PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
+PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
     public: \
-        bool name ## Set (const type &o) { \
-            if (m_ ## name != o) { \
-                m_ ## name = o; \
-                m_settings.setValue(STRINGIFY(name), o); \
-                m_settings.sync(); \
-                emit name ## Changed(); \
-                return true; \
-            } \
-            return false; \
-        }
+    bool name ## Set (const type &o) { \
+        if (m_ ## name != o) { \
+            m_ ## name = o; \
+            m_settings.setValue(STRINGIFY(name), o); \
+            m_settings.sync(); \
+            emit name ## Changed(); \
+            return true; \
+        } \
+        return false; \
+    }
+
+#define DEPRECATED_SETTING(type, name, ...) \
+    PROPERTY(type, name, __VA_ARGS__)
 
 /*
  * USAGE:
@@ -121,7 +124,7 @@ class Settings : public QObject {
 
     // UNUSED SETTINGS
     // determine what to do about these later
-    SETTING(bool, hotlistShowUnreadCount, true) // Obsoleted by hotlistFormat
+    DEPRECATED_SETTING(bool, hotlistShowUnreadCount, true) // Obsoleted by hotlistFormat
     // END OF UNUSED SETTINGS
 
 public:

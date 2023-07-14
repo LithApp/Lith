@@ -62,7 +62,8 @@ void Settings::migrate() {
     // I think checking that m_settings contains something that's not present in the metaobject should be enough
     if (hotlistShowUnreadCountGet() == false) {
         if (hotlistFormatGet() == c_hotlistDefaultFormat) {
-            hotlistShowUnreadCountSet(false);
+            m_settings.remove("hotlistShowUnreadCount");
+            m_settings.sync();
             hotlistFormatSet({"%1", "number"});
         }
     }
