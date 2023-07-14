@@ -44,7 +44,11 @@ Dialog {
         }
     }
 
-    Component.onCompleted: console.log(reflection.stringProperties)
+    footer: DialogButtons {
+        id: dialogButtons
+        acceptable: formatSplitter.variablesValid && formatSplitter.formatValid
+        dialog: root
+    }
 
     Reflection {
         id: reflection
@@ -272,13 +276,6 @@ Dialog {
                         Layout.preferredWidth: implicitWidth * 1.2
                     }
                 }
-            }
-
-            DialogButtons {
-                id: dialogButtons
-                acceptable: formatSplitter.variablesValid && formatSplitter.formatValid
-                Layout.fillWidth: true
-                dialog: root
             }
         }
         Rectangle {

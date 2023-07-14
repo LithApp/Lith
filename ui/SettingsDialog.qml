@@ -64,12 +64,7 @@ Dialog {
 
     StackLayout {
         id: stackLayout
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-            bottom: dialogButtons.top
-        }
+        anchors.fill: parent
 
         currentIndex: tabBar.currentIndex
 
@@ -87,13 +82,8 @@ Dialog {
         }
     }
 
-    DialogButtons {
+    footer: DialogButtons {
         id: dialogButtons
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
         dialog: root
         acceptText: qsTr("Save and close")
         additionalButton: Button {

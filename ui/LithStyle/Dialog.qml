@@ -28,18 +28,10 @@ T.Dialog {
     }
 
     T.Overlay.modal: Rectangle {
-        color: {
-            var c = Qt.color(palette.window)
-            c.a = 0.5
-            return c
-        }
+        color: colorUtils.setAlpha(palette.window, 0.7)
     }
 
     T.Overlay.modeless: Rectangle {
-        color: {
-            var c = Qt.color(palette.window)
-            c.a = 0.5
-            return c
-        }
+        color: colorUtils.setAlpha(palette.window, 0.7)
     }
 }

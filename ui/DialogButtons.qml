@@ -5,7 +5,7 @@ import QtQuick.Controls
 Rectangle {
     id: root
     color: palette.window
-    implicitHeight: layout.implicitHeight + layout.y
+    implicitHeight: layout.implicitHeight + 2 * layout.y
 
     property Item additionalButton
     onAdditionalButtonChanged: {
@@ -21,15 +21,24 @@ Rectangle {
     signal rejected
 
     Rectangle {
+        anchors.fill: parent
+        visible: !root.dialog || !root.dialog.borderless
+        color: "transparent"
+        border.width: 1
+        border.color: palette.light
+    }
+
+    Rectangle {
+        visible: root.dialog && root.dialog.borderless
         width: parent.width
         height: 1
-        color: palette.midlight
+        color: palette.light
     }
 
     RowLayout {
         id: layout
-        height: parent.height
-        y: 1
+        y: 5
+        height: parent.height - 2 * y
         spacing: 18
         anchors.horizontalCenter: parent.horizontalCenter
         // This item is laid out in the other direction to allow adding more buttons on the left side
