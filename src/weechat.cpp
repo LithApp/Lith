@@ -119,6 +119,8 @@ void Weechat::start() {
 }
 
 void Weechat::restart() {
+    if (m_reconnectTimer->isActive())
+        m_reconnectTimer->stop();
     m_initializationStatus = UNINITIALIZED;
     auto host = lith()->settingsGet()->hostGet();
     auto port = lith()->settingsGet()->portGet();
