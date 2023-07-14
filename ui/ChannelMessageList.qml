@@ -27,6 +27,11 @@ ListView {
     property real scrollToBottomButtonPosition: scrollToBottomButton.visible ? height - scrollToBottomButton.y - scrollToBottomButton.height
                                                                              : height
 
+    onHeightChanged: {
+        if (atYEnd)
+            positionViewAtBeginning()
+    }
+
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
@@ -35,7 +40,6 @@ ListView {
 
     ScrollBar.vertical: ScrollBar {
         id: scrollBar
-        rotation: 180
         hoverEnabled: true
         active: hovered || pressed
         orientation: Qt.Vertical
@@ -45,12 +49,11 @@ ListView {
         anchors.bottom: listView.bottom
     }
 
-    rotation: 180
     orientation: Qt.Vertical
+    verticalLayoutDirection: ListView.BottomToTop
     spacing: lith.settings.messageSpacing
     model: lith.selectedBuffer ? lith.selectedBuffer.lines_filtered : null
     delegate: ChannelMessage {
-        rotation: 180
         messageModel: modelData
     }
 
@@ -61,7 +64,7 @@ ListView {
     function fillTopOfList() {
         if (!lith.selectedBuffer)
             return
-        if (yPosition + visibleArea.heightRatio > 0.75) {
+        if (visibleArea.heightRatio >= 0.5 || yPosition + visibleArea.heightRatio <= 0.5) {
             lith.selectedBuffer.fetchMoreLines()
         }
     }
@@ -84,15 +87,14 @@ ListView {
     Button {
         id: scrollToBottomButton
         anchors {
-            top: parent.top
-            left: parent.left
+            bottom: parent.bottom
+            right: parent.right
             margins: height / 2
         }
-        rotation: 180
         width: height
         flat: false
         icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
-        opacity: listView.atYBeginning	 ? 0.0 : 0.5
+        opacity: listView.atYEnd ? 0.0 : 0.5
         visible: opacity > 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }
         onClicked: positionViewAtBeginning()
