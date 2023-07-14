@@ -82,7 +82,7 @@ Dialog {
                             visible: modelData && autocomplete.parent && "%1".arg(modelData).startsWith(autocomplete.parent.text)
                             width: suggestionLabel.width + 27
                             height: suggestionLabel.height + 18
-                            color: Qt.rgba(palette.buttonText.r, palette.buttonText.g, palette.buttonText.b, 0.1)
+                            color: colorUtils.setAlpha(palette.buttonText, autocompleteDelegateMouse.pressed ? 0.25 : autocompleteDelegateMouse.containsMouse ? 0.15 : 0.1)
                             Label {
                                 id: suggestionLabel
                                 anchors.centerIn: parent
@@ -90,7 +90,9 @@ Dialog {
                                 color: palette.buttonText
                             }
                             MouseArea {
+                                id: autocompleteDelegateMouse
                                 anchors.fill: parent
+                                hoverEnabled: true
                                 onClicked: {
                                     autocomplete.parent.text = modelData
                                     autocomplete.visible = false
