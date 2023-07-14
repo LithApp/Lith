@@ -10,7 +10,7 @@ Dialog {
     modal: true
     anchors.centerIn: Overlay.overlay
     width: 400
-    implicitHeight: Math.min(header.height + mainItem.implicitHeight, mainView.height)
+    implicitHeight: Math.min(header.height + mainItem.implicitHeight + footer.height, mainView.height)
     closePolicy: autocomplete.visible ? Popup.CloseOnPressOutside : (Popup.CloseOnEscape | Popup.CloseOnPressOutside)
     onVisibleChanged: {
         if (visible) {
@@ -46,6 +46,7 @@ Dialog {
 
     footer: DialogButtons {
         id: dialogButtons
+        enabled: !help.visible // disable the buttons so the user doesn't get confused
         acceptable: formatSplitter.variablesValid && formatSplitter.formatValid
         dialog: root
     }
@@ -128,7 +129,7 @@ Dialog {
                 id: formatField
                 summary: qsTr("Format definition")
                 Layout.fillHeight: true
-                Layout.minimumHeight: 180
+                Layout.maximumHeight: formatLayout.height + formatField.firstRowHeight + formatField.verticalPadding * 2
 
                 columnComponent: ScrollView {
                     id: formatScrollView
@@ -292,6 +293,13 @@ Dialog {
                     x: 6
                     y: 6
                     width: helpScrollView.width - 12
+                    Label {
+                        Layout.fillWidth: true
+                        wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                        text: qsTr("How to use this editor")
+                        horizontalAlignment: Label.AlignHCenter
+                        size: Label.Medium
+                    }
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Label.WrapAtWordBoundaryOrAnywhere

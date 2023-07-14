@@ -10,13 +10,17 @@ Rectangle {
     property Item rowComponent
     property Item columnComponent
     readonly property Item labelComponent: summary
+    readonly property real firstRowHeight: row.height
+
+    readonly property real horizontalPadding: 9
+    readonly property real verticalPadding: 3
 
     onRowComponentChanged: if (rowComponent) rowComponent.parent = row
     onColumnComponentChanged: if (columnComponent) columnComponent.parent = column
 
     Layout.fillWidth: true
     implicitWidth: column.implicitWidth + column.anchors.margins * 2
-    implicitHeight: column.implicitHeight + column.y * 2
+    implicitHeight: column.implicitHeight + root.verticalPadding * 2
 
     color: "transparent"
     border.width: 1
@@ -28,10 +32,10 @@ Rectangle {
         anchors {
             left: parent.left
             right: parent.right
-            margins: 9
+            margins: root.horizontalPadding
         }
-        y: 3
-        height: parent.height - 2 * y
+        y: root.verticalPadding
+        height: parent.height - 2 * root.verticalPadding
         RowLayout {
             id: row
             Layout.minimumHeight: summary.font.pixelSize + 32
