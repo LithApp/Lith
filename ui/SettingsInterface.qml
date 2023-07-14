@@ -161,6 +161,12 @@ ScrollView {
                 }
             }
 
+            Fields.IntSpinBox {
+                id: messageSpacingSpinbox
+                summary: qsTr("Message spacing")
+                value: settings.messageSpacing
+            }
+
             ////////////////////////// COLOR THEME
             Fields.Header {
                 text: qsTr("Color theme")
@@ -370,18 +376,6 @@ ScrollView {
                 id: muteVideosByDefaultCheckbox
                 summary: qsTr("Mute videos by default")
                 checked: settings.showSendButton
-            }
-
-
-            ////////////////////////// ADVANCED TWEAKS
-            Fields.Header {
-                text: qsTr("Advanced tweaks")
-            }
-
-            Fields.IntSpinBox {
-                id: messageSpacingSpinbox
-                summary: qsTr("Message spacing")
-                value: settings.messageSpacing
             }
         }
     }
