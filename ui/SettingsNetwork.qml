@@ -26,6 +26,7 @@ ScrollView {
     id: root
     clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+    ScrollBar.vertical.policy: !window.platform.mobile ? ScrollBar.AlwaysOn : ScrollBar.vertical.policy
 
     property bool networkSettingsChanged: {
         if (passphraseField.text.length > 0)
