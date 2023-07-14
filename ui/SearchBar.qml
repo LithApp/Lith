@@ -34,112 +34,96 @@ Item {
         color: colorUtils.mixColors(palette.text, palette.window, 0.3)
     }
 
-    ColumnLayout {
+    RowLayout {
         id: rootLayout
         y: 1
-        width: parent.width
-
-        RowLayout {
-            Layout.fillWidth: true
-            visible: false
-            spacing: 6
-            Label {
-                Layout.leftMargin: 3
-                text: qsTr("Search: ")
-            }
-
-            TextField {
-                Layout.fillWidth: true
-                text: search.term
-                onTextEdited: search.term = text
+        x: 5
+        width: parent.width - 2 * x
+        spacing: 6
+        Button {
+            id: searchModeButton
+            // This is a small hack to make this button appear in the same place as its input bar counterpart
+            Layout.preferredHeight: implicitHeight - 1
+            icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
+            focusPolicy: Qt.NoFocus
+            flat: true
+            onClicked: root.visible = false
+            ToolTip.text: "Exit search mode"
+            ToolTip.visible: searchModeButton.hovered
+            ToolTip.delay: 800
+            // Looks meh
+            IconImage {
+                mipmap: true
+                width: parent.width / 3.5
+                height: width
+                source: "qrc:/navigation/"+currentTheme+"/close.png"
+                anchors {
+                    top: parent.top
+                    right: parent.right
+                    margins: height / 3.5
+                }
             }
         }
-        RowLayout {
+
+        TextField {
+            id: termField
             Layout.fillWidth: true
-            spacing: 6
+            text: search.term
+            onTextEdited: search.term = text
+            rightPadding: clearTermButton.width + padding
+
+            Keys.onEscapePressed: {
+                if (search.highlightedMatchIndex >= 0)
+                    search.resetHighlight()
+                else
+                    root.visible = false
+            }
+            Keys.onUpPressed: search.highlightNext()
+            Keys.onDownPressed: search.highlightPrevious()
+
             Button {
-                id: searchModeButton
-                icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
-                focusPolicy: Qt.NoFocus
-                flat: true
-                onClicked: root.visible = false
-                ToolTip.text: "Exit search mode"
-                ToolTip.visible: searchModeButton.hovered
-                ToolTip.delay: 800
-                // Looks meh
-                IconImage {
-                    mipmap: true
-                    width: parent.width / 3.5
-                    height: width
-                    source: "qrc:/navigation/"+currentTheme+"/close.png"
-                    anchors {
-                        top: parent.top
-                        right: parent.right
-                        margins: height / 3.5
-                    }
-                }
-            }
-
-            TextField {
-                id: termField
-                Layout.fillWidth: true
-                text: search.term
-                onTextEdited: search.term = text
-                rightPadding: clearTermButton.width + padding
-
-                Keys.onEscapePressed: {
-                    if (search.highlightedMatchIndex >= 0)
-                        search.resetHighlight()
-                    else
-                        root.visible = false
-                }
-                Keys.onUpPressed: search.highlightNext()
-                Keys.onDownPressed: search.highlightPrevious()
-
-                Button {
-                    id: clearTermButton
-                    height: parent.height * 0.75
-                    width: height
-                    icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
-                    flat: true
-                    focusPolicy: Qt.NoFocus
-                    onClicked: lith.search.term = ""
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        right: parent.right
-                        margins: termField.padding / 2
-                    }
-                }
-            }
-
-            ColumnLayout {
-                spacing: 0
-                Label {
-                    size: Label.Small
-                    text: qsTr("Total: %1 lines").arg(lith.selectedBuffer ? lith.selectedBuffer.lines.count : "N/A")
-                    opacity: 0.7
-                }
-                Label {
-                    size: Label.Small
-                    text: search.term.length === 0 ? qsTr("Start typing to search")
-                                                   : search.highlightedMatchIndex >= 0 ? qsTr("Showing match %1 of %2").arg(search.highlightedMatchIndex + 1).arg(search.matches.length)
-                                                                                       : qsTr("Matched: %1 lines").arg(search.matches.length)
-                }
-            }
-            Button {
-                icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
+                id: clearTermButton
+                height: parent.height * 0.75
+                width: height
+                icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
                 flat: true
                 focusPolicy: Qt.NoFocus
-                onClicked: search.highlightPrevious()
-                enabled: search.previousEnabled
+                onClicked: lith.search.term = ""
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    right: parent.right
+                    margins: termField.padding / 2
+                }
             }
-            Button {
-                icon.source: "qrc:/navigation/"+currentTheme+"/up-arrow.png"
-                flat: true
-                focusPolicy: Qt.NoFocus
-                onClicked: search.highlightNext()
-                enabled: search.nextEnabled
+        }
+
+        ColumnLayout {
+            spacing: 0
+            Label {
+                size: Label.Small
+                text: qsTr("Total: %1 lines").arg(lith.selectedBuffer ? lith.selectedBuffer.lines.count : "N/A")
+                opacity: 0.7
             }
+            Label {
+                size: Label.Small
+                text: search.term.length === 0 ? qsTr("Start typing to search")
+                                               : search.highlightedMatchIndex >= 0 ? qsTr("Showing match %1 of %2").arg(search.highlightedMatchIndex + 1).arg(search.matches.length)
+                                                                                   : qsTr("Matched: %1 lines").arg(search.matches.length)
+            }
+        }
+        Button {
+            icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
+            flat: true
+            focusPolicy: Qt.NoFocus
+            onClicked: search.highlightPrevious()
+            enabled: search.previousEnabled
+        }
+        Button {
+            icon.source: "qrc:/navigation/"+currentTheme+"/up-arrow.png"
+            flat: true
+            focusPolicy: Qt.NoFocus
+            onClicked: search.highlightNext()
+            enabled: search.nextEnabled
         }
     }
 }

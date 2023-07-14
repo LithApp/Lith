@@ -41,8 +41,9 @@ Item {
     RowLayout {
         id: inputBarLayout
         y: 1
+        x: 5
         height: parent.height
-        width: parent.width
+        width: parent.width - 2 * x
 
         spacing: 6
         Button {
