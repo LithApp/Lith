@@ -154,6 +154,9 @@ Item {
         y: isClosed ? mainView.y + channelView.messageArea.y : mainView.y
         height: isClosed ? channelView.scrollToBottomButtonPosition : mainView.height
         width: Math.min(0.66 * mainView.width, 400) + mainView.rightMargin
+        onRequestSearchBar: {
+            channelView.showSearchBar()
+        }
     }
 
     NickListActionMenu {

@@ -315,6 +315,20 @@ QObject *BufferLine::bufferGet() {
     return parent();
 }
 
+bool BufferLine::searchCompare(const QString &term) {
+    // TODO search parameters, case insensitive and nick+message always
+    if (term.isEmpty())
+        return true;
+    if (!Lith::instance()->settingsGet()->showJoinPartQuitMessagesGet() && isJoinPartQuitMsgGet())
+        return false;
+    auto lowerTerm = term.toLower();
+    if (m_prefix.toPlain().toLower().contains(lowerTerm))
+        return true;
+    if (m_message.toPlain().toLower().contains(lowerTerm))
+        return true;
+    return false;
+}
+
 Nick::Nick(Buffer *parent)
     : QObject(parent)
 {

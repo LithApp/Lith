@@ -15,6 +15,7 @@
         <file>navigation/dark/forward.png</file>
         <file>navigation/dark/image.png</file>
         <file>navigation/dark/image-gallery.png</file>
+        <file>navigation/dark/loupe.png</file>
         <file>navigation/dark/menu.png</file>
         <file>navigation/dark/mute.png</file>
         <file>navigation/dark/no-wifi.png</file>
@@ -31,6 +32,7 @@
         <file>navigation/dark/sleeping.png</file>
         <file>navigation/dark/smile.png</file>
         <file>navigation/dark/transfer.png</file>
+        <file>navigation/dark/up-arrow.png</file>
         <file>navigation/dark/volume.png</file>
         <file>navigation/light/album-folder.png</file>
         <file>navigation/light/close.png</file>
@@ -45,6 +47,7 @@
         <file>navigation/light/forward.png</file>
         <file>navigation/light/image.png</file>
         <file>navigation/light/image-gallery.png</file>
+        <file>navigation/light/loupe.png</file>
         <file>navigation/light/menu.png</file>
         <file>navigation/light/mute.png</file>
         <file>navigation/light/no-wifi.png</file>
@@ -61,6 +64,7 @@
         <file>navigation/light/sleeping.png</file>
         <file>navigation/light/smile.png</file>
         <file>navigation/light/transfer.png</file>
+        <file>navigation/light/up-arrow.png</file>
         <file>navigation/light/volume.png</file>
     </qresource>
 </RCC>

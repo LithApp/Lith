@@ -31,7 +31,16 @@ Rectangle {
 
     height: lith.settings.terminalLikeChat ? terminalLineLayout.height : messageBubble.height
 
-    color: messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : "transparent"
+    opacity: messageModel.searchCompare(lith.search.term) ? 1.0 : 0.3
+
+    readonly property bool isHighlighted: lith.search.highlightedLine && messageModel && lith.search.highlightedLine === messageModel
+
+    color: isHighlighted ? colorUtils.setAlpha(palette.text, 0.1) : messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : "transparent"
+    border {
+        color: palette.highlight
+        width: root.isHighlighted ? 1 : 0
+    }
+
     Connections {
         target: messageMouseArea
         function onClicked(mouse) {

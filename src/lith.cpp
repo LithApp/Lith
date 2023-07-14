@@ -75,7 +75,6 @@ void Lith::selectedBufferIndexSet(int index) {
         m_selectedBufferIndex = index;
         emit selectedBufferChanged();
         if (selectedBuffer()) {
-            selectedBuffer()->fetchMoreLines();
             selectedBuffer()->clearHotlist();
         }
         if (index >= 0)
@@ -138,6 +137,10 @@ QAbstractItemModel *Lith::logger() {
     return m_filteredLogger;
 }
 
+Search *Lith::search() {
+    return m_search;
+}
+
 Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_settings(new Settings(this))
@@ -151,6 +154,7 @@ Lith::Lith(QObject *parent)
     , m_selectedBufferNicks(new NickListFilter(this))
     , m_logger(new Logger(this))
     , m_filteredLogger(new FilteredLogger(this))
+    , m_search(new Search(this))
 {
 
     connect(this, &Lith::selectedBufferChanged, [this](){

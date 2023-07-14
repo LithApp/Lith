@@ -10,6 +10,7 @@ typedef QSharedPointer<QObject> QObjectPointer;
 class QmlObjectList : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
     Q_DISABLE_COPY(QmlObjectList)
     virtual ~QmlObjectList() {
@@ -82,6 +83,10 @@ protected:
     QHash<int, QByteArray> roleNames() const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+signals:
+    void countChanged();
+
 private:
     QmlObjectList(const QMetaObject& m, QObject *parent = Q_NULLPTR);
 

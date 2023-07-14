@@ -175,6 +175,8 @@ public:
 
     QObject *bufferGet();
 
+    Q_INVOKABLE bool searchCompare(const QString& term);
+
 signals:
     void messageChanged();
     void prefixChanged();

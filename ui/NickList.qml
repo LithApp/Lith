@@ -24,6 +24,8 @@ Drawer {
         id: palette
     }
 
+    signal requestSearchBar
+
     readonly property bool isClosed: position < 1
 
     onVisibleChanged: {
@@ -89,6 +91,15 @@ Drawer {
             color: palette.windowText
             opacity: 0.7
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+        }
+
+        Button {
+            Layout.alignment: Qt.AlignHCenter
+            text: qsTr("Search messages")
+            onClicked: {
+                root.requestSearchBar()
+                root.close()
+            }
         }
 
         Item {

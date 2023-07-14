@@ -50,5 +50,6 @@
         <file>LithStyle/Label.qml</file>
         <file>LithStyle/SpinBox.qml</file>
         <file>LithStyle/ItemDelegate.qml</file>
+        <file>SearchBar.qml</file>
     </qresource>
 </RCC>

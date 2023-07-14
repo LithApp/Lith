@@ -23,18 +23,42 @@ import lith 1.0
 
 
 Item {
-    implicitHeight: inputBarLayout.implicitHeight
+    id: root
+    implicitHeight: inputBarLayout.implicitHeight + 1
 
     // TODO
     property alias textInput: channelTextInput
     property bool hasFocus: channelTextInput.activeFocus
 
+    signal requestSearchBar
+
+    onVisibleChanged: {
+        if (visible) {
+            channelTextInput.forceActiveFocus()
+        }
+    }
+
     RowLayout {
         id: inputBarLayout
+        y: 1
         height: parent.height
         width: parent.width
 
         spacing: 6
+        Button {
+            id: searchModeButton
+            implicitWidth: implicitHeight
+            icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
+            focusPolicy: Qt.NoFocus
+            flat: true
+            visible: settings.showSearchButton
+            onClicked: {
+                root.requestSearchBar()
+            }
+            ToolTip.text: "Enter search mode"
+            ToolTip.visible: searchModeButton.hovered
+            ToolTip.delay: 800
+        }
         Button {
             id: autocompleteButton
             Layout.fillHeight: true

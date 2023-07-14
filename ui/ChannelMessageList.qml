@@ -57,6 +57,21 @@ ListView {
         messageModel: modelData
     }
 
+    Connections {
+        target: lith.search
+        function onHighlightedMatchIndexChanged() {
+            if (!lith.search.highlightedLine)
+                return
+            for(var i = 0; i < listView.model.count(); i++) {
+                var modelLine = listView.model.at(i)
+                if (lith.search.highlightedLine === modelLine) {
+                    listView.positionViewAtIndex(i, ListView.Contain)
+                    break
+                }
+            }
+        }
+    }
+
     ChannelMessageActionMenu {
         id: channelMessageActionMenu
     }

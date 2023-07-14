@@ -23,6 +23,7 @@
 #include "protocol.h"
 #include "datamodel.h"
 #include "windowhelper.h"
+#include "search.h"
 #include "util/nicklistfilter.h"
 #include "util/messagelistfilter.h"
 
@@ -60,6 +61,7 @@ private:
     Q_PROPERTY(int selectedBufferIndex READ selectedBufferIndex WRITE selectedBufferIndexSet NOTIFY selectedBufferChanged)
     Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
     Q_PROPERTY(QAbstractItemModel* logger READ logger CONSTANT)
+    Q_PROPERTY(Search* search READ search CONSTANT)
 
 public:
     static Lith *_self;
@@ -74,6 +76,7 @@ public:
     void networkErrorStringSet(const QString &o);
 
     QAbstractItemModel *logger();
+    Search* search();
 
     void log(Logger::EventType type, QString summary) {
         m_logger->log(Logger::Event{type, summary});
@@ -158,6 +161,7 @@ private:
     MessageFilterList *m_messageBufferList { nullptr };
     Logger *m_logger { nullptr };
     FilteredLogger *m_filteredLogger { nullptr };
+    Search *m_search { nullptr };
     int m_selectedBufferIndex { -1 };
 
     QString m_lastNetworkError {};

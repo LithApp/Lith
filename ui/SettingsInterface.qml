@@ -35,6 +35,7 @@ ScrollView {
         settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
         settings.showGalleryButton = showGalleryButtonCheckbox.checked
         settings.showSendButton = showSendButtonCheckbox.checked
+        settings.showSearchButton = showSearchButtonCheckbox.checked
         settings.baseFontSize = baseFontSizeSpinBox.value
         settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
         settings.timestampFormat = timestampFormatInput.text
@@ -62,6 +63,7 @@ ScrollView {
         showAutocompleteButtonCheckbox.checked = settings.showAutocompleteButton
         showGalleryButtonCheckbox.checked = settings.showGalleryButton
         showSendButtonCheckbox.checked = settings.showSendButton
+        showSearchButtonCheckbox.checked = settings.showSearchButton
         baseFontSizeSpinBox.value = settings.baseFontSize
         nickCutoffThresholdSpinBox.value = settings.nickCutoffThreshold
         timestampFormatInput.text = settings.timestampFormat
@@ -219,6 +221,12 @@ ScrollView {
                 id: showSendButtonCheckbox
                 summary: qsTr("Show send button")
                 checked: settings.showSendButton
+            }
+
+            Fields.Boolean {
+                id: showSearchButtonCheckbox
+                summary: qsTr("Show search button")
+                checked: settings.showSearchButton
             }
 
             ////////////////////////// HOTLIST

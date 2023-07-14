@@ -31,6 +31,10 @@ ColumnLayout {
     property alias messageArea: messageArea
     property alias scrollToBottomButtonPosition: channelMessageList.scrollToBottomButtonPosition
 
+    function showSearchBar() {
+        searchBar.visible = true
+    }
+
     ChannelHeader {
         id: channelHeader
         Layout.fillWidth: true
@@ -97,10 +101,22 @@ ColumnLayout {
         Layout.preferredHeight: visible ? implicitHeight : 0
     }
 
+    SearchBar {
+        id: searchBar
+        visible: false
+        Layout.fillWidth: true
+        onCurrentMessageIndexChanged: {
+            if (searchBar.currentMessageIndex >= 0)
+                channelMessageList.positionViewAtIndex(searchBar.currentMessageIndex, ListView.Contain)
+        }
+    }
+
     ChannelInputBar {
         id: inputBar
+        visible: !searchBar.visible
         Layout.fillWidth: true
         Layout.preferredHeight: implicitHeight
+        onRequestSearchBar: searchBar.visible = true
     }
 
     FileDialog {

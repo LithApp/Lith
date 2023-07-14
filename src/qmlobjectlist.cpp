@@ -27,6 +27,7 @@ void QmlObjectList::prepend(QObject *object) {
     beginInsertRows(QModelIndex(), 0, 0);
     mData.prepend(QObjectPointer(object));
     endInsertRows();
+    emit countChanged();
 }
 
 void QmlObjectList::append(QObject *object)
@@ -42,6 +43,7 @@ bool QmlObjectList::insert(const int& i, QObject* object)
     beginInsertRows(QModelIndex(), i, i);
     mData.insert(i, QObjectPointer(object));
     endInsertRows();
+    emit countChanged();
     return true;
 }
 
@@ -58,6 +60,7 @@ bool QmlObjectList::removeRow(int row, const QModelIndex &parent)
     beginRemoveRows(parent, first, last);
     mData.removeAt(row);
     endRemoveRows();
+    emit countChanged();
     return true;
 }
 
@@ -112,5 +115,6 @@ void QmlObjectList::clear() {
     beginResetModel();
     mData.clear();
     endResetModel();
+    emit countChanged();
 }
 
