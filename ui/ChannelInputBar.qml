@@ -80,6 +80,7 @@ Item {
             id: channelTextInput
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.minimumWidth: 64
         }
 
         Button {

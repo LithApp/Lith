@@ -70,16 +70,20 @@ Rectangle {
             Layout.fillHeight: true
             spacing: 0
             RowLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 spacing: 0
                 Item {
                     // Wrapper around the title so recording info can be placed next to it and title still stays in center
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    implicitWidth: bufferNameLabel.implicitWidth
+                    implicitHeight: bufferNameLabel.implicitHeight
 
                     Label {
                         id: bufferNameLabel
                         // First part is calculated as half of the area the parent item got, second part is putting the label to the right side of its parent (when space runs out)
-                        x: Math.min((parent.width - width + replayInfoLayout.width) / 2, parent.width - width)
+                        x: Math.min((parent.width - width + replayInfoLayout.width) / 2, parent.width - width - 6)
                         color: palette.text
                         font.bold: true
                         text: lith.selectedBuffer ? lith.selectedBuffer.name : "Lith"
@@ -168,13 +172,13 @@ Rectangle {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: height
             flat: true
-            visible: lith.status !== Lith.UNCONFIGURED
             enabled: lith.status === Lith.CONNECTED
             onClicked: {
                 nickDrawer.visible = !nickDrawer.visible
                 if(!window.platform.mobile) nickDrawer.open()
             }
-            icon.source: lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+currentTheme+"/transfer.png" :
+            icon.source: lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
+                         lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+currentTheme+"/transfer.png" :
                          lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+currentTheme+"/smile.png" :
                          lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+currentTheme+"/no-wifi.png" :
                          lith.status === Lith.ERROR        ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
