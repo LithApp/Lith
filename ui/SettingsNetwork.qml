@@ -205,6 +205,196 @@ ScrollView {
                 checked: settings.enableReplayRecording
                 summary: qsTr("Record network data")
                 details: qsTr("(Developer only, restart required)\nLith will record all data coming from WeeChat for debugging purposes. Personal data such as message contents and encryption negotiation will be logged.")
+                columnComponent: ListView {
+                    id: recordingsListView
+                    Layout.fillWidth: true
+                    model: lith.networkProxy.existingRecordings
+                    implicitHeight: contentHeight
+                    spacing: -1
+
+                    Label {
+                        opacity: 0.5
+                        text: qsTr("There were no present recordings on startup.")
+                        visible: recordingsListView.count === 0
+                        anchors.centerIn: parent
+                    }
+
+                    header: RowLayout {
+                        visible: recordingsListView.count > 0
+                        spacing: 0
+                        Label {
+                            Layout.leftMargin: 6
+                            Layout.topMargin: 6
+                            Layout.bottomMargin: 6
+                            text: "Slot"
+                            Layout.minimumWidth: font.pixelSize * 3
+                            Layout.maximumWidth: Layout.minimumWidth
+                            horizontalAlignment: Label.AlignHCenter
+                        }
+                        Label {
+                            text: "Started"
+                            Layout.minimumWidth: font.pixelSize * 9
+                            Layout.maximumWidth: Layout.minimumWidth
+                            horizontalAlignment: Label.AlignHCenter
+                        }
+                        Label {
+                            text: "Size"
+                            Layout.minimumWidth: font.pixelSize * 6
+                            Layout.maximumWidth: Layout.minimumWidth
+                            horizontalAlignment: Label.AlignHCenter
+                        }
+                        Label {
+                            text: "Version"
+                            Layout.minimumWidth: font.pixelSize * 3
+                            Layout.maximumWidth: Layout.minimumWidth
+                            horizontalAlignment: Label.AlignHCenter
+                        }
+                        Item {
+                            Layout.fillWidth: true
+                        }
+                    }
+
+                    delegate: Rectangle {
+                        required property var modelData
+                        required property int index
+                        property bool beingRecorded: {
+                            if (lith.networkProxy.recording) {
+                                if (lith.networkProxy.slot === modelData.number)
+                                    return true
+                            }
+                            return false
+                        }
+
+                        width: ListView.view.width
+                        implicitHeight: recordingLayout.implicitHeight + recordingLayout.y * 2
+                        color: index % 2 ? palette.alternateBase : palette.base
+                        border.color: palette.light
+                        border.width: 1
+                        RowLayout {
+                            id: recordingLayout
+                            y: 6
+                            x: 6
+                            width: parent.width - x * 2
+                            height: parent.height - y * 2
+                            spacing: 0
+                            Label {
+                                text: modelData.number
+                                font.weight: 99
+                                Layout.minimumWidth: font.pixelSize * 3
+                                Layout.maximumWidth: Layout.minimumWidth
+                                horizontalAlignment: Label.AlignHCenter
+                            }
+                            Label {
+                                visible: beingRecorded
+                                text: qsTr("This slot is currently being overwritten.")
+                                opacity: 0.8
+                                Layout.minimumWidth: font.pixelSize * 15
+                                Layout.maximumWidth: Layout.minimumWidth
+                                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                            }
+                            Label {
+                                visible: !beingRecorded
+                                text: Qt.formatDateTime(modelData.createdAt)
+                                Layout.minimumWidth: font.pixelSize * 9
+                                Layout.maximumWidth: Layout.minimumWidth
+                                horizontalAlignment: Label.AlignHCenter
+                            }
+                            Label {
+                                visible: !beingRecorded
+                                text: "%1 KiB".arg(Number(modelData.size / 1024.0).toLocaleString(Qt.locale(), "f", 0))
+                                Layout.minimumWidth: font.pixelSize * 6
+                                Layout.maximumWidth: Layout.minimumWidth
+                                horizontalAlignment: Label.AlignHCenter
+                            }
+                            Label {
+                                text: beingRecorded ? lith.networkProxy.currentReplayVersion : modelData.version
+                                Layout.minimumWidth: font.pixelSize * 3
+                                Layout.maximumWidth: Layout.minimumWidth
+                                horizontalAlignment: Label.AlignHCenter
+                            }
+                            Item {
+                                Layout.fillWidth: true
+                            }
+                            Button {
+                                id: saveToDocumentsButton
+                                visible: !beingRecorded
+                                minimumWidth: 0
+                                font.pointSize: lith.settings.baseFontSize * 0.875
+                                horizontalPadding: 8
+                                verticalPadding: 2
+                                text: "Save to\nDocuments"
+                                onClicked: {
+                                    var result = modelData.store()
+                                    recordingResultPopupLabel.text = result
+                                }
+                            }
+                            Button {
+                                id: deleteRecordingButton
+                                visible: !beingRecorded
+                                Layout.leftMargin: 4
+                                minimumWidth: 0
+                                Layout.preferredHeight: Math.max(deleteRecordingButton.implicitHeight, saveToDocumentsButton.implicitHeight)
+                                font.pointSize: lith.settings.baseFontSize * 0.875
+                                horizontalPadding: 8
+                                verticalPadding: 2
+                                text: "Delete"
+                                onClicked: {
+                                    var result = modelData.erase()
+                                    recordingResultPopupLabel.text = result
+                                }
+                            }
+                        }
+                    }
+
+                    Popup {
+                        id: recordingResultPopup
+                        anchors.centerIn: parent
+                        width: recordingResultPopupRectangle.width
+                        height: recordingResultPopupRectangle.height
+                        modal: true
+                        Overlay.modal: Rectangle {
+                            color: colorUtils.setAlpha(palette.window, 0.7)
+                        }
+                        onVisibleChanged: {
+                            if (visible)
+                                recordingResultPopupTimer.start()
+                            else
+                                recordingResultPopupLabel.text = ""
+                        }
+                        Rectangle {
+                            id: recordingResultPopupRectangle
+                            color: palette.window
+                            border.color: colorUtils.mixColors(palette.text, palette.window, 0.3)
+                            border.width: 1
+                            implicitWidth: recordingResultPopupLabel.width + 2 * recordingResultPopupLabel.x
+                            implicitHeight: recordingResultPopupLabel.implicitHeight + 2 * recordingResultPopupLabel.y
+                            Label {
+                                id: recordingResultPopupLabel
+                                x: 18
+                                y: 12
+                                width: Math.min(mainView.width, font.pixelSize * 32)
+                                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                                onTextChanged: (text) => {
+                                    if (text.length > 0)
+                                        recordingResultPopup.visible = true
+                                }
+                                onLinkActivated: (link) => {
+                                    clipboardProxy.setText(link)
+                                    // oof, this is not nice
+                                    text += "<br><font color=\"%1\">%2</font>".arg(colorUtils.mixColors(palette.text, palette.window, 0.6)).arg(qsTr("Path copied to clipboard."))
+                                }
+                            }
+                        }
+                        Timer {
+                            id: recordingResultPopupTimer
+                            interval: 10000
+                            running: false
+                            onTriggered: {
+                                recordingResultPopup.visible = false
+                            }
+                        }
+                    }
+                }
             }
             Item {
                 Layout.fillHeight: true

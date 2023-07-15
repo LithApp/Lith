@@ -5,9 +5,10 @@ import QtQuick.Templates 2.15 as T
 T.Button {
     id: control
 
+    property real minimumWidth: text.length > 0 ? 100 : 0
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding,
-                            (text.length > 0 ? 100 : 0))
+                            minimumWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 

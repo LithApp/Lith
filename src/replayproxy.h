@@ -7,11 +7,36 @@
 #include <QTimer>
 
 class Weechat;
+
+class ReplayRecordingInfo : public QObject {
+    Q_OBJECT
+    PROPERTY_CONSTANT(int, version)
+    PROPERTY_CONSTANT(QDateTime, createdAt)
+    PROPERTY_CONSTANT(int, number, -1)
+    PROPERTY_CONSTANT(qreal, size, -1)
+    PROPERTY_CONSTANT(QString, absolutePath)
+public:
+    ReplayRecordingInfo(int version, QDateTime createdAt, int number, size_t size, const QString &absolutePath, QObject* parent = nullptr)
+        : QObject(parent)
+        , m_version(version)
+        , m_createdAt(createdAt)
+        , m_number(number)
+        , m_size(size)
+        , m_absolutePath(absolutePath)
+    {
+
+    }
+    Q_INVOKABLE QString erase();
+    Q_INVOKABLE QString store();
+};
+
 class BaseNetworkProxy : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int currentReplayVersion READ currentReplayVersionGet CONSTANT)
     Q_PROPERTY(bool recording READ recording NOTIFY recordingChanged)
     Q_PROPERTY(bool replaying READ replaying NOTIFY replayingChanged)
+    PROPERTY_READONLY(QList<ReplayRecordingInfo*>, existingRecordings)
 public:
     inline static const int currentReplayVersion = 1;
     inline static const int maxLogFiles = 10;
@@ -29,6 +54,7 @@ public:
 
     Mode mode() const;
 
+    int currentReplayVersionGet() const { return currentReplayVersion; }
     virtual bool recording() const { return false; }
     virtual bool replaying() const { return false; }
 

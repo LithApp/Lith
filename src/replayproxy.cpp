@@ -35,7 +35,38 @@ BaseNetworkProxy::BaseNetworkProxy(QObject *parent, Mode mode)
     : QObject(parent)
     , m_mode(mode)
 {
-
+    QDir dir(getLogDirPath());
+    if (dir.exists()) {
+        auto entriesByTime = dir.entryInfoList(QStringList{logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
+        for (const auto& entry : entriesByTime) {
+            auto justTheNumber = entry.fileName();
+            justTheNumber.replace("LithReplay", "");
+            justTheNumber.replace(".dat", "");
+            QFile entryFile(entry.absoluteFilePath());
+            if (entryFile.open(QIODevice::ReadOnly)) {
+                QDataStream stream(&entryFile);
+                int version = -1;
+                QDateTime creationTime;
+                stream >> version >> creationTime;
+                if (stream.status() == QDataStream::Ok) {
+                    auto record = new ReplayRecordingInfo(version, creationTime, justTheNumber.toInt(), entry.size(), entry.absoluteFilePath(), this);
+                    m_existingRecordings.append(record);
+                    connect(record, &QObject::destroyed, this, [this, record]() {
+                        if (m_existingRecordings.contains(record)) {
+                            m_existingRecordings.removeAll(record);
+                            emit existingRecordingsChanged();
+                        }
+                    });
+                }
+                else {
+                    m_existingRecordings.append(new ReplayRecordingInfo(1, QDateTime(), -1, entry.size(), entry.absoluteFilePath(), this));
+                }
+            }
+            else {
+                m_existingRecordings.append(new ReplayRecordingInfo(1, QDateTime(), -1, entry.size(), entry.absoluteFilePath(), this));
+            }
+        }
+    }
 }
 
 void BaseNetworkProxy::printHelpAndQuitApp() {
@@ -226,4 +257,24 @@ RecordProxy::RecordProxy(QObject *parent)
 
     m_logDataStream << currentReplayVersion;
     m_logDataStream << m_creationTime;
+}
+
+QString ReplayRecordingInfo::erase() {
+    QFile f(m_absolutePath);
+    if (f.remove()) {
+        deleteLater();
+        return QString("File \"%1\" was successfully erased.").arg(m_absolutePath);
+    }
+    return QString("Could not erase file \"%1\": %2").arg(m_absolutePath).arg(f.errorString());
+}
+
+QString ReplayRecordingInfo::store() {
+    QFile f(m_absolutePath);
+    auto docPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QDir docDir(docPath);
+    auto newName = QString("LithReplay%1_%2.dat").arg(m_number).arg(QDateTime::currentDateTime().toString("yyMMdd_hhmmss"));
+    auto absoluteNewPath = docDir.absoluteFilePath(newName);
+    if (f.copy(absoluteNewPath))
+        return QString("Replay %1 was copied to<br>\"<a href=\"%2\">%2</a>\".").arg(m_number).arg(absoluteNewPath);
+    return QString("Could not save replay %1 to path \"%2\": %3").arg(m_number).arg(absoluteNewPath).arg(f.errorString());
 }
