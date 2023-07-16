@@ -278,7 +278,7 @@ Dialog {
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
             onWheel: (wheel) => {
                 if (wheel.modifiers & Qt.ShiftModifier) {
-                    delegateImage.rotation += wheel.angleDelta.y / 12
+                    delegateImage.rotation += (wheel.inverted ? wheel.angleDelta.x : wheel.angleDelta.y) / 12
                 }
                 else {
                     delegateImage.scale += wheel.angleDelta.y * 0.002
