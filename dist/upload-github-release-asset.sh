@@ -44,6 +44,12 @@ AUTH="Authorization: token $github_api_token"
 WGET_ARGS="--content-disposition --auth-no-challenge --no-cookie"
 CURL_ARGS="-LJO#"
 
+if [[ $tag == *.0 ]]; then
+    IS_PRERELEASE="false"
+else
+    IS_PRERELEASE="true"
+fi
+
 if [[ "$tag" == 'LATEST' ]]; then
   GH_TAGS="$GH_REPO/releases/latest"
 fi
@@ -56,7 +62,7 @@ fi
 # Validate token.
 curl -o /dev/null -sH "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or network issue!";  exit 1; }
 
-curl -d '{ "tag_name": "'$tag'", "target_commitish": "", "name": "'$tag'", "body": "'$tag'", "draft": false, "prerelease": false }' -H "Content-Type: application/json" -X POST -o /dev/null -sH "$AUTH" $GH_RELEASES
+curl -d '{ "tag_name": "'$tag'", "target_commitish": "", "name": "'$tag'", "body": "'$tag'", "draft": false, "prerelease": '$IS_PRERELEASE' }' -H "Content-Type: application/json" -X POST -o /dev/null -sH "$AUTH" $GH_RELEASES
 
 # Read asset tags.
 response=$(curl -sH "$AUTH" $GH_TAGS)
