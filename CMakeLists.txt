@@ -8,9 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-set(REVERSE_DOMAIN_IDENTIFIER cz.rtinbriza.ma)
-set(IOS_DEVELOPMENT_TEAM_ID "")
-set(VERSION "0.0.0")
+set(VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
 set(PROJECT_VERSION ${VERSION})
 
 string(REPLACE "." ";" VERSION_LIST ${VERSION})
