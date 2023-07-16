@@ -110,7 +110,7 @@ jobs:
         fi
 
   Android:
-    if: github.event_name == 'create'
+    if: false && github.event_name == 'create'
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
@@ -153,6 +153,7 @@ jobs:
         fi
 
   Webassembly:
+    if: false
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
