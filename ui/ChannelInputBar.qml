@@ -79,10 +79,19 @@ Item {
             ToolTip.delay: 800
         }
 
-        ChannelTextInput {
-            id: channelTextInput
+        // First part of a hack to show more lines of text when writing a long message
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            ChannelTextInput {
+                id: channelTextInput
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+                height: parent.height
+            }
         }
 
         Button {
