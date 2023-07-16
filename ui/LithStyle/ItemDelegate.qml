@@ -10,7 +10,7 @@ T.ItemDelegate {
                              implicitContentHeight + topPadding + bottomPadding,
                              implicitIndicatorHeight + topPadding + bottomPadding)
 
-    padding: 8
+    padding: 10
     spacing: 6
 
     icon.width: 24
@@ -22,11 +22,12 @@ T.ItemDelegate {
         text: control.text
         font: control.font
         color: control.checked ? palette.highlightedText : palette.text
+        size: Label.Large
     }
 
     background: Rectangle {
-        implicitWidth: 100
-        implicitHeight: 40
+        implicitWidth: 64
+        implicitHeight: 32
         color: control.checked     ? colorUtils.setAlpha(palette.highlight, 0.7) :
                control.highlighted ? colorUtils.setAlpha(palette.highlight, 0.6) :
                control.pressed     ? colorUtils.setAlpha(palette.text, 0.1) :

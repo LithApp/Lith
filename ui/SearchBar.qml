@@ -39,11 +39,12 @@ Item {
         y: 1
         x: 5
         width: parent.width - 2 * x
-        spacing: 6
+        height: parent.height - 1
+        spacing: 3
         Button {
             id: searchModeButton
-            // This is a small hack to make this button appear in the same place as its input bar counterpart
-            Layout.preferredHeight: implicitHeight - 1
+            Layout.preferredHeight: implicitHeight - 2
+            Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
             focusPolicy: Qt.NoFocus
             flat: true
@@ -68,6 +69,7 @@ Item {
         TextField {
             id: termField
             Layout.fillWidth: true
+            Layout.horizontalStretchFactor: 2
             text: search.term
             onTextEdited: search.term = text
             rightPadding: clearTermButton.width + padding
@@ -98,21 +100,53 @@ Item {
         }
 
         ColumnLayout {
+            id: resultsLayout
+            Layout.fillWidth: true
+            Layout.horizontalStretchFactor: 1
+            TextMetrics {
+                id: resultsMetrics
+                text: "Total: 123 lines"
+                font: totalCountLabel.font
+            }
+
             spacing: 0
             Label {
+                id: totalCountLabel
+                visible: resultsMetrics.width * 3.5 < rootLayout.width
                 size: Label.Small
                 text: qsTr("Total: %1 lines").arg(lith.selectedBuffer ? lith.selectedBuffer.lines.count : "N/A")
                 opacity: 0.7
             }
             Label {
                 size: Label.Small
+                visible: resultsMetrics.width * 3.5 < rootLayout.width
                 text: search.term.length === 0 ? qsTr("Start typing to search")
                                                : search.highlightedMatchIndex >= 0 ? qsTr("Showing match %1 of %2").arg(search.highlightedMatchIndex + 1).arg(search.matches.length)
                                                                                    : qsTr("Matched: %1 lines").arg(search.matches.length)
             }
+            Label {
+                Layout.alignment: Qt.AlignHCenter
+                visible: resultsMetrics.width * 3.5 >= rootLayout.width
+                opacity: search.term.length === 0 || search.highlightedMatchIndex < 0 ? 0.7 : 1
+                text: search.term.length === 0 || search.highlightedMatchIndex < 0 ? "N/A" : search.highlightedMatchIndex + 1
+            }
+            Rectangle {
+                Layout.alignment: Qt.AlignHCenter
+                visible: resultsMetrics.width * 3.5 >= rootLayout.width && search.term.length !== 0
+                width: totalCountLabel.font.pixelSize
+                height: 1
+                color: totalCountLabel.color
+            }
+            Label {
+                Layout.alignment: Qt.AlignHCenter
+                visible: resultsMetrics.width * 3.5 >= rootLayout.width && search.term.length !== 0
+                text: search.matches.length
+            }
         }
         Button {
             icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
+            Layout.preferredHeight: implicitHeight - 2
+            Layout.minimumWidth: height
             flat: true
             focusPolicy: Qt.NoFocus
             onClicked: search.highlightPrevious()
@@ -120,6 +154,8 @@ Item {
         }
         Button {
             icon.source: "qrc:/navigation/"+currentTheme+"/up-arrow.png"
+            Layout.preferredHeight: implicitHeight - 2
+            Layout.minimumWidth: height
             flat: true
             focusPolicy: Qt.NoFocus
             onClicked: search.highlightNext()

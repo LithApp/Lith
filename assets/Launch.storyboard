@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lith" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Lith" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
                                 <rect key="frame" x="0.0" y="54" width="390" height="13"/>
                                 <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="11"/>
                                 <nil key="textColor"/>
@@ -32,7 +32,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Ou-Hu-Ygl">
-                                <rect key="frame" x="0.0" y="769" width="390" height="1"/>
+                                <rect key="frame" x="0.0" y="770" width="390" height="1"/>
                                 <color key="backgroundColor" systemColor="systemGrayColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="wWa-n6-6jg"/>
@@ -47,10 +47,10 @@
                             <constraint firstItem="AyF-Ms-kbw" firstAttribute="right" secondItem="Ze5-6b-2t3" secondAttribute="right" id="IHc-YI-cDW"/>
                             <constraint firstItem="3Ou-Hu-Ygl" firstAttribute="left" secondItem="Ze5-6b-2t3" secondAttribute="left" id="NcW-31-B42"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="GJd-Yh-RWb" secondAttribute="centerX" id="Q3B-4B-g5h"/>
-                            <constraint firstItem="3Ou-Hu-Ygl" firstAttribute="bottom" secondItem="Bcu-3y-fUS" secondAttribute="bottom" constant="-40" id="chL-zv-a1e"/>
+                            <constraint firstItem="3Ou-Hu-Ygl" firstAttribute="bottom" secondItem="Bcu-3y-fUS" secondAttribute="bottom" constant="-39" id="chL-zv-a1e"/>
                             <constraint firstItem="3Ou-Hu-Ygl" firstAttribute="right" secondItem="Ze5-6b-2t3" secondAttribute="right" id="mB6-9D-IQg"/>
                             <constraint firstItem="GJd-Yh-RWb" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" symbolic="YES" id="x7j-FC-K8j"/>
-                            <constraint firstItem="AyF-Ms-kbw" firstAttribute="top" secondItem="GJd-Yh-RWb" secondAttribute="bottom" constant="32" id="yHi-8C-6jy"/>
+                            <constraint firstItem="AyF-Ms-kbw" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="52" id="yHi-8C-6jy"/>
                         </constraints>
                     </view>
                 </viewController>

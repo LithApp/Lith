@@ -12,8 +12,7 @@ T.Button {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    horizontalPadding: text.length > 0 ? 12 : 6
-    verticalPadding: text.length > 0 ? 12 : 6
+    padding: 3
     spacing: 6
 
     icon.width: 28
@@ -21,17 +20,40 @@ T.Button {
 
     font.pointSize: lith.settings.baseFontSize
 
-    contentItem: IconLabel {
-        spacing: control.spacing
-        mirrored: control.mirrored
-        display: control.display
+    contentItem: Item {
         opacity: control.enabled ? 1.0 : 0.5
 
-        icon: control.icon
-        text: control.text
-        font: control.font
-        color: control.checked || control.highlighted ? control.palette.brightText :
-               control.flat && !control.down ? (control.visualFocus ? control.palette.highlight : control.palette.windowText) : control.palette.buttonText
+        implicitHeight: {
+            const iconHeight = control.icon.height + control.topPadding + control.bottomPadding
+            const labelHeight = buttonLabel.implicitHeight + control.topPadding + control.bottomPadding
+            return Math.max(iconHeight, labelHeight)
+        }
+        implicitWidth: (control.icon.source.length > 0 ? control.icon.width + control.spacing + control.leftPadding + control.rightPadding : 0) + buttonLabel.implicitWidth
+
+        Image {
+            id: buttonIcon
+            source: control.icon.source
+
+            x: control.leftPadding
+            height: parent.height - control.topPadding - control.bottomPadding
+            width: height
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Label {
+            id: buttonLabel
+
+            padding: 3
+            x: control.icon.source.length > 0 ? buttonIcon.width + control.spacing + 12 : 0
+            anchors.verticalCenter: parent.verticalCenter
+            width: parent.width - x
+            horizontalAlignment: Label.AlignHCenter
+
+            text: control.text
+            font: control.font
+            color: control.checked || control.highlighted ? control.palette.brightText :
+                   control.flat && !control.down ? (control.visualFocus ? control.palette.highlight : control.palette.windowText) : control.palette.buttonText
+        }
     }
 
     background: Rectangle {

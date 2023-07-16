@@ -55,7 +55,7 @@ Rectangle {
         Button {
             id: bufferListButton
             focusPolicy: Qt.NoFocus
-            Layout.preferredWidth: height
+            Layout.preferredWidth: implicitHeight
             flat: true
             icon.source: "qrc:/navigation/"+currentTheme+"/menu.png"
             onClicked: {

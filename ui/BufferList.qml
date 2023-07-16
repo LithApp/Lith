@@ -153,9 +153,10 @@ Rectangle {
             Rectangle {
                 id: numberIndicator
                 x: bufferDelegate.horizontalPadding
-                height: parent.height - 16
+                height: parent.height - 12
                 width: height
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenterOffset: 1
                 color: buffer && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
                 radius: 2
                 Label {
@@ -173,7 +174,7 @@ Rectangle {
                 color: modelData.hotMessages ? colorUtils.darken(palette.highlight, 1.3) : palette.alternateBase
                 border.color: palette.text
                 border.width: 1
-                height: parent.height - 16
+                height: parent.height - 12
                 width: Math.max(height, hotListItemCount.width + 6)
                 anchors.verticalCenter: bufferDelegate.verticalCenter
                 anchors.right: bufferDelegate.right

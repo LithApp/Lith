@@ -42,13 +42,15 @@ Item {
         id: inputBarLayout
         y: 1
         x: 5
-        height: parent.height
         width: parent.width - 2 * x
+        height: parent.height
 
-        spacing: 6
+        spacing: 3
         Button {
             id: searchModeButton
-            implicitWidth: implicitHeight
+            Layout.preferredHeight: implicitHeight - 2
+            Layout.fillHeight: true
+            Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
             focusPolicy: Qt.NoFocus
             flat: true
@@ -62,6 +64,7 @@ Item {
         }
         Button {
             id: autocompleteButton
+            Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
@@ -80,12 +83,12 @@ Item {
             id: channelTextInput
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.minimumWidth: 64
         }
 
         Button {
             id: imageButton
             visible: settings.showGalleryButton
+            Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
             property bool isBusy: uploader.working
@@ -109,6 +112,7 @@ Item {
 
         Button {
             id: sendButton
+            Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
