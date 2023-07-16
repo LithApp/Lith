@@ -232,6 +232,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
         "-framework UIKit"
         -F/System/Library/Frameworks
     )
+
+    # This is a workaround, Qt doesn't include this plugin automatically for us
+    qt_import_plugins(Lith INCLUDE Qt::QIosOptionalPlugin_NSPhotoLibraryPlugin)
 endif()
 
 install(TARGETS Lith LithUI LithStyle
