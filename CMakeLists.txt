@@ -9,12 +9,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 set(VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
-set(PROJECT_VERSION ${VERSION})
 
-string(REPLACE "." ";" VERSION_LIST ${VERSION})
+if (VERSION)
+    set(PROJECT_VERSION ${VERSION})
+else()
+    message(WARNING "Version passed to CMake was empty, this may have been done on accident")
+    set(PROJECT_VERSION "0.0.0")
+endif()
+
+string(REPLACE "." ";" VERSION_LIST ${PROJECT_VERSION})
 list(GET VERSION_LIST 0 PROJECT_VERSION_MAJOR)
 list(GET VERSION_LIST 1 PROJECT_VERSION_MINOR)
 list(GET VERSION_LIST 2 PROJECT_VERSION_PATCH)
+
 
 find_package(Qt6 COMPONENTS Widgets Gui Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -194,8 +201,8 @@ set_target_properties(Lith PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE_GUI_IDENTIFIER cz.rtinbriza.ma.Lith
     MACOSX_BUNDLE_BUNDLE_NAME Lith
-    MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/dist/ios/Info.plist.in"
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_WEAK YES
     XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER cz.rtinbriza.ma.Lith
