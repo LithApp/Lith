@@ -244,6 +244,7 @@ jobs:
       run: |
         mkdir build
         cd build
+        export TAG_NAME=$(./dist/get-tag-name.sh)
         export CMAKE_PREFIX_PATH="$Qt6_DIR"/lib/cmake
         cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$TAG_NAME
         make -j5
@@ -316,6 +317,7 @@ jobs:
         modules: ${{env.QT_MODULES}}
     - name: Build the application
       run: |
+        export TAG_NAME=$(./dist/get-tag-name.sh)
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
     - name: Generate .dmg
       run: |
