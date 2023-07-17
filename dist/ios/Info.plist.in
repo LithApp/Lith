@@ -36,6 +36,10 @@
         <string>Used to upload photos to the chat</string>
         <key>NSPhotoLibraryUsageDescription</key>
         <string>Used to upload photos to the chat</string>
+        <key>UIFileSharingEnabled</key>
+        <true/>
+        <key>LSSupportsOpeningDocumentsInPlace</key>
+        <true/>
         <key>ITSAppUsesNonExemptEncryption</key>
         <false/>
         <key>UISupportedInterfaceOrientations</key>
