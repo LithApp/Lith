@@ -158,18 +158,18 @@ qt_add_executable(Lith
 )
 
 qt_add_qml_module(LithUI
+    STATIC
     URI LithUI
     VERSION 1.0
     QML_FILES ${LITH_QML}
     OUTPUT_DIRECTORY LithUI
-    NO_PLUGIN
 )
 qt_add_qml_module(LithStyle
+    STATIC
     URI LithStyle
     VERSION 1.0
     QML_FILES ${LITHSTYLE_QML}
     OUTPUT_DIRECTORY LithStyle
-    NO_PLUGIN
 )
 
 target_compile_definitions(Lith PRIVATE
@@ -180,8 +180,8 @@ target_include_directories(Lith PRIVATE
 )
 
 target_link_libraries(Lith PRIVATE
-    LithStyle
-    LithUI
+    LithStyleplugin
+    LithUIplugin
     Qt::Gui
     Qt::GuiPrivate
     Qt::Multimedia

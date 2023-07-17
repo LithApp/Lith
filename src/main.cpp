@@ -36,6 +36,10 @@
 #include <QMetaType>
 #include <QIcon>
 
+#include <QtQml/qqmlextensionplugin.h>
+Q_IMPORT_QML_PLUGIN(LithUIPlugin)
+Q_IMPORT_QML_PLUGIN(LithStylePlugin)
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setOrganizationName("Lith");
