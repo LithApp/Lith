@@ -162,12 +162,14 @@ qt_add_qml_module(LithUI
     VERSION 1.0
     QML_FILES ${LITH_QML}
     OUTPUT_DIRECTORY LithUI
+    NO_PLUGIN_OPTIONAL
 )
 qt_add_qml_module(LithStyle
     URI LithStyle
     VERSION 1.0
     QML_FILES ${LITHSTYLE_QML}
     OUTPUT_DIRECTORY LithStyle
+    NO_PLUGIN_OPTIONAL
 )
 
 target_compile_definitions(Lith PRIVATE
