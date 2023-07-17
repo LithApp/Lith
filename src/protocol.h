@@ -19,7 +19,7 @@
 
 #include "common.h"
 
-namespace Protocol {
+namespace WeeChatProtocol {
     using Char = char;
     using Integer = qint32;
     using LongInteger = qint64;
@@ -62,7 +62,7 @@ namespace Protocol {
     FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHTML);
 };
 
-Q_DECLARE_METATYPE(Protocol::HData);
-Q_DECLARE_METATYPE(Protocol::HData*);
+Q_DECLARE_METATYPE(WeeChatProtocol::HData);
+Q_DECLARE_METATYPE(WeeChatProtocol::HData*);
 
 #endif // PROTOCOL_H

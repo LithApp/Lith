@@ -149,6 +149,10 @@ BaseNetworkProxy *Lith::networkProxy() {
     return m_networkProxy;
 }
 
+NotificationHandler *Lith::notificationHandler() {
+    return m_notificationHandler;
+}
+
 Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_windowHelper(new WindowHelper(this))
@@ -163,8 +167,12 @@ Lith::Lith(QObject *parent)
     , m_logger(new Logger(this))
     , m_filteredLogger(new FilteredLogger(this))
     , m_search(new Search(this))
+    , m_notificationHandler(new NotificationHandler(this))
 {
 
+    connect(m_notificationHandler, &NotificationHandler::bufferSelected, this, [this](int bufferNumber) {
+        selectBufferNumber(bufferNumber);
+    });
     connect(this, &Lith::selectedBufferChanged, [this](){
         if (selectedBuffer())
             m_selectedBufferNicks->setSourceModel(selectedBuffer()->nicks());
@@ -196,7 +204,17 @@ void Lith::reconnect() {
     QMetaObject::invokeMethod(m_weechat, "restart", Qt::QueuedConnection);
 }
 
-void Lith::handleBufferInitialization(const Protocol::HData &hda) {
+void Lith::selectBufferNumber(int bufferNumber) {
+    for (int i = 0; i < m_buffers->count(); i++) {
+        auto buffer = m_buffers->get<Buffer>(i);
+        if (buffer && buffer->numberGet() == bufferNumber) {
+            selectedBufferSet(buffer);
+            return;
+        }
+    }
+}
+
+void Lith::handleBufferInitialization(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer
         auto ptr = i.pointers.first();
@@ -208,7 +226,7 @@ void Lith::handleBufferInitialization(const Protocol::HData &hda) {
     }
 }
 
-void Lith::handleFirstReceivedLine(const Protocol::HData &hda) {
+void Lith::handleFirstReceivedLine(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer - lines - line - line_data
         auto bufPtr = i.pointers.first();
@@ -231,7 +249,7 @@ void Lith::handleFirstReceivedLine(const Protocol::HData &hda) {
     }
 }
 
-void Lith::handleHotlistInitialization(const Protocol::HData &hda) {
+void Lith::handleHotlistInitialization(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // hotlist
         auto ptr = i.pointers.first();
@@ -250,7 +268,7 @@ void Lith::handleHotlistInitialization(const Protocol::HData &hda) {
     }
 }
 
-void Lith::handleNicklistInitialization(const Protocol::HData &hda) {
+void Lith::handleNicklistInitialization(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer - nicklist_item
         auto bufPtr = i.pointers.first();
@@ -268,7 +286,7 @@ void Lith::handleNicklistInitialization(const Protocol::HData &hda) {
     }
 }
 
-void Lith::handleFetchLines(const Protocol::HData &hda) {
+void Lith::handleFetchLines(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer - lines - line - line_data
         auto bufPtr = i.pointers.first();
@@ -291,7 +309,7 @@ void Lith::handleFetchLines(const Protocol::HData &hda) {
     }
 }
 
-void Lith::handleHotlist(const Protocol::HData &hda) {
+void Lith::handleHotlist(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // hotlist
         auto hlPtr = i.pointers.first();
@@ -314,7 +332,7 @@ void Lith::handleHotlist(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_buffer_opened(const Protocol::HData &hda) {
+void Lith::_buffer_opened(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer
         auto bufPtr = i.pointers.first();
@@ -329,31 +347,31 @@ void Lith::_buffer_opened(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_buffer_type_changed(const Protocol::HData &hda) {
+void Lith::_buffer_type_changed(const WeeChatProtocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
-void Lith::_buffer_moved(const Protocol::HData &hda) {
+void Lith::_buffer_moved(const WeeChatProtocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
-void Lith::_buffer_merged(const Protocol::HData &hda) {
+void Lith::_buffer_merged(const WeeChatProtocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
-void Lith::_buffer_unmerged(const Protocol::HData &hda) {
+void Lith::_buffer_unmerged(const WeeChatProtocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
-void Lith::_buffer_hidden(const Protocol::HData &hda) {
+void Lith::_buffer_hidden(const WeeChatProtocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
-void Lith::_buffer_unhidden(const Protocol::HData &hda) {
+void Lith::_buffer_unhidden(const WeeChatProtocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
 }
 
-void Lith::_buffer_renamed(const Protocol::HData &hda) {
+void Lith::_buffer_renamed(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer
         auto bufPtr = i.pointers.first();
@@ -368,7 +386,7 @@ void Lith::_buffer_renamed(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_buffer_title_changed(const Protocol::HData &hda) {
+void Lith::_buffer_title_changed(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer
         auto bufPtr = i.pointers.first();
@@ -379,7 +397,7 @@ void Lith::_buffer_title_changed(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_buffer_localvar_added(const Protocol::HData &hda) {
+void Lith::_buffer_localvar_added(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer
         auto bufPtr = i.pointers.first();
@@ -391,17 +409,17 @@ void Lith::_buffer_localvar_added(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_buffer_localvar_changed(const Protocol::HData &hda) {
+void Lith::_buffer_localvar_changed(const WeeChatProtocol::HData &hda) {
     // These three seem to be the same
     _buffer_localvar_added(hda);
 }
 
-void Lith::_buffer_localvar_removed(const Protocol::HData &hda) {
+void Lith::_buffer_localvar_removed(const WeeChatProtocol::HData &hda) {
     // These three seem to be the same
     _buffer_localvar_added(hda);
 }
 
-void Lith::_buffer_closing(const Protocol::HData &hda) {
+void Lith::_buffer_closing(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer
         auto bufPtr = i.pointers.first();
@@ -414,12 +432,12 @@ void Lith::_buffer_closing(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_buffer_cleared(const Protocol::HData &hda) {
+void Lith::_buffer_cleared(const WeeChatProtocol::HData &hda) {
     qCritical() << __FUNCTION__ << "is not implemented yet";
     std::cerr << hda.toString().toStdString() << std::endl;
 }
 
-void Lith::_buffer_line_added(const Protocol::HData &hda) {
+void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // line_data
         auto linePtr = i.pointers.last();
@@ -467,7 +485,7 @@ void Lith::_buffer_line_added(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_nicklist(const Protocol::HData &hda) {
+void Lith::_nicklist(const WeeChatProtocol::HData &hda) {
     Buffer *previousBuffer = nullptr;
     for (auto &i : hda.data) {
         // buffer - nicklist_item
@@ -487,7 +505,7 @@ void Lith::_nicklist(const Protocol::HData &hda) {
     }
 }
 
-void Lith::_nicklist_diff(const Protocol::HData &hda) {
+void Lith::_nicklist_diff(const WeeChatProtocol::HData &hda) {
     for (auto &i : hda.data) {
         // buffer - nicklist_item
         auto bufPtr = i.pointers.first();

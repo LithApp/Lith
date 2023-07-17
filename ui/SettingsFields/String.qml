@@ -11,6 +11,7 @@ Base {
     property alias horizontalAlignment: textField.horizontalAlignment
     property alias echoMode: textField.echoMode
     property alias passwordCharacter: textField.passwordCharacter
+    property alias readOnly: textField.readOnly
 
     rowComponent: TextField {
         id: textField

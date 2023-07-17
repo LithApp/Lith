@@ -25,7 +25,7 @@
 #include <QAbstractEventDispatcher>
 #include <QStringLiteral>
 
-namespace Protocol {
+namespace WeeChatProtocol {
 
 template <>
 Char parse(QDataStream &s, bool *ok) {

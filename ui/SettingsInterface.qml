@@ -394,6 +394,27 @@ ScrollView {
                 summary: qsTr("Mute videos by default")
                 checked: settings.showSendButton
             }
+
+            Fields.Header {
+                text: qsTr("Notification settings")
+            }
+
+            Fields.Base {
+                id: deviceTokenField
+                summary: "Device token"
+                rowComponent: Label {
+                    Layout.preferredWidth: settingsPaneLayout.width / 2
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                    text: lith.notificationHandler.deviceToken
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            clipboardProxy.setText(lith.notificationHandler.deviceToken)
+                            deviceTokenField.details = "Copied to clipboard"
+                        }
+                    }
+                }
+            }
         }
     }
 }

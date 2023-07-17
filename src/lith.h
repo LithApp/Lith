@@ -28,6 +28,8 @@
 #include "util/nicklistfilter.h"
 #include "util/messagelistfilter.h"
 
+#include "notificationhandler.h"
+
 #include <QSortFilterProxyModel>
 #include <QPointer>
 
@@ -38,6 +40,7 @@ class Buffer;
 class BufferLine;
 class HotListItem;
 class BaseNetworkProxy;
+class NotificationHandler;
 
 class Lith : public QObject {
     Q_OBJECT
@@ -66,6 +69,7 @@ private:
     Q_PROPERTY(QAbstractItemModel* logger READ logger CONSTANT)
     Q_PROPERTY(Search* search READ search CONSTANT)
     Q_PROPERTY(BaseNetworkProxy* networkProxy READ networkProxy CONSTANT)
+    Q_PROPERTY(NotificationHandler* notificationHandler READ notificationHandler CONSTANT)
 
 public:
     static Lith *_self;
@@ -83,6 +87,7 @@ public:
     QAbstractItemModel *logger();
     Search* search();
     BaseNetworkProxy *networkProxy();
+    NotificationHandler *notificationHandler();
 
     void log(Logger::EventType type, QString summary) {
         m_logger->log(Logger::Event{type, summary});
@@ -107,31 +112,33 @@ public slots:
     void resetData();
     void reconnect();
 
-    void handleBufferInitialization(const Protocol::HData &hda);
-    void handleFirstReceivedLine(const Protocol::HData &hda);
-    void handleHotlistInitialization(const Protocol::HData &hda);
-    void handleNicklistInitialization(const Protocol::HData &hda);
+    void selectBufferNumber(int bufferNumber);
 
-    void handleFetchLines(const Protocol::HData &hda);
-    void handleHotlist(const Protocol::HData &hda);
+    void handleBufferInitialization(const WeeChatProtocol::HData &hda);
+    void handleFirstReceivedLine(const WeeChatProtocol::HData &hda);
+    void handleHotlistInitialization(const WeeChatProtocol::HData &hda);
+    void handleNicklistInitialization(const WeeChatProtocol::HData &hda);
 
-    void _buffer_opened(const Protocol::HData &hda);
-    void _buffer_type_changed(const Protocol::HData &hda);
-    void _buffer_moved(const Protocol::HData &hda);
-    void _buffer_merged(const Protocol::HData &hda);
-    void _buffer_unmerged(const Protocol::HData &hda);
-    void _buffer_hidden(const Protocol::HData &hda);
-    void _buffer_unhidden(const Protocol::HData &hda);
-    void _buffer_renamed(const Protocol::HData &hda);
-    void _buffer_title_changed(const Protocol::HData &hda);
-    void _buffer_localvar_added(const Protocol::HData &hda);
-    void _buffer_localvar_changed(const Protocol::HData &hda);
-    void _buffer_localvar_removed(const Protocol::HData &hda);
-    void _buffer_closing(const Protocol::HData &hda);
-    void _buffer_cleared(const Protocol::HData &hda);
-    void _buffer_line_added(const Protocol::HData &hda);
-    void _nicklist(const Protocol::HData &hda);
-    void _nicklist_diff(const Protocol::HData &hda);
+    void handleFetchLines(const WeeChatProtocol::HData &hda);
+    void handleHotlist(const WeeChatProtocol::HData &hda);
+
+    void _buffer_opened(const WeeChatProtocol::HData &hda);
+    void _buffer_type_changed(const WeeChatProtocol::HData &hda);
+    void _buffer_moved(const WeeChatProtocol::HData &hda);
+    void _buffer_merged(const WeeChatProtocol::HData &hda);
+    void _buffer_unmerged(const WeeChatProtocol::HData &hda);
+    void _buffer_hidden(const WeeChatProtocol::HData &hda);
+    void _buffer_unhidden(const WeeChatProtocol::HData &hda);
+    void _buffer_renamed(const WeeChatProtocol::HData &hda);
+    void _buffer_title_changed(const WeeChatProtocol::HData &hda);
+    void _buffer_localvar_added(const WeeChatProtocol::HData &hda);
+    void _buffer_localvar_changed(const WeeChatProtocol::HData &hda);
+    void _buffer_localvar_removed(const WeeChatProtocol::HData &hda);
+    void _buffer_closing(const WeeChatProtocol::HData &hda);
+    void _buffer_cleared(const WeeChatProtocol::HData &hda);
+    void _buffer_line_added(const WeeChatProtocol::HData &hda);
+    void _nicklist(const WeeChatProtocol::HData &hda);
+    void _nicklist_diff(const WeeChatProtocol::HData &hda);
     void _pong(const FormattedString &str);
 
 public:
@@ -169,6 +176,7 @@ private:
     Logger *m_logger { nullptr };
     FilteredLogger *m_filteredLogger { nullptr };
     Search *m_search { nullptr };
+    NotificationHandler *m_notificationHandler { nullptr };
     int m_selectedBufferIndex { -1 };
 
     QString m_lastNetworkError {};

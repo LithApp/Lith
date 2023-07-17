@@ -56,10 +56,10 @@ int main(int argc, char *argv[])
 
     // Register types
     qRegisterMetaType<StringMap>();
-    qRegisterMetaType<Protocol::HData>();
-    qRegisterMetaType<Protocol::HData*>();
+    qRegisterMetaType<WeeChatProtocol::HData>();
+    qRegisterMetaType<WeeChatProtocol::HData*>();
     qRegisterMetaType<FormattedString>();
-    qRegisterMetaType<Protocol::String>();
+    qRegisterMetaType<WeeChatProtocol::String>();
     qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "formattedString", "");
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString &s){
         if (s.containsHtml()) {

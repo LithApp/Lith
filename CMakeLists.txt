@@ -40,6 +40,8 @@ set(LITH_SOURCES
     src/logger.cpp
     src/logger.h
     src/main.cpp
+    src/notificationhandler.h
+    src/notificationhandler.cpp
     src/protocol.cpp
     src/protocol.h
     src/qmlobjectlist.cpp
@@ -138,6 +140,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(LITH_SOURCES
         ${LITH_SOURCES}
         src/iosclipboard.h src/iosclipboard.mm
+        src/iosnotifications.mm
     )
     set(LITH_RESOURCES
         ${LITH_RESOURCES}
@@ -209,6 +212,7 @@ set_target_properties(Lith PROPERTIES
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_WEAK YES
     XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER cz.rtinbriza.ma.Lith
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME AppIcon
+    XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/dist/ios/notifications.entitlements"
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -232,6 +236,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     target_link_libraries(Lith PRIVATE
         "-framework Foundation"
         "-framework UIKit"
+        "-framework usernotifications"
         -F/System/Library/Frameworks
     )
 

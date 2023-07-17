@@ -279,35 +279,35 @@ void Weechat::fetchLines(pointer_t ptr, int count) {
 void Weechat::onMessageReceived(QByteArray &data) {
     QDataStream s(&data, QIODevice::ReadOnly);
 
-    Protocol::String id = Protocol::parse<Protocol::String>(s);
+    WeeChatProtocol::String id = WeeChatProtocol::parse<WeeChatProtocol::String>(s);
 
     char type[4] = { 0 };
     s.readRawData(type, 3);
 
     if (QString(type) == "hda") {
-        Protocol::HData hda = Protocol::parse<Protocol::HData>(s);
+        WeeChatProtocol::HData hda = WeeChatProtocol::parse<WeeChatProtocol::HData>(s);
 
         if (c_initializationMap.contains(id)) {
             // wtf, why can't I write this as |= ?
             m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap.value(id, UNINITIALIZED));
-            if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData, hda))) {
+            if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
             }
         }
         else {
             auto name = id.split(";").first();
-            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(Protocol::HData, hda))) {
+            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(name));
             }
         }
     }
     else if (QString(type) == "htb") {
-        Protocol::HashTable htb = Protocol::parse<Protocol::HashTable>(s);
+        WeeChatProtocol::HashTable htb = WeeChatProtocol::parse<WeeChatProtocol::HashTable>(s);
 
         onHandshakeAccepted(htb);
     }
     else if (QString(type) == "str") {
-        Protocol::String str = Protocol::parse<Protocol::String>(s);
+        WeeChatProtocol::String str = WeeChatProtocol::parse<WeeChatProtocol::String>(s);
 
         if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const FormattedString&, str))) {
             lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
