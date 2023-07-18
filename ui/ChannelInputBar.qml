@@ -56,6 +56,7 @@ Item {
             flat: true
             visible: settings.showSearchButton
             onClicked: {
+                Window.activeFocusItem.focus = false
                 root.requestSearchBar()
             }
             ToolTip.text: "Enter search mode"

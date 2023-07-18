@@ -12,6 +12,8 @@ Item {
     property int currentIndex: -1
     property int currentMessageIndex: currentIndex >= 0 && currentIndex < search.matches.length ? search.matches[currentIndex] : -1
 
+    property alias textInput: termField
+
     onVisibleChanged: {
         if (visible) {
             termField.forceActiveFocus()

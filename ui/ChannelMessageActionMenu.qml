@@ -26,7 +26,6 @@ import lith 1.0
 Dialog {
     id: channelMessageActionMenuDialog
     modal: true
-    focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     width: parent.width / 1.25

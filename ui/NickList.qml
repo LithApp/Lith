@@ -30,12 +30,22 @@ Drawer {
 
     onVisibleChanged: {
         if (visible) {
-            if (window.platform.mobile)
-                nickFilter.focus = false
-            else
-                nickFilter.focus = true
+            if (platform.mobile) {
+                Qt.inputMethod.hide()
+                showKeyboardTimer.start()
+            }
+            else {
+                nickFilter.forceActiveFocus()
+            }
+
         }
         nickListView.currentIndex = 0
+    }
+
+    Timer {
+        id: showKeyboardTimer
+        interval: 1
+        //onTriggered: Qt.inputMethod.show()
     }
 
     function openNickActionMenu(nick) {
@@ -108,7 +118,6 @@ Drawer {
             height: nickFilter.height
             TextField {
                 id: nickFilter
-                focus: false
                 placeholderText: qsTr("Filter nicks")
                 anchors {
                     left: parent.left

@@ -28,6 +28,7 @@ ColumnLayout {
 
     property bool inputBarHasFocus: inputBar.hasFocus
     property alias textInput: inputBar.textInput
+    property alias searchTextInput: searchBar.textInput
     property alias messageArea: messageArea
     property alias scrollToBottomButtonPosition: channelMessageList.scrollToBottomButtonPosition
 

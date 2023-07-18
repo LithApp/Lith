@@ -23,7 +23,6 @@ import lith 1.0
 TextField {
     id: inputField
     verticalAlignment: TextField.AlignVCenter
-    focus: false
     inputMethodHints: Qt.ImhMultiLine
     renderType: TextInput.NativeRendering
 
@@ -38,10 +37,6 @@ TextField {
 
     Connections {
         target: Qt.inputMethod
-        function onVisibleChanged() {
-            if (!Qt.inputMethod.visible)
-                inputField.focus = false
-        }
     }
 
     onAccepted: {
@@ -56,7 +51,7 @@ TextField {
     Connections {
         target: lith
         function onSelectedBufferChanged() {
-            inputField.focus = true
+            inputField.forceActiveFocus()
 
             if (lith.settings.useLocalInputBar) {
                 if (previousBuffer)

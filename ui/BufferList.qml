@@ -31,7 +31,7 @@ Rectangle {
         if (window.platform.mobile)
             filterField.focus = false
         else
-            filterField.focus = true
+            filterField.forceActiveFocus()
     }
     signal close
 
