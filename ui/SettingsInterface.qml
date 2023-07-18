@@ -397,11 +397,15 @@ ScrollView {
 
             Fields.Header {
                 text: qsTr("Notification settings")
+                // Hidden for now
+                visible: false
             }
 
             Fields.Base {
                 id: deviceTokenField
                 summary: "Device token"
+                visible: false
+
                 rowComponent: Label {
                     Layout.preferredWidth: settingsPaneLayout.width / 2
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
