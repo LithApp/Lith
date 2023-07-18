@@ -15,7 +15,9 @@ Setup is necessary on the WeeChat side, please consult the following sources:
 ### Binary Packages
 
 Lith currently supports the following platforms:
- - (Beta) **iOS** and **iPadOS**: https://testflight.apple.com/join/QfcVgNHD (AppStore version coming soon)
+ - (Beta) **iOS** and **iPadOS**:
+    - RECOMMENDED: https://testflight.apple.com/join/QfcVgNHD - "Stable" track - releases ending with .0
+    - https://testflight.apple.com/join/xS3hWrmj - "Unstable" track - more or less everything I tag, may be messy
  - (Alpha) Android: https://github.com/LithApp/Lith/releases
  - (Beta) **Linux**: https://flathub.org/apps/details/app.lith.Lith
  - (Alpha) Windows: https://github.com/LithApp/Lith/releases
