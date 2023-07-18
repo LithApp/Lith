@@ -82,21 +82,17 @@ Item {
             }
             Keys.onUpPressed: search.highlightNext()
             Keys.onDownPressed: search.highlightPrevious()
+        }
 
-            Button {
-                id: clearTermButton
-                height: parent.height * 0.75
-                width: height
-                icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
-                flat: true
-                focusPolicy: Qt.NoFocus
-                onClicked: lith.search.term = ""
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                    right: parent.right
-                    margins: termField.padding / 2
-                }
-            }
+        Button {
+            id: clearTermButton
+            Layout.preferredHeight: implicitHeight - 16
+            Layout.minimumWidth: height
+            Layout.alignment: Qt.AlignVCenter
+            icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
+            flat: true
+            focusPolicy: Qt.NoFocus
+            onClicked: lith.search.term = ""
         }
 
         ColumnLayout {
