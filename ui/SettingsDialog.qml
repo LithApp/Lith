@@ -81,28 +81,6 @@ Dialog {
         }
     }
 
-    Text {
-        z: 9999999999
-        anchors.centerIn: parent
-        color: "red"
-        font.pointSize: 14
-        text: {
-            let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
-            let focusItemBottomBoundary = Window.activeFocusItem ? Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y : "N/A"
-            return "Window.height" + Window.height + "\n" +
-              "Qt.inputMethod.keyboardRectangle.height" + Qt.inputMethod.keyboardRectangle.height + "\n" +
-              "Window.activeFocusItem.y" + (Window.activeFocusItem ? Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y : "N/A") + "\n" +
-              "keyboardTopBoundary" + keyboardTopBoundary + "\n" +
-              "focusItemBottomBoundary" + focusItemBottomBoundary + "\n"
-        }
-        Rectangle {
-            z: -1
-            anchors.fill: parent
-            opacity: 0.5
-            anchors.margins: -3
-        }
-    }
-
     footer: DialogButtons {
         id: dialogButtons
         dialog: root

@@ -33,19 +33,21 @@ Item {
     }
 
     property real topMargin: {
-        if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
-            let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
-            let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
-            if (window.platform.ios && focusItemBottomBoundary > keyboardTopBoundary) {
-                return Qt.inputMethod.keyboardRectangle.height + safeAreaMargins.top
+        if (window.platform.ios) {
+            if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
+                let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
+                let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
+                if (focusItemBottomBoundary > keyboardTopBoundary) {
+                    return Qt.inputMethod.keyboardRectangle.height + safeAreaMargins.top
+                }
             }
         }
         return safeAreaMargins.top
     }
     property real bottomMargin:{
-        let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
-        let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
         if (window.platform.ios) {
+            let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
+            let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
             if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
                 if (focusItemBottomBoundary <= keyboardTopBoundary)
                     return Qt.inputMethod.keyboardRectangle.height
