@@ -60,20 +60,17 @@ Dialog {
         horizontalAlignment: Label.AlignHCenter
     }
 
-    background: Rectangle {
-        color: palette.window
-    }
-
     ColumnLayout
     {
         spacing: 16
         // columns: 1
-        width: parent.width
+        width: parent.width - 2
+        x: 1
 
         Button {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 4 * implicitHeight
+            Layout.preferredHeight: 1.5 * implicitHeight
             Layout.topMargin: 16
             flat: true
 
@@ -101,7 +98,7 @@ Dialog {
         Button {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 4 * implicitHeight
+            Layout.preferredHeight: 1.5 * implicitHeight
             flat: true
 
             visible: !(nickname == "")
@@ -129,7 +126,7 @@ Dialog {
             clip: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 4 * implicitHeight
+            Layout.preferredHeight: 1.5 * implicitHeight
             Layout.bottomMargin: 16
             flat: true
 
