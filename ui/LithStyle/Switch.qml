@@ -13,6 +13,8 @@ T.Switch {
     property color onColor: palette.highlight
     property color offColor: palette.window
 
+    font.pointSize: lith.settings.baseFontSize
+
     indicator: Rectangle {
         implicitWidth: 44
         implicitHeight: 24

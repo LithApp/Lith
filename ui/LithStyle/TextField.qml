@@ -15,6 +15,8 @@ T.TextField {
     placeholderTextColor: colorUtils.setAlpha(disabledPalette.text, 0.5)
     verticalAlignment: Text.AlignVCenter
 
+    font.pointSize: lith.settings.baseFontSize
+
     property color borderColor: "transparent"
     property color backgroundColor: colorUtils.mixColors(palette.text, palette.window, 0.05)
     property real animationSpeed: 300

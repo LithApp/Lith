@@ -17,6 +17,8 @@ T.ItemDelegate {
     icon.height: 24
     icon.color: control.palette.text
 
+    font.pointSize: lith.settings.baseFontSize
+
     contentItem: Label {
         verticalAlignment: Label.AlignVCenter
         text: control.text
