@@ -165,13 +165,16 @@ ReplayProxy::ReplayProxy(QObject *parent)
             selectedFileName = logFileNameTemplate.arg(replayNumber);
         }
         else {
-            printHelpAndQuitApp();
-            qCritical() << QString("The argument you entered was: \"%1\"").arg(replayArgument);
-            return;
+            selectedFileName = replayArgument;
         }
     }
 
-    auto fullFilePath = dir.absoluteFilePath(selectedFileName);
+
+    QString fullFilePath;
+    if (selectedFileName.contains('/') || selectedFileName.contains('\\'))
+        fullFilePath = selectedFileName;
+    else
+        fullFilePath = dir.absoluteFilePath(selectedFileName);
     m_logFile.setFileName(fullFilePath);
     if (!m_logFile.open(QIODevice::ReadOnly)) {
         printHelpAndQuitApp();
@@ -191,7 +194,7 @@ ReplayProxy::ReplayProxy(QObject *parent)
     connect(this, &ReplayProxy::loadingFinished, &m_replayTimer, qOverload<>(&QTimer::start), Qt::QueuedConnection);
     connect(this, &ReplayProxy::replayFinished, &m_replayTimer, &QTimer::stop, Qt::QueuedConnection);
     connect(&m_replayTimer, &QTimer::timeout, this, &ReplayProxy::replayStep);
-    m_replayTimer.setInterval(100);
+    m_replayTimer.setInterval(1);
     m_replayTimer.setSingleShot(false);
 
     QTimer::singleShot(0, this, &ReplayProxy::readAll);
