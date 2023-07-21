@@ -168,8 +168,8 @@ int Buffer::opsGet() const {
 
 QStringList Buffer::local_variables_stringListGet() const {
     QStringList ret;
-    for (auto &i : m_local_variables.keys()) {
-        ret.append(QString("%1: %2").arg(i).arg(m_local_variables[i]));
+    for (auto [key, value] : m_local_variables.asKeyValueRange()) {
+        ret.append(QString("%1: %2").arg(key).arg(value));
     }
     return ret;
 }
@@ -195,11 +195,12 @@ MessageFilterList *Buffer::lines_filtered() {
 }
 
 bool Buffer::input(const QString &data) {
+    static QRegularExpression inputRegularExpression("\n|\r\n|\r");
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
         bool success = false;
         QList<bool> success_list;
 
-        auto data_split = data.split(QRegularExpression("\n|\r\n|\r"));
+        auto data_split = data.split(inputRegularExpression);
 
         for (auto &data_single_line : data_split) {
             QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr), Q_ARG(QString, data_single_line));

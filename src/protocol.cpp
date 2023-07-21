@@ -692,24 +692,24 @@ QString HData::toString() const {
 
     ret += "HDATA\n";
     ret += "- PATH:\n";
-    for (auto i : path) {
+    for (auto &i : path) {
         ret += "\t" + i + "\n";
     }
     ret += "- KEYS:\n";
-    for (auto i : keys) {
+    for (auto &i : keys) {
         ret += "\t" + i + "\n";
     }
     ret += "-VALUES:\n";
-    for (auto i : data) {
+    for (auto &i : data) {
         ret += "\t-PATH\n";
         ret += "\t\t";
-        for (auto j : i.pointers) {
+        for (auto &j : i.pointers) {
             ret += QString("%1").arg(j, 8, 16, QChar('0')) + " ";
         }
         ret += "\n";
         ret += "\t-OBJECTS\n";
-        for (auto j : i.objects.keys()) {
-            ret += QString("\t\t") + j + ": \"" + i.objects[j].toString() + "\"\n";
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            ret += QString("\t\t") + key + ": \"" + value.toString() + "\"\n";
         }
         ret += "\n";
     }

@@ -23,7 +23,7 @@ MessageFilterList::MessageFilterList(QObject *parent, QAbstractListModel *parent
 {
     setSourceModel(parentModel);
     setFilterRole(Qt::UserRole);
-    connect(Lith::instance()->settingsGet(), &Settings::showJoinPartQuitMessagesChanged, [this]
+    connect(Lith::instance()->settingsGet(), &Settings::showJoinPartQuitMessagesChanged, this, [this]
     {
         invalidateFilter();
     });

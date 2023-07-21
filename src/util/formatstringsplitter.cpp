@@ -122,12 +122,12 @@ void FormatStringSplitter::onFormatChanged() {
     for (auto &match : matches) {
         if (match.capturedTexts().size() == 2) {
             bool ok = false;
-            auto number = match.capturedTexts()[1].toInt(&ok);
+            auto number = match.capturedView(1).toInt(&ok);
             if (ok) {
                 numberSet.insert(number);
             }
             else {
-                errorStringSet(tr("Format string %1 is not convertible to number").arg(match.capturedTexts().first()));
+                errorStringSet(tr("Format string %1 is not convertible to number").arg(match.capturedView(0)));
                 formatValidSet(false);
                 return;
             }

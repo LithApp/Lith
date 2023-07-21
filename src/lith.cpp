@@ -219,8 +219,8 @@ void Lith::handleBufferInitialization(const WeeChatProtocol::HData &hda) {
         // buffer
         auto ptr = i.pointers.first();
         auto b = new Buffer(this, ptr);
-        for (auto j : i.objects.keys()) {
-            b->setProperty(qPrintable(j), i.objects[j]);
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            b->setProperty(qPrintable(key), value);
         }
         addBuffer(ptr, b);
     }
@@ -240,9 +240,9 @@ void Lith::handleFirstReceivedLine(const WeeChatProtocol::HData &hda) {
         if (line)
             continue;
         line = new BufferLine(buffer);
-        for (auto j : i.objects.keys()) {
-            if (j != "buffer")
-                line->setProperty(qPrintable(j), i.objects[j]);
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            if (key != "buffer")
+                line->setProperty(qPrintable(key), value);
         }
         buffer->appendLine(line);
         addLine(bufPtr, linePtr, line);
@@ -259,10 +259,10 @@ void Lith::handleHotlistInitialization(const WeeChatProtocol::HData &hda) {
         if (buffer) {
             item->bufferSet(buffer);
         }
-        for (auto j : i.objects.keys()) {
-            if (j == "buffer")
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            if (key == "buffer")
                 continue;
-            item->setProperty(qPrintable(j), i.objects[j]);
+            item->setProperty(qPrintable(key), value);
         }
         addHotlist(ptr, item);
     }
@@ -279,8 +279,8 @@ void Lith::handleNicklistInitialization(const WeeChatProtocol::HData &hda) {
             continue;
         }
         auto nick = new Nick(buffer);
-        for (auto j : i.objects.keys()) {
-            nick->setProperty(qPrintable(j), i.objects[j]);
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            nick->setProperty(qPrintable(key), value);
         }
         buffer->addNick(nickPtr, nick);
     }
@@ -300,9 +300,9 @@ void Lith::handleFetchLines(const WeeChatProtocol::HData &hda) {
         if (line)
             continue;
         line = new BufferLine(buffer);
-        for (auto j : i.objects.keys()) {
-            if (j != "buffer")
-                line->setProperty(qPrintable(j), i.objects[j]);
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            if (key != "buffer")
+                line->setProperty(qPrintable(key), value);
         }
         buffer->appendLine(line);
         addLine(bufPtr, linePtr, line);
@@ -324,10 +324,10 @@ void Lith::handleHotlist(const WeeChatProtocol::HData &hda) {
             hl = new HotListItem(this);
             hl->bufferSet(buf);
         }
-        for (auto j : i.objects.keys()) {
-            if (j == "buffer")
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            if (key == "buffer")
                 continue;
-            hl->setProperty(qPrintable(j), i.objects[j]);
+            hl->setProperty(qPrintable(key), value);
         }
     }
 }
@@ -340,8 +340,8 @@ void Lith::_buffer_opened(const WeeChatProtocol::HData &hda) {
         if (buffer)
             continue;
         buffer = new Buffer(this, bufPtr);
-        for (auto j : i.objects.keys()) {
-            buffer->setProperty(qPrintable(j), i.objects[j]);
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            buffer->setProperty(qPrintable(key), value);
         }
         addBuffer(bufPtr, buffer);
     }
@@ -378,9 +378,9 @@ void Lith::_buffer_renamed(const WeeChatProtocol::HData &hda) {
         auto buf = getBuffer(bufPtr);
         if (!buf)
             continue;
-        for (auto j : i.objects.keys()) {
-            if (j.endsWith("name")) {
-                buf->setProperty(qPrintable(j), i.objects[j]);
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            if (key.endsWith("name")) {
+                buf->setProperty(qPrintable(key), value);
             }
         }
     }
@@ -449,10 +449,10 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
             continue;
         }
         auto line = new BufferLine(buffer);
-        for (auto j : i.objects.keys()) {
-            if (j == "buffer")
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            if (key == "buffer")
                 continue;
-            line->setProperty(qPrintable(j), i.objects[j]);
+            line->setProperty(qPrintable(key), value);
         }
         m_logger->log(Logger::Event{Logger::LineAdded, buffer->nameGet(), "Received a line", QString("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
         buffer->prependLine(line);
@@ -494,8 +494,8 @@ void Lith::_nicklist(const WeeChatProtocol::HData &hda) {
             buffer->clearNicks();
         previousBuffer = buffer;
         auto nick = new Nick(buffer);
-        for (auto j : i.objects.keys()) {
-            nick->setProperty(qPrintable(j), i.objects[j]);
+        for (auto [key, value] : i.objects.asKeyValueRange()) {
+            nick->setProperty(qPrintable(key), value);
         }
         buffer->addNick(nickPtr, nick);
     }
@@ -513,10 +513,10 @@ void Lith::_nicklist_diff(const WeeChatProtocol::HData &hda) {
         switch (op) {
         case '+': {
             auto nick = new Nick(buffer);
-            for (auto j : i.objects.keys()) {
-                if (j == "_diff")
+            for (auto [key, value] : i.objects.asKeyValueRange()) {
+                if (key == "_diff")
                     continue;
-                nick->setProperty(qPrintable(j), i.objects[j]);
+                nick->setProperty(qPrintable(key), value);
             }
             buffer->addNick(nickPtr, nick);
             break;
@@ -530,10 +530,10 @@ void Lith::_nicklist_diff(const WeeChatProtocol::HData &hda) {
             auto nick = buffer->getNick(nickPtr);
             if (!nick)
                 break;
-            for (auto j : i.objects.keys()) {
-                if (j == "_diff")
+            for (auto [key, value] : i.objects.asKeyValueRange()) {
+                if (key == "_diff")
                     continue;
-                nick->setProperty(qPrintable(j), i.objects[j]);
+                nick->setProperty(qPrintable(key), value);
             }
             break;
         }
@@ -593,8 +593,8 @@ BufferLine *Lith::getLine(pointer_t bufPtr, pointer_t linePtr) {
 }
 
 const BufferLine *Lith::getLine(pointer_t bufPtr, pointer_t linePtr) const {
-    if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr)) {
-        return m_lineMap[bufPtr][linePtr];
+    if (m_lineMap.contains(bufPtr) && m_lineMap.value(bufPtr).contains(linePtr)) {
+        return m_lineMap.value(bufPtr).value(linePtr);
     }
     return nullptr;
 }

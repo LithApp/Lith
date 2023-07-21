@@ -14,8 +14,8 @@ void QmlObjectList::append(const QVariantMap& properties)
         Lith::instance()->log(Logger::Unexpected, QString("Object model cannot instantiate %1, missing constructor").arg(mMetaObject.className()));
         return;
     }
-    for(const QString& key : properties.keys()) {
-        if(!newObj->setProperty(key.toUtf8().data(), properties.value(key))) {
+    for(auto [key, value] : properties.asKeyValueRange()) {
+        if(!newObj->setProperty(key.toUtf8().data(), value)) {
             Lith::instance()->log(Logger::Unexpected, QString("Object model cannot append object of type %1 with property %2").arg(mMetaObject.className()).arg(key));
         }
     }

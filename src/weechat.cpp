@@ -295,7 +295,8 @@ void Weechat::onMessageReceived(QByteArray &data) {
             }
         }
         else {
-            auto name = id.split(";").first();
+            auto parts = id.split(";");
+            auto name = parts.first();
             if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(name));
             }

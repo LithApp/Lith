@@ -52,7 +52,7 @@ Settings::Settings(QObject *parent)
             settingsReady();
             delete testSettingsReady;
         } else {
-            QTimer::singleShot(10, *testSettingsReady);
+            QTimer::singleShot(10, this, *testSettingsReady);
         }
     };
     (*testSettingsReady)();
