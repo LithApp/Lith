@@ -150,7 +150,7 @@ protected:
     void addBuffer(pointer_t ptr, Buffer *b);
     void removeBuffer(pointer_t ptr);
     Buffer *getBuffer(pointer_t ptr);
-    void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line);
+    void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line, bool overwrite = false);
     BufferLine *getLine(pointer_t bufPtr, pointer_t linePtr);
     void addHotlist(pointer_t ptr, HotListItem *hotlist);
     HotListItem *getHotlist(pointer_t ptr);
@@ -183,7 +183,7 @@ private:
     QString m_error {};
 
     QMap<pointer_t, QPointer<Buffer>> m_bufferMap {};
-    QMap<pointer_t, QPointer<BufferLine>> m_lineMap;
+    QMap<pointer_t, QMap<pointer_t, QPointer<BufferLine>>> m_lineMap;
     QMap<pointer_t, QPointer<HotListItem>> m_hotList;
 };
 

@@ -448,12 +448,7 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
             qWarning() << "Line missing a parent:";
             continue;
         }
-        auto line = getLine(bufPtr, linePtr);
-        if (line) {
-            m_logger->log(Logger::Event{Logger::Unexpected, buffer->nameGet(), "Received a line that already existed", QString("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
-            continue;
-        }
-        line = new BufferLine(buffer);
+        auto line = new BufferLine(buffer);
         for (auto j : i.objects.keys()) {
             if (j == "buffer")
                 continue;
@@ -461,7 +456,8 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
         }
         m_logger->log(Logger::Event{Logger::LineAdded, buffer->nameGet(), "Received a line", QString("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
         buffer->prependLine(line);
-        addLine(bufPtr, linePtr, line);
+        // Overwrite the duplicate map here in case it already exists, we've hit the limit of WeeChat can return (usually 4096 lines per buffer)
+        addLine(bufPtr, linePtr, line, true);
         if (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet())) {
             QString title;
             if (buffer->isChannelGet() || buffer->isServerGet()) {
@@ -579,21 +575,26 @@ Buffer *Lith::getBuffer(pointer_t ptr) {
     return nullptr;
 }
 
-void Lith::addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line) {
-    auto ptr = bufPtr << 32 | linePtr;
-    if (m_lineMap.contains(ptr)) {
-        // TODO
-        qCritical() << "Line with ptr" << QString("%1").arg(ptr, 16, 16, QChar('0')) << "already exists";
-        qCritical() << "Original: " << m_lineMap[ptr]->messageGet();
+void Lith::addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line, bool overwrite) {
+    if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr) && !overwrite) {
+        qCritical() << "Line with bufPtr" << QString("%1").arg(bufPtr, 16, 16, QChar('0')) << "and linePtr" << QString("%1").arg(linePtr, 16, 16, QChar('0')) << "already exists";
+        qCritical() << "Original: " << m_lineMap[bufPtr][linePtr]->messageGet();
         qCritical() << "New:" << line->messageGet();
+        return;
     }
-    m_lineMap[ptr] = line;
+    m_lineMap[bufPtr][linePtr] = line;
 }
 
 BufferLine *Lith::getLine(pointer_t bufPtr, pointer_t linePtr) {
-    auto ptr = bufPtr << 32 | linePtr;
-    if (m_lineMap.contains(ptr)) {
-        return m_lineMap[ptr];
+    if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr)) {
+        return m_lineMap[bufPtr][linePtr];
+    }
+    return nullptr;
+}
+
+const BufferLine *Lith::getLine(pointer_t bufPtr, pointer_t linePtr) const {
+    if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr)) {
+        return m_lineMap[bufPtr][linePtr];
     }
     return nullptr;
 }
@@ -615,14 +616,6 @@ HotListItem *Lith::getHotlist(pointer_t ptr) {
 const Buffer *Lith::getBuffer(pointer_t ptr) const {
     if (m_bufferMap.contains(ptr))
         return m_bufferMap[ptr];
-    return nullptr;
-}
-
-const BufferLine *Lith::getLine(pointer_t bufPtr, pointer_t linePtr) const {
-    auto ptr = bufPtr << 32 | linePtr;
-    if (m_lineMap.contains(ptr)) {
-        return m_lineMap[ptr];
-    }
     return nullptr;
 }
 
