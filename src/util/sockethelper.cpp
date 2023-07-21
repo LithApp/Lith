@@ -229,7 +229,7 @@ void SocketHelper::onReadyRead() {
     // continue in whatever message came before (be it from a previous readyRead or this one
     if (m_bytesRemaining > 0) {
         auto cache = m_tcpSocket->read(m_bytesRemaining);
-        m_bytesRemaining -= cache.count();
+        m_bytesRemaining -= cache.size();
         m_fetchBuffer.append(cache);
     }
 

@@ -99,7 +99,7 @@ QByteArray Weechat::randomString(int length) {
     QByteArray result;
     auto rg = QRandomGenerator::securelySeeded();
     for (int i = 0; i < length; i++) {
-        result += alphabet[rg.bounded(0, alphabet.count())];
+        result += alphabet[rg.bounded(0, alphabet.size())];
     }
     return result;
 }
@@ -259,7 +259,7 @@ bool Weechat::input(pointer_t ptr, const QString &data) {
     auto line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
     //qCritical() << "WRITING:" << line;
     auto message = line.toUtf8();
-    if (message.count() == m_connection->write(line.toUtf8()))
+    if (message.size() == m_connection->write(line.toUtf8()))
         return true;
     return false;
 }

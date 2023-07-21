@@ -201,7 +201,7 @@ QString FormattedString::toTrimmedHtml(int n, const ColorTheme &theme) const {
         Part tempPart = i;
         tempPart.text = word;
         ret.append(tempPart.toHtml(theme));
-        n -= word.count();
+        n -= word.size();
         if (n <= 0)
             break;
     }
@@ -252,8 +252,8 @@ void FormattedString::prune() {
                 segments.append(url);
                 previousEnd = reMatch.capturedEnd();
             }
-            if (previousEnd < it->text.count()) {
-                Part suffix = { it->text.mid(previousEnd, it->text.count() - previousEnd) };
+            if (previousEnd < it->text.size()) {
+                Part suffix = { it->text.mid(previousEnd, it->text.size() - previousEnd) };
                 segments.append(suffix);
             }
             it = m_parts.erase(it);
