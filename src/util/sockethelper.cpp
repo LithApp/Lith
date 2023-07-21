@@ -61,7 +61,7 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
 
     connect(m_webSocket, &QWebSocket::connected, this, &SocketHelper::onConnected);
     connect(m_webSocket, &QWebSocket::disconnected, this, &SocketHelper::onDisconnected);
-    connect(m_webSocket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::error), this, &SocketHelper::onError);
+    connect(m_webSocket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred), this, &SocketHelper::onError);
 
     connect(m_webSocket, &QWebSocket::binaryMessageReceived, this, &SocketHelper::onBinaryMessageReceived);
 
