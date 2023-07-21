@@ -51,7 +51,7 @@ LongInteger parse(QDataStream &s, bool *ok) {
     LongInteger r;
     quint8 length;
     s >> length;
-    QByteArray buf((int) length + 1, 0);
+    QByteArray buf((int) length, 0);
     s.readRawData(buf.data(), length);
     r = buf.toLongLong();
     if (ok)
@@ -70,7 +70,7 @@ String parse(QDataStream &s, bool canContainHtml, bool *ok) {
     else if (len == 0)
         r = "";
     else if (len > 0) {
-        QByteArray buf(len + 1, 0);
+        QByteArray buf(len, 0);
         s.readRawData(buf.data(), len);
         r = convertColorsToHtml(buf, canContainHtml);
     }
@@ -106,7 +106,7 @@ Pointer parse(QDataStream &s, bool *ok) {
     Pointer r;
     quint8 length;;
     s >> length;
-    QByteArray buf((int) length + 1, 0);
+    QByteArray buf((int) length, 0);
     s.readRawData(buf.data(), length);
     bool parseOk = false;
     r = buf.toULongLong(&parseOk, 16);
@@ -120,7 +120,7 @@ Time parse(QDataStream &s, bool *ok) {
     Time r;
     quint8 length;
     s >> length;
-    QByteArray buf((int) length + 1, 0);
+    QByteArray buf((int) length, 0);
     s.readRawData(buf.data(), length);
     r = buf;
     if (ok)
