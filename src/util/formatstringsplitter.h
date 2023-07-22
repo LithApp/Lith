@@ -98,6 +98,7 @@ public:
 private slots:
     void onFormatChanged();
     void onVariableValidChanged();
+    void onDataSourceChanged();
 
 signals:
     void countChanged();
@@ -106,6 +107,7 @@ signals:
 
 private:
     QmlObjectList *m_variables;
+    QList<QMetaObject::Connection> m_dataSourceConnections;
 };
 
 #endif // FORMATSTRINGSPLITTER_H

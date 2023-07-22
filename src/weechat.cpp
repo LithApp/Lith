@@ -186,16 +186,16 @@ void Weechat::onHandshakeAccepted(const StringMap &data) {
     m_initializationStatus = (Initialization) (m_initializationStatus | HANDSHAKE);
 
     m_connection->write(QString("init"), QString(), hashString);
-    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestBuffers).toUtf8(), QString("buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables"));
-    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestFirstLine).toUtf8(), QString("buffer:gui_buffers(*)/lines/last_line(-1)/data"));
-    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestHotlist).toUtf8(), QString("hotlist:gui_hotlist(*)"));
+    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestBuffers), QString("buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables"));
+    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestFirstLine), QString("buffer:gui_buffers(*)/lines/last_line(-1)/data"));
+    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestHotlist), QString("hotlist:gui_hotlist(*)"));
     m_connection->write(QString("sync"));
-    m_connection->write(QString("nicklist"), QString("%1").arg(MessageNames::c_requestNicklist).toUtf8());
+    m_connection->write(QString("nicklist"), QString("%1").arg(MessageNames::c_requestNicklist));
 }
 
 void Weechat::requestHotlist() {
     if (m_connection->isConnected()) {
-        m_connection->write(QString("hdata"), QString("handleHotlist;%1").arg(m_messageOrder++), "hotlist:gui_hotlist(*)");
+        m_connection->write(QString("hdata"), QString("handleHotlist;%1").arg(m_messageOrder++), QString("hotlist:gui_hotlist(*)"));
     }
 }
 

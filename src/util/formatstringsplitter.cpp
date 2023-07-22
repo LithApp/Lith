@@ -19,6 +19,8 @@ FormatStringSplitter::FormatStringSplitter(QObject *parent)
     connect(this, &FormatStringSplitter::variablesValidChanged, this, &FormatStringSplitter::formattedDataChanged);
     connect(this, &FormatStringSplitter::formatValidChanged, this, &FormatStringSplitter::formattedDataChanged);
     connect(this, &FormatStringSplitter::dataSourceChanged, this, &FormatStringSplitter::formattedDataChanged);
+    connect(this, &FormatStringSplitter::formatChanged, this, &FormatStringSplitter::onDataSourceChanged);
+    connect(this, &FormatStringSplitter::formattedDataChanged, this, &FormatStringSplitter::onDataSourceChanged);
     connect(this, &FormatStringSplitter::formatChanged, this, &FormatStringSplitter::stringListChanged);
     connect(this, &FormatStringSplitter::countChanged, this, &FormatStringSplitter::stringListChanged);
 }
@@ -214,6 +216,26 @@ void FormatStringSplitter::onVariableValidChanged() {
         }
     }
     variablesValidSet(true);
+}
+
+void FormatStringSplitter::onDataSourceChanged() {
+    for (auto &i : m_dataSourceConnections) {
+        disconnect(i);
+    }
+    m_dataSourceConnections.clear();
+    if (dataSourceGet()) {
+        for (int i = 0; i < m_variables->count(); i++) {
+            auto var = m_variables->get<FormatStringVariable>(i);
+            auto signalName = var->nameGet() + "Changed";
+            auto propertyIndex = dataSourceGet()->metaObject()->indexOfProperty(qPrintable(var->nameGet()));
+            if (propertyIndex >= 0) {
+                auto sourceSignal = dataSourceGet()->metaObject()->property(propertyIndex).notifySignal();
+                auto targetIndex = metaObject()->indexOfProperty("formattedData");
+                auto targetSignal = metaObject()->property(targetIndex).notifySignal();
+                m_dataSourceConnections.append(connect(dataSourceGet(), sourceSignal, this, targetSignal));
+            }
+        }
+    }
 }
 
 FormatStringVariable::FormatStringVariable(FormatStringSplitter *parent, int index)
