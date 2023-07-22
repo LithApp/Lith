@@ -14,6 +14,6 @@ Base {
     rowComponent: SpinBox {
         id: spinBox
         Layout.fillWidth: true
-        Layout.maximumWidth: root.width / 2
+        Layout.maximumWidth: root.halfWidth
     }
 }

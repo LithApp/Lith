@@ -17,7 +17,8 @@ Base {
         id: textField
         horizontalAlignment: TextField.AlignRight
         Layout.fillWidth: true
-        Layout.maximumWidth: root.width / 2
+        Layout.maximumWidth: root.halfWidth
+        Layout.preferredWidth: root.halfWidth
         passwordCharacter: "*"
     }
 }

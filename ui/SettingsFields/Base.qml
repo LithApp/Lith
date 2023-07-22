@@ -11,6 +11,7 @@ Rectangle {
     property Item columnComponent
     readonly property Item labelComponent: summary
     readonly property real firstRowHeight: row.height
+    readonly property real halfWidth: (root.width / 2) - horizontalPadding - (row.spacing / 2)
 
     readonly property real horizontalPadding: 9
     readonly property real verticalPadding: 3
