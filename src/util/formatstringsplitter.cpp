@@ -226,7 +226,6 @@ void FormatStringSplitter::onDataSourceChanged() {
     if (dataSourceGet()) {
         for (int i = 0; i < m_variables->count(); i++) {
             auto var = m_variables->get<FormatStringVariable>(i);
-            auto signalName = var->nameGet() + "Changed";
             auto propertyIndex = dataSourceGet()->metaObject()->indexOfProperty(qPrintable(var->nameGet()));
             if (propertyIndex >= 0) {
                 auto sourceSignal = dataSourceGet()->metaObject()->property(propertyIndex).notifySignal();
