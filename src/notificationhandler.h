@@ -1,5 +1,5 @@
-#ifndef IOSNOTIFICATIONS_H
-#define IOSNOTIFICATIONS_H
+#ifndef NOTIFICATIONHANDLER_H
+#define NOTIFICATIONHANDLER_H
 
 #include "common.h"
 
@@ -17,6 +17,9 @@ public:
 
     void deviceTokenSet(const QString &value);
 
+private slots:
+    void registerForNotifications();
+
 signals:
     void bufferSelected(int bufferNumber);
 
@@ -27,4 +30,4 @@ private:
     QString m_deviceToken;
 };
 
-#endif // IOSNOTIFICATIONS_H
+#endif // NOTIFICATIONHANDLER_H

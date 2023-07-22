@@ -122,6 +122,8 @@ class Settings : public QObject {
     SETTING(bool, enableLogging, false)
     SETTING(bool, enableReplayRecording, false)
 
+    SETTING(bool, enableNotifications, false)
+
     // This is hidden for now
     SETTING(bool, terminalLikeChat, true)
 

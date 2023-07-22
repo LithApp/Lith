@@ -54,6 +54,7 @@ ScrollView {
         settings.baseFontFamily = fontDialog.currentFont.family
         settings.showBufferListOnStartup = showBufferListOnStartupCheckbox.checked
         settings.platformBufferControlPosition = platformBufferControlPositionCheckbox.checked
+        settings.enableNotifications = enableNotificationsCheckbox.checked
     }
     function onRejected() {
         restore()
@@ -90,6 +91,7 @@ ScrollView {
         fontDialog.currentFont.family = settings.baseFontFamily
         showBufferListOnStartupCheckbox.checked = settings.showBufferListOnStartup
         platformBufferControlPositionCheckbox.checked = settings.platformBufferControlPosition
+        enableNotificationsCheckbox.checked = settings.enableNotifications
     }
 
     FontDialog {
@@ -397,14 +399,19 @@ ScrollView {
 
             Fields.Header {
                 text: qsTr("Notification settings")
-                // Hidden for now
-                visible: false
+            }
+
+            Fields.Boolean {
+                id: enableNotificationsCheckbox
+                summary: qsTr("Enable notifications")
+                details: platform.ios ? qsTr("This setting won't do anything for now, we need to implement a server and WeeChat plugin to actually pass notifications to Lith.") : ""
+                checked: lith.settings.enableNotifications
             }
 
             Fields.Base {
                 id: deviceTokenField
                 summary: "Device token"
-                visible: false
+                visible: platform.ios
 
                 rowComponent: Label {
                     Layout.preferredWidth: settingsPaneLayout.width / 2
@@ -414,9 +421,15 @@ ScrollView {
                         anchors.fill: parent
                         onClicked: {
                             clipboardProxy.setText(lith.notificationHandler.deviceToken)
-                            deviceTokenField.details = "Copied to clipboard"
+                            deviceTokenField.details = qsTr("Copied to clipboard")
                         }
                     }
+                }
+                onDetailsChanged: deviceTokenCopiedTimer.start()
+                Timer {
+                    id: deviceTokenCopiedTimer
+                    interval: 5000
+                    onTriggered: deviceTokenField.details = ""
                 }
             }
         }

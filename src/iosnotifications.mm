@@ -1,4 +1,5 @@
 #include "lith.h"
+#include "iosnotifications.h"
 
 #import <UserNotifications/UserNotifications.h>
 #import <Foundation/Foundation.h>
@@ -15,14 +16,10 @@
 
     auto notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
     if (notificationCenter.delegate == self) {
-        return true;
+        return YES;
     }
     notificationCenter.delegate = self;
 
-    // Register to receive notifications from the system
-    [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-
-    [application registerForRemoteNotifications];
     return YES;
   }
 
@@ -32,6 +29,7 @@
   {
       Q_UNUSED(center)
       // Not handling just receiving notifications for now
+      Lith::instance()->log(Logger::Platform, "Received a notification");
       completionHandler(UNNotificationPresentationOptionAlert);
   }
 
@@ -44,10 +42,11 @@
       // Here notifications that were actually interacted with are handled
       NSDictionary *userInfo = response.notification.request.content.userInfo;
       if (userInfo[@"buffer_number"] != nullptr) {
+          Lith::instance()->log(Logger::Platform, "Handling a notification interaction");
           emit Lith::instance()->notificationHandler()->bufferSelected([userInfo[@"buffer_number"] intValue]);
       }
       else {
-        Lith::instance()->log(Logger::Unexpected, "Received a notification without a buffer number");
+        Lith::instance()->log(Logger::Unexpected, "Handling a notification interaction without a buffer number");
       }
 
       completionHandler();
@@ -58,8 +57,26 @@
   }
 
   - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-      NSLog(@"Did Fail to Register for   Remote Notifications");
-      NSLog(@"%@, %@", error, error.localizedDescription);
       Lith::instance()->log(Logger::Unexpected, QString("Failed registering for notifications: %1").arg(QString::fromNSString(error.localizedDescription)));
   }
 @end
+
+void iosRegisterForNotifications() {
+  Lith::instance()->log(Logger::Platform, QString("About to register for notifications"));
+
+  dispatch_async(dispatch_get_main_queue(), ^{
+        // Register to receive notifications from the system
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+  });
+}
+
+void iosUnregisterForNotifications() {
+  Lith::instance()->log(Logger::Platform, QString("About to unregister for notifications"));
+  Lith::instance()->notificationHandler()->deviceTokenSet(QString());
+
+  dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeNone) categories:nil]];
+        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+  });
+}

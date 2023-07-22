@@ -458,7 +458,7 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
         buffer->prependLine(line);
         // Overwrite the duplicate map here in case it already exists, we've hit the limit of WeeChat can return (usually 4096 lines per buffer)
         addLine(bufPtr, linePtr, line, true);
-        if (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet())) {
+        if (settingsGet()->enableNotificationsGet() && (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet()))) {
             QString title;
             if (buffer->isChannelGet() || buffer->isServerGet()) {
                 title = tr("New highlight in %1 from %2").arg(buffer->short_nameGet()).arg(line->colorlessNicknameGet());

@@ -33,7 +33,8 @@ public:
         LineAdded,
         Network,
         Protocol,
-        FormatSplitter
+        FormatSplitter,
+        Platform
     };
     Q_ENUM(EventType)
     struct Event {

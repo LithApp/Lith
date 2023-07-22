@@ -140,7 +140,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(LITH_SOURCES
         ${LITH_SOURCES}
         src/iosclipboard.h src/iosclipboard.mm
-        src/iosnotifications.mm
+        src/iosnotifications.h src/iosnotifications.mm
     )
     set(LITH_RESOURCES
         ${LITH_RESOURCES}
