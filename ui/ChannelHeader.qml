@@ -83,7 +83,7 @@ Rectangle {
                     Label {
                         id: bufferNameLabel
                         // First part is calculated as half of the area the parent item got, second part is putting the label to the right side of its parent (when space runs out)
-                        x: Math.min((parent.width - width + replayInfoLayout.width) / 2, parent.width - width - 6)
+                        x: Math.min((parent.width - width + replayInfoLayout.width + 6) / 2, parent.width - width - 6)
                         color: palette.text
                         font.bold: true
                         text: lith.selectedBuffer ? lith.selectedBuffer.name : "Lith"
