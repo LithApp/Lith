@@ -30,6 +30,14 @@ void QmlObjectList::prepend(QObject *object) {
     emit countChanged();
 }
 
+void QmlObjectList::prepend(QObjectPointer object) {
+    Q_ASSERT(object->metaObject() == &mMetaObject);
+    beginInsertRows(QModelIndex(), 0, 0);
+    mData.prepend(object);
+    endInsertRows();
+    emit countChanged();
+}
+
 void QmlObjectList::append(QObject *object)
 {
     insert(rowCount(), object);

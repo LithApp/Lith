@@ -22,6 +22,7 @@ public:
         return new QmlObjectList(T::staticMetaObject, parent);
     }
 
+    void prepend(QObjectPointer object);
     void prepend(QObject* object);
     void append(QObject *object);
 

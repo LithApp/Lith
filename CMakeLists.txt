@@ -89,7 +89,6 @@ set(LITH_QML
     ui/ChannelTextInput.qml
     ui/ChannelView.qml
     ui/DataBrowser.qml
-    ui/DebugDialog.qml
     ui/DialogButtons.qml
     ui/DropHandler.qml
     ui/DynamicDrawer.qml

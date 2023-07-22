@@ -169,7 +169,6 @@ Lith::Lith(QObject *parent)
     , m_search(new Search(this))
     , m_notificationHandler(new NotificationHandler(this))
 {
-
     connect(m_notificationHandler, &NotificationHandler::bufferSelected, this, [this](int bufferNumber) {
         selectBufferNumber(bufferNumber);
     });
@@ -193,6 +192,57 @@ void Lith::resetData() {
     selectedBufferIndexSet(-1);
 
     m_buffers->clear();
+    if (!m_logBuffer) {
+        m_logBuffer = QSharedPointer<Buffer>::create(this, 0);
+        m_logBuffer->nameSet("Lith Log");
+        auto eventToLine = [](Buffer *parent, const QDateTime& dateTime, const Logger::Event& event) -> BufferLine* {
+            auto logLine = new BufferLine(parent);
+            logLine->dateSet(dateTime);
+            QMetaEnum me = QMetaEnum::fromType<Logger::EventType>();
+            auto type = QString(me.valueToKey(event.type)).toUpper();
+            logLine->prefixSet(type);
+            FormattedString msg;
+            if (!event.context.isEmpty()) {
+                msg.addPart(FormattedString::Part(event.context));
+                msg.lastPart().bold = true;
+                msg.addPart(FormattedString::Part(" " + event.summary));
+            }
+            else {
+                msg.addPart(FormattedString::Part(event.summary));
+            }
+            if (!event.details.isEmpty()) {
+                msg.lastPart().text.append("\n");
+                msg.addPart(FormattedString::Part(event.details));
+                msg.lastPart().foreground.index = 15;
+            }
+            logLine->messageSet(msg);
+            return logLine;
+        };
+        if (settingsGet()->enableLoggingGet()) {
+            for (const auto& eventPair : m_logger->events()) {
+                m_logBuffer->prependLine(eventToLine(m_logBuffer.data(), eventPair.first, eventPair.second));
+            }
+        }
+        connect(m_logger, &Logger::eventAdded, this, [this, eventToLine](const QDateTime& dateTime, const Logger::Event& event) {
+            if (settingsGet()->enableLoggingGet()) {
+                m_logBuffer->prependLine(eventToLine(m_logBuffer.data(), dateTime, event));
+            }
+        });
+        connect (settingsGet(), &Settings::enableLoggingChanged, this, [this]() {
+            if (settingsGet()->enableLoggingGet()) {
+                auto previousSelectedBuffer = selectedBuffer();
+                m_buffers->prepend(m_logBuffer);
+                selectedBufferSet(previousSelectedBuffer);
+            }
+            else {
+                if (selectedBuffer() == m_logBuffer.data())
+                    selectedBufferIndexSet(-1);
+                m_buffers->removeItem(m_logBuffer.data());
+            }
+        });
+    }
+    if (settingsGet()->enableLoggingGet())
+        m_buffers->prepend(m_logBuffer);
     m_bufferMap.clear();
     m_lineMap.clear();
     m_hotList.clear();

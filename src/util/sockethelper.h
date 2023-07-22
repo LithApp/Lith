@@ -30,9 +30,8 @@ public slots:
     void connectToTcpSocket(const QString &hostname, int port, bool encrypted);
 #endif // __EMSCRIPTEN__
 
-    qint64 write(const char *data);
-    qint64 write(const QString &data);
-    qint64 write(const QByteArray &data);
+    qint64 write(const QString& command, const QString& id = {}, const QString &data = {});
+    qint64 write(const QByteArray& command, const QByteArray& id = {}, const QByteArray &data = {});
 
 signals:
     void connected();

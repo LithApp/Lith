@@ -185,18 +185,17 @@ void Weechat::onHandshakeAccepted(const StringMap &data) {
 
     m_initializationStatus = (Initialization) (m_initializationStatus | HANDSHAKE);
 
-    m_connection->write(("init " + hashString + "\n").toUtf8());
-    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables\n").arg(MessageNames::c_requestBuffers).toUtf8());
-    m_connection->write(QString("(%1) hdata buffer:gui_buffers(*)/lines/last_line(-1)/data\n").arg(MessageNames::c_requestFirstLine).toUtf8());
-    m_connection->write(QString("(%1) hdata hotlist:gui_hotlist(*)\n").arg(MessageNames::c_requestHotlist).toUtf8());
-    m_connection->write("sync\n");
-    m_connection->write(QString("(%1) nicklist\n").arg(MessageNames::c_requestNicklist).toUtf8());
+    m_connection->write(QString("init"), QString(), hashString);
+    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestBuffers).toUtf8(), QString("buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables"));
+    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestFirstLine).toUtf8(), QString("buffer:gui_buffers(*)/lines/last_line(-1)/data"));
+    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestHotlist).toUtf8(), QString("hotlist:gui_hotlist(*)"));
+    m_connection->write(QString("sync"));
+    m_connection->write(QString("nicklist"), QString("%1").arg(MessageNames::c_requestNicklist).toUtf8());
 }
 
 void Weechat::requestHotlist() {
     if (m_connection->isConnected()) {
-        auto msg = QString("(handleHotlist;%1) hdata hotlist:gui_hotlist(*)\n").arg(m_messageOrder++);
-        m_connection->write(msg.toUtf8());
+        m_connection->write(QString("hdata"), QString("handleHotlist;%1").arg(m_messageOrder++), "hotlist:gui_hotlist(*)");
     }
 }
 
@@ -219,7 +218,7 @@ void Weechat::onConnected() {
     }
 
     if (lith()->settingsGet()->handshakeAuthGet()) {
-        m_connection->write(QString("(%1) handshake password_hash_algo=%2,compression=%3\n").arg(MessageNames::c_handshake).arg(hashAlgos).arg(lith()->settingsGet()->connectionCompressionGet() ? "zlib" : "off").toUtf8());
+        m_connection->write(QString("handshake"), QString("%1").arg(MessageNames::c_handshake), QString("password_hash_algo=%1,compression=%2").arg(hashAlgos).arg(lith()->settingsGet()->connectionCompressionGet() ? "zlib" : "off"));
     }
     else {
         StringMap data;
@@ -256,12 +255,7 @@ void Weechat::onError(const QString &message) {
 
 bool Weechat::input(pointer_t ptr, const QString &data) {
     // server doesn't reply to input commands directly so no message order here
-    auto line = QString("input 0x%1 %2\n").arg(ptr, 0, 16).arg(data);
-    //qCritical() << "WRITING:" << line;
-    auto message = line.toUtf8();
-    if (message.size() == m_connection->write(line.toUtf8()))
-        return true;
-    return false;
+    return m_connection->write(QString("input"), QString(), QString("0x%1 %2\n").arg(ptr, 0, 16).arg(data));
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {
@@ -271,8 +265,7 @@ void Weechat::fetchLines(pointer_t ptr, int count) {
         lith()->log(Logger::Protocol, buffer->nameGet(), QString("Fetching %1 lines").arg(count));
     else
         lith()->log(Logger::Unexpected, "Attempted to fetch lines for buffer with invalid buffer");
-    auto line = QString("(handleFetchLines;%1) hdata buffer:0x%2/lines/last_line(-%3)/data\n").arg(m_messageOrder++).arg(ptr, 0, 16).arg(count);
-    m_connection->write(line.toUtf8());
+    m_connection->write(QString("hdata"), QString("handleFetchLines;%1").arg(m_messageOrder++), QString("buffer:0x%1/lines/last_line(-%2)/data").arg(ptr, 0, 16).arg(count));
     m_timeoutTimer->start(5000);
 }
 
@@ -341,7 +334,7 @@ void Weechat::onPingTimeout() {
             restart();
         }
         previousPing = m_messageOrder++;
-        if (m_connection->write(QString("(%1) ping %1\n").arg(previousPing)) <= 0) {
+        if (!m_connection->write(QString("ping"), QString("%1").arg(previousPing), QString("%1").arg(previousPing))) {
             restart();
         }
     }

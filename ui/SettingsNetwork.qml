@@ -190,11 +190,6 @@ ScrollView {
             Fields.Header {
                 text: "Logging"
             }
-            Fields.Button {
-                summary: qsTr("Debug log")
-                text: "Open"
-                onClicked: debugDialog.visible = true
-            }
             Fields.Boolean {
                 id: enableLoggingCheckbox
                 checked: settings.enableLogging

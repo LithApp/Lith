@@ -63,7 +63,10 @@ public:
 
     void log(Event event);
 
-    const QList<QPair<QDateTime, Event>>& events() const;;
+    const QList<QPair<QDateTime, Event>>& events() const;
+
+signals:
+    void eventAdded(const QDateTime& dateTime, const Event& event);
 
 private:
     QList<QPair<QDateTime, Event>> m_events;

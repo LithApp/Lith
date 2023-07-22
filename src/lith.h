@@ -185,6 +185,7 @@ private:
     QMap<pointer_t, QPointer<Buffer>> m_bufferMap {};
     QMap<pointer_t, QMap<pointer_t, QPointer<BufferLine>>> m_lineMap;
     QMap<pointer_t, QPointer<HotListItem>> m_hotList;
+    QSharedPointer<Buffer> m_logBuffer;
 };
 
 class ProxyBufferList : public QSortFilterProxyModel {

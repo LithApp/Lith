@@ -111,27 +111,40 @@ void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool en
 
 #endif // __EMSCRIPTEN__
 
-qint64 SocketHelper::write(const char *data) {
-     return write(QByteArray(data));
+qint64 SocketHelper::write(const QString& command, const QString& id, const QString &data) {
+    return write(command.toUtf8(), id.toUtf8(), data.toUtf8());
 }
 
-qint64 SocketHelper::write(const QString &data) {
-    return write(data.toUtf8());
-}
-
-qint64 SocketHelper::write(const QByteArray &data) {
+qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, const QByteArray &data) {
     qint64 bytes = 0;
-    lith()->log(Logger::Protocol, QString(), QString("Sending WeeChat command"), QString(data));
+    QByteArray fullCommand;
+    if (!id.isEmpty()) {
+        fullCommand.append("(");
+        fullCommand.append(id);
+        fullCommand.append(") ");
+    }
+    fullCommand.append(command);
+    if (!data.isEmpty()) {
+        fullCommand.append(" ");
+        fullCommand.append(data);
+    }
+    fullCommand.append("\n");
+    if (command != "ping") {
+        if (command == "init")
+            lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString("[obscured]"));
+        else
+            lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString(fullCommand));
+    }
     if (m_webSocket) {
-        bytes = m_webSocket->sendTextMessage(data);
+        bytes = m_webSocket->sendTextMessage(fullCommand);
     }
 #ifndef __EMSCRIPTEN__
     if (m_tcpSocket) {
-        bytes = m_tcpSocket->write(data);
+        bytes = m_tcpSocket->write(fullCommand);
     }
 #endif // __EMSCRIPTEN__
-    if (bytes != data.size()) {
-        lith()->log(Logger::Network, QString("SocketHelper::write: Attempted to write %1 but managed to write %2 bytes").arg(data.size()).arg(bytes));
+    if (bytes != fullCommand.size()) {
+        lith()->log(Logger::Network, QString("SocketHelper::write: Attempted to write %1 but managed to write %2 bytes").arg(fullCommand.size()).arg(bytes));
     }
     return bytes;
 }

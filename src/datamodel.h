@@ -58,7 +58,7 @@ public:
 
 class Buffer : public QObject {
     Q_OBJECT
-    PROPERTY(int, number)
+    PROPERTY(int, number, 0)
     PROPERTY(FormattedString, name)
     PROPERTY(FormattedString, short_name)
     ALIAS(FormattedString, name, full_name)
@@ -129,7 +129,7 @@ private:
     QmlObjectList *m_lines { nullptr };
     QmlObjectList *m_nicks { nullptr };
     MessageFilterList *m_proxyLinesFiltered { nullptr };
-    pointer_t m_ptr;
+    pointer_t m_ptr = 0;
     bool m_afterInitialFetch { false };
     int m_lastRequestedCount { 0 };
     FormattedString m_title {};

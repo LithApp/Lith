@@ -157,14 +157,14 @@ Rectangle {
                 width: height
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: 1
-                color: buffer && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
+                color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
                 radius: 2
                 Label {
-                    text: buffer ? buffer.number : ""
+                    text: buffer && buffer.number > 0 ? buffer.number : ""
                     size: Label.Small
                     anchors.centerIn: parent
                     color: disabledPalette.text
-                    opacity: buffer && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
+                    opacity: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
                 }
                 Behavior on opacity { NumberAnimation { duration: 100 } }
             }

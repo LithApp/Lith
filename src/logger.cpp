@@ -65,6 +65,7 @@ void Logger::log(Event event) {
         event.details = event.details.trimmed();
         m_events.append({QDateTime::currentDateTime(), event});
         endInsertRows();
+        emit eventAdded(m_events.last().first, m_events.last().second);
     }
 }
 
