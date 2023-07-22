@@ -220,17 +220,20 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     )
 endif()
 
+if (APPLE)
+    # The asset catalog (icon especially) will be shared between macOS and iOS
+    target_sources(Lith PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/assets/Assets.xcassets")
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/Assets.xcassets"
+        PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+endif()
+
 if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     find_library(FWFoundation Foundation)
     find_library(FWUIKit UIKit)
 
     set_target_properties(Lith PROPERTIES
         QT_IOS_LAUNCH_SCREEN "${CMAKE_CURRENT_SOURCE_DIR}/assets/Launch.storyboard")
-
-    target_sources(Lith PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/assets/Assets.xcassets")
-    set_source_files_properties(
-        "${CMAKE_CURRENT_SOURCE_DIR}/assets/Assets.xcassets"
-        PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     target_link_libraries(Lith PRIVATE
         "-framework Foundation"
