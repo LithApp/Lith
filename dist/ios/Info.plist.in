@@ -18,6 +18,8 @@
         <string>${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}</string>
         <key>CFBundleVersion</key>
         <string>${VERSION}</string>
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.utilities</string>
         <key>CFBundleIconName</key>
         <string>AppIcon</string>
         <key>CFBundleIcons</key>

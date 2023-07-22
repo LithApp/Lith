@@ -211,7 +211,7 @@ set_target_properties(Lith PROPERTIES
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_WEAK YES
     XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER cz.rtinbriza.ma.Lith
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME AppIcon
-    XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/dist/ios/notifications.entitlements"
+    XCODE_ATTRIBUTE_INFOPLIST_KEY_LSApplicationCategoryType "public.app-category.utilities";
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -228,12 +228,20 @@ if (APPLE)
         PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 endif()
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set_target_properties(Lith PROPERTIES
+        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/dist/macos/sandbox.entitlements"
+    )
+endif()
+
 if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     find_library(FWFoundation Foundation)
     find_library(FWUIKit UIKit)
 
     set_target_properties(Lith PROPERTIES
-        QT_IOS_LAUNCH_SCREEN "${CMAKE_CURRENT_SOURCE_DIR}/assets/Launch.storyboard")
+        QT_IOS_LAUNCH_SCREEN "${CMAKE_CURRENT_SOURCE_DIR}/assets/Launch.storyboard"
+        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/dist/ios/notifications.entitlements"
+    )
 
     target_link_libraries(Lith PRIVATE
         "-framework Foundation"
