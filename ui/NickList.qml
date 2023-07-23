@@ -50,7 +50,7 @@ Drawer {
 
     function openNickActionMenu(nick) {
         nickListActionMenu.visible = true
-        nickListActionMenu.nickname = nick
+        nickListActionMenu.nickModel = nick
     }
 
     Rectangle {
@@ -189,7 +189,7 @@ Drawer {
                 text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
                 onClicked: {
                     nickListView.currentIndex = index
-                    openNickActionMenu(modelData.colorlessName)
+                    openNickActionMenu(modelData)
                 }
             }
         }
