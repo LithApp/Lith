@@ -40,9 +40,7 @@ Item {
         target: messageMouseArea
         function onClicked(mouse) {
             if (mouse.button === Qt.RightButton) {
-                channelMessageActionMenu.show(messageModel.message.toPlain(),
-                                              messageModel.nick,
-                                              messageModel.date)
+                channelMessageActionMenu.show(messageModel)
             }
         }
     }
@@ -55,9 +53,7 @@ Item {
         acceptedButtons: (window.platform.mobile ? Qt.LeftButton : 0) | Qt.RightButton
         cursorShape: messageText.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.IBeamCursor
         onPressAndHold: {
-            channelMessageActionMenu.show(messageModel.message.toPlain(),
-                                          messageModel.nick,
-                                          messageModel.date)
+            channelMessageActionMenu.show(messageModel)
         }
     }
 

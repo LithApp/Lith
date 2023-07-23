@@ -120,6 +120,7 @@ class Settings : public QObject {
     SETTING(bool, showBufferListOnStartup, false)
     SETTING(bool, platformBufferControlPosition, true)
 
+    SETTING(bool, showInternalData, false)
     SETTING(bool, enableLogging, false)
     SETTING(bool, enableReplayRecording, false)
 

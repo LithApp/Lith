@@ -290,6 +290,7 @@ void Lith::handleFirstReceivedLine(const WeeChatProtocol::HData &hda) {
         if (line)
             continue;
         line = new BufferLine(buffer);
+        line->ptrSet(linePtr);
         for (auto [key, value] : i.objects.asKeyValueRange()) {
             if (key != "buffer")
                 line->setProperty(qPrintable(key), value);
@@ -350,6 +351,7 @@ void Lith::handleFetchLines(const WeeChatProtocol::HData &hda) {
         if (line)
             continue;
         line = new BufferLine(buffer);
+        line->ptrSet(linePtr);
         for (auto [key, value] : i.objects.asKeyValueRange()) {
             if (key != "buffer")
                 line->setProperty(qPrintable(key), value);
@@ -498,7 +500,12 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
             qWarning() << "Line missing a parent:";
             continue;
         }
+        auto oldLine = getLine(bufPtr, linePtr);
+        if (oldLine) {
+            oldLine->ptrSet(0);
+        }
         auto line = new BufferLine(buffer);
+        line->ptrSet(linePtr);
         for (auto [key, value] : i.objects.asKeyValueRange()) {
             if (key == "buffer")
                 continue;

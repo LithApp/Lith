@@ -103,6 +103,36 @@ Drawer {
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
 
+        GridLayout {
+            visible: lith.settings.showInternalData
+            Layout.leftMargin: 6
+            Layout.rightMargin: 6
+            Layout.fillWidth: true
+            columns: 2
+            rowSpacing: 1
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                size: Label.Tiny
+                text: "Number: " + (lith.selectedBuffer ? lith.selectedBuffer.number : "N/A")
+            }
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                size: Label.Tiny
+                text: "Pointer: " + (lith.selectedBuffer ? "0x" + lith.selectedBuffer.ptr.toString(16) : "N/A")
+            }
+            Repeater {
+                model: lith.selectedBuffer ? lith.selectedBuffer.local_variables_stringList : null
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                    size: Label.Tiny
+                    text: modelData
+                }
+            }
+        }
+
         Button {
             Layout.alignment: Qt.AlignHCenter
             text: qsTr("Search messages")

@@ -64,6 +64,7 @@ ScrollView {
             (typeof settings.useWebsockets !== "undefined" ? useWebsocketsCheckbox.checked : false),
             (typeof settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
         )
+        settings.showInternalData = showInternalDataCheckbox.checked
         settings.enableLogging = enableLoggingCheckbox.checked
         settings.enableReplayRecording = enableReplayRecordingCheckbox.checked
         passphraseField.text = ""
@@ -85,6 +86,7 @@ ScrollView {
         if (typeof settings.websocketsEndpoint !== "undefined") {
             websocketsEndpointInput.text = settings.websocketsEndpoint
         }
+        showInternalDataCheckbox.checked = settings.showInternalData
         enableLoggingCheckbox.checked = settings.enableLogging
         enableReplayRecordingCheckbox.checked = settings.enableReplayRecording
     }
@@ -188,7 +190,13 @@ ScrollView {
                 summary: qsTr("Websockets endpoint")
             }
             Fields.Header {
-                text: "Logging"
+                text: "Logging and debugging"
+            }
+            Fields.Boolean {
+                id: showInternalDataCheckbox
+                checked: settings.showInternalData
+                summary: qsTr("Show internal data")
+                details: qsTr("Enable showing extra internal data in some portions of the UI.")
             }
             Fields.Boolean {
                 id: enableLoggingCheckbox

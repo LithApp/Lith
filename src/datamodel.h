@@ -58,6 +58,7 @@ public:
 
 class Buffer : public QObject {
     Q_OBJECT
+    Q_PROPERTY(pointer_t ptr READ ptr NOTIFY ptrChanged)
     PROPERTY(int, number, 0)
     PROPERTY(FormattedString, name)
     PROPERTY(FormattedString, short_name)
@@ -96,6 +97,7 @@ public:
 
     bool isAfterInitialFetch();
 
+    pointer_t ptr() const;
     QmlObjectList *lines();
     QmlObjectList *nicks();
     MessageFilterList *lines_filtered();
@@ -119,6 +121,7 @@ signals:
     void nicksChanged();
     void titleChanged();
     void totalUnreadMessagesChanged();
+    void ptrChanged();
 
 public slots:
     bool input(const QString &data);
@@ -137,6 +140,7 @@ private:
 
 class BufferLine : public QObject {
     Q_OBJECT
+    PROPERTY(pointer_t, ptr)
     PROPERTY(QDateTime, date)
     PROPERTY(bool, displayed)
     PROPERTY(bool, highlight)

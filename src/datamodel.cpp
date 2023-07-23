@@ -71,6 +71,10 @@ bool Buffer::isAfterInitialFetch() {
     return m_afterInitialFetch;
 }
 
+pointer_t Buffer::ptr() const {
+    return m_ptr;
+}
+
 QmlObjectList *Buffer::lines() {
     return m_lines;
 }

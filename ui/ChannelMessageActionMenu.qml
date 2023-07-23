@@ -36,14 +36,13 @@ Dialog {
     y: Math.round((parent.height - height) / 2)
 
 
-    property string message;
-    property string nickname;
-    property var timestamp;
+    property var lineModel
+    readonly property string message: lineModel ? lineModel.message.toPlain() : ""
+    readonly property string nickname: lineModel ? lineModel.nick : ""
+    readonly property var timestamp: lineModel ? lineModel.date : null
 
-    function show(msg, nick, time) {
-        message = msg
-        nickname = nick
-        timestamp = time
+    function show(model) {
+        lineModel = model
         visible = true
     }
 
@@ -59,93 +58,149 @@ Dialog {
         horizontalAlignment: Label.AlignHCenter
     }
 
-    ColumnLayout
-    {
-        spacing: 16
-        // columns: 1
+    GridLayout {
+        columns: window.landscapeMode ? 2 : 1
         width: parent.width - 2
         x: 1
 
-        Button {
+        ColumnLayout {
+            Layout.minimumWidth: 300
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 1.5 * implicitHeight
-            Layout.topMargin: 16
-            flat: true
+            spacing: 16
 
-            Label {
-                id: label1
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: 6
-                    verticalCenter: parent.verticalCenter
+            Button {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 1.5 * implicitHeight
+                Layout.topMargin: 16
+                flat: true
+
+                Label {
+                    id: label1
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        margins: 6
+                        verticalCenter: parent.verticalCenter
+                    }
+                    maximumLineCount: 2
+                    elide: Text.ElideRight
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                    text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
                 }
-                maximumLineCount: 2
-                elide: Text.ElideRight
-                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
+
+                visible: !(nickname == "")
+
+                onClicked: {
+                    channelMessageActionMenuDialog.close()
+                    clipboardProxy.setText(label1.text)
+                }
             }
+            Button {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 1.5 * implicitHeight
+                flat: true
 
-            visible: !(nickname == "")
+                visible: !(nickname == "")
 
-            onClicked: {
-                channelMessageActionMenuDialog.close()
-                clipboardProxy.setText(label1.text)
+                Label {
+                    id: label2
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        margins: 6
+                        verticalCenter: parent.verticalCenter
+                    }
+                    maximumLineCount: 2
+                    elide: Text.ElideRight
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                    text: "<" + nickname + "> " + message
+                }
+
+                onClicked: {
+                    channelMessageActionMenuDialog.close()
+                    clipboardProxy.setText(label2.text)
+                }
+            }
+            Button {
+                clip: true
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 1.5 * implicitHeight
+                Layout.bottomMargin: 16
+                flat: true
+
+                Label {
+                    id: label3
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        margins: 6
+                        verticalCenter: parent.verticalCenter
+                    }
+                    maximumLineCount: 2
+                    elide: Text.ElideRight
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                    text: message
+                }
+
+                onClicked: {
+                    channelMessageActionMenuDialog.close()
+                    clipboardProxy.setText(label3.text)
+                }
             }
         }
-        Button {
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 1.5 * implicitHeight
-            flat: true
 
-            visible: !(nickname == "")
+        ColumnLayout {
+            visible: lith.settings.showInternalData
+            Layout.fillWidth: true
+            Layout.margins: 6
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                text: "Pointer: " + (lineModel ? "0x" + lineModel.ptr.toString(16) : "N/A")
+            }
 
             Label {
-                id: label2
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: 6
-                    verticalCenter: parent.verticalCenter
-                }
-                maximumLineCount: 2
-                elide: Text.ElideRight
+                Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                text: "<" + nickname + "> " + message
+                text: "Date: " + (lineModel ? Qt.formatDateTime(lineModel.date, Qt.RFC2822Date) : "N/A")
             }
-
-            onClicked: {
-                channelMessageActionMenuDialog.close()
-                clipboardProxy.setText(label2.text)
-            }
-        }
-        Button {
-            clip: true
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignCenter
-            Layout.preferredHeight: 1.5 * implicitHeight
-            Layout.bottomMargin: 16
-            flat: true
 
             Label {
-                id: label3
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: 6
-                    verticalCenter: parent.verticalCenter
-                }
-                maximumLineCount: 2
-                elide: Text.ElideRight
+                Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                text: message
+                text: "Higlight: " + (lineModel ? lineModel.highlight ? "true" : "false" : "N/A")
             }
 
-            onClicked: {
-                channelMessageActionMenuDialog.close()
-                clipboardProxy.setText(label3.text)
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                text: "Prefix: " + (lineModel ? lineModel.prefix.toHtml() : "N/A")
+                textFormat: Label.PlainText
+            }
+
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                text: "Message: " + (lineModel ? lineModel.message.toHtml() : "N/A")
+                textFormat: Label.PlainText
+            }
+
+            Label {
+                Layout.fillWidth: true
+                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                text: "Tags:"
+            }
+
+            Repeater {
+                model: lineModel ? lineModel.tags_array : null
+                Label {
+                    Layout.fillWidth: true
+                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                    text: " - " + modelData
+                }
             }
         }
     }
