@@ -21,41 +21,6 @@ T.TextField {
     property color backgroundColor: colorUtils.mixColors(palette.text, palette.window, 0.05)
     property real animationSpeed: 300
 
-    cursorDelegate: Item {
-        width: 3
-        height: control.font.pixelSize + 2
-        Rectangle {
-            visible: control.cursorVisible
-            color: control.color
-            anchors {
-                fill: parent
-                rightMargin: 2
-            }
-            SequentialAnimation on opacity {
-                loops: Animation.Infinite
-                running: true
-                NumberAnimation {
-                    from: 0
-                    to: 1
-                    duration: control.animationSpeed
-                    easing.type: Easing.OutQuad
-                }
-                PauseAnimation {
-                    duration: control.animationSpeed * 2
-                }
-                NumberAnimation {
-                    from: 1
-                    to: 0
-                    duration: control.animationSpeed
-                    easing.type: Easing.OutQuad
-                }
-                PauseAnimation {
-                    duration: control.animationSpeed * 2
-                }
-            }
-        }
-    }
-
     background: Rectangle {
         property color actualBorderColor: {
             if (control.borderColor != Qt.color("transparent"))
