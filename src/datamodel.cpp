@@ -335,7 +335,7 @@ bool BufferLine::searchCompare(const QString &term) {
         return true;
     if (m_message.toPlain().toLower().contains(lowerTerm))
         return true;
-    if (m_date.toString("hh:mm:ss").contains(lowerTerm))
+    if (m_date.toString(Lith::instance()->settingsGet()->timestampFormatGet()).contains(lowerTerm))
         return true;
     return false;
 }
