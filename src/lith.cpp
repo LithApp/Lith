@@ -541,7 +541,7 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
             bool isRegistered = connectionInterface->isServiceRegistered(serviceName);
 
             if (isRegistered) {
-                QDBusInterface notifications(serviceName, "/org/freedesktop/Notifications", "org.freedesktop.Notifications", dbus);
+                QDBusInterface notifications(serviceName, "/org/freedesktop/Notifications", serviceName, dbus);
                 auto reply = notifications.call("Notify", "Lith", 0U, "org.LithApp.Lith", title, line->colorlessTextGet(), QStringList{}, QVariantMap{}, -1);
             } else {
                 static QIcon appIcon(":/icon.png");
