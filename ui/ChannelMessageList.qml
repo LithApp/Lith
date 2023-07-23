@@ -55,7 +55,14 @@ ListView {
     model: lith.selectedBuffer ? lith.selectedBuffer.lines_filtered : null
     delegate: ChannelMessage {
         messageModel: modelData
+        readonly property string sectionName: ListView.section
+        readonly property string nextSectionName: ListView.nextSection
+        header: lith.settings.showDateHeaders && sectionName !== nextSectionName ? sectionName : ""
     }
+
+    section.criteria: ViewSection.FullString
+    section.labelPositioning: ViewSection.InlineLabels
+    section.property: "modelData.dateString"
 
     Connections {
         target: lith.search
