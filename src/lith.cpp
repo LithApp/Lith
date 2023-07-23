@@ -33,6 +33,7 @@
 
 #if defined(__linux) && !defined(__ANDROID_API__)
 #include <QDBusInterface>
+#include <QtDBus/QDBusConnectionInterface>
 #endif // __linux
 
 Lith *Lith::_self = nullptr;
@@ -530,8 +531,21 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData &hda) {
             }
 
 #if defined(__linux) && !defined(__ANDROID_API__)
-            QDBusInterface notifications("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications", QDBusConnection::sessionBus());
-            auto reply = notifications.call("Notify", "Lith", 0U, "org.LithApp.Lith", title, line->colorlessTextGet(), QStringList{}, QVariantMap{}, -1);
+            QString serviceName = "org.freedesktop.Notifications";
+            QDBusConnection dbus = QDBusConnection::sessionBus();
+            QDBusConnectionInterface *connectionInterface = dbus.interface();
+            bool isRegistered = connectionInterface->isServiceRegistered(serviceName);
+
+            if (isRegistered) {
+                QDBusInterface notifications(serviceName, "/org/freedesktop/Notifications", "org.freedesktop.Notifications", dbus);
+                auto reply = notifications.call("Notify", "Lith", 0U, "org.LithApp.Lith", title, line->colorlessTextGet(), QStringList{}, QVariantMap{}, -1);
+            } else {
+                static QIcon appIcon(":/icon.png");
+                static QSystemTrayIcon *icon = new QSystemTrayIcon(appIcon);
+                icon->show();
+
+                icon->showMessage(title, line->colorlessTextGet(), appIcon);
+            }
 #else
             static QIcon appIcon(":/icon.png");
             static QSystemTrayIcon *icon = new QSystemTrayIcon(appIcon);
