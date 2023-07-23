@@ -71,6 +71,8 @@ private:
     Q_PROPERTY(BaseNetworkProxy* networkProxy READ networkProxy CONSTANT)
     Q_PROPERTY(NotificationHandler* notificationHandler READ notificationHandler CONSTANT)
 
+    Q_PROPERTY(QString gitVersion READ gitVersion CONSTANT)
+
 public:
     static Lith *_self;
     static Lith *instance();
@@ -88,6 +90,8 @@ public:
     Search* search();
     BaseNetworkProxy *networkProxy();
     NotificationHandler *notificationHandler();
+
+    QString gitVersion() const;
 
     void log(Logger::EventType type, QString summary) {
         m_logger->log(Logger::Event{type, summary});

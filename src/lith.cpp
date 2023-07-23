@@ -20,6 +20,7 @@
 #include "datamodel.h"
 #include "weechat.h"
 #include "windowhelper.h"
+#include "cmakedefs.h"
 
 #include <iostream>
 #include <QThread>
@@ -151,6 +152,10 @@ BaseNetworkProxy *Lith::networkProxy() {
 
 NotificationHandler *Lith::notificationHandler() {
     return m_notificationHandler;
+}
+
+QString Lith::gitVersion() const {
+    return GIT_STATE;
 }
 
 Lith::Lith(QObject *parent)

@@ -50,6 +50,14 @@ ColumnLayout {
         ColumnLayout {
             visible: !lith.selectedBuffer
             anchors.fill: parent
+            anchors.margins: 6
+            Label {
+                Layout.fillWidth: true
+                text: "Version %1".arg(lith.gitVersion)
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                horizontalAlignment: Label.AlignHCenter
+            }
+
             Label {
                 Layout.fillHeight: true
                 Layout.fillWidth: true

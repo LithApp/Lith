@@ -22,6 +22,25 @@ list(GET VERSION_LIST 0 PROJECT_VERSION_MAJOR)
 list(GET VERSION_LIST 1 PROJECT_VERSION_MINOR)
 list(GET VERSION_LIST 2 PROJECT_VERSION_PATCH)
 
+find_package(Git REQUIRED)
+# rerun git metadata retrieval on each commit message change
+set_property(
+    DIRECTORY
+    APPEND
+    PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_LIST_DIR}/.git/COMMIT_EDITMSG
+)
+execute_process(
+    COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+    COMMAND "${GIT_EXECUTABLE}" describe --tags --dirty
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE GIT_STATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 find_package(Qt6 COMPONENTS Widgets Gui Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -30,8 +49,12 @@ endif()
 
 qt_standard_project_setup(REQUIRES 6.5)
 
+configure_file(src/cmakedefs.h.in ${CMAKE_CURRENT_BINARY_DIR}/defs/cmakedefs.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/defs)
+
 set(LITH_SOURCES
     src/clipboardproxy.cpp src/clipboardproxy.h
+    ${CMAKE_CURRENT_BINARY_DIR}/defs/cmakedefs.h
     src/common.h
     src/datamodel.cpp
     src/datamodel.h
