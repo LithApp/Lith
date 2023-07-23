@@ -21,7 +21,7 @@ import QtQuick.Controls 2.4
 
 import lith 1.0
 
-Rectangle {
+Item {
     id: root
     z: index
     width: ListView.view.width // + timeMetrics.width
@@ -35,12 +35,6 @@ Rectangle {
 
     property alias header: headerLabel.text
     readonly property bool isHighlighted: lith.search.highlightedLine && messageModel && lith.search.highlightedLine === messageModel
-
-    color: isHighlighted ? colorUtils.setAlpha(palette.text, 0.1) : messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : palette.base
-    border {
-        color: palette.highlight
-        width: root.isHighlighted ? 1 : 0
-    }
 
     Connections {
         target: messageMouseArea
@@ -141,11 +135,20 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        anchors.fill: terminalLineLayout
+        color: messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : isHighlighted ? colorUtils.setAlpha(palette.text, 0.1) : "transparent"
+        border {
+            color: palette.highlight
+            width: root.isHighlighted ? 1.5 : 0
+        }
+    }
+
     RowLayout {
         id: terminalLineLayout
         visible: lith.settings.terminalLikeChat
         width: parent.width
-        y: headerLabel.visible ? headerLabel.height : 0
+        y: headerLabel.visible ? headerLabel.height + 1 : 1
         spacing: 0
         Label {
             Layout.alignment: Qt.AlignTop
@@ -153,6 +156,8 @@ Rectangle {
             color: disabledPalette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
+            lineHeight: messageText.lineHeight
+            lineHeightMode: messageText.lineHeightMode
         }
         Label {
             Layout.alignment: Qt.AlignTop
@@ -162,6 +167,9 @@ Rectangle {
             color: palette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
+            lineHeight: messageText.lineHeight
+            lineHeightMode: messageText.lineHeightMode
+            verticalAlignment: Label.AlignVCenter
         }
         Label {
             id: messageText
@@ -171,6 +179,8 @@ Rectangle {
             color: palette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
+            lineHeight: font.pixelSize + 1
+            lineHeightMode: Label.FixedHeight
             onLinkActivated: (link) => {
                 linkHandler.show(link, root)
             }
