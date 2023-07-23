@@ -47,7 +47,7 @@ Settings::Settings(QObject *parent)
         emit readyChanged();
     };
     std::function<void(void)> *testSettingsReady = new std::function<void(void)>();
-    *testSettingsReady = [=](){
+    *testSettingsReady = [this, testSettingsReady, settingsReady](){
         if (m_settings.status() == QSettings::NoError) {
             settingsReady();
             delete testSettingsReady;
