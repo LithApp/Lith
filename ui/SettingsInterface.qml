@@ -180,6 +180,7 @@ ScrollView {
                 id: messageSpacingSpinbox
                 summary: qsTr("Message spacing")
                 value: settings.messageSpacing
+                from: -to
             }
 
             ////////////////////////// COLOR THEME
