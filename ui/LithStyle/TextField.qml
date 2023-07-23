@@ -29,7 +29,7 @@ T.TextField {
             color: control.color
             anchors {
                 fill: parent
-                leftMargin: 2
+                rightMargin: 2
             }
             SequentialAnimation on opacity {
                 loops: Animation.Infinite
