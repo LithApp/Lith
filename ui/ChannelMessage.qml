@@ -140,45 +140,98 @@ Item {
         }
     }
 
-    RowLayout {
+    ColumnLayout {
         id: terminalLineLayout
         visible: lith.settings.terminalLikeChat
         width: parent.width
         y: headerLabel.visible ? headerLabel.height + 1 : 1
         spacing: 0
-        Label {
-            Layout.alignment: Qt.AlignTop
-            text: messageModel.date.toLocaleString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
-            color: disabledPalette.text
-            textFormat: Text.RichText
-            renderType: Text.NativeRendering
-            lineHeight: messageText.lineHeight
-            lineHeightMode: messageText.lineHeightMode
-        }
-        Label {
-            Layout.alignment: Qt.AlignTop
-            font.bold: true
-            visible: lith.settings.nickCutoffThreshold !== 0
-            text: messageModel.prefix.toTrimmedHtml(lith.settings.nickCutoffThreshold) + "\u00A0"
-            color: palette.text
-            textFormat: Text.RichText
-            renderType: Text.NativeRendering
-            lineHeight: messageText.lineHeight
-            lineHeightMode: messageText.lineHeightMode
-            verticalAlignment: Label.AlignVCenter
-        }
-        Label {
-            id: messageText
-            text: messageModel.message
+        RowLayout {
             Layout.fillWidth: true
-            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-            color: palette.text
-            textFormat: Text.RichText
-            renderType: Text.NativeRendering
-            lineHeight: font.pixelSize + 1
-            lineHeightMode: Label.FixedHeight
-            onLinkActivated: (link) => {
-                linkHandler.show(link, root)
+            spacing: 0
+            Label {
+                Layout.alignment: Qt.AlignTop
+                text: messageModel.date.toLocaleString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
+                color: disabledPalette.text
+                textFormat: Text.RichText
+                renderType: Text.NativeRendering
+                lineHeight: messageText.lineHeight
+                lineHeightMode: messageText.lineHeightMode
+            }
+            Label {
+                Layout.alignment: Qt.AlignTop
+                font.bold: true
+                visible: lith.settings.nickCutoffThreshold !== 0
+                text: messageModel.prefix.toTrimmedHtml(lith.settings.nickCutoffThreshold) + "\u00A0"
+                color: palette.text
+                textFormat: Text.RichText
+                renderType: Text.NativeRendering
+                lineHeight: messageText.lineHeight
+                lineHeightMode: messageText.lineHeightMode
+                verticalAlignment: Label.AlignVCenter
+            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 0
+                Label {
+                    id: messageText
+                    text: messageModel.message
+                    Layout.fillWidth: true
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    color: palette.text
+                    textFormat: Text.RichText
+                    renderType: Text.NativeRendering
+                    lineHeight: font.pixelSize + 1
+                    lineHeightMode: Label.FixedHeight
+                    onLinkActivated: (link) => {
+                        linkHandler.show(link, root)
+                    }
+                }
+
+                RowLayout {
+                    id: thumbnailLayout
+                    Layout.fillWidth: true
+                    visible: settings.showImageThumbnails
+                    Repeater {
+                        model: settings.showImageThumbnails ? messageModel.message.urls : null
+                        Rectangle {
+                            implicitHeight: 100
+                            implicitWidth: thumbnailImage.sourceSize.width === 0 ? 100 : height * (thumbnailImage.sourceSize.width / thumbnailImage.sourceSize.height)
+                            radius: 6
+                            clip: true
+                            color: "transparent"
+                            border.width: 1
+                            border.color: palette.text
+                            visible: modelData.endsWith(".jpg") || modelData.endsWith(".png")
+                            Image {
+                                id: thumbnailImage
+                                z: -1
+                                anchors.fill: parent
+                                fillMode: Image.PreserveAspectFit
+                                source: modelData.endsWith(".jpg") || modelData.endsWith(".png") ? modelData : ""
+
+                                Label {
+                                    id: thumbnailCross
+                                    text: "❌"
+                                    visible: parent.status === Image.Error
+                                    anchors.centerIn: parent
+                                    color: "red"
+                                    Label {
+                                        anchors {
+                                            top: parent.bottom
+                                            horizontalCenter: parent.horizontalCenter
+                                        }
+                                        text: "Error"
+                                    }
+                                }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: linkHandler.show(modelData, root)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

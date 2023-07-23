@@ -43,6 +43,7 @@ ScrollView {
         settings.showDateHeaders = showDateHeadersCheckbox.checked
         settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
         settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
+        settings.showImageThumbnails = showImageThumbnailsCheckbox.checked
         settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
         lith.settings.openLinksDirectlyInBrowser = openLinksDirectlyInBrowserSwitch.checked
         settings.forceLightTheme = forceLightThemeCheckbox.checked
@@ -74,6 +75,7 @@ ScrollView {
         showDateHeadersCheckbox.checked = lith.settings.showDateHeaders
         muteVideosByDefaultCheckbox.checked = settings.muteVideosByDefault
         loopVideosByDefaultCheckbox.checked = settings.loopVideosByDefault
+        showImageThumbnailsCheckbox.checked = settings.showImageThumbnails
         openLinksDirectlyCheckbox.checked = settings.openLinksDirectly
         openLinksDirectlyInBrowserSwitch.checked = lith.settings.openLinksDirectlyInBrowser
         forceLightThemeCheckbox.checked = settings.forceLightTheme
@@ -322,6 +324,12 @@ ScrollView {
             ////////////////////////// MULTIMEDIA
             Fields.Header {
                 text: qsTr("Multimedia")
+            }
+
+            Fields.Boolean {
+                id: showImageThumbnailsCheckbox
+                summary: qsTr("Show image thumbnails")
+                checked: lith.settings.showImageThumbnails
             }
 
             Fields.Boolean {

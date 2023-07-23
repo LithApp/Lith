@@ -80,6 +80,7 @@ class Settings : public QObject {
     SETTING(bool, muteVideosByDefault, true)
     SETTING(bool, loopVideosByDefault, true)
 
+    SETTING(bool, showImageThumbnails, false)
     SETTING(bool, openLinksDirectly, false)
     SETTING(bool, openLinksDirectlyInBrowser, false)
 

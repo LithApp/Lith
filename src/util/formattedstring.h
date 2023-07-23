@@ -26,6 +26,7 @@
 class FormattedString {
     Q_GADGET
     Q_PROPERTY(int length READ length CONSTANT)
+    Q_PROPERTY(QStringList urls READ urls CONSTANT)
 public:
     struct Part {
         struct Color {
@@ -97,6 +98,8 @@ public:
     QString toLower() const;
     std::string toStdString() const;
     int length() const;
+
+    QStringList urls() const;
 
 private:
     QList<Part> m_parts {};

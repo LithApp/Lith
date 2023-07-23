@@ -295,6 +295,15 @@ int FormattedString::length() const {
     return toPlain().length();
 }
 
+QStringList FormattedString::urls() const {
+    QStringList ret;
+    for (auto &i : m_parts) {
+        if (i.hyperlink)
+            ret.append(i.text);
+    }
+    return ret;
+}
+
 FormattedString &FormattedString::operator+=(const char *s) {
     lastPart().text += s;
     return *this;
