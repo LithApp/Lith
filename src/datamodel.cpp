@@ -255,6 +255,10 @@ Lith *BufferLine::lith() {
     return nullptr;
 }
 
+QString BufferLine::dateString() const {
+    return dateGet().date().toString();
+}
+
 FormattedString BufferLine::prefixGet() const {
     return m_prefix;
 }

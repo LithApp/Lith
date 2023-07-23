@@ -64,6 +64,7 @@ class Settings : public QObject {
     SETTING(int, shortenLongUrlsThreshold, 50)
     SETTING(int, nickCutoffThreshold, -1)
     SETTING(QString, timestampFormat, "hh:mm:ss")
+    SETTING(bool, showDateHeaders, true)
     SETTING(int, messageSpacing, 0)
 
     SETTING(bool, forceDarkTheme, false)

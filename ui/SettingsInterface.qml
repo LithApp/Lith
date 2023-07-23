@@ -40,6 +40,7 @@ ScrollView {
         settings.baseFontSize = baseFontSizeSpinBox.value
         settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
         settings.timestampFormat = timestampFormatInput.text
+        settings.showDateHeaders = showDateHeadersCheckbox.checked
         settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
         settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
         settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
@@ -70,6 +71,7 @@ ScrollView {
         baseFontSizeSpinBox.value = settings.baseFontSize
         nickCutoffThresholdSpinBox.value = settings.nickCutoffThreshold
         timestampFormatInput.text = settings.timestampFormat
+        showDateHeadersCheckbox.checked = lith.settings.showDateHeaders
         muteVideosByDefaultCheckbox.checked = settings.muteVideosByDefault
         loopVideosByDefaultCheckbox.checked = settings.loopVideosByDefault
         openLinksDirectlyCheckbox.checked = settings.openLinksDirectly
@@ -141,6 +143,13 @@ ScrollView {
                 Layout.alignment: Qt.AlignLeft
                 summary: qsTr("Timestamp format")
                 text: lith.settings.timestampFormat
+            }
+
+            Fields.Boolean {
+                id: showDateHeadersCheckbox
+                Layout.alignment: Qt.AlignLeft
+                summary: qsTr("Show date headers in the buffer")
+                checked: lith.settings.showDateHeaders
             }
 
             Fields.Boolean {

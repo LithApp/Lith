@@ -142,6 +142,7 @@ class BufferLine : public QObject {
     PROPERTY(bool, highlight)
     PROPERTY(QStringList, tags_array)
 
+    Q_PROPERTY(QString dateString READ dateString NOTIFY dateChanged)
     Q_PROPERTY(QString nick READ nickGet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString message READ messageGet WRITE messageSet NOTIFY messageChanged)
@@ -162,6 +163,7 @@ public:
 
     void setParent(Buffer *parent);
 
+    QString dateString() const;
     FormattedString prefixGet() const;
     void prefixSet(const FormattedString &o);
     QString nickGet() const;

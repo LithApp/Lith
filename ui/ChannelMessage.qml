@@ -29,13 +29,14 @@ Rectangle {
     //property var previousMessageModel: ListView.view.contentItem.children[index-1].messageModel
     //property var nextMessageModel: ListView.view.contentItem.children[index+1].messageModel
 
-    height: lith.settings.terminalLikeChat ? terminalLineLayout.height : messageBubble.height
+    height: (lith.settings.terminalLikeChat ? terminalLineLayout.height : messageBubble.height) + (headerLabel.visible ? headerLabel.height : 0)
 
     opacity: messageModel.searchCompare(lith.search.term) ? 1.0 : 0.3
 
+    property alias header: headerLabel.text
     readonly property bool isHighlighted: lith.search.highlightedLine && messageModel && lith.search.highlightedLine === messageModel
 
-    color: isHighlighted ? colorUtils.setAlpha(palette.text, 0.1) : messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : "transparent"
+    color: isHighlighted ? colorUtils.setAlpha(palette.text, 0.1) : messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : palette.base
     border {
         color: palette.highlight
         width: root.isHighlighted ? 1 : 0
@@ -125,14 +126,30 @@ Rectangle {
     }
     */
 
+    Label {
+        id: headerLabel
+        visible: text.length > 0
+        width: parent.width
+        horizontalAlignment: Label.AlignHCenter
+        topPadding: 3
+        bottomPadding: 3
+        Rectangle {
+            anchors.fill: parent
+            z: -1
+            height: 1
+            color: colorUtils.mixColors(palette.text, palette.window, 0.1)
+        }
+    }
+
     RowLayout {
         id: terminalLineLayout
         visible: lith.settings.terminalLikeChat
         width: parent.width
+        y: headerLabel.visible ? headerLabel.height : 0
         spacing: 0
         Label {
             Layout.alignment: Qt.AlignTop
-            text: messageModel.date.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
+            text: messageModel.date.toLocaleString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
             color: disabledPalette.text
             textFormat: Text.RichText
             renderType: Text.NativeRendering
