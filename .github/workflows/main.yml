@@ -322,6 +322,10 @@ jobs:
     - name: Generate .dmg
       run: |
         "$Qt6_DIR"/bin/macdeployqt build_macos/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
+    - name: Fancy up the .dmg
+      run: |
+        git clone https://github.com/create-dmg/create-dmg.git
+        ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --volname Lith --background ./dist/macos/dmgbg.png test.dmg build_macos/Lith.app
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
