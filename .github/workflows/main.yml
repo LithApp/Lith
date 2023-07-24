@@ -329,7 +329,8 @@ jobs:
         hdiutil attach build_macos/Lith_qt.dmg -mountpoint tmpmountpoint/
         git clone https://github.com/create-dmg/create-dmg.git
         # ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --codesign=Z52EFCPL6D --volname Lith --background ./dist/macos/dmgbg.png build_macos/Lith.dmg build_macos/Lith.app
-        ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --codesign Z52EFCPL6D --volname Lith --background ./dist/macos/dmgbg.png build_macos/Lith.dmg tmpmountpoint/Lith.app
+        # ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --codesign Z52EFCPL6D --volname Lith --background ./dist/macos/dmgbg.png build_macos/Lith.dmg tmpmountpoint/Lith.app
+        ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --volname Lith --background ./dist/macos/dmgbg.png build_macos/Lith.dmg tmpmountpoint/Lith.app
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
