@@ -24,7 +24,6 @@
 #include <QSortFilterProxyModel>
 #include <QDateTime>
 
-
 class Logger : public QAbstractTableModel {
     Q_OBJECT
 public:
@@ -54,6 +53,7 @@ public:
         Details,
         _LastColumn,
     };
+
     Logger(QObject *parent = nullptr);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
@@ -87,5 +87,10 @@ public:
 private:
     Logger *m_logger { nullptr };
 };
+
+// So the compiler doesn't complain about enum arithmetics...
+inline int operator+(Qt::ItemDataRole l, Logger::Columns r) {
+    return static_cast<int>(l) + static_cast<int>(r);
+}
 
 #endif // LOGGER_H

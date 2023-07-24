@@ -50,6 +50,7 @@ int Logger::rowCount(const QModelIndex &parent) const {
 
 int Logger::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return _LastColumn;
 }
 
@@ -118,6 +119,7 @@ bool FilteredLogger::filterAcceptsRow(int source_row, const QModelIndex &source_
 }
 
 bool FilteredLogger::filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const {
+    Q_UNUSED(source_parent)
     if (source_column == Logger::Details && !m_showDetails)
         return false;
     return true;
