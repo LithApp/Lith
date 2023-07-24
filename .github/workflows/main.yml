@@ -322,7 +322,7 @@ jobs:
     - name: Generate .dmg
       run: |
         "$Qt6_DIR"/bin/macdeployqt build_macos/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
-    - name: Fancy up the .dmg
+    - name: Create a fancier .dmg
       run: |
         mkdir tmpmountpoint/
         mv build_macos/Lith.dmg build_macos/Lith_qt.dmg
