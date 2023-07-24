@@ -231,6 +231,8 @@ set_target_properties(Lith PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/dist/ios/Info.plist.in"
+    MACOSX_BUNDLE_ICON_FILE icon.icns
+
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_WEAK YES
     XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER cz.rtinbriza.ma.Lith
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME AppIcon
@@ -245,8 +247,9 @@ endif()
 
 if (APPLE)
     # The asset catalog (icon especially) will be shared between macOS and iOS
-    target_sources(Lith PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/assets/Assets.xcassets")
+    target_sources(Lith PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/assets/Assets.xcassets" "${CMAKE_CURRENT_SOURCE_DIR}/assets/icon.icns")
     set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/icon.icns"
         "${CMAKE_CURRENT_SOURCE_DIR}/assets/Assets.xcassets"
         PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 endif()
