@@ -167,6 +167,11 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(LITH_RESOURCES
         ${LITH_RESOURCES}
     )
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(LITH_RESOURCES
+        ${LITH_RESOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/icon.icns"
+    )
 endif()
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     enable_language("RC")
