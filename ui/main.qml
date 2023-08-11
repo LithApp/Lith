@@ -86,10 +86,24 @@ ApplicationWindow {
         id: debugWindowLoader
         active: lith.debugVersion && platform.desktop
         source: "util/DebugWindow.qml"
+        property bool firstLoadX: true
+        property bool firstLoadY: true
         onLoaded: {
-            item.x = Qt.binding(() => window.x + window.width)
-            item.y = Qt.binding(() => window.y)
+            item.x = window.x + window.width
+            item.y = window.y
             item.raise()
+        }
+        Connections {
+            target: window
+            enabled: debugWindowLoader.firstLoadX || debugWindowLoader.firstLoadY
+            function onXChanged() {
+                debugWindowLoader.item.x = window.x + window.width
+                debugWindowLoader.firstLoadX = false
+            }
+            function onYChanged() {
+                debugWindowLoader.item.y = window.y
+                debugWindowLoader.firstLoadY = false
+            }
         }
     }
 
