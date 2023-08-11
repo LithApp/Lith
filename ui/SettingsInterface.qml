@@ -26,83 +26,77 @@ ScrollView {
     clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
-    function onAccepted() {
-        save()
-    }
     function save() {
-        settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
-        settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
-        settings.useLocalInputBar = useLocalInputBarCheckbox.checked
-        settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
-        settings.showGalleryButton = showGalleryButtonCheckbox.checked
-        settings.showSendButton = showSendButtonCheckbox.checked
-        settings.showSearchButton = showSearchButtonCheckbox.checked
-        settings.baseFontSize = baseFontSizeSpinBox.value
-        settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
-        settings.timestampFormat = timestampFormatInput.text
-        settings.showDateHeaders = showDateHeadersCheckbox.checked
-        settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
-        settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
-        settings.showImageThumbnails = showImageThumbnailsCheckbox.checked
-        settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
+        lith.settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
+        lith.settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
+        lith.settings.useLocalInputBar = useLocalInputBarCheckbox.checked
+        lith.settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
+        lith.settings.showGalleryButton = showGalleryButtonCheckbox.checked
+        lith.settings.showSendButton = showSendButtonCheckbox.checked
+        lith.settings.showSearchButton = showSearchButtonCheckbox.checked
+        lith.settings.baseFontSize = baseFontSizeSpinBox.value
+        lith.settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
+        lith.settings.timestampFormat = timestampFormatInput.text
+        lith.settings.showDateHeaders = showDateHeadersCheckbox.checked
+        lith.settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
+        lith.settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
+        lith.settings.showImageThumbnails = showImageThumbnailsCheckbox.checked
+        lith.settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
         lith.settings.openLinksDirectlyInBrowser = openLinksDirectlyInBrowserSwitch.checked
-        settings.scrollbarsOverlayContents = scrollbarsOverlayContentsCheckbox.checked
-        settings.forceLightTheme = forceLightThemeCheckbox.checked
-        settings.forceDarkTheme = forceDarkThemeCheckbox.checked
-        settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
-        settings.hotlistEnabled = hotlistEnabledCheckbox.checked
-        settings.hotlistCompact = hotlistCompactCheckbox.checked
-        settings.messageSpacing = messageSpacingSpinbox.value
-        settings.showJoinPartQuitMessages = showJoinPartQuitMessagesCheckbox.checked
-        settings.baseFontFamily = fontDialog.currentFont.family
-        settings.showBufferListOnStartup = showBufferListOnStartupCheckbox.checked
-        settings.platformBufferControlPosition = platformBufferControlPositionCheckbox.checked
-        settings.enableNotifications = enableNotificationsCheckbox.checked
-    }
-    function onRejected() {
-        restore()
+        lith.settings.scrollbarsOverlayContents = scrollbarsOverlayContentsCheckbox.checked
+        lith.settings.forceLightTheme = forceLightThemeCheckbox.checked
+        lith.settings.forceDarkTheme = forceDarkThemeCheckbox.checked
+        lith.settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
+        lith.settings.hotlistEnabled = hotlistEnabledCheckbox.checked
+        lith.settings.hotlistCompact = hotlistCompactCheckbox.checked
+        lith.settings.messageSpacing = messageSpacingSpinbox.value
+        lith.settings.showJoinPartQuitMessages = showJoinPartQuitMessagesCheckbox.checked
+        lith.settings.baseFontFamily = fontDialog.currentFont.family
+        lith.settings.showBufferListOnStartup = showBufferListOnStartupCheckbox.checked
+        lith.settings.platformBufferControlPosition = platformBufferControlPositionCheckbox.checked
+        lith.settings.enableNotifications = enableNotificationsCheckbox.checked
     }
     function restore() {
-        shortenLongUrlsCheckbox.checked = settings.shortenLongUrls
-        shortenLongUrlsThreshold.text = settings.shortenLongUrlsThreshold
-        useLocalInputBarCheckbox.checked = settings.useLocalInputBar
-        showAutocompleteButtonCheckbox.checked = settings.showAutocompleteButton
-        showGalleryButtonCheckbox.checked = settings.showGalleryButton
-        showSendButtonCheckbox.checked = settings.showSendButton
-        showSearchButtonCheckbox.checked = settings.showSearchButton
-        baseFontSizeSpinBox.value = settings.baseFontSize
-        nickCutoffThresholdSpinBox.value = settings.nickCutoffThreshold
-        timestampFormatInput.text = settings.timestampFormat
+        shortenLongUrlsCheckbox.checked = lith.settings.shortenLongUrls
+        shortenLongUrlsThreshold.text = lith.settings.shortenLongUrlsThreshold
+        useLocalInputBarCheckbox.checked = lith.settings.useLocalInputBar
+        showAutocompleteButtonCheckbox.checked = lith.settings.showAutocompleteButton
+        showGalleryButtonCheckbox.checked = lith.settings.showGalleryButton
+        showSendButtonCheckbox.checked = lith.settings.showSendButton
+        showSearchButtonCheckbox.checked = lith.settings.showSearchButton
+        baseFontSizeSpinBox.value = lith.settings.baseFontSize
+        nickCutoffThresholdSpinBox.value = lith.settings.nickCutoffThreshold
+        timestampFormatInput.text = lith.settings.timestampFormat
         showDateHeadersCheckbox.checked = lith.settings.showDateHeaders
-        muteVideosByDefaultCheckbox.checked = settings.muteVideosByDefault
-        loopVideosByDefaultCheckbox.checked = settings.loopVideosByDefault
-        showImageThumbnailsCheckbox.checked = settings.showImageThumbnails
-        openLinksDirectlyCheckbox.checked = settings.openLinksDirectly
+        muteVideosByDefaultCheckbox.checked = lith.settings.muteVideosByDefault
+        loopVideosByDefaultCheckbox.checked = lith.settings.loopVideosByDefault
+        showImageThumbnailsCheckbox.checked = lith.settings.showImageThumbnails
+        openLinksDirectlyCheckbox.checked = lith.settings.openLinksDirectly
         openLinksDirectlyInBrowserSwitch.checked = lith.settings.openLinksDirectlyInBrowser
-        scrollbarsOverlayContentsCheckbox.checked = settings.scrollbarsOverlayContents
-        forceLightThemeCheckbox.checked = settings.forceLightTheme
-        forceDarkThemeCheckbox.checked = settings.forceDarkTheme
-        useTrueBlackWithDarkThemeCheckbox.checked = settings.useTrueBlackWithDarkTheme
-        hotlistEnabledCheckbox.checked = settings.hotlistEnabled
-        hotlistCompactCheckbox.checked = settings.hotlistCompact
-        messageSpacingSpinbox.value = settings.messageSpacing
-        showJoinPartQuitMessagesCheckbox.checked = settings.showJoinPartQuitMessages
+        scrollbarsOverlayContentsCheckbox.checked = lith.settings.scrollbarsOverlayContents
+        forceLightThemeCheckbox.checked = lith.settings.forceLightTheme
+        forceDarkThemeCheckbox.checked = lith.settings.forceDarkTheme
+        useTrueBlackWithDarkThemeCheckbox.checked = lith.settings.useTrueBlackWithDarkTheme
+        hotlistEnabledCheckbox.checked = lith.settings.hotlistEnabled
+        hotlistCompactCheckbox.checked = lith.settings.hotlistCompact
+        messageSpacingSpinbox.value = lith.settings.messageSpacing
+        showJoinPartQuitMessagesCheckbox.checked = lith.settings.showJoinPartQuitMessages
         try {
-            fontChangeButton.text = settings.baseFontFamily
-            fontChangeButton.font.family = settings.baseFontFamily
+            fontChangeButton.text = lith.settings.baseFontFamily
+            fontChangeButton.font.family = lith.settings.baseFontFamily
         }
         catch(e) {
 
         }
-        fontDialog.currentFont.family = settings.baseFontFamily
-        showBufferListOnStartupCheckbox.checked = settings.showBufferListOnStartup
-        platformBufferControlPositionCheckbox.checked = settings.platformBufferControlPosition
-        enableNotificationsCheckbox.checked = settings.enableNotifications
+        fontDialog.currentFont.family = lith.settings.baseFontFamily
+        showBufferListOnStartupCheckbox.checked = lith.settings.showBufferListOnStartup
+        platformBufferControlPositionCheckbox.checked = lith.settings.platformBufferControlPosition
+        enableNotificationsCheckbox.checked = lith.settings.enableNotifications
     }
 
     FontDialog {
         id: fontDialog
-        currentFont.family: settings.baseFontFamily
+        currentFont.family: lith.settings.baseFontFamily
         flags: FontDialog.MonospacedFonts
         onAccepted: {
             fontChangeButton.text = fontDialog.selectedFont.family
@@ -129,7 +123,7 @@ ScrollView {
                 summary: "Font family"
                 details: "(requires restart)"
                 visible: !window.platform.mobile
-                text: settings.baseFontFamily
+                text: lith.settings.baseFontFamily
                 onClicked: fontDialog.open()
             }
 
@@ -137,7 +131,7 @@ ScrollView {
                 id: baseFontSizeSpinBox
                 Layout.alignment: Qt.AlignLeft
                 summary: qsTr("Message font size")
-                value: settings.baseFontSize
+                value: lith.settings.baseFontSize
                 from: 6
                 to: 32
             }
@@ -158,7 +152,7 @@ ScrollView {
 
             Fields.Boolean {
                 id: showJoinPartQuitMessagesCheckbox
-                checked: settings.showJoinPartQuitMessages
+                checked: lith.settings.showJoinPartQuitMessages
                 summary: qsTr("Show join/part messages")
             }
 
@@ -167,7 +161,7 @@ ScrollView {
                 summary: qsTr("Align nick length")
                 from: -1
                 to: 100
-                value: settings.nickCutoffThreshold
+                value: lith.settings.nickCutoffThreshold
                 textFromValue: function(value, locale) {
                     if (value >= 0)
                         return Number(value)
@@ -183,7 +177,7 @@ ScrollView {
             Fields.IntSpinBox {
                 id: messageSpacingSpinbox
                 summary: qsTr("Message spacing")
-                value: settings.messageSpacing
+                value: lith.settings.messageSpacing
                 from: -to
             }
 
@@ -196,7 +190,7 @@ ScrollView {
                 id: scrollbarsOverlayContentsCheckbox
                 summary: qsTr("Mobile-like scrollbar")
                 details: checked ? qsTr("Scrollbar will be thin and appear above contents") : qsTr("Scrollbar will be wide and always visible next to contents")
-                checked: settings.scrollbarsOverlayContents
+                checked: lith.settings.scrollbarsOverlayContents
             }
 
             ////////////////////////// COLOR THEME
@@ -207,7 +201,7 @@ ScrollView {
             Fields.Boolean {
                 id: forceLightThemeCheckbox
                 summary: qsTr("Force light theme")
-                checked: settings.forceLightTheme
+                checked: lith.settings.forceLightTheme
                 onCheckedChanged: {
                     if (checked)
                         forceDarkThemeCheckbox.checked = false
@@ -217,7 +211,7 @@ ScrollView {
             Fields.Boolean {
                 id: forceDarkThemeCheckbox
                 summary: qsTr("Force dark theme")
-                checked: settings.forceDarkTheme
+                checked: lith.settings.forceDarkTheme
                 onCheckedChanged: {
                     if (checked)
                         forceLightThemeCheckbox.checked = false
@@ -227,7 +221,7 @@ ScrollView {
             Fields.Boolean {
                 id: useTrueBlackWithDarkThemeCheckbox
                 summary: qsTr("Use black in dark theme")
-                checked: settings.useTrueBlackWithDarkTheme
+                checked: lith.settings.useTrueBlackWithDarkTheme
             }
 
             ////////////////////////// INPUT BAR
@@ -239,31 +233,31 @@ ScrollView {
                 id: useLocalInputBarCheckbox
                 summary: qsTr("Use local input bar")
                 details: checked ? qsTr("Last input will be remembered in each buffer") : qsTr("Input contents won't change when switching buffers")
-                checked: settings.useLocalInputBar
+                checked: lith.settings.useLocalInputBar
             }
 
             Fields.Boolean {
                 id: showAutocompleteButtonCheckbox
                 summary: qsTr("Show autocomplete button")
-                checked: settings.showAutocompleteButton
+                checked: lith.settings.showAutocompleteButton
             }
 
             Fields.Boolean {
                 id: showGalleryButtonCheckbox
                 summary: qsTr("Show gallery button")
-                checked: settings.showGalleryButton
+                checked: lith.settings.showGalleryButton
             }
 
             Fields.Boolean {
                 id: showSendButtonCheckbox
                 summary: qsTr("Show send button")
-                checked: settings.showSendButton
+                checked: lith.settings.showSendButton
             }
 
             Fields.Boolean {
                 id: showSearchButtonCheckbox
                 summary: qsTr("Show search button")
-                checked: settings.showSearchButton
+                checked: lith.settings.showSearchButton
             }
 
             ////////////////////////// HOTLIST
@@ -274,7 +268,7 @@ ScrollView {
             Fields.Boolean {
                 id: hotlistEnabledCheckbox
                 summary: qsTr("Enable hotlist")
-                checked: settings.hotlistEnabled
+                checked: lith.settings.hotlistEnabled
             }
 
             Fields.Button {
@@ -293,7 +287,7 @@ ScrollView {
                 id: hotlistCompactCheckbox
                 summary: qsTr("Use compact layout")
                 enabled: hotlistEnabledCheckbox.checked
-                checked: settings.hotlistCompact
+                checked: lith.settings.hotlistCompact
             }
 
             ////////////////////////// BUFFER LIST
@@ -304,13 +298,13 @@ ScrollView {
             Fields.Boolean {
                 id: showBufferListOnStartupCheckbox
                 summary: qsTr("Show buffer list on startup")
-                checked: settings.showBufferListOnStartup
+                checked: lith.settings.showBufferListOnStartup
             }
 
             Fields.Boolean {
                 id: platformBufferControlPositionCheckbox
                 summary: window.platform.mobile ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
-                checked: settings.platformBufferControlPosition
+                checked: lith.settings.platformBufferControlPosition
             }
 
             ////////////////////////// URL HANDLING
@@ -321,14 +315,14 @@ ScrollView {
             Fields.Boolean {
                 id: shortenLongUrlsCheckbox
                 summary: qsTr("Shortening Enabled")
-                checked: settings.shortenLongUrls
+                checked: lith.settings.shortenLongUrls
             }
 
             Fields.String {
                 id: shortenLongUrlsThreshold
                 summary: qsTr("Length threshold")
                 enabled: shortenLongUrlsCheckbox.checked
-                text: settings.shortenLongUrlsThreshold
+                text: lith.settings.shortenLongUrlsThreshold
                 inputMethodHints: Qt.ImhPreferNumbers
                 validator: IntValidator {
                     bottom: 0
@@ -350,7 +344,7 @@ ScrollView {
                 id: openLinksDirectlyCheckbox
                 summary: qsTr("Open links directly")
                 details: checked ? qsTr("Lith will either show media (images, video) directly with a built-in player or open your default browser (unsupported media, other link types)") : qsTr("Lith will show a popup allowing you to choose between copying the URL, opening it in your default browser or showing it inside Lith if supported (images, video)")
-                checked: settings.openLinksDirectly
+                checked: lith.settings.openLinksDirectly
                 columnComponent: RowLayout {
                     Layout.leftMargin: 15
                     Layout.rightMargin: 15
@@ -420,13 +414,13 @@ ScrollView {
             Fields.Boolean {
                 id: loopVideosByDefaultCheckbox
                 summary: qsTr("Loop videos by default")
-                checked: settings.showSendButton
+                checked: lith.settings.showSendButton
             }
 
             Fields.Boolean {
                 id: muteVideosByDefaultCheckbox
                 summary: qsTr("Mute videos by default")
-                checked: settings.showSendButton
+                checked: lith.settings.showSendButton
             }
 
             Fields.Header {

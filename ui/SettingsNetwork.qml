@@ -30,65 +30,59 @@ ScrollView {
     property bool networkSettingsChanged: {
         if (passphraseField.text.length > 0)
             return true
-        if (settings.host !== hostField.text)
+        if (lith.settings.host !== hostField.text)
             return true
-        if (settings.port !== parseInt(portField.text))
+        if (lith.settings.port !== parseInt(portField.text))
             return true
-        if (settings.encrypted !== encryptedCheckbox.checked)
+        if (lith.settings.encrypted !== encryptedCheckbox.checked)
             return true
-        if (settings.allowSelfSignedCertificates !== selfSignedCertificateCheckbox.checked)
+        if (lith.settings.allowSelfSignedCertificates !== selfSignedCertificateCheckbox.checked)
             return true
-        if (settings.handshakeAuth !== handshakeAuthCheckbox.checked)
+        if (lith.settings.handshakeAuth !== handshakeAuthCheckbox.checked)
             return true
-        if (settings.connectionCompression !== connectionCompressionCheckbox.checked)
+        if (lith.settings.connectionCompression !== connectionCompressionCheckbox.checked)
             return true
-        if (typeof settings.useWebsockets !== "undefined") {
-            if (settings.useWebsockets !== useWebsocketsCheckbox.checked)
+        if (typeof lith.settings.useWebsockets !== "undefined") {
+            if (lith.settings.useWebsockets !== useWebsocketsCheckbox.checked)
                 return true
         }
-        if (typeof settings.websocketsEndpoint !== "undefined") {
-            if (settings.websocketsEndpoint !== websocketsEndpointInput.text)
+        if (typeof lith.settings.websocketsEndpoint !== "undefined") {
+            if (lith.settings.websocketsEndpoint !== websocketsEndpointInput.text)
                 return true
         }
         return false
     }
 
-    function onAccepted() {
-        save()
-    }
     function save() {
         // Network-resetting settings need to be changed at once to not reset the connection for each changed property
-        settings.saveNetworkSettings(
+        lith.settings.saveNetworkSettings(
             hostField.text, portField.text, encryptedCheckbox.checked, selfSignedCertificateCheckbox.checked,
             passphraseField.text, handshakeAuthCheckbox.checked, connectionCompressionCheckbox.checked,
-            (typeof settings.useWebsockets !== "undefined" ? useWebsocketsCheckbox.checked : false),
-            (typeof settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
+            (typeof lith.settings.useWebsockets !== "undefined" ? useWebsocketsCheckbox.checked : false),
+            (typeof lith.settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
         )
-        settings.showInternalData = showInternalDataCheckbox.checked
-        settings.enableLogging = enableLoggingCheckbox.checked
-        settings.enableReplayRecording = enableReplayRecordingCheckbox.checked
+        lith.settings.showInternalData = showInternalDataCheckbox.checked
+        lith.settings.enableLogging = enableLoggingCheckbox.checked
+        lith.settings.enableReplayRecording = enableReplayRecordingCheckbox.checked
         passphraseField.text = ""
-    }
-    function onRejected() {
-        restore()
     }
     function restore() {
         passphraseField.text = ""
-        hostField.text = settings.host
-        portField.text = settings.port
-        encryptedCheckbox.checked = settings.encrypted
-        selfSignedCertificateCheckbox.checked = settings.allowSelfSignedCertificates
-        handshakeAuthCheckbox.checked = settings.handshakeAuth
-        connectionCompressionCheckbox.checked = settings.connectionCompression
-        if (typeof settings.useWebsockets !== "undefined") {
-            useWebsocketsCheckbox.checked = settings.useWebsockets
+        hostField.text = lith.settings.host
+        portField.text = lith.settings.port
+        encryptedCheckbox.checked = lith.settings.encrypted
+        selfSignedCertificateCheckbox.checked = lith.settings.allowSelfSignedCertificates
+        handshakeAuthCheckbox.checked = lith.settings.handshakeAuth
+        connectionCompressionCheckbox.checked = lith.settings.connectionCompression
+        if (typeof lith.settings.useWebsockets !== "undefined") {
+            useWebsocketsCheckbox.checked = lith.settings.useWebsockets
         }
-        if (typeof settings.websocketsEndpoint !== "undefined") {
-            websocketsEndpointInput.text = settings.websocketsEndpoint
+        if (typeof lith.settings.websocketsEndpoint !== "undefined") {
+            websocketsEndpointInput.text = lith.settings.websocketsEndpoint
         }
-        showInternalDataCheckbox.checked = settings.showInternalData
-        enableLoggingCheckbox.checked = settings.enableLogging
-        enableReplayRecordingCheckbox.checked = settings.enableReplayRecording
+        showInternalDataCheckbox.checked = lith.settings.showInternalData
+        enableLoggingCheckbox.checked = lith.settings.enableLogging
+        enableReplayRecordingCheckbox.checked = lith.settings.enableReplayRecording
     }
 
     Item {
@@ -124,14 +118,14 @@ ScrollView {
             }
             Fields.String {
                 id: hostField
-                text: settings.host
+                text: lith.settings.host
 
                 summary: qsTr("Hostname")
                 inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase
             }
             Fields.Integer {
                 id: portField
-                text: settings.port
+                text: lith.settings.port
 
                 summary: qsTr("Port")
                 validator: IntValidator {
@@ -141,13 +135,13 @@ ScrollView {
             }
             Fields.Boolean {
                 id: encryptedCheckbox
-                checked: settings.encrypted
+                checked: lith.settings.encrypted
 
                 summary: qsTr("SSL")
             }
             Fields.Boolean {
                 id: selfSignedCertificateCheckbox
-                checked: settings.allowSelfSignedCertificates
+                checked: lith.settings.allowSelfSignedCertificates
 
                 summary: qsTr("Allow self-signed certificates")
                 details: "(Less secure, not recommended)"
@@ -155,19 +149,19 @@ ScrollView {
             Fields.String {
                 id: passphraseField
                 summary: qsTr("Password")
-                placeholderText: settings.passphrase.length > 0 ? "**********" : "No password was entered yet"
+                placeholderText: lith.settings.passphrase.length > 0 ? "**********" : "No password was entered yet"
                 echoMode: TextInput.Password
             }
             Fields.Boolean {
                 id: handshakeAuthCheckbox
-                checked: settings.handshakeAuth
+                checked: lith.settings.handshakeAuth
 
                 summary: qsTr("Use Handshake")
                 details: "(More secure, available since WeeChat 2.9)"
             }
             Fields.Boolean {
                 id: connectionCompressionCheckbox
-                checked: settings.connectionCompression
+                checked: lith.settings.connectionCompression
 
                 summary: qsTr("Use WeeChat compression")
             }
@@ -176,16 +170,16 @@ ScrollView {
             }
             Fields.Boolean {
                 id: useWebsocketsCheckbox
-                visible: typeof settings.useWebsockets !== "undefined"
-                checked: settings.useWebsockets
+                visible: typeof lith.settings.useWebsockets !== "undefined"
+                checked: lith.settings.useWebsockets
 
                 summary: qsTr("Use WebSockets to connect")
             }
             Fields.String {
                 id: websocketsEndpointInput
-                visible: typeof settings.useWebsockets !== "undefined"
+                visible: typeof lith.settings.useWebsockets !== "undefined"
                 enabled: useWebsocketsCheckbox.checked
-                text: settings.websocketsEndpoint
+                text: lith.settings.websocketsEndpoint
 
                 summary: qsTr("Websockets endpoint")
             }
@@ -194,18 +188,18 @@ ScrollView {
             }
             Fields.Boolean {
                 id: showInternalDataCheckbox
-                checked: settings.showInternalData
+                checked: lith.settings.showInternalData
                 summary: qsTr("Show internal data")
                 details: qsTr("Enable showing extra internal data in some portions of the UI.")
             }
             Fields.Boolean {
                 id: enableLoggingCheckbox
-                checked: settings.enableLogging
+                checked: lith.settings.enableLogging
                 summary: qsTr("Enable logging")
             }
             Fields.Boolean {
                 id: enableReplayRecordingCheckbox
-                checked: settings.enableReplayRecording
+                checked: lith.settings.enableReplayRecording
                 summary: qsTr("Record network data")
                 details: qsTr("(Developer only, restart required)\nLith will record all data coming from WeeChat for debugging purposes. Personal data such as message contents and encryption negotiation will be logged.")
                 columnComponent: ListView {
@@ -375,7 +369,7 @@ ScrollView {
                                 id: recordingResultPopupLabel
                                 x: 18
                                 y: 12
-                                width: Math.min(mainView.width, font.pixelSize * 32)
+                                width: Math.min(root.width, font.pixelSize * 32)
                                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                                 onTextChanged: (text) => {
                                     if (text.length > 0)

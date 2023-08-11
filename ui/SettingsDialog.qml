@@ -24,70 +24,9 @@ Dialog {
     modal: true
     borderless: true
 
-    header: TabBar {
-        id: tabBar
-        width: parent.width
-
-        Repeater {
-            model: window.platform.mobile ? [qsTr("Connection"), qsTr("Interface")]
-                                          : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
-
-            delegate: TabButton {
-                text: modelData
-            }
-        }
-    }
-
-    function save() {
-        settingsNetwork.save()
-        settingsInterface.save()
-        settingsShortcuts.save()
-    }
-    function restore() {
-        settingsNetwork.restore()
-        settingsInterface.restore()
-        settingsShortcuts.restore()
-    }
-
-    onAccepted: {
-        settingsNetwork.onAccepted()
-        settingsInterface.onAccepted()
-        settingsShortcuts.onAccepted()
-    }
-    onRejected: {
-        settingsNetwork.onRejected()
-        settingsInterface.onRejected()
-        settingsShortcuts.onRejected()
-    }
-
-
-    StackLayout {
-        id: stackLayout
+    SettingsDialogContents {
+        id: contents
         anchors.fill: parent
-
-        currentIndex: tabBar.currentIndex
-
-        SettingsNetwork {
-            id: settingsNetwork
-        }
-
-        SettingsInterface {
-            id: settingsInterface
-        }
-
-        SettingsShortcuts {
-            id: settingsShortcuts
-            enabled: !window.platform.mobile
-        }
-    }
-
-    footer: DialogButtons {
-        id: dialogButtons
-        dialog: root
-        acceptText: qsTr("Save and close")
-        additionalButton: Button {
-            text: qsTr("Save")
-            onClicked: root.save()
-        }
+        onCloseRequested: root.close()
     }
 }

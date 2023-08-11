@@ -125,6 +125,7 @@ set(LITH_QML
     ui/ScrollHelper.qml
     ui/SearchBar.qml
     ui/SettingsDialog.qml
+    ui/SettingsDialogContents.qml
     ui/SettingsFields/Base.qml
     ui/SettingsFields/Boolean.qml
     ui/SettingsFields/Button.qml
