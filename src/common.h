@@ -26,6 +26,15 @@
 
 #include "util/formattedstring.h"
 
+#if !defined(LITH_PLATFORM_MOBILE) && !defined(LITH_PLATFORM_DESKTOP)
+#  if defined(Q_OS_IOS) || defined(Q_OS_ANDROID)
+#    define LITH_PLATFORM_MOBILE 1
+#  else // let's assume all other platforms are desktop for simplicity
+#    define LITH_PLATFORM_DESKTOP 1
+#  endif
+#endif // Q_OS_IOS || Q_OS_ANDROID
+
+
 typedef QMap<QString, QString> StringMap;
 Q_DECLARE_METATYPE(StringMap);
 
