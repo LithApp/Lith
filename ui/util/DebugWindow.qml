@@ -8,6 +8,8 @@ import ".."
 Window {
     id: debugWindow
 
+    title: "Lith Debug"
+
     visible: true
     width: 600
     height: 800
