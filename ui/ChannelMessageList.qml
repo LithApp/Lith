@@ -21,6 +21,7 @@ import QtQuick.Layouts
 ListView {
     id: listView
 
+
     // ugh, this is an ugly hack to fix the button under the Drawer drag area
     // Qt doesn't seem to care about this https://bugreports.qt.io/browse/QTBUG-59141
     // note the whole widget is rotated by 180 degress so it has to be subtracted from the height
@@ -32,6 +33,11 @@ ListView {
             positionViewAtBeginning()
     }
 
+    // The ListView jumps around when new messages are being loaded while dragging, to avoid that annoyance, handle overshoots by ourselves.
+    // Second part of this is at the bottom, overshooting is marked with expanding rectangles
+    boundsMovement: Flickable.StopAtBounds
+    readonly property color overshootMarkerColor: palette.highlight
+
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
@@ -41,12 +47,6 @@ ListView {
     ScrollBar.vertical: ScrollBar {
         id: scrollBar
         hoverEnabled: true
-        active: hovered || pressed
-        orientation: Qt.Vertical
-        parent: listView.parent
-        anchors.top: listView.top
-        anchors.right: listView.right
-        anchors.bottom: listView.bottom
     }
 
     orientation: Qt.Vertical
@@ -120,5 +120,30 @@ ListView {
         visible: opacity > 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }
         onClicked: positionViewAtBeginning()
+    }
+
+    Rectangle {
+        id: topOvershootMarker
+        anchors.top: parent.top
+        width: parent.width
+        height: Math.pow(Math.max(0, Math.abs(listView.verticalOvershoot)), 0.3)
+        gradient: Gradient {
+            GradientStop { position: 1.0; color: colorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
+            GradientStop { position: 0.0; color: listView.overshootMarkerColor }
+        }
+        visible: listView.dragging && listView.verticalOvershoot < 0
+    }
+
+    Rectangle {
+        id: bottomOvershootMarker
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: -1
+        width: parent.width
+        height: Math.pow(Math.max(0, listView.verticalOvershoot), 0.3)
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: colorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
+            GradientStop { position: 1.0; color: listView.overshootMarkerColor }
+        }
+        visible: listView.dragging && listView.verticalOvershoot > 0
     }
 }
