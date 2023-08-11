@@ -5,22 +5,22 @@ Button {
     text: "[]"
     width: height
     onClicked: {
-        if (settings.forceLightTheme) {
-            settings.forceLightTheme = false
-            settings.forceDarkTheme = true
+        if (lith.settings.forceLightTheme) {
+            lith.settings.forceLightTheme = false
+            lith.settings.forceDarkTheme = true
         }
-        else if (settings.forceDarkTheme) {
-            if (settings.useTrueBlackWithDarkTheme) {
-                settings.forceDarkTheme = false
-                settings.useTrueBlackWithDarkTheme = false
-                settings.forceLightTheme = true
+        else if (lith.settings.forceDarkTheme) {
+            if (lith.settings.useTrueBlackWithDarkTheme) {
+                lith.settings.forceDarkTheme = false
+                lith.settings.useTrueBlackWithDarkTheme = false
+                lith.settings.forceLightTheme = true
             }
             else {
-                settings.useTrueBlackWithDarkTheme = true
+                lith.settings.useTrueBlackWithDarkTheme = true
             }
         }
         else {
-            settings.forceLightTheme = true
+            lith.settings.forceLightTheme = true
         }
     }
 }

@@ -139,6 +139,7 @@ set(LITH_QML
     ui/SettingsNetwork.qml
     ui/SettingsShortcuts.qml
     ui/main.qml
+    ui/util/DebugWindow.qml
     ui/util/PaletteSwitch.qml
 )
 

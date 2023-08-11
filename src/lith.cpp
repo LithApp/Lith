@@ -158,6 +158,10 @@ QString Lith::gitVersion() const {
     return GIT_STATE;
 }
 
+bool Lith::debugVersion() const {
+    return QStringLiteral("Debug") == CMAKE_BUILD_TYPE;
+}
+
 Lith::Lith(QObject *parent)
     : QObject(parent)
     , m_windowHelper(new WindowHelper(this))

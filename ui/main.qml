@@ -77,6 +77,22 @@ ApplicationWindow {
         }
     }
 
+    onActiveChanged: {
+        if (active && lith.debugVersion && platform.desktop)
+            debugWindowLoader.item.raise()
+    }
+
+    Loader {
+        id: debugWindowLoader
+        active: lith.debugVersion && platform.desktop
+        source: "util/DebugWindow.qml"
+        onLoaded: {
+            item.x = Qt.binding(() => window.x + window.width)
+            item.y = Qt.binding(() => window.y)
+            item.raise()
+        }
+    }
+
     SystemPalette {
         id: palette
     }

@@ -72,6 +72,7 @@ private:
     Q_PROPERTY(NotificationHandler* notificationHandler READ notificationHandler CONSTANT)
 
     Q_PROPERTY(QString gitVersion READ gitVersion CONSTANT)
+    Q_PROPERTY(bool debugVersion READ debugVersion CONSTANT)
 
 public:
     static Lith *_self;
@@ -92,6 +93,7 @@ public:
     NotificationHandler *notificationHandler();
 
     QString gitVersion() const;
+    bool debugVersion() const;
 
     void log(Logger::EventType type, QString summary) {
         m_logger->log(Logger::Event{type, summary});
