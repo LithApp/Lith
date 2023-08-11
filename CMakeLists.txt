@@ -92,6 +92,8 @@ set(LITH_SOURCES
     src/util/reflection.h
     src/util/sockethelper.cpp
     src/util/sockethelper.h
+    src/util/urlmetadata.cpp
+    src/util/urlmetadata.h
     src/weechat.cpp
     src/weechat.h
     src/windowhelper.cpp

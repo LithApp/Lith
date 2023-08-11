@@ -23,6 +23,7 @@
 #include "windowhelper.h"
 #include "util/formatstringsplitter.h"
 #include "util/reflection.h"
+#include "util/urlmetadata.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -90,6 +91,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<RecordProxy>("lith", 1, 0, "RecordProxy", "");
     qmlRegisterType<FormatStringSplitter>("lith", 1, 0, "FormatStringSplitter");
     qmlRegisterType<Reflection>("lith", 1, 0, "Reflection");
+    qmlRegisterType<UrlMetaData>("lith", 1, 0, "UrlMetaData");
 
     // Initialize UI helpers and fonts
     Settings::instance();

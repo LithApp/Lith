@@ -202,13 +202,19 @@ Item {
                             color: "transparent"
                             border.width: 1
                             border.color: palette.text
-                            visible: modelData.endsWith(".jpg") || modelData.endsWith(".png")
+                            visible: metadata.isImage || metadata.isVideo
+                            UrlMetaData {
+                                id: metadata
+                                url: modelData
+                                onPreviewUrlChanged: console.warn("Preview: " + previewUrl)
+                            }
+
                             Image {
                                 id: thumbnailImage
                                 z: -1
                                 anchors.fill: parent
                                 fillMode: Image.PreserveAspectFit
-                                source: modelData.endsWith(".jpg") || modelData.endsWith(".png") ? modelData : ""
+                                source: metadata.previewUrl // modelData.endsWith(".jpg") || modelData.endsWith(".png") ? modelData : ""
 
                                 Label {
                                     id: thumbnailCross
