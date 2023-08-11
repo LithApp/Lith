@@ -24,6 +24,8 @@ Rectangle {
     id: root
     color: palette.window
 
+    readonly property real delegateWidth: root.width - (lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
+
     readonly property bool controlRowOnBottom: (window.platform.mobile && lith.settings.platformBufferControlPosition) || (!window.platform.mobile && !lith.settings.platformBufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
     function clear() {
@@ -126,7 +128,7 @@ Rectangle {
 
         delegate: ItemDelegate {
             id: bufferDelegate
-            width: bufferList.width
+            width: root.delegateWidth
 
             checked: lith.selectedBuffer == buffer
             highlighted: bufferList.currentIndex === index
@@ -152,7 +154,7 @@ Rectangle {
 
             Rectangle {
                 id: numberIndicator
-                x: bufferDelegate.horizontalPadding
+                x: bufferDelegate.spacing
                 height: parent.height - 12
                 width: height
                 anchors.verticalCenter: parent.verticalCenter
@@ -178,7 +180,7 @@ Rectangle {
                 width: Math.max(height, hotListItemCount.width + 6)
                 anchors.verticalCenter: bufferDelegate.verticalCenter
                 anchors.right: bufferDelegate.right
-                anchors.rightMargin: bufferDelegate.horizontalPadding
+                anchors.rightMargin: bufferDelegate.spacing
                 radius: 2
                 Label {
                     id: hotListItemCount

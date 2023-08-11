@@ -38,6 +38,8 @@ ListView {
     boundsMovement: Flickable.StopAtBounds
     readonly property color overshootMarkerColor: palette.highlight
 
+    readonly property real delegateWidth: listView.width - (lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
+
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
@@ -46,7 +48,6 @@ ListView {
 
     ScrollBar.vertical: ScrollBar {
         id: scrollBar
-        hoverEnabled: true
     }
 
     orientation: Qt.Vertical
@@ -58,6 +59,7 @@ ListView {
         readonly property string sectionName: ListView.section
         readonly property string nextSectionName: ListView.nextSection
         header: lith.settings.showDateHeaders && sectionName !== nextSectionName ? sectionName : ""
+        width: listView.delegateWidth
     }
 
     section.criteria: ViewSection.FullString

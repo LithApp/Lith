@@ -67,6 +67,12 @@ class Settings : public QObject {
     SETTING(bool, showDateHeaders, true)
     SETTING(int, messageSpacing, 0)
 
+#if defined(LITH_PLATFORM_DESKTOP)
+    SETTING(bool, scrollbarsOverlayContents, false)
+#else
+    SETTING(bool, scrollbarsOverlayContents, true)
+#endif
+
     SETTING(bool, forceDarkTheme, false)
     SETTING(bool, forceLightTheme, false)
     SETTING(bool, useTrueBlackWithDarkTheme, false)

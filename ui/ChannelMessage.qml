@@ -24,7 +24,6 @@ import lith 1.0
 Item {
     id: root
     z: index
-    width: ListView.view.width // + timeMetrics.width
     property var messageModel: null
     //property var previousMessageModel: ListView.view.contentItem.children[index-1].messageModel
     //property var nextMessageModel: ListView.view.contentItem.children[index+1].messageModel

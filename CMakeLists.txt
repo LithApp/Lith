@@ -150,6 +150,7 @@ set(LITHSTYLE_QML
     ui/LithStyle/ItemDelegate.qml
     ui/LithStyle/Label.qml
     ui/LithStyle/Popup.qml
+    ui/LithStyle/ScrollBar.qml
     ui/LithStyle/SpinBox.qml
     ui/LithStyle/Switch.qml
     ui/LithStyle/TabButton.qml

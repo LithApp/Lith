@@ -46,6 +46,7 @@ ScrollView {
         settings.showImageThumbnails = showImageThumbnailsCheckbox.checked
         settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
         lith.settings.openLinksDirectlyInBrowser = openLinksDirectlyInBrowserSwitch.checked
+        settings.scrollbarsOverlayContents = scrollbarsOverlayContentsCheckbox.checked
         settings.forceLightTheme = forceLightThemeCheckbox.checked
         settings.forceDarkTheme = forceDarkThemeCheckbox.checked
         settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
@@ -78,6 +79,7 @@ ScrollView {
         showImageThumbnailsCheckbox.checked = settings.showImageThumbnails
         openLinksDirectlyCheckbox.checked = settings.openLinksDirectly
         openLinksDirectlyInBrowserSwitch.checked = lith.settings.openLinksDirectlyInBrowser
+        scrollbarsOverlayContentsCheckbox.checked = settings.scrollbarsOverlayContents
         forceLightThemeCheckbox.checked = settings.forceLightTheme
         forceDarkThemeCheckbox.checked = settings.forceDarkTheme
         useTrueBlackWithDarkThemeCheckbox.checked = settings.useTrueBlackWithDarkTheme
@@ -183,6 +185,18 @@ ScrollView {
                 summary: qsTr("Message spacing")
                 value: settings.messageSpacing
                 from: -to
+            }
+
+            ////////////////////////// GENERAL
+            Fields.Header {
+                text: qsTr("General")
+            }
+
+            Fields.Boolean {
+                id: scrollbarsOverlayContentsCheckbox
+                summary: qsTr("Mobile-like scrollbar")
+                details: checked ? qsTr("Scrollbar will be thin and appear above contents") : qsTr("Scrollbar will be wide and always visible next to contents")
+                checked: settings.scrollbarsOverlayContents
             }
 
             ////////////////////////// COLOR THEME
