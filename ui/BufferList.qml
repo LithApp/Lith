@@ -24,6 +24,7 @@ Rectangle {
     id: root
     color: palette.window
 
+    property bool compactView: true
     readonly property real delegateWidth: root.width - (lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
     readonly property bool controlRowOnBottom: (window.platform.mobile && lith.settings.platformBufferControlPosition) || (!window.platform.mobile && !lith.settings.platformBufferControlPosition)
@@ -136,9 +137,10 @@ Rectangle {
             required property var modelData
             required property int index
             property var buffer: modelData
-            text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name : ""
+            text: root.compactView ? "" : buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name : ""
 
             onClicked: {
+                console.log("Clicked")
                 lith.selectedBuffer = buffer
                 root.close()
             }
@@ -168,11 +170,22 @@ Rectangle {
                     color: disabledPalette.text
                     opacity: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
                 }
-                Behavior on opacity { NumberAnimation { duration: 100 } }
+                Behavior on borderColor { ColorAnimation { duration: 100 } }
+                property color borderColor: {
+                    if (!root.compactView)
+                        return "transparent"
+                    if (modelData.hotMessages > 0)
+                        return palette.highlight
+                    if (modelData.unreadMessages > 0)
+                        return palette.windowText
+                    return "transparent"
+                }
+                border.color: numberIndicator.borderColor
+                border.width: 1
             }
             Rectangle {
                 id: hotMessageIndicator
-                visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
+                visible: (modelData.hotMessages > 0 || modelData.unreadMessages > 0) && !root.compactView
                 color: modelData.hotMessages ? colorUtils.darken(palette.highlight, 1.3) : palette.alternateBase
                 border.color: palette.text
                 border.width: 1

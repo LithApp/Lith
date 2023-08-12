@@ -36,4 +36,12 @@ T.ItemDelegate {
                control.hovered     ? colorUtils.setAlpha(palette.text, 0.2) :
                                      palette.base
     }
+
+    // The original implementation didn't handle clicks correctly when there was another MouseArea overlaid on top of this item,
+    // so this is a workaround to make that work.
+    MouseArea {
+        id: itemDelegateMouse
+        anchors.fill: parent
+        onClicked: control.clicked()
+    }
 }

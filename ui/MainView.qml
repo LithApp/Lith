@@ -144,16 +144,22 @@ Item {
             }
         }
 
-        BufferList {
-            id: bufferList
+        Item {
+            clip: true
             anchors.fill: parent
-            onClose: {
-                if (!landscapeMode)
-                    bufferDrawer.hide()
-                if (channelView.textInput.visible)
-                    channelView.textInput.forceActiveFocus()
-                else if (channelView.searchTextInput.visible)
-                    channelView.searchTextInput.forceActiveFocus()
+            BufferList {
+                id: bufferList
+                width: parent.width
+                height: parent.height
+                x: -bufferDrawer.x
+                onClose: {
+                    if (!landscapeMode)
+                        bufferDrawer.hide()
+                    if (channelView.textInput.visible)
+                        channelView.textInput.forceActiveFocus()
+                    else if (channelView.searchTextInput.visible)
+                        channelView.searchTextInput.forceActiveFocus()
+                }
             }
         }
     }

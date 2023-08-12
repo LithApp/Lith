@@ -41,6 +41,7 @@ Q_DECLARE_METATYPE(StringMap);
 typedef uint64_t pointer_t;
 Q_DECLARE_METATYPE(pointer_t);
 
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
 #define STRINGIFY(x) #x
 
 #define PROPERTY_CONSTANT(type, name, ...) \
@@ -67,9 +68,9 @@ private: \
         Q_SIGNAL void name ## Changed();
 
 #define SETTER_DEFINITION(type, name) \
-    void name ## Set (const type &o) { \
-            if (m_ ## name != o) { \
-                m_ ## name = o; \
+    void name ## Set (const type &newValue) { \
+            if (m_ ## name != newValue) { \
+                m_ ## name = newValue; \
                 emit name ## Changed(); \
         } \
     }
@@ -97,14 +98,15 @@ private: \
     const type* name ## Get () const { return m_ ## name; } \
     Q_SIGNAL void name ## Changed(); \
     public: \
-        void name ## Set (type *o) { \
-            if (m_ ## name != o) { \
-                m_ ## name = o; \
+        void name ## Set (type *newValue) { \
+            if (m_ ## name != newValue) { \
+                m_ ## name = newValue; \
                 emit name ## Changed(); \
             } \
         }
 
 #define ALIAS(type, orig, alias) \
     Q_PROPERTY(type alias READ orig ## Get WRITE orig ## Set NOTIFY orig ## Changed)
+// NOLINTEND(cppcoreguidelines-macro-usage)
 
 #endif // COMMON_H

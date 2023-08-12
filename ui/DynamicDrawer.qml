@@ -3,7 +3,9 @@ import QtQuick
 Rectangle {
     id: drawer
     property bool isClosed: position === 0.0
-    width: visible ? landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainView.width + mainView.leftMargin : 0
+    readonly property bool closeCompletely: false
+    readonly property real closedLimit: closeCompletely ? 0 : 36
+    width: visible ? landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainView.width + mainView.leftMargin : closedLimit
     property real dragOutHandleTopMargin: 0
     property real dragOutHandleBottomMargin: 0
 
@@ -20,7 +22,7 @@ Rectangle {
               drawer.lastState === DynamicDrawer.State.Closed
         target: drawer
         property: "x"
-        value: -drawer.width
+        value: -drawer.width + closedLimit
     }
     Binding {
         when: !dragOutHandleMouse.drag.active &&
@@ -44,20 +46,22 @@ Rectangle {
         }
         lastState = DynamicDrawer.State.None
         if (!dragOutHandleMouse.drag.active)
-            drawer.x = -drawer.width
+            drawer.x = -drawer.width + drawer.closedLimit
         dragOutHandle.visible = false
         openAnimation.start()
     }
     function hide() {
         //x = -width
-        lastState = DynamicDrawer.State.None
-        if (!dragOutHandleMouse.drag.active)
-            drawer.x = 0
-        closeAnimation.start()
-        dragOutHandle.visible = true
+        if (lastState != DynamicDrawer.State.Closed) {
+            lastState = DynamicDrawer.State.Closed
+            if (!dragOutHandleMouse.drag.active)
+                drawer.x = 0
+            closeAnimation.start()
+            dragOutHandle.visible = true
+        }
     }
 
-    readonly property real position: 1 - Math.abs(x / width)
+    readonly property real position: 1 - Math.abs((x) / (width - closedLimit))
     onPositionChanged: {
         if (position === 0.0)
             dragOutHandle.visible = true
@@ -71,18 +75,20 @@ Rectangle {
     }
     NumberAnimation on x {
         id: closeAnimation
-        to: -drawer.width
+        to: -drawer.width + drawer.closedLimit
         duration: 120
         onFinished: lastState = DynamicDrawer.State.Closed
         running: false
     }
 
     Rectangle {
-        visible: !drawer.isClosed
+        //visible: !drawer.isClosed
         anchors {
             top: parent.top
             right: parent.right
             bottom: parent.bottom
+            topMargin: drawer.dragOutHandleTopMargin
+            bottomMargin: drawer.dragOutHandleBottomMargin
             rightMargin: -1
         }
         width: 1
@@ -93,7 +99,7 @@ Rectangle {
     Rectangle {
         id: backdrop
         visible: !landscapeMode && opacity > 0.0
-        opacity: bufferDrawer.position
+        opacity: drawer.position
         anchors {
             top: parent.top
             bottom: parent.bottom
@@ -107,7 +113,10 @@ Rectangle {
             cursorShape: Qt.ArrowCursor
             acceptedButtons: Qt.AllButtons
             propagateComposedEvents: false
-            onClicked: bufferDrawer.hide()
+            onClicked: {
+                console.warn("backdrop")
+                drawer.hide()
+            }
         }
     }
 
@@ -139,6 +148,7 @@ Rectangle {
             drag.axis: Drag.XAxis
             drag.minimumX: 200
             drag.maximumX: window.width - 200
+            onClicked: console.warn("dragHandleMouse")
         }
     }
 
@@ -153,22 +163,44 @@ Rectangle {
         x: parent.width - 32
         property real threshold: 100
         width: 64
+        z: 1000
 
         MouseArea {
             id: dragOutHandleMouse
             anchors.fill: parent
+            anchors.leftMargin: -drawer.closedLimit
             propagateComposedEvents: true
             drag.axis: Drag.XAxis
-            drag.target: bufferDrawer
-            drag.minimumX: -bufferDrawer.width
+            drag.target: drawer
+            drag.minimumX: -drawer.width + drawer.closedLimit
             drag.maximumX: 0
-            onReleased: function(mouse) {
-                if (bufferDrawer.x < -bufferDrawer.width + dragOutHandle.threshold) {
+            drag.onActiveChanged: {
+                if (drawer.x < -drawer.width + dragOutHandle.threshold) {
                     drawer.hide()
                 }
                 else {
                     drawer.open()
                 }
+            }
+
+            /*
+            onPressed: (mouse) => {
+                           mouse.accepted = false
+                       }
+
+            onReleased: function(mouse) {
+                mouse.accepted = false
+                if (drawer.x < -drawer.width + dragOutHandle.threshold) {
+                    drawer.hide()
+                }
+                else {
+                    drawer.open()
+                }
+            }
+            */
+            onClicked: (mouse) => {
+                console.warn("dragOutHandleMouse")
+                mouse.accepted = false
             }
         }
     }
