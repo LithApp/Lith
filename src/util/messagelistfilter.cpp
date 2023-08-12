@@ -23,24 +23,26 @@ MessageFilterList::MessageFilterList(QObject *parent, QAbstractListModel *parent
 {
     setSourceModel(parentModel);
     setFilterRole(Qt::UserRole);
-    connect(Lith::instance()->settingsGet(), &Settings::showJoinPartQuitMessagesChanged, this, [this]
+    connect(Lith::settingsGet(), &Settings::showJoinPartQuitMessagesChanged, this, [this]
     {
         invalidateFilter();
     });
 }
 bool MessageFilterList::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
-    if (!sourceModel())
+    if (!sourceModel()) {
         return true;
+    }
 
     auto index = sourceModel()->index(source_row, 0, source_parent);
     auto v = sourceModel()->data(index);
-    auto b = qvariant_cast<BufferLine*>(v);
+    auto *b = qvariant_cast<BufferLine *>(v);
 
-    if (b && !Lith::instance()->settingsGet()->showJoinPartQuitMessagesGet()) {
+    if (b && !Lith::settingsGet()->showJoinPartQuitMessagesGet()) {
         return !b->isJoinPartQuitMsgGet();
     }
-    else
+    else {
         return b;
+    }
 
     return false;
 }

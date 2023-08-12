@@ -49,22 +49,23 @@ public:
     };
 
     FormattedString(const FormattedString &o);
-    FormattedString(FormattedString &&o);
+    FormattedString(FormattedString &&o) noexcept;
     FormattedString(const QString &o);
     FormattedString(QString &&o);
     FormattedString(const char *d);
     FormattedString();
+    ~FormattedString() = default;
 
     FormattedString &operator=(const QString &o);
     FormattedString &operator=(QString &&o);
     FormattedString &operator=(const FormattedString &o);
-    FormattedString &operator=(FormattedString &&o);
+    FormattedString &operator=(FormattedString &&o) noexcept;
     FormattedString &operator=(const char *o);
 
-    bool operator==(const FormattedString &o);
-    bool operator!=(const FormattedString &o);
-    bool operator==(const QString &o);
-    bool operator!=(const QString &o);
+    bool operator==(const FormattedString &o) const;
+    bool operator!=(const FormattedString &o) const;
+    bool operator==(const QString &o) const;
+    bool operator!=(const QString &o) const;
 
     // these methods append to the last available segment
     FormattedString &operator+=(const char *s);

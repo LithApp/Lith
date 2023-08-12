@@ -17,7 +17,7 @@ void NotificationHandler::deviceTokenSet(const QString &value) {
 void NotificationHandler::registerForNotifications()
 {
 #ifdef Q_OS_IOS
-    if (Lith::instance()->settingsGet()->enableNotificationsGet()) {
+    if (Lith::settingsGet()->enableNotificationsGet()) {
         iosRegisterForNotifications();
     }
     else {
@@ -33,9 +33,9 @@ bool NotificationHandler::validGet() const {
 NotificationHandler::NotificationHandler(Lith *parent)
     : QObject(parent)
 {
-    if (parent->settingsGet()->isReady()) {
+    if (Lith::settingsGet()->isReady()) {
         QTimer::singleShot(0, this, &NotificationHandler::registerForNotifications);
     }
-    connect(parent->settingsGet(), &Settings::enableNotificationsChanged, this, &NotificationHandler::registerForNotifications);
+    connect(Lith::settingsGet(), &Settings::enableNotificationsChanged, this, &NotificationHandler::registerForNotifications);
     connect(this, &NotificationHandler::deviceTokenChanged, this, &NotificationHandler::validChanged);
 }

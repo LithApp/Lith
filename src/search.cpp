@@ -29,10 +29,12 @@ Lith *Search::lith() {
 }
 
 BufferLine *Search::highlightedLine() {
-    if (m_term.isEmpty())
+    if (m_term.isEmpty()) {
         return nullptr;
-    if (m_highlightedMatchIndex < 0 || m_highlightedMatchIndex >= m_matches.count())
+    }
+    if (m_highlightedMatchIndex < 0 || m_highlightedMatchIndex >= m_matches.count()) {
         return nullptr;
+    }
     return m_matches[m_highlightedMatchIndex];
 }
 
@@ -73,11 +75,12 @@ void Search::invalidate() {
         }
         else {
             QList<BufferLine*> lines;
-            auto buf = lith()->selectedBuffer();
+            auto *buf = lith()->selectedBuffer();
             for (int i = 0; i < buf->lines()->count(); i++) {
-                auto line = buf->lines()->get<BufferLine>(i);
-                if (line->searchCompare(termGet()))
+                auto *line = buf->lines()->get<BufferLine>(i);
+                if (line->searchCompare(termGet())) {
                     lines.append(line);
+                }
             }
             matchesSet(lines);
             return;
@@ -100,14 +103,15 @@ void Search::onMessagesAdded(const QModelIndex &parent, int first, int last) {
         Lith::instance()->log(Logger::Unexpected, "Search::onMessagesAdded was called with multiple lines, this shouldn't happen");
     }
 
-    auto buf = lith()->selectedBuffer();
-    auto line = buf->lines()->get<BufferLine>(first);
+    auto *buf = lith()->selectedBuffer();
+    auto *line = buf->lines()->get<BufferLine>(first);
     if (line->searchCompare(termGet())) {
         auto result = matchesGet();
         if (first == 0) {
             result.prepend(line);
-            if (highlightedMatchIndexGet() >= 0)
+            if (highlightedMatchIndexGet() >= 0) {
                 highlightedMatchIndexSet(highlightedMatchIndexGet() + 1);
+            }
         }
         else {
             result.append(line);

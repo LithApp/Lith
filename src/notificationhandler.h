@@ -10,7 +10,7 @@ class NotificationHandler : public QObject {
     Q_PROPERTY(bool valid READ validGet NOTIFY validChanged)
     Q_PROPERTY(QString deviceToken READ deviceTokenGet WRITE deviceTokenSet NOTIFY deviceTokenChanged)
 public:
-    NotificationHandler(Lith *parent = nullptr);
+    explicit NotificationHandler(Lith *parent = nullptr);
 
     bool validGet() const;
     QString deviceTokenGet() const;

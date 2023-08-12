@@ -75,7 +75,6 @@ private:
     Q_PROPERTY(bool debugVersion READ debugVersion CONSTANT)
 
 public:
-    static Lith *_self;
     static Lith *instance();
 
     Weechat *weechat();
@@ -86,33 +85,33 @@ public:
     void errorStringSet(const QString &o);
     void networkErrorStringSet(const QString &o);
 
-    Settings* settingsGet();
+    static Settings* settingsGet();
     QAbstractItemModel *logger();
     Search* search();
     BaseNetworkProxy *networkProxy();
     NotificationHandler *notificationHandler();
 
-    QString gitVersion() const;
-    bool debugVersion() const;
+    static QString gitVersion();
+    static bool debugVersion();
 
     void log(Logger::EventType type, QString summary) {
-        m_logger->log(Logger::Event{type, summary});
+        m_logger->log(Logger::Event{type, std::move(summary)});
     }
     void log(Logger::EventType type, QString context, QString summary, QString details = QString()) {
-        m_logger->log(Logger::Event{type, context, summary, details});
+        m_logger->log(Logger::Event{type, std::move(context), std::move(summary), std::move(details)});
     }
 
     ProxyBufferList *buffers();
     QmlObjectList *unfilteredBuffers();
     Buffer *selectedBuffer();
     void selectedBufferSet(Buffer *b);
-    int selectedBufferIndex();
+    int selectedBufferIndex() const;
     void selectedBufferIndexSet(int index);
     NickListFilter *selectedBufferNicks();
     Q_INVOKABLE void switchToBufferNumber(int number);
 
     // TODO hack, this shouldn't be in this class
-    Q_INVOKABLE QString getLinkFileExtension(const QString &url);
+    Q_INVOKABLE static QString getLinkFileExtension(const QString &url);
 
 public slots:
     void resetData();
@@ -168,7 +167,7 @@ signals:
     void pongReceived(qint64 id);
 
 private:
-    explicit Lith(QObject *parent = 0);
+    explicit Lith(QObject *parent = nullptr);
 
 #ifndef Q_OS_WASM
     QThread *m_weechatThread { nullptr };
@@ -200,7 +199,7 @@ class ProxyBufferList : public QSortFilterProxyModel {
 public:
     ProxyBufferList(QObject *parent = nullptr, QAbstractListModel *parentModel = nullptr);
 
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 };
 
 

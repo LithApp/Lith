@@ -32,7 +32,7 @@ class Weechat : public QObject {
 public:
     Q_OBJECT
 public:
-    Weechat(BaseNetworkProxy *networkProxy, Lith *lith = nullptr);
+    explicit Weechat(BaseNetworkProxy *networkProxy, Lith *lith = nullptr);
     const Lith *lith() const;
     Lith *lith();
 

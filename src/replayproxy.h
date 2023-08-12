@@ -19,9 +19,9 @@ public:
     ReplayRecordingInfo(int version, QDateTime createdAt, int number, size_t size, const QString &absolutePath, QObject* parent = nullptr)
         : QObject(parent)
         , m_version(version)
-        , m_createdAt(createdAt)
+        , m_createdAt(std::move(createdAt))
         , m_number(number)
-        , m_size(size)
+        , m_size(static_cast<qreal>(size))
         , m_absolutePath(absolutePath)
     {
 
@@ -54,7 +54,7 @@ public:
 
     Mode mode() const;
 
-    int currentReplayVersionGet() const { return currentReplayVersion; }
+    static int currentReplayVersionGet() { return currentReplayVersion; }
     virtual bool recording() const { return false; }
     virtual bool replaying() const { return false; }
 
@@ -68,7 +68,7 @@ signals:
 
 protected:
     explicit BaseNetworkProxy(QObject *parent = nullptr, Mode mode = Disabled);
-    void printHelpAndQuitApp();
+    static void printHelpAndQuitApp();
 
 private:
     Mode m_mode;
@@ -81,12 +81,12 @@ class ReplayProxy : public BaseNetworkProxy {
 public:
     friend class BaseNetworkProxy;
 
-    virtual bool replaying() const override { return m_playing; }
-    int totalEventsGet() const { return m_events.size(); }
+    bool replaying() const override { return m_playing; }
+    int totalEventsGet() const { return static_cast<int>(m_events.size()); }
     int currentEventGet() const { return m_currentEvent; }
 
 public slots:
-    virtual void onDataReceived(const QByteArray &data) override;
+    void onDataReceived(const QByteArray &data) override;
 
 private slots:
     void readAll();
@@ -116,10 +116,10 @@ class RecordProxy : public BaseNetworkProxy {
 public:
     friend class BaseNetworkProxy;
 
-    virtual bool recording() const override;
+    bool recording() const override;
 
 public slots:
-    virtual void onDataReceived(const QByteArray &data) override;
+    void onDataReceived(const QByteArray &data) override;
 
 private:
     explicit RecordProxy(QObject *parent = nullptr);

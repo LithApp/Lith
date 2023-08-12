@@ -147,7 +147,7 @@ public:
     Q_PROPERTY(QStringList hotlistDefaultFormat MEMBER c_hotlistDefaultFormat CONSTANT)
 
 public slots:
-    void saveNetworkSettings(const QString host, int port, bool encrypted, bool allowSelfSignedCertificates,
+    void saveNetworkSettings(const QString& host, int port, bool encrypted, bool allowSelfSignedCertificates,
                              const QString& passphrase, bool handshakeAuth, bool connectionCompression,
                              bool useWebsockets, const QString& websocketsEndpoint);
 
@@ -159,7 +159,7 @@ public:
     static Settings* instance();
     bool isReady() const;
 private:
-    Settings(QObject *parent = nullptr);
+    explicit Settings(QObject *parent = nullptr);
     void migrate();
     QSettings m_settings;
     bool m_ready = false;

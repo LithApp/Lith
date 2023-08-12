@@ -17,14 +17,14 @@ public:
 
     void init();
 
-    bool lightThemeGet() { return !darkThemeGet(); }
-    const ColorTheme &currentTheme();
-    const ColorTheme &inverseTheme();
+    bool lightThemeGet() const { return !darkThemeGet(); }
+    const ColorTheme &currentTheme() const;
+    const ColorTheme &inverseTheme() const;
 
-    Q_INVOKABLE QVariantMap getSafeAreaMargins(QQuickWindow *window);
+    Q_INVOKABLE static QVariantMap getSafeAreaMargins(QQuickWindow *window);
 
 private:
-    bool detectSystemDarkStyle();
+    static bool detectSystemDarkStyle();
 
 signals:
     void themeChanged();

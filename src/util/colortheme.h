@@ -43,12 +43,18 @@ public:
         _LAST_WEECHAT_COLOR
     };
 
-    ColorTheme(Group group = LIGHT, const QString &name = {}, const QStringList &weechatColors = {}, const QStringList &extendedColors = {})
-        : m_group(group), m_name(name), m_weechatColors(weechatColors), m_extendedColors(extendedColors)
+    explicit ColorTheme(Group group = LIGHT,
+                        const QString &name = {},
+                        const QStringList &weechatColors = {},
+                        const QStringList &extendedColors = {})
+        : m_group(group)
+        , m_name(name)
+        , m_weechatColors(weechatColors)
+        , m_extendedColors(extendedColors)
     {}
 
     Q_INVOKABLE QString getIcon(const QString &name);
-    Q_INVOKABLE QColor dim(const QColor &color);
+    Q_INVOKABLE static QColor dim(const QColor &color);
 
     QString name() const { return m_name; }
     const QStringList &weechatColors() const { return m_weechatColors; }
@@ -65,7 +71,7 @@ private:
 Q_DECLARE_METATYPE(ColorTheme)
 
 static inline const ColorTheme lightTheme {
-    ColorTheme::LIGHT, "light",
+    ColorTheme::LIGHT, QStringLiteral("light"),
     {
         "black",   "white",   "#444444", "#880000", "#ff4444", "#008800", "#33cc33", "#d2691e",
         "#dddd00", "#000088", "#3333dd", "#660066", "#ff44ff", "#006666", "#22aaaa", "#aaaaaa",
@@ -109,7 +115,7 @@ static inline const ColorTheme lightTheme {
 };
 
 static inline const ColorTheme darkTheme {
-    ColorTheme::DARK, "dark",
+    ColorTheme::DARK, QStringLiteral("dark"),
     {
         "#ffffff", "#2c2829", "#444444", "#880000", "#ff4444", "#33dd33", "#55ff55", "#d2691e",
         "#ffff00", "#4444ff", "#9999ff", "#ee44ee", "#ff88ff", "#22aaaa", "#44dddd", "#aaaaaa",
@@ -153,7 +159,7 @@ static inline const ColorTheme darkTheme {
 };
 
 static inline const ColorTheme blackTheme {
-    ColorTheme::DARK, "black",
+    ColorTheme::DARK, QStringLiteral("black"),
     {
         "white",   "black",   "#444444", "#880000", "#ff4444", "#33dd33", "#55ff55", "#d2691e",
         "#ffff00", "#4444ff", "#9999ff", "#ee44ee", "#ff88ff", "#22aaaa", "#44dddd", "#aaaaaa",

@@ -43,9 +43,9 @@ QString FormatStringSplitter::formattedDataGet() {
 
     QString result(formatGet());
 
-    auto mo = m_dataSource->metaObject();
+    const auto *mo = m_dataSource->metaObject();
     for (int i = 0; i < m_variables->count(); i++) {
-        auto var = m_variables->get<FormatStringVariable>(i);
+        auto *var = m_variables->get<FormatStringVariable>(i);
         if (!var) {
             continue;
         }
@@ -78,12 +78,12 @@ QString FormatStringSplitter::formattedDataGet() {
 void FormatStringSplitter::fromStringList(const QStringList &items) {
     bool first = true;
     int varIndex = 0;
-    for (auto &i : items) {
+    for (const auto &i : items) {
         if (first) {
             formatSet(i);
         }
         else {
-            auto variable = m_variables->get<FormatStringVariable>(varIndex);
+            auto *variable = m_variables->get<FormatStringVariable>(varIndex);
             if (!variable) {
                 Lith::instance()->log(Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i));
                 varIndex++;
@@ -100,7 +100,7 @@ QStringList FormatStringSplitter::stringList() const {
     QStringList result;
     result.append(formatGet());
     for (int i = 0; i < m_variables->count(); i++) {
-        auto variable = m_variables->get<FormatStringVariable>(i);
+        auto *variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
             Lith::instance()->log(Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i));
             continue;
@@ -111,8 +111,9 @@ QStringList FormatStringSplitter::stringList() const {
 }
 
 bool FormatStringSplitter::validate(const QString &name) {
-    if (m_allowedPropertyNames.isEmpty())
+    if (m_allowedPropertyNames.isEmpty()) {
         return true;
+    }
     return m_allowedPropertyNames.contains(name);
 }
 
@@ -121,7 +122,7 @@ void FormatStringSplitter::onFormatChanged() {
     QSet<int> numberSet;
     auto matches = formatPlaceholderRegexp.globalMatch(m_format);
 
-    for (auto &match : matches) {
+    for (const auto &match : matches) {
         if (match.capturedTexts().size() == 2) {
             bool ok = false;
             auto number = match.capturedView(1).toInt(&ok);
@@ -166,7 +167,7 @@ void FormatStringSplitter::onFormatChanged() {
     }
 
     errorStringSet(QString());
-    int newCount = numberList.size();
+    int newCount = static_cast<int>(numberList.size());
     int oldCount = m_variables->count();
     while (m_variables->count() < newCount) {
         auto *var = new FormatStringVariable(this, m_variables->count());
@@ -184,7 +185,7 @@ void FormatStringSplitter::onFormatChanged() {
     }
     bool allValid = true;
     for (int i = 0; i < m_variables->count(); i++) {
-        auto variable = m_variables->get<FormatStringVariable>(i);
+        auto *variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
             continue;
         }
@@ -194,8 +195,9 @@ void FormatStringSplitter::onFormatChanged() {
         }
     }
     variablesValidSet(allValid);
-    if (newCount != oldCount)
+    if (newCount != oldCount) {
         emit countChanged();
+    }
     formatValidSet(true);
     emit formattedDataChanged();
 }
@@ -206,7 +208,7 @@ void FormatStringSplitter::onVariableValidChanged() {
         return;
     }
     for (int i = 0; i < m_variables->count(); i++) {
-        auto variable = m_variables->get<FormatStringVariable>(i);
+        auto *variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
             continue;
         }
@@ -225,7 +227,7 @@ void FormatStringSplitter::onDataSourceChanged() {
     m_dataSourceConnections.clear();
     if (dataSourceGet()) {
         for (int i = 0; i < m_variables->count(); i++) {
-            auto var = m_variables->get<FormatStringVariable>(i);
+            auto *var = m_variables->get<FormatStringVariable>(i);
             auto propertyIndex = dataSourceGet()->metaObject()->indexOfProperty(qPrintable(var->nameGet()));
             if (propertyIndex >= 0) {
                 auto sourceSignal = dataSourceGet()->metaObject()->property(propertyIndex).notifySignal();

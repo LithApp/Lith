@@ -12,11 +12,13 @@ SocketHelper::SocketHelper(Weechat *parent)
 
 bool SocketHelper::isConnected() {
     // TODO
-    if (m_webSocket && m_webSocket->isValid())
+    if (m_webSocket && m_webSocket->isValid()) {
         return true;
+    }
 #ifndef __EMSCRIPTEN__
-    if (m_tcpSocket && m_tcpSocket->isValid())
+    if (m_tcpSocket && m_tcpSocket->isValid()) {
         return true;
+    }
 #endif
     return false;
 }
@@ -28,8 +30,9 @@ Weechat *SocketHelper::weechat()
 
 Lith *SocketHelper::lith()
 {
-    if (weechat())
+    if (weechat()) {
         return weechat()->lith();
+    }
     return nullptr;
 }
 
@@ -37,11 +40,13 @@ void SocketHelper::onError(QAbstractSocket::SocketError e) {
     QMetaEnum me = QMetaEnum::fromType<QAbstractSocket::SocketError>();
     lith()->log(Logger::Network, QString("Socket error: %1").arg(me.valueToKey(e)));
 #ifndef __EMSCRIPTEN__
-    if (m_tcpSocket)
+    if (m_tcpSocket) {
         emit errorOccurred(m_tcpSocket->errorString());
+    }
 #endif
-    if (m_webSocket)
+    if (m_webSocket) {
         emit errorOccurred(m_webSocket->errorString());
+    }
 }
 
 void SocketHelper::onDisconnected() {
@@ -66,7 +71,7 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
     connect(m_webSocket, &QWebSocket::binaryMessageReceived, this, &SocketHelper::onBinaryMessageReceived);
 
     QList<QSslError> expectedSslErrors;
-    if (weechat()->lith()->settingsGet()->allowSelfSignedCertificatesGet()) {
+    if (Lith::settingsGet()->allowSelfSignedCertificatesGet()) {
 #ifndef __EMSCRIPTEN__
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
@@ -87,7 +92,7 @@ void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool en
     m_tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
     QList<QSslError> expectedSslErrors;
-    if (weechat()->lith()->settingsGet()->allowSelfSignedCertificatesGet()) {
+    if (Lith::settingsGet()->allowSelfSignedCertificatesGet()) {
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
     }
@@ -103,10 +108,11 @@ void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool en
     connect(m_tcpSocket, &QSslSocket::connected, this, &SocketHelper::onConnected, Qt::QueuedConnection);
     connect(m_tcpSocket, &QSslSocket::disconnected, this, &SocketHelper::onDisconnected, Qt::QueuedConnection);
 
-    if (encrypted)
+    if (encrypted) {
         m_tcpSocket->connectToHostEncrypted(hostname, port);
-    else
+    } else {
         m_tcpSocket->connectToHost(hostname, port);
+    }
 }
 
 #endif // __EMSCRIPTEN__
@@ -130,10 +136,14 @@ qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, cons
     }
     fullCommand.append("\n");
     if (command != "ping") {
-        if (command == "init")
+        if (command == "init") {
             lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString("[obscured]"));
-        else
-            lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString(fullCommand));
+        } else {
+            lith()->log(Logger::Protocol,
+                        command,
+                        QString("Sending WeeChat command"),
+                        QString(fullCommand));
+        }
     }
     if (m_webSocket) {
         bytes = m_webSocket->sendTextMessage(fullCommand);
@@ -168,8 +178,8 @@ void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
         if (header.size() != 5) {
             return;
         }
-        qint32 bytes;
-        bool compressed;
+        qint32 bytes = 0;
+        bool compressed = false;
         QDataStream s(&header, QIODevice::ReadOnly);
         s >> bytes >> compressed;
         if (bytes <= 5) {
@@ -196,7 +206,7 @@ void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
 
 #ifndef __EMSCRIPTEN__
 void SocketHelper::onSslErrors(const QList<QSslError> &errors) {
-    for (auto& i : errors) {
+    for (const auto &i : errors) {
         lith()->log(Logger::Network, "SSL error: " + i.errorString());
     }
 }
@@ -213,8 +223,9 @@ void SocketHelper::onReadyRead() {
     // this slot being called while a message is already being processed
     // This is guard that prevents processing of more messages at the same moment
     static bool guard = false;
-    if (guard)
+    if (guard) {
         return;
+    }
 
     static bool compressed = false;
 
@@ -235,14 +246,15 @@ void SocketHelper::onReadyRead() {
         m_fetchBuffer.clear();
         // add a header to the data if compressed, containing the expected length of the data
         // Qt doesn't seem to care if it's correct so just put 0 in there
-        if (compressed)
+        if (compressed) {
             m_fetchBuffer.append(4, 0);
+        }
     }
 
     // continue in whatever message came before (be it from a previous readyRead or this one
     if (m_bytesRemaining > 0) {
         auto cache = m_tcpSocket->read(m_bytesRemaining);
-        m_bytesRemaining -= cache.size();
+        m_bytesRemaining -= static_cast<qint32>(cache.size());
         m_fetchBuffer.append(cache);
     }
 

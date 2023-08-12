@@ -10,16 +10,16 @@ typedef QSharedPointer<QObject> QObjectPointer;
 class QmlObjectList : public QAbstractListModel
 {
     Q_OBJECT
+    Q_DISABLE_COPY_MOVE(QmlObjectList)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    Q_DISABLE_COPY(QmlObjectList)
-    virtual ~QmlObjectList() {
+    ~QmlObjectList() override {
         mData.clear();
     }
 
     template <typename T>
     inline static QmlObjectList* create(QObject *parent = Q_NULLPTR) {
-        return new QmlObjectList(T::staticMetaObject, parent);
+        return new QmlObjectList(&T::staticMetaObject, parent);
     }
 
     void prepend(QObjectPointer object);
@@ -48,13 +48,15 @@ public:
     Q_INVOKABLE bool removeItem(QObject *item);
 
     Q_INVOKABLE inline void removeFirst() {
-        if(!mData.isEmpty())
+        if (!mData.isEmpty()) {
             removeRow(0);
+        }
     }
 
     Q_INVOKABLE inline void removeLast() {
-        if(!mData.isEmpty())
+        if (!mData.isEmpty()) {
             removeRow(rowCount() - 1);
+        }
     }
 
     Q_INVOKABLE QVariant at(const int& i);
@@ -66,7 +68,7 @@ public:
     }
 
     template <typename T>
-    inline T *get(const int &i) {
+    inline T *get(int i) {
         return qobject_cast<T*>(mData.at(i).data());
     }
     template <typename T>
@@ -79,19 +81,17 @@ public:
     }
 
 protected:
-    QVariant data(const QModelIndex &index, int role) const;
-
-    QHash<int, QByteArray> roleNames() const;
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QHash<int, QByteArray> roleNames() const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
 signals:
     void countChanged();
 
 private:
-    QmlObjectList(const QMetaObject& m, QObject *parent = Q_NULLPTR);
+    explicit QmlObjectList(const QMetaObject *m, QObject *parent = Q_NULLPTR);
 
-    const QMetaObject&              mMetaObject;
+    const QMetaObject*              mMetaObject;
     QList<QObjectPointer>         mData;
 };
 

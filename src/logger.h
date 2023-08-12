@@ -38,8 +38,8 @@ public:
     Q_ENUM(EventType)
     struct Event {
         EventType type;
-        Event(EventType type, QString summary) : type(type), summary(summary) {}
-        Event(EventType type, QString context, QString summary, QString details) : type(type), context(context), summary(summary), details(details) {}
+        Event(EventType type, QString summary) : type(type), summary(std::move(summary)) {}
+        Event(EventType type, QString context, QString summary, QString details) : type(type), context(std::move(context)), summary(std::move(summary)), details(std::move(details)) {}
 
         QString context;
         QString summary;
@@ -54,7 +54,7 @@ public:
         _LastColumn,
     };
 
-    Logger(QObject *parent = nullptr);
+    explicit Logger(QObject *parent = nullptr);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -79,11 +79,11 @@ class FilteredLogger : public QSortFilterProxyModel {
     PROPERTY(bool, showProtocol, true)
     PROPERTY(bool, showDetails, false)
 public:
-    FilteredLogger(QObject* parent = nullptr);
+    explicit FilteredLogger(QObject *parent = nullptr);
     void setSourceModel(QAbstractItemModel* model) override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const override;
     const Logger *logger() const;
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
-    virtual bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const override;
 private:
     Logger *m_logger { nullptr };
 };

@@ -50,14 +50,14 @@ class Nick : public QObject {
 
     Q_PROPERTY(QString colorlessName READ colorlessName NOTIFY nameChanged)
 public:
-    Nick(Buffer *parent = nullptr);
-    virtual ~Nick();
+    explicit Nick(Buffer *parent = nullptr);
 
     QString colorlessName() const;
 };
 
 class Buffer : public QObject {
     Q_OBJECT
+    Q_DISABLE_COPY_MOVE(Buffer)
     Q_PROPERTY(pointer_t ptr READ ptr NOTIFY ptrChanged)
     PROPERTY(int, number, 0)
     PROPERTY(FormattedString, name)
@@ -84,7 +84,7 @@ class Buffer : public QObject {
     PROPERTY(QString, lastUserInput, "")
 public:
     Buffer(Lith *parent, pointer_t pointer);
-    virtual ~Buffer();
+    ~Buffer() override;
 
     Lith *lith();
 
@@ -95,7 +95,7 @@ public:
     FormattedString titleGet() const;
     void titleSet(const FormattedString &o);
 
-    bool isAfterInitialFetch();
+    bool isAfterInitialFetch() const;
 
     pointer_t ptr() const;
     QmlObjectList *lines();
@@ -124,7 +124,7 @@ signals:
     void ptrChanged();
 
 public slots:
-    bool input(const QString &data);
+    bool input(const QString &data) const;
     void fetchMoreLines();
     void clearHotlist();
 
@@ -159,8 +159,7 @@ class BufferLine : public QObject {
     Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged) // used here because segments is already chopped up
     Q_PROPERTY(QObject *buffer READ bufferGet CONSTANT)
 public:
-    BufferLine(Buffer *parent);
-    virtual ~BufferLine();
+    explicit BufferLine(Buffer *parent);
 
     Buffer *buffer();
     Lith *lith();
@@ -202,7 +201,7 @@ class HotListItem : public QObject {
     PROPERTY(QList<int>, count)
     Q_PROPERTY(Buffer* buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)
 public:
-    HotListItem(QObject *parent = nullptr);
+    explicit HotListItem(QObject *parent = nullptr);
 
     Buffer *bufferGet();
     void bufferSet(Buffer *o);

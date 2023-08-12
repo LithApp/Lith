@@ -15,8 +15,9 @@ const QString &Reflection::classNameGet() const {
 }
 
 void Reflection::setClassName(const QString &name) {
-    if (m_className == name)
+    if (m_className == name) {
         return;
+    }
     m_className = name;
     emit classNameChanged();
 }
@@ -33,13 +34,14 @@ const QStringList &Reflection::stringPropertiesGet() const
         else {
             auto mt = QMetaType::fromName(m_className.toLocal8Bit());
             if (mt.isValid()) {
-                auto mo = mt.metaObject();
+                const auto *mo = mt.metaObject();
                 if (mo) {
                     for (int i = 0; i < mo->propertyCount(); i++) {
                         auto property = mo->property(i);
                         QString name = property.name();
-                        if (name == "objectName")
+                        if (name == "objectName") {
                             continue;
+                        }
                         if (QMetaType::canConvert(property.metaType(), QMetaType(QMetaType::QString))) {
                             allowedPropertiesForClass[m_className].append(name);
                         }

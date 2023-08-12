@@ -29,23 +29,27 @@ const QRegularExpression urlRegExp(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(
 
 QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
     QString ret;
-    if (bold)
+    if (bold) {
         ret.append("<b>");
-    if (underline)
+    }
+    if (underline) {
         ret.append("<u>");
+    }
     if (foreground.index >= 0) {
         ret.append("<font color=\"");
         if (foreground.extended) {
-            if (theme.extendedColors().count() > foreground.index)
+            if (theme.extendedColors().count() > foreground.index) {
                 ret.append(theme.extendedColors()[foreground.index]);
-            else
+            } else {
                 ret.append("pink");
+            }
         }
         else {
-            if (theme.weechatColors().count() > foreground.index)
+            if (theme.weechatColors().count() > foreground.index) {
                 ret.append(theme.weechatColors()[foreground.index]);
-            else
+            } else {
                 ret.append("pink");
+            }
         }
         ret.append("\">");
     }
@@ -56,8 +60,8 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
     }
 
     QString finalText;
-    const auto urlThreshold = Lith::instance()->settingsGet()->shortenLongUrlsThresholdGet();
-    const auto urlShortenEnabled = Lith::instance()->settingsGet()->shortenLongUrlsGet();
+    const auto urlThreshold = Lith::settingsGet()->shortenLongUrlsThresholdGet();
+    const auto urlShortenEnabled = Lith::settingsGet()->shortenLongUrlsGet();
     if (urlThreshold > 0 && hyperlink && text.size() > urlThreshold && urlShortenEnabled) {
         auto url = QUrl(text);
         auto scheme = url.scheme();
@@ -73,7 +77,7 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
         else {
             // We'll show always show the host and the scheme.
             const auto hostPrefix = scheme + "://" + host + "/";
-            const auto ellipsis = "\u2026";
+            const auto *const ellipsis = "\u2026";
 
             // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
             // ellipsis...
@@ -103,12 +107,15 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
     if (hyperlink) {
         ret.append("</a>");
     }
-    if (foreground.index >= 0)
+    if (foreground.index >= 0) {
         ret.append("</font>");
-    if (underline)
+    }
+    if (underline) {
         ret.append("</u>");
-    if (bold)
+    }
+    if (bold) {
         ret.append("</b>");
+    }
     return ret;
 }
 
@@ -125,14 +132,15 @@ FormattedString::FormattedString(const QString &o)
 {}
 
 FormattedString::FormattedString(QString &&o)
-    : m_parts({std::move(o)})
-{}
+{
+    m_parts.emplace_back(std::move(o));
+}
 
 FormattedString::FormattedString(const FormattedString &o)
     : m_parts({o.m_parts})
 {}
 
-FormattedString::FormattedString(FormattedString &&o)
+FormattedString::FormattedString(FormattedString &&o) noexcept
     : m_parts(std::move(o.m_parts))
 {}
 
@@ -141,11 +149,11 @@ FormattedString &FormattedString::operator=(const char *o) {
     return *this;
 }
 
-bool FormattedString::operator==(const QString &o) {
+bool FormattedString::operator==(const QString &o) const {
     return toPlain() == o;
 }
 
-bool FormattedString::operator!=(const QString &o) {
+bool FormattedString::operator!=(const QString &o) const {
     return !operator==(o);
 }
 
@@ -177,7 +185,7 @@ const FormattedString::Part &FormattedString::firstPart() const {
 
 QString FormattedString::toPlain() const {
     QString ret;
-    for (auto &i : m_parts) {
+    for (const auto &i : m_parts) {
         ret.append(i.text);
     }
     return ret;
@@ -185,7 +193,7 @@ QString FormattedString::toPlain() const {
 
 QString FormattedString::toHtml(const ColorTheme &theme) const {
     QString ret { "<html><body><span style='white-space: pre-wrap;'>" };
-    for (auto &i : m_parts) {
+    for (const auto &i : m_parts) {
         ret.append(i.toHtml(theme));
     }
     ret.append("</span></body></html>");
@@ -193,17 +201,19 @@ QString FormattedString::toHtml(const ColorTheme &theme) const {
 }
 
 QString FormattedString::toTrimmedHtml(int n, const ColorTheme &theme) const {
-    if (n < 0)
+    if (n < 0) {
         return toHtml(theme);
+    }
     QString ret = "<html><body><span style='white-space: pre-wrap;'>";
-    for (auto &i : m_parts) {
+    for (const auto &i : m_parts) {
         QString word = i.text.left(n);
         Part tempPart = i;
         tempPart.text = word;
         ret.append(tempPart.toHtml(theme));
-        n -= word.size();
-        if (n <= 0)
+        n -= static_cast<int>(word.size());
+        if (n <= 0) {
             break;
+        }
     }
     while (n > 0) {
         ret.append("\u00A0");
@@ -218,7 +228,7 @@ bool FormattedString::containsHtml() const {
 }
 
 int FormattedString::count() const {
-    return m_parts.count();
+    return static_cast<int>(m_parts.count());
 }
 
 FormattedString::Part &FormattedString::lastPart() {
@@ -250,7 +260,7 @@ void FormattedString::prune() {
                 url.hyperlink = true;
                 segments.append(prefix);
                 segments.append(url);
-                previousEnd = reMatch.capturedEnd();
+                previousEnd = static_cast<int>(reMatch.capturedEnd());
             }
             if (previousEnd < it->text.size()) {
                 Part suffix = { it->text.mid(previousEnd, it->text.size() - previousEnd) };
@@ -267,10 +277,11 @@ void FormattedString::prune() {
         }
     }
     while (it != m_parts.end()) {
-        if (it->text.isEmpty())
+        if (it->text.isEmpty()) {
             it = m_parts.erase(it);
-        else
+        } else {
             ++it;
+        }
     }
     it = m_parts.begin();
 }
@@ -292,14 +303,15 @@ std::string FormattedString::toStdString() const {
 }
 
 int FormattedString::length() const {
-    return toPlain().length();
+    return static_cast<int>(toPlain().length());
 }
 
 QStringList FormattedString::urls() const {
     QStringList ret;
-    for (auto &i : m_parts) {
-        if (i.hyperlink)
+    for (const auto &i : m_parts) {
+        if (i.hyperlink) {
             ret.append(i.text);
+        }
     }
     return ret;
 }
@@ -309,11 +321,11 @@ FormattedString &FormattedString::operator+=(const char *s) {
     return *this;
 }
 
-bool FormattedString::operator!=(const FormattedString &o) {
+bool FormattedString::operator!=(const FormattedString &o) const {
     return !operator==(o);
 }
 
-bool FormattedString::operator==(const FormattedString &o) {
+bool FormattedString::operator==(const FormattedString &o) const {
     return toPlain() == o.toPlain();
 }
 
@@ -322,7 +334,8 @@ FormattedString::operator QString() const {
 }
 
 FormattedString &FormattedString::operator=(QString &&o) {
-    m_parts = { std::move(o) };
+    m_parts.clear();
+    m_parts.emplace_back(std::move(o));
     return *this;
 }
 
@@ -330,7 +343,7 @@ FormattedString &FormattedString::operator=(const QString &o) {
     m_parts = { o };
     return *this;
 }
-FormattedString &FormattedString::operator=(FormattedString &&o) {
+FormattedString &FormattedString::operator=(FormattedString &&o) noexcept {
     m_parts = { std::move(o.m_parts) };
     return *this;
 }
@@ -343,16 +356,18 @@ FormattedString &FormattedString::operator=(const FormattedString &o) {
 QColor FormattedString::Part::Color::toQColor(const ColorTheme &theme) const {
     if (index >= 0) {
         if (extended) {
-            if (theme.extendedColors().count() > index)
+            if (theme.extendedColors().count() > index) {
                 return QColor(theme.extendedColors()[index]);
-            else
+            } else {
                 return QColor("pink");
+            }
         }
         else {
-            if (theme.weechatColors().count() > index)
+            if (theme.weechatColors().count() > index) {
                 return QColor(theme.weechatColors()[index]);
-            else
+            } else {
                 return QColor("pink");
+            }
         }
     }
     return QColor("pink");

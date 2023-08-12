@@ -25,7 +25,7 @@
 class ClipboardProxy : public QObject {
     Q_OBJECT
 public:
-    ClipboardProxy(QObject *parent = nullptr);
+    explicit ClipboardProxy(QObject *parent = nullptr);
 
     Q_INVOKABLE bool hasImage();
 

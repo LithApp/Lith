@@ -28,11 +28,12 @@ NickListFilter::NickListFilter(QObject *parent)
 }
 
 bool NickListFilter::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
-    if (!sourceModel())
+    if (!sourceModel()) {
         return false;
+    }
     auto index = sourceModel()->index(source_row, 0, source_parent);
     auto v = sourceModel()->data(index);
-    auto n = qvariant_cast<Nick*>(v);
+    auto *n = qvariant_cast<Nick *>(v);
     if (n) {
         return n->visibleGet() &&
                n->levelGet() == 0 &&

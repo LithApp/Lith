@@ -15,7 +15,7 @@ class Lith;
 class SocketHelper : public QObject {
     Q_OBJECT
 public:
-    SocketHelper(Weechat *parent = nullptr);
+    explicit SocketHelper(Weechat *parent = nullptr);
 
     bool isConnected();
 

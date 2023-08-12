@@ -67,7 +67,7 @@ void Buffer::titleSet(const FormattedString &o) {
     }
 }
 
-bool Buffer::isAfterInitialFetch() {
+bool Buffer::isAfterInitialFetch() const {
     return m_afterInitialFetch;
 }
 
@@ -85,7 +85,7 @@ QmlObjectList *Buffer::nicks() {
 
 Nick *Buffer::getNick(pointer_t ptr) {
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto *n = m_nicks->get<Nick>(i);
         if (n && n->ptrGet() == ptr) {
             return n;
         }
@@ -109,7 +109,7 @@ void Buffer::addNick(pointer_t ptr, Nick *nick) {
 
 void Buffer::removeNick(pointer_t ptr) {
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto *n = m_nicks->get<Nick>(i);
         if (n && n->ptrGet() == ptr) {
             m_nicks->removeRow(i);
             emit nicksChanged();
@@ -126,9 +126,9 @@ void Buffer::clearNicks() {
 QStringList Buffer::getVisibleNicks() {
     QStringList result;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto nick = m_nicks->get<Nick>(i);
+        auto *nick = m_nicks->get<Nick>(i);
         if (nick && nick->visibleGet() && nick->levelGet() == 0) {
-            result.append(nick->nameGet());
+            result.append(QString(nick->nameGet()));
         }
     }
     return result;
@@ -137,10 +137,14 @@ QStringList Buffer::getVisibleNicks() {
 int Buffer::normalsGet() const {
     int total = 0;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto *n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'> </span></body></html>")
+            if (n->prefixGet().trimmed().isEmpty()
+                || n->prefixGet()
+                       == "<html><body><span style='white-space: pre-wrap;'> "
+                          "</span></body></html>") {
                 total++;
+            }
         }
     }
     return total;
@@ -149,10 +153,12 @@ int Buffer::normalsGet() const {
 int Buffer::voicesGet() const {
     int total = 0;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto *n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>+</span></body></html>")
+            if (n->prefixGet()
+                == "<html><body><span style='white-space: pre-wrap;'>+</span></body></html>") {
                 total++;
+            }
         }
     }
     return total;
@@ -161,10 +167,12 @@ int Buffer::voicesGet() const {
 int Buffer::opsGet() const {
     int total = 0;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto *n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>@</span></body></html>")
+            if (n->prefixGet()
+                == "<html><body><span style='white-space: pre-wrap;'>@</span></body></html>") {
                 total++;
+            }
         }
     }
     return total;
@@ -198,9 +206,10 @@ MessageFilterList *Buffer::lines_filtered() {
     return m_proxyLinesFiltered;
 }
 
-bool Buffer::input(const QString &data) {
-    if (!m_ptr)
+bool Buffer::input(const QString &data) const {
+    if (!m_ptr) {
         return false;
+    }
 
     static QRegularExpression inputRegularExpression("\n|\r\n|\r");
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
@@ -220,8 +229,9 @@ bool Buffer::input(const QString &data) {
 
 void Buffer::fetchMoreLines() {
     m_afterInitialFetch = true;
-    if (!m_ptr)
+    if (!m_ptr) {
         return;
+    }
     if (m_lines->count() >= m_lastRequestedCount) {
         QMetaObject::invokeMethod(Lith::instance()->weechat(), "fetchLines", Q_ARG(pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25));
         //Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
@@ -240,13 +250,10 @@ BufferLine::BufferLine(Buffer *parent)
 {
     // connections to changed signals are required because FormattedString isn't directly connected to signals that can directly modify it
     // having it here results in fewer connections and that means lower cpu load when the signals are fired
-    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
-    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
+    connect(Lith::settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
+    connect(Lith::settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
     connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::messageChanged);
     connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::prefixChanged);
-}
-
-BufferLine::~BufferLine() {
 }
 
 Buffer *BufferLine::buffer() {
@@ -254,8 +261,9 @@ Buffer *BufferLine::buffer() {
 }
 
 Lith *BufferLine::lith() {
-    if (buffer())
+    if (buffer()) {
         return buffer()->lith();
+    }
     return nullptr;
 }
 
@@ -302,8 +310,10 @@ bool BufferLine::isSelfMsgGet() {
 
 QColor BufferLine::nickColorGet() const {
     // TODO this is suspicious at best
-    if (m_prefix.count() > 2)
-        return m_prefix.at(2).foreground.toQColor(Lith::instance()->windowHelperGet()->inverseTheme());
+    if (m_prefix.count() > 2) {
+        return m_prefix.at(2).foreground.toQColor(
+            Lith::instance()->windowHelperGet()->inverseTheme());
+    }
     return QColor();
 }
 
@@ -320,7 +330,7 @@ QString BufferLine::colorlessNicknameGet() {
 }
 
 QString BufferLine::colorlessTextGet() {
-    auto messageStripped = QTextDocumentFragment::fromHtml(m_message).toPlainText();
+    auto messageStripped = QTextDocumentFragment::fromHtml(QString(m_message)).toPlainText();
     return messageStripped;
 }
 
@@ -330,17 +340,22 @@ QObject *BufferLine::bufferGet() {
 
 bool BufferLine::searchCompare(const QString &term) {
     // TODO search parameters, case insensitive and nick+message always
-    if (term.isEmpty())
+    if (term.isEmpty()) {
         return true;
-    if (!Lith::instance()->settingsGet()->showJoinPartQuitMessagesGet() && isJoinPartQuitMsgGet())
+    }
+    if (!Lith::settingsGet()->showJoinPartQuitMessagesGet() && isJoinPartQuitMsgGet()) {
         return false;
+    }
     auto lowerTerm = term.toLower();
-    if (m_prefix.toPlain().toLower().contains(lowerTerm))
+    if (m_prefix.toPlain().toLower().contains(lowerTerm)) {
         return true;
-    if (m_message.toPlain().toLower().contains(lowerTerm))
+    }
+    if (m_message.toPlain().toLower().contains(lowerTerm)) {
         return true;
-    if (m_date.toString(Lith::instance()->settingsGet()->timestampFormatGet()).contains(lowerTerm))
+    }
+    if (m_date.toString(Lith::settingsGet()->timestampFormatGet()).contains(lowerTerm)) {
         return true;
+    }
     return false;
 }
 
@@ -348,9 +363,6 @@ Nick::Nick(Buffer *parent)
     : QObject(parent)
 {
 
-}
-
-Nick::~Nick() {
 }
 
 QString Nick::colorlessName() const

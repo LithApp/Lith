@@ -37,8 +37,10 @@
 #include <QIcon>
 
 #include <QtQml/qqmlextensionplugin.h>
+// NOLINTSTART
 Q_IMPORT_QML_PLUGIN(LithUIPlugin)
 Q_IMPORT_QML_PLUGIN(LithStylePlugin)
+// NOLINTEND
 
 int main(int argc, char *argv[])
 {
@@ -63,9 +65,9 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "formattedString", "");
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString &s){
         if (s.containsHtml()) {
-            if (Lith::instance()->windowHelperGet()->lightThemeGet())
+            if (Lith::instance()->windowHelperGet()->lightThemeGet()) {
                 return s.toHtml(lightTheme);
-            else
+            } else
                 return s.toHtml(darkTheme);
         }
         return s.toPlain();
@@ -95,15 +97,18 @@ int main(int argc, char *argv[])
     Settings::instance();
     Lith::instance();
     Lith::instance()->windowHelperGet()->init();
-    auto fontFamilyFromSettings = Lith::instance()->settingsGet()->baseFontFamilyGet();
+    auto fontFamilyFromSettings = Lith::settingsGet()->baseFontFamilyGet();
 #if defined(Q_OS_IOS) || defined(Q_OS_MACOS)
     QFont font("Menlo");
 #else
     QFontDatabase::addApplicationFont(":/fonts/Inconsolata-Variable.ttf");
     QFont font("Inconsolata");
 #endif
-    if(fontFamilyFromSettings.length() != 0) // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
-        font = QFont(fontFamilyFromSettings); // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
+    if (fontFamilyFromSettings.length()
+        != 0) { // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
+        font = QFont(
+            fontFamilyFromSettings); // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
+    }
     font.setKerning(false);
     font.setHintingPreference(QFont::PreferNoHinting);
     font.setStyleHint(QFont::Monospace);
@@ -114,7 +119,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("lith", Lith::instance());
     engine.rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
-    engine.rootContext()->setContextProperty("settings", Lith::instance()->settingsGet());
+    engine.rootContext()->setContextProperty("settings", Lith::settingsGet());
     engine.load(QUrl(QLatin1String("qrc:/qt/qml/LithUI/ui/main.qml")));
 
     QPixmap iconPixmap(":/icon.png");

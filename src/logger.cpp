@@ -45,7 +45,7 @@ QVariant Logger::data(const QModelIndex &index, int role) const {
 
 int Logger::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
-    return m_events.count();
+    return static_cast<int>(m_events.count());
 }
 
 int Logger::columnCount(const QModelIndex &parent) const
@@ -59,8 +59,8 @@ QHash<int, QByteArray> Logger::roleNames() const {
 }
 
 void Logger::log(Event event) {
-    if (Lith::instance()->settingsGet()->enableLoggingGet()) {
-        beginInsertRows(QModelIndex(), m_events.count(), m_events.count());
+    if (Lith::settingsGet()->enableLoggingGet()) {
+        beginInsertRows(QModelIndex(), static_cast<int>(m_events.count()), static_cast<int>(m_events.count()));
         event.summary = event.summary.trimmed();
         event.context = event.context.trimmed();
         event.details = event.details.trimmed();
@@ -100,27 +100,33 @@ const Logger *FilteredLogger::logger() const {
 
 bool FilteredLogger::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
     Q_UNUSED(source_parent)
-    if (!logger())
+    if (!logger()) {
         return false;
-    if (source_row >= logger()->events().size())
+    }
+    if (source_row >= logger()->events().size()) {
         return false;
-    auto& event = logger()->events().at(source_row);
+    }
+    const auto &event = logger()->events().at(source_row);
     if (event.second.type == Logger::LineAdded) {
-        if (!showLineAddedGet())
+        if (!showLineAddedGet()) {
             return false;
+        }
     }
     if (event.second.type == Logger::Protocol) {
-        if (!showProtocolGet())
+        if (!showProtocolGet()) {
             return false;
+        }
     }
-    if (m_contextFilter.isEmpty())
+    if (m_contextFilter.isEmpty()) {
         return true;
+    }
     return logger()->events().at(source_row).second.context.contains(m_contextFilter, Qt::CaseInsensitive);
 }
 
 bool FilteredLogger::filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const {
     Q_UNUSED(source_parent)
-    if (source_column == Logger::Details && !m_showDetails)
+    if (source_column == Logger::Details && !m_showDetails) {
         return false;
+    }
     return true;
 }

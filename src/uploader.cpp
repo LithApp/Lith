@@ -40,10 +40,10 @@ void Uploader::upload(const QString &path) {
 
     auto* mgr = new QNetworkAccessManager(this);
 
-    QFile *file;
-    if (path.startsWith("file://"))
+    QFile *file = nullptr;
+    if (path.startsWith("file://")) {
         file = new QFile(QUrl(path).toLocalFile());
-    else if (path.startsWith("file:assets-library")) {
+    } else if (path.startsWith("file:assets-library")) {
         QImageIOHandler::Transformations transformation;
         {
             // this needs to be in its own scope
@@ -54,27 +54,27 @@ void Uploader::upload(const QString &path) {
         QImage im(QUrl(path).toLocalFile());
         if (transformation == QImageIOHandler::TransformationRotate90) {
             QTransform transform;
-            transform.translate(im.size().width() / 2, im.size().height() / 2);
+            transform.translate(im.size().width() / 2.0, im.size().height() / 2.0);
             transform.rotate(90);
             im = im.transformed(transform);
         }
         else if (transformation == QImageIOHandler::TransformationRotate180) {
             QTransform transform;
-            transform.translate(im.size().width() / 2, im.size().height() / 2);
+            transform.translate(im.size().width() / 2.0, im.size().height() / 2.0);
             transform.rotate(180);
             im = im.transformed(transform);
         }
         else if (transformation == QImageIOHandler::TransformationRotate270) {
             QTransform transform;
-            transform.translate(im.size().width() / 2, im.size().height() / 2);
+            transform.translate(im.size().width() / 2.0, im.size().height() / 2.0);
             transform.rotate(270);
             im = im.transformed(transform);
         }
         uploadBinary(im);
         return;
-    }
-    else
+    } else {
         file = new QFile(path);
+    }
     if (!file->open(QIODevice::ReadOnly)) {
         emit error("Could not open file " + path);
         return;
@@ -83,9 +83,9 @@ void Uploader::upload(const QString &path) {
     workingSet(true);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
-    request.setRawHeader("Authorization", "Client-ID " + Lith::instance()->settingsGet()->imgurApiKeyGet().toUtf8());
+    request.setRawHeader("Authorization", "Client-ID " + Lith::settingsGet()->imgurApiKeyGet().toUtf8());
 
-    auto reply = mgr->post(request, file->readAll());
+    auto *reply = mgr->post(request, file->readAll());
     file->setParent(reply);
 
     connect(mgr, &QNetworkAccessManager::finished, this, &Uploader::onFinished);
@@ -98,19 +98,19 @@ void Uploader::uploadBinary(QImage data) {
 
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
-    request.setRawHeader("Authorization", "Client-ID " + Lith::instance()->settingsGet()->imgurApiKeyGet().toUtf8());
+    request.setRawHeader("Authorization", "Client-ID " + Lith::settingsGet()->imgurApiKeyGet().toUtf8());
 
     workingSet(true);
 
     if (data.size().width() > 2500) {
-        data = data.scaled(data.size() / 2);
+        data = data.scaled(data.size() / 2.0);
     }
     QByteArray arr;
     QBuffer buffer(&arr);
     buffer.open(QIODevice::WriteOnly);
     data.save(&buffer, "PNG");
     buffer.close();
-    auto reply = mgr->post(request, arr);
+    auto *reply = mgr->post(request, arr);
 
     connect(mgr, &QNetworkAccessManager::finished, this, &Uploader::onFinished);
 }
