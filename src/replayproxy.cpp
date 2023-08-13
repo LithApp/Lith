@@ -11,14 +11,12 @@ QString BaseNetworkProxy::getLogDirPath() {
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 }
 
-BaseNetworkProxy *BaseNetworkProxy::create(QObject *parent) {
+BaseNetworkProxy* BaseNetworkProxy::create(QObject* parent) {
     if (qApp->arguments().contains("--replay")) {
         return new ReplayProxy(parent);
-    }
-    else if (Settings::instance()->enableReplayRecordingGet()) {
+    } else if (Settings::instance()->enableReplayRecordingGet()) {
         return new RecordProxy(parent);
-    }
-    else {
+    } else {
         return new BaseNetworkProxy(parent);
     }
 }
@@ -27,17 +25,16 @@ BaseNetworkProxy::Mode BaseNetworkProxy::mode() const {
     return m_mode;
 }
 
-void BaseNetworkProxy::onDataReceived(const QByteArray &data) {
+void BaseNetworkProxy::onDataReceived(const QByteArray& data) {
     emit dataReceived(data);
 }
 
-BaseNetworkProxy::BaseNetworkProxy(QObject *parent, Mode mode)
+BaseNetworkProxy::BaseNetworkProxy(QObject* parent, Mode mode)
     : QObject(parent)
-    , m_mode(mode)
-{
+    , m_mode(mode) {
     QDir dir(getLogDirPath());
     if (dir.exists()) {
-        auto entriesByTime = dir.entryInfoList(QStringList{logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
+        auto entriesByTime = dir.entryInfoList(QStringList {logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
         for (const auto& entry : entriesByTime) {
             auto justTheNumber = entry.fileName();
             justTheNumber.replace("LithReplay", "");
@@ -49,12 +46,8 @@ BaseNetworkProxy::BaseNetworkProxy(QObject *parent, Mode mode)
                 QDateTime creationTime;
                 stream >> version >> creationTime;
                 if (stream.status() == QDataStream::Ok) {
-                    auto *record = new ReplayRecordingInfo(version,
-                                                           creationTime,
-                                                           justTheNumber.toInt(),
-                                                           entry.size(),
-                                                           entry.absoluteFilePath(),
-                                                           this);
+                    auto* record =
+                        new ReplayRecordingInfo(version, creationTime, justTheNumber.toInt(), entry.size(), entry.absoluteFilePath(), this);
                     m_existingRecordings.append(record);
                     connect(record, &QObject::destroyed, this, [this, record]() {
                         if (m_existingRecordings.contains(record)) {
@@ -62,12 +55,10 @@ BaseNetworkProxy::BaseNetworkProxy(QObject *parent, Mode mode)
                             emit existingRecordingsChanged();
                         }
                     });
-                }
-                else {
+                } else {
                     m_existingRecordings.append(new ReplayRecordingInfo(1, QDateTime(), -1, entry.size(), entry.absoluteFilePath(), this));
                 }
-            }
-            else {
+            } else {
                 m_existingRecordings.append(new ReplayRecordingInfo(1, QDateTime(), -1, entry.size(), entry.absoluteFilePath(), this));
             }
         }
@@ -81,15 +72,14 @@ void BaseNetworkProxy::printHelpAndQuitApp() {
     if (!dir.exists()) {
         dir.mkpath(".");
     }
-    auto entries = dir.entryInfoList(QStringList{logFileNameTemplate.arg("*")}, QDir::Filter::Files);
-    auto entriesByTime = dir.entryInfoList(QStringList{logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
+    auto entries = dir.entryInfoList(QStringList {logFileNameTemplate.arg("*")}, QDir::Filter::Files);
+    auto entriesByTime = dir.entryInfoList(QStringList {logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
     if (entries.isEmpty()) {
         qCritical() << "There are no saved recordings now. Run Lith in regular mode and enable replay recording to create some.";
-    }
-    else {
+    } else {
         qCritical() << "There are now these following recordings available:";
         QString entriesString;
-        for (auto &i : entries) {
+        for (auto& i : entries) {
             auto justTheNumber = i.fileName();
             justTheNumber.replace("LithReplay", "");
             justTheNumber.replace(".dat", "");
@@ -98,8 +88,7 @@ void BaseNetworkProxy::printHelpAndQuitApp() {
                 justTheLatestNumber.replace("LithReplay", "");
                 justTheLatestNumber.replace(".dat", "");
                 entriesString.append(QString("\tlast (%1), ").arg(justTheLatestNumber));
-            }
-            else {
+            } else {
                 entriesString.append(", ");
             }
             entriesString.append(justTheNumber);
@@ -110,8 +99,7 @@ void BaseNetworkProxy::printHelpAndQuitApp() {
     QTimer::singleShot(0, qApp, &QApplication::quit);
 }
 
-
-void ReplayProxy::onDataReceived(const QByteArray &data) {
+void ReplayProxy::onDataReceived(const QByteArray& data) {
     Q_UNUSED(data)
 }
 
@@ -121,12 +109,10 @@ void ReplayProxy::readAll() {
         m_logDataStream >> event;
         if (m_logDataStream.status() == QDataStream::Ok) {
             m_events.append(event);
-        }
-        else {
+        } else {
             qCritical() << "QDataStream broke:" << m_logDataStream.status();
         }
     }
-
 
     emit loadingFinished();
     m_playing = true;
@@ -138,17 +124,15 @@ void ReplayProxy::replayStep() {
         emit dataReceived(m_events.at(m_currentEvent).second);
         m_currentEvent++;
         emit currentEventChanged();
-    }
-    else {
+    } else {
         emit replayFinished();
         m_playing = false;
         emit replayingChanged();
     }
 }
 
-ReplayProxy::ReplayProxy(QObject *parent)
-    : BaseNetworkProxy(parent, Replay)
-{
+ReplayProxy::ReplayProxy(QObject* parent)
+    : BaseNetworkProxy(parent, Replay) {
     int replayArgumentIndex = qApp->arguments().indexOf("--replay");
 
     if ((replayArgumentIndex + 1) >= qApp->arguments().size()) {
@@ -160,22 +144,19 @@ ReplayProxy::ReplayProxy(QObject *parent)
     QString selectedFileName;
     QString replayArgument = qApp->arguments().at(replayArgumentIndex + 1);
     if (replayArgument == "last") {
-        auto entries = dir.entryInfoList(QStringList{logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
+        auto entries = dir.entryInfoList(QStringList {logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
         if (!entries.isEmpty()) {
             selectedFileName = entries.first().fileName();
         }
-    }
-    else {
+    } else {
         bool ok = false;
         int replayNumber = replayArgument.toInt(&ok);
         if (ok) {
             selectedFileName = logFileNameTemplate.arg(replayNumber);
-        }
-        else {
+        } else {
             selectedFileName = replayArgument;
         }
     }
-
 
     QString fullFilePath;
     if (selectedFileName.contains('/') || selectedFileName.contains('\\')) {
@@ -194,7 +175,10 @@ ReplayProxy::ReplayProxy(QObject *parent)
     m_logDataStream >> m_replayVersion;
     if (m_logDataStream.status() != QDataStream::Ok || m_replayVersion != currentReplayVersion) {
         printHelpAndQuitApp();
-        qCritical().noquote() << QString("File \"%1\" is an older replay version (%2), we're currently on %3").arg(selectedFileName).arg(m_replayVersion).arg(currentReplayVersion);
+        qCritical().noquote() << QString("File \"%1\" is an older replay version (%2), we're currently on %3")
+                                     .arg(selectedFileName)
+                                     .arg(m_replayVersion)
+                                     .arg(currentReplayVersion);
         return;
     }
     m_logDataStream >> m_creationTime;
@@ -212,10 +196,9 @@ bool RecordProxy::recording() const {
     return m_logFile.isOpen() && m_logFile.isWritable() && m_logDataStream.status() == QDataStream::Ok;
 }
 
-void RecordProxy::onDataReceived(const QByteArray &data)
-{
+void RecordProxy::onDataReceived(const QByteArray& data) {
     if (m_logFile.isOpen()) {
-        QPair<QDateTime, QByteArray> newEvent{QDateTime::currentDateTime(), data};
+        QPair<QDateTime, QByteArray> newEvent {QDateTime::currentDateTime(), data};
         m_logDataStream << newEvent;
         m_logFile.flush();
         m_events.append(newEvent);
@@ -224,10 +207,9 @@ void RecordProxy::onDataReceived(const QByteArray &data)
     emit dataReceived(data);
 }
 
-RecordProxy::RecordProxy(QObject *parent)
+RecordProxy::RecordProxy(QObject* parent)
     : BaseNetworkProxy(parent, Record)
-    , m_creationTime(QDateTime::currentDateTime())
-{
+    , m_creationTime(QDateTime::currentDateTime()) {
     QDir dir(getLogDirPath());
     if (!dir.exists()) {
         if (!dir.mkpath(".")) {
@@ -235,7 +217,7 @@ RecordProxy::RecordProxy(QObject *parent)
             return;
         }
     }
-    auto entries = dir.entryInfoList(QStringList{logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
+    auto entries = dir.entryInfoList(QStringList {logFileNameTemplate.arg("*")}, QDir::Filter::Files, QDir::SortFlag::Time);
 
     QString selectedFileName;
     // First check if all possible filenames are filled
@@ -244,7 +226,7 @@ RecordProxy::RecordProxy(QObject *parent)
                 return entry.fileName() == BaseNetworkProxy::logFileNameTemplate.arg(i);
             }) == entries.end()) {
             slotSet(i);
-            selectedFileName = QString{BaseNetworkProxy::logFileNameTemplate}.arg(i);
+            selectedFileName = QString {BaseNetworkProxy::logFileNameTemplate}.arg(i);
             break;
         }
     }
@@ -261,7 +243,8 @@ RecordProxy::RecordProxy(QObject *parent)
 
     m_logFile.setFileName(dir.absoluteFilePath(selectedFileName));
     if (!m_logFile.open(QIODevice::WriteOnly)) {
-        qCritical() << QString("Logger could not open %1 for writing, recording will be disabled.").arg(dir.absoluteFilePath(selectedFileName));
+        qCritical(
+        ) << QString("Logger could not open %1 for writing, recording will be disabled.").arg(dir.absoluteFilePath(selectedFileName));
         return;
     }
     m_logDataStream.setDevice(&m_logFile);
@@ -286,9 +269,7 @@ QString ReplayRecordingInfo::store() {
     auto newName = QString("LithReplay%1_%2.dat").arg(m_number).arg(QDateTime::currentDateTime().toString("yyMMdd_hhmmss"));
     auto absoluteNewPath = docDir.absoluteFilePath(newName);
     if (f.copy(absoluteNewPath)) {
-        return QString("Replay %1 was copied to<br>\"<a href=\"%2\">%2</a>\".")
-            .arg(m_number)
-            .arg(absoluteNewPath);
+        return QString("Replay %1 was copied to<br>\"<a href=\"%2\">%2</a>\".").arg(m_number).arg(absoluteNewPath);
     }
     return QString("Could not save replay %1 to path \"%2\": %3").arg(m_number).arg(absoluteNewPath).arg(f.errorString());
 }

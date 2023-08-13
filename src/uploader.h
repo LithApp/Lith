@@ -23,22 +23,21 @@
 #include <QNetworkReply>
 #include <QImage>
 
-class Uploader : public QObject
-{
+class Uploader : public QObject {
     Q_OBJECT
     PROPERTY(bool, working)
 public:
-    explicit Uploader(QObject *parent = nullptr);
+    explicit Uploader(QObject* parent = nullptr);
 
 public slots:
-    void upload(const QString &path);
+    void upload(const QString& path);
     void uploadBinary(QImage data);
 signals:
-    void error(const QString &message);
-    void success(const QString &url);
+    void error(const QString& message);
+    void success(const QString& url);
 
 private slots:
-    void onFinished(QNetworkReply *reply);
+    void onFinished(QNetworkReply* reply);
 };
 
-#endif // UPLOADER_H
+#endif  // UPLOADER_H

@@ -25,11 +25,15 @@
 #include <QUrl>
 
 namespace {
-    Q_GLOBAL_STATIC(const QRegularExpression, urlRegExp, R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
-                                 QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption | QRegularExpression::ExtendedPatternSyntaxOption);
+    Q_GLOBAL_STATIC(
+        const QRegularExpression, urlRegExp,
+        R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
+        QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption |
+            QRegularExpression::ExtendedPatternSyntaxOption
+    );
 }
 
-QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
+QString FormattedString::Part::toHtml(const ColorTheme& theme) const {
     QString ret;
     if (bold) {
         ret.append("<b>");
@@ -45,8 +49,7 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
             } else {
                 ret.append("pink");
             }
-        }
-        else {
+        } else {
             if (theme.weechatColors().count() > foreground.index) {
                 ret.append(theme.weechatColors()[foreground.index]);
             } else {
@@ -75,24 +78,21 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
         // If we only have a hostname, we'll use it as is.
         if (path.isEmpty() || path == "/") {
             finalText = text;
-        }
-        else {
+        } else {
             // We'll show always show the host and the scheme.
             const auto hostPrefix = scheme + "://" + host + "/";
-            const auto *const ellipsis = "\u2026";
+            const auto* const ellipsis = "\u2026";
 
             // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
             // ellipsis...
             if (hostPrefix.length() >= urlThreshold) {
                 finalText = hostPrefix + ellipsis;
-            }
-            else {
+            } else {
                 // This is a "nice" url with just a hostname and then one path fragment. We'll let these slide, because these tend
                 // to look nice even if they're long. Something like https://host.domain/file.extension
                 if (path == "/" + file && !url.hasQuery()) {
                     finalText = text;
-                }
-                else {
+                } else {
                     // Otherwise it's a weird link with multiple path fragments and queries and stuff. We'll just use the host and 10
                     // characters of the path.
                     const auto maxCharsToAppend = urlThreshold - hostPrefix.length();
@@ -100,8 +100,7 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
                 }
             }
         }
-    }
-    else {
+    } else {
         finalText = text;
     }
     ret.append(finalText.toHtmlEscaped());
@@ -122,49 +121,48 @@ QString FormattedString::Part::toHtml(const ColorTheme &theme) const {
 }
 
 FormattedString::FormattedString()
-    : m_parts({QString()})
-{}
+    : m_parts({QString()}) {
+}
 
-FormattedString::FormattedString(const char *d)
-    : m_parts({QString(d)})
-{}
+FormattedString::FormattedString(const char* d)
+    : m_parts({QString(d)}) {
+}
 
-FormattedString::FormattedString(const QString &o)
-    : m_parts({o})
-{}
+FormattedString::FormattedString(const QString& o)
+    : m_parts({o}) {
+}
 
-FormattedString::FormattedString(QString &&o)
-{
+FormattedString::FormattedString(QString&& o) {
     m_parts.emplace_back(std::move(o));
 }
 
-FormattedString::FormattedString(const FormattedString &o)
-    : m_parts({o.m_parts})
-{}
+FormattedString::FormattedString(const FormattedString& o)
+    : m_parts({o.m_parts}) {
+}
 
-FormattedString::FormattedString(FormattedString &&o) noexcept
-    : m_parts(std::move(o.m_parts))
-{}
+FormattedString::FormattedString(FormattedString&& o) noexcept
+    : m_parts(std::move(o.m_parts)) {
+}
 
-FormattedString &FormattedString::operator=(const char *o) {
-    m_parts = { QString(o) };
+FormattedString& FormattedString::operator=(const char* o) {
+    m_parts = {QString(o)};
     return *this;
 }
 
-bool FormattedString::operator==(const QString &o) const {
+bool FormattedString::operator==(const QString& o) const {
     return toPlain() == o;
 }
 
-bool FormattedString::operator!=(const QString &o) const {
+bool FormattedString::operator!=(const QString& o) const {
     return !operator==(o);
 }
 
-FormattedString &FormattedString::operator+=(const QString &s) {
+FormattedString& FormattedString::operator+=(const QString& s) {
     lastPart().text += s;
     return *this;
 }
 
-const ColorTheme &FormattedString::getCurrentTheme() {
+const ColorTheme& FormattedString::getCurrentTheme() {
     return Lith::instance()->windowHelperGet()->currentTheme();
 }
 
@@ -172,42 +170,42 @@ void FormattedString::clear() {
     m_parts = {{}};
 }
 
-FormattedString::Part &FormattedString::addPart(const FormattedString::Part &p) {
+FormattedString::Part& FormattedString::addPart(const FormattedString::Part& p) {
     m_parts.append(p);
     return m_parts.last();
 }
 
-FormattedString::Part &FormattedString::firstPart() {
+FormattedString::Part& FormattedString::firstPart() {
     return m_parts.first();
 }
 
-const FormattedString::Part &FormattedString::firstPart() const {
+const FormattedString::Part& FormattedString::firstPart() const {
     return m_parts.first();
 }
 
 QString FormattedString::toPlain() const {
     QString ret;
-    for (const auto &i : m_parts) {
+    for (const auto& i : m_parts) {
         ret.append(i.text);
     }
     return ret;
 }
 
-QString FormattedString::toHtml(const ColorTheme &theme) const {
-    QString ret { "<html><body><span style='white-space: pre-wrap;'>" };
-    for (const auto &i : m_parts) {
+QString FormattedString::toHtml(const ColorTheme& theme) const {
+    QString ret {"<html><body><span style='white-space: pre-wrap;'>"};
+    for (const auto& i : m_parts) {
         ret.append(i.toHtml(theme));
     }
     ret.append("</span></body></html>");
     return ret;
 }
 
-QString FormattedString::toTrimmedHtml(int n, const ColorTheme &theme) const {
+QString FormattedString::toTrimmedHtml(int n, const ColorTheme& theme) const {
     if (n < 0) {
         return toHtml(theme);
     }
     QString ret = "<html><body><span style='white-space: pre-wrap;'>";
-    for (const auto &i : m_parts) {
+    for (const auto& i : m_parts) {
         QString word = i.text.left(n);
         Part tempPart = i;
         tempPart.text = word;
@@ -233,23 +231,24 @@ int FormattedString::count() const {
     return static_cast<int>(m_parts.count());
 }
 
-FormattedString::Part &FormattedString::lastPart() {
+FormattedString::Part& FormattedString::lastPart() {
     return m_parts.last();
 }
 
-const FormattedString::Part &FormattedString::lastPart() const {
+const FormattedString::Part& FormattedString::lastPart() const {
     return m_parts.last();
 }
 
-const FormattedString::Part &FormattedString::at(int index) const {
+const FormattedString::Part& FormattedString::at(int index) const {
     return m_parts.at(index);
 }
 
 void FormattedString::prune() {
     auto it = m_parts.begin();
     while (it != m_parts.end()) {
-        // Originally: QRegExp re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))", Qt::CaseInsensitive, QRegExp::W3CXmlSchema11);
-        // ; was added to handle &amp; escapes right
+        // Originally: QRegExp
+        // re(R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])))",
+        // Qt::CaseInsensitive, QRegExp::W3CXmlSchema11); ; was added to handle &amp; escapes right
 
         auto reIt = urlRegExp->globalMatch(it->text, 0, QRegularExpression::NormalMatch);
         if (reIt.hasNext()) {
@@ -257,24 +256,23 @@ void FormattedString::prune() {
             int previousEnd = 0;
             while (reIt.hasNext()) {
                 auto reMatch = reIt.next();
-                Part prefix = { it->text.mid(previousEnd, reMatch.capturedStart() - previousEnd) };
-                Part url = { it->text.mid(reMatch.capturedStart(), reMatch.capturedLength()) };
+                Part prefix = {it->text.mid(previousEnd, reMatch.capturedStart() - previousEnd)};
+                Part url = {it->text.mid(reMatch.capturedStart(), reMatch.capturedLength())};
                 url.hyperlink = true;
                 segments.append(prefix);
                 segments.append(url);
                 previousEnd = static_cast<int>(reMatch.capturedEnd());
             }
             if (previousEnd < it->text.size()) {
-                Part suffix = { it->text.mid(previousEnd, it->text.size() - previousEnd) };
+                Part suffix = {it->text.mid(previousEnd, it->text.size() - previousEnd)};
                 segments.append(suffix);
             }
             it = m_parts.erase(it);
-            for (auto &i : segments) {
+            for (auto& i : segments) {
                 it = m_parts.insert(it, i);
                 ++it;
             }
-        }
-        else {
+        } else {
             ++it;
         }
     }
@@ -288,11 +286,11 @@ void FormattedString::prune() {
     it = m_parts.begin();
 }
 
-QStringList FormattedString::split(const QString &sep) const {
+QStringList FormattedString::split(const QString& sep) const {
     return toPlain().split(sep);
 }
 
-qlonglong FormattedString::toLongLong(bool *ok, int base) const {
+qlonglong FormattedString::toLongLong(bool* ok, int base) const {
     return toPlain().toLongLong(ok, base);
 }
 
@@ -310,7 +308,7 @@ int FormattedString::length() const {
 
 QStringList FormattedString::urls() const {
     QStringList ret;
-    for (const auto &i : m_parts) {
+    for (const auto& i : m_parts) {
         if (i.hyperlink) {
             ret.append(i.text);
         }
@@ -318,16 +316,16 @@ QStringList FormattedString::urls() const {
     return ret;
 }
 
-FormattedString &FormattedString::operator+=(const char *s) {
+FormattedString& FormattedString::operator+=(const char* s) {
     lastPart().text += s;
     return *this;
 }
 
-bool FormattedString::operator!=(const FormattedString &o) const {
+bool FormattedString::operator!=(const FormattedString& o) const {
     return !operator==(o);
 }
 
-bool FormattedString::operator==(const FormattedString &o) const {
+bool FormattedString::operator==(const FormattedString& o) const {
     return toPlain() == o.toPlain();
 }
 
@@ -335,22 +333,22 @@ FormattedString::operator QString() const {
     return toPlain();
 }
 
-FormattedString &FormattedString::operator=(QString &&o) {
+FormattedString& FormattedString::operator=(QString&& o) {
     m_parts.clear();
     m_parts.emplace_back(std::move(o));
     return *this;
 }
 
-FormattedString &FormattedString::operator=(const QString &o) {
-    m_parts = { o };
+FormattedString& FormattedString::operator=(const QString& o) {
+    m_parts = {o};
     return *this;
 }
-FormattedString &FormattedString::operator=(FormattedString &&o) noexcept {
-    m_parts = { std::move(o.m_parts) };
+FormattedString& FormattedString::operator=(FormattedString&& o) noexcept {
+    m_parts = {std::move(o.m_parts)};
     return *this;
 }
 
-FormattedString &FormattedString::operator=(const FormattedString &o) {
+FormattedString& FormattedString::operator=(const FormattedString& o) {
     if (this == &o) {
         return *this;
     }
@@ -358,7 +356,7 @@ FormattedString &FormattedString::operator=(const FormattedString &o) {
     return *this;
 }
 
-QColor FormattedString::Part::Color::toQColor(const ColorTheme &theme) const {
+QColor FormattedString::Part::Color::toQColor(const ColorTheme& theme) const {
     if (index >= 0) {
         if (extended) {
             if (theme.extendedColors().count() > index) {
@@ -366,8 +364,7 @@ QColor FormattedString::Part::Color::toQColor(const ColorTheme &theme) const {
             } else {
                 return QColor("pink");
             }
-        }
-        else {
+        } else {
             if (theme.weechatColors().count() > index) {
                 return QColor(theme.weechatColors()[index]);
             } else {

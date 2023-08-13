@@ -5,9 +5,8 @@
 #include <QMetaEnum>
 #include <QDataStream>
 
-SocketHelper::SocketHelper(Weechat *parent)
-    : QObject(parent)
-{
+SocketHelper::SocketHelper(Weechat* parent)
+    : QObject(parent) {
 }
 
 bool SocketHelper::isConnected() {
@@ -23,13 +22,11 @@ bool SocketHelper::isConnected() {
     return false;
 }
 
-Weechat *SocketHelper::weechat()
-{
+Weechat* SocketHelper::weechat() {
     return qobject_cast<Weechat*>(parent());
 }
 
-Lith *SocketHelper::lith()
-{
+Lith* SocketHelper::lith() {
     if (weechat()) {
         return weechat()->lith();
     }
@@ -59,9 +56,11 @@ void SocketHelper::onConnected() {
     emit connected();
 }
 
-void SocketHelper::connectToWebsocket(const QString &hostname, const QString &endpoint, int port, bool encrypted) {
+void SocketHelper::connectToWebsocket(const QString& hostname, const QString& endpoint, int port, bool encrypted) {
     reset();
-    lith()->log(Logger::Network, QString("Connecting to: %1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
+    lith()->log(
+        Logger::Network, QString("Connecting to: %1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint)
+    );
     m_webSocket = new QWebSocket("weechat", QWebSocketProtocol::VersionLatest, this);
 
     connect(m_webSocket, &QWebSocket::connected, this, &SocketHelper::onConnected);
@@ -75,7 +74,7 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
 #ifndef __EMSCRIPTEN__
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
         expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
-#endif // __EMSCRIPTEN__
+#endif  // __EMSCRIPTEN__
     }
 #ifndef __EMSCRIPTEN__
     m_webSocket->ignoreSslErrors(expectedSslErrors);
@@ -85,7 +84,7 @@ void SocketHelper::connectToWebsocket(const QString &hostname, const QString &en
 }
 
 #ifndef __EMSCRIPTEN__
-void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool encrypted) {
+void SocketHelper::connectToTcpSocket(const QString& hostname, int port, bool encrypted) {
     reset();
     lith()->log(Logger::Network, QString("Connecting to: %1:%2 (%3)").arg(hostname).arg(port).arg(encrypted ? "ssl" : "plain"));
     m_tcpSocket = new QSslSocket(this);
@@ -98,12 +97,21 @@ void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool en
     }
     m_tcpSocket->ignoreSslErrors(expectedSslErrors);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-    connect(m_tcpSocket, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this, &SocketHelper::onError, Qt::QueuedConnection);
-#else
-    connect(m_tcpSocket, static_cast<void(QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &SocketHelper::onError, Qt::QueuedConnection);
-#endif
-    connect(m_tcpSocket, static_cast<void(QSslSocket::*)(const QList<QSslError> &)>(&QSslSocket::sslErrors), this, &SocketHelper::onSslErrors, Qt::QueuedConnection);
+  #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    connect(
+        m_tcpSocket, static_cast<void (QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this,
+        &SocketHelper::onError, Qt::QueuedConnection
+    );
+  #else
+    connect(
+        m_tcpSocket, static_cast<void (QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &SocketHelper::onError,
+        Qt::QueuedConnection
+    );
+  #endif
+    connect(
+        m_tcpSocket, static_cast<void (QSslSocket::*)(const QList<QSslError>&)>(&QSslSocket::sslErrors), this, &SocketHelper::onSslErrors,
+        Qt::QueuedConnection
+    );
     connect(m_tcpSocket, &QSslSocket::readyRead, this, &SocketHelper::onReadyRead, Qt::QueuedConnection);
     connect(m_tcpSocket, &QSslSocket::connected, this, &SocketHelper::onConnected, Qt::QueuedConnection);
     connect(m_tcpSocket, &QSslSocket::disconnected, this, &SocketHelper::onDisconnected, Qt::QueuedConnection);
@@ -115,13 +123,13 @@ void SocketHelper::connectToTcpSocket(const QString &hostname, int port, bool en
     }
 }
 
-#endif // __EMSCRIPTEN__
+#endif  // __EMSCRIPTEN__
 
-qint64 SocketHelper::write(const QString& command, const QString& id, const QString &data) {
+qint64 SocketHelper::write(const QString& command, const QString& id, const QString& data) {
     return write(command.toUtf8(), id.toUtf8(), data.toUtf8());
 }
 
-qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, const QByteArray &data) {
+qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, const QByteArray& data) {
     qint64 bytes = 0;
     QByteArray fullCommand;
     if (!id.isEmpty()) {
@@ -139,10 +147,7 @@ qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, cons
         if (command == "init") {
             lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString("[obscured]"));
         } else {
-            lith()->log(Logger::Protocol,
-                        command,
-                        QString("Sending WeeChat command"),
-                        QString(fullCommand));
+            lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString(fullCommand));
         }
     }
     if (m_webSocket) {
@@ -152,9 +157,12 @@ qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, cons
     if (m_tcpSocket) {
         bytes = m_tcpSocket->write(fullCommand);
     }
-#endif // __EMSCRIPTEN__
+#endif  // __EMSCRIPTEN__
     if (bytes != fullCommand.size()) {
-        lith()->log(Logger::Network, QString("SocketHelper::write: Attempted to write %1 but managed to write %2 bytes").arg(fullCommand.size()).arg(bytes));
+        lith()->log(
+            Logger::Network,
+            QString("SocketHelper::write: Attempted to write %1 but managed to write %2 bytes").arg(fullCommand.size()).arg(bytes)
+        );
     }
     return bytes;
 }
@@ -169,10 +177,10 @@ void SocketHelper::reset() {
         m_tcpSocket->deleteLater();
         m_tcpSocket = nullptr;
     }
-#endif // __EMSCRIPTEN__
+#endif  // __EMSCRIPTEN__
 }
 
-void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
+void SocketHelper::onBinaryMessageReceived(const QByteArray& data) {
     if (data.size() > 5) {
         auto header = data.left(5);
         if (header.size() != 5) {
@@ -196,8 +204,7 @@ void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
             dataCopy[2] = 0;
             dataCopy[3] = 0;
             dataCopy = qUncompress(dataCopy);
-        }
-        else {
+        } else {
             dataCopy = data.mid(5);
         }
         emit dataReceived(dataCopy);
@@ -205,8 +212,8 @@ void SocketHelper::onBinaryMessageReceived(const QByteArray &data) {
 }
 
 #ifndef __EMSCRIPTEN__
-void SocketHelper::onSslErrors(const QList<QSslError> &errors) {
-    for (const auto &i : errors) {
+void SocketHelper::onSslErrors(const QList<QSslError>& errors) {
+    for (const auto& i : errors) {
         lith()->log(Logger::Network, "SSL error: " + i.errorString());
     }
 }
@@ -274,4 +281,4 @@ void SocketHelper::onReadyRead() {
         onReadyRead();
     }
 }
-#endif // __EMSCRIPTEN__
+#endif  // __EMSCRIPTEN__

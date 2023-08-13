@@ -22,16 +22,13 @@ public:
         , m_createdAt(std::move(createdAt))
         , m_number(number)
         , m_size(static_cast<qreal>(size))
-        , m_absolutePath(std::move(absolutePath))
-    {
-
+        , m_absolutePath(std::move(absolutePath)) {
     }
     Q_INVOKABLE QString erase();
     Q_INVOKABLE QString store();
 };
 
-class BaseNetworkProxy : public QObject
-{
+class BaseNetworkProxy : public QObject {
     Q_OBJECT
     Q_PROPERTY(int currentReplayVersion READ currentReplayVersionGet CONSTANT)
     Q_PROPERTY(bool recording READ recording NOTIFY recordingChanged)
@@ -50,24 +47,30 @@ public:
     };
     Q_ENUM(Mode)
 
-    static BaseNetworkProxy* create(QObject *parent);
+    static BaseNetworkProxy* create(QObject* parent);
 
     Mode mode() const;
 
-    static int currentReplayVersionGet() { return currentReplayVersion; }
-    virtual bool recording() const { return false; }
-    virtual bool replaying() const { return false; }
+    static int currentReplayVersionGet() {
+        return currentReplayVersion;
+    }
+    virtual bool recording() const {
+        return false;
+    }
+    virtual bool replaying() const {
+        return false;
+    }
 
 public slots:
-    virtual void onDataReceived(const QByteArray &data);
+    virtual void onDataReceived(const QByteArray& data);
 
 signals:
-    void dataReceived(const QByteArray &data);
+    void dataReceived(const QByteArray& data);
     void recordingChanged();
     void replayingChanged();
 
 protected:
-    explicit BaseNetworkProxy(QObject *parent = nullptr, Mode mode = Disabled);
+    explicit BaseNetworkProxy(QObject* parent = nullptr, Mode mode = Disabled);
     static void printHelpAndQuitApp();
 
 private:
@@ -81,12 +84,18 @@ class ReplayProxy : public BaseNetworkProxy {
 public:
     friend class BaseNetworkProxy;
 
-    bool replaying() const override { return m_playing; }
-    int totalEventsGet() const { return static_cast<int>(m_events.size()); }
-    int currentEventGet() const { return m_currentEvent; }
+    bool replaying() const override {
+        return m_playing;
+    }
+    int totalEventsGet() const {
+        return static_cast<int>(m_events.size());
+    }
+    int currentEventGet() const {
+        return m_currentEvent;
+    }
 
 public slots:
-    void onDataReceived(const QByteArray &data) override;
+    void onDataReceived(const QByteArray& data) override;
 
 private slots:
     void readAll();
@@ -99,7 +108,8 @@ signals:
     void currentEventChanged();
 
 private:
-    explicit ReplayProxy(QObject *parent = nullptr);
+    explicit ReplayProxy(QObject* parent = nullptr);
+
     QTimer m_replayTimer;
     bool m_playing = false;
     int m_replayVersion = 0;
@@ -119,10 +129,10 @@ public:
     bool recording() const override;
 
 public slots:
-    void onDataReceived(const QByteArray &data) override;
+    void onDataReceived(const QByteArray& data) override;
 
 private:
-    explicit RecordProxy(QObject *parent = nullptr);
+    explicit RecordProxy(QObject* parent = nullptr);
     bool m_firstEvent = true;
     QDateTime m_creationTime;
     QList<QPair<QDateTime, QByteArray>> m_events;
@@ -130,6 +140,4 @@ private:
     QDataStream m_logDataStream;
 };
 
-
-
-#endif // REPLAYPROXY_H
+#endif  // REPLAYPROXY_H

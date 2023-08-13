@@ -13,10 +13,9 @@ namespace {
     Q_GLOBAL_STATIC(const QRegularExpression, formatPlaceholderRegexp, "[%]([0-9]+)");
 }
 
-FormatStringSplitter::FormatStringSplitter(QObject *parent)
-    : QObject{parent}
-    , m_variables(QmlObjectList::create<FormatStringVariable>(this))
-{
+FormatStringSplitter::FormatStringSplitter(QObject* parent)
+    : QObject {parent}
+    , m_variables(QmlObjectList::create<FormatStringVariable>(this)) {
     connect(this, &FormatStringSplitter::formatChanged, this, &FormatStringSplitter::onFormatChanged);
     connect(this, &FormatStringSplitter::variablesValidChanged, this, &FormatStringSplitter::formattedDataChanged);
     connect(this, &FormatStringSplitter::formatValidChanged, this, &FormatStringSplitter::formattedDataChanged);
@@ -27,7 +26,7 @@ FormatStringSplitter::FormatStringSplitter(QObject *parent)
     connect(this, &FormatStringSplitter::countChanged, this, &FormatStringSplitter::stringListChanged);
 }
 
-QmlObjectList *FormatStringSplitter::variables() {
+QmlObjectList* FormatStringSplitter::variables() {
     return m_variables;
 }
 
@@ -45,14 +44,17 @@ QString FormatStringSplitter::formattedDataGet() {
 
     QString result(formatGet());
 
-    const auto *mo = m_dataSource->metaObject();
+    const auto* mo = m_dataSource->metaObject();
     for (int i = 0; i < m_variables->count(); i++) {
-        auto *var = m_variables->get<FormatStringVariable>(i);
+        auto* var = m_variables->get<FormatStringVariable>(i);
         if (!var) {
             continue;
         }
         if (!validate(var->nameGet())) {
-            Lith::instance()->log(Logger::FormatSplitter, QString("FormatStringSplitter::formattedData was called with invalid variable (%1), inserting N/A").arg(var->nameGet()));
+            Lith::instance()->log(
+                Logger::FormatSplitter,
+                QString("FormatStringSplitter::formattedData was called with invalid variable (%1), inserting N/A").arg(var->nameGet())
+            );
             result = result.arg("N/A");
             continue;
         }
@@ -67,7 +69,9 @@ QString FormatStringSplitter::formattedDataGet() {
             continue;
         }
         if (!propertyVariant.canConvert<QString>()) {
-            Lith::instance()->log(Logger::FormatSplitter, QString("Not sure how but could not convert property %1 to QString").arg(var->nameGet()));
+            Lith::instance()->log(
+                Logger::FormatSplitter, QString("Not sure how but could not convert property %1 to QString").arg(var->nameGet())
+            );
             continue;
         }
         QString propertyString = propertyVariant.toString();
@@ -77,17 +81,18 @@ QString FormatStringSplitter::formattedDataGet() {
     return result;
 }
 
-void FormatStringSplitter::fromStringList(const QStringList &items) {
+void FormatStringSplitter::fromStringList(const QStringList& items) {
     bool first = true;
     int varIndex = 0;
-    for (const auto &i : items) {
+    for (const auto& i : items) {
         if (first) {
             formatSet(i);
-        }
-        else {
-            auto *variable = m_variables->get<FormatStringVariable>(varIndex);
+        } else {
+            auto* variable = m_variables->get<FormatStringVariable>(varIndex);
             if (!variable) {
-                Lith::instance()->log(Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i));
+                Lith::instance()->log(
+                    Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i)
+                );
                 varIndex++;
                 continue;
             }
@@ -102,9 +107,11 @@ QStringList FormatStringSplitter::stringList() const {
     QStringList result;
     result.append(formatGet());
     for (int i = 0; i < m_variables->count(); i++) {
-        auto *variable = m_variables->get<FormatStringVariable>(i);
+        auto* variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
-            Lith::instance()->log(Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i));
+            Lith::instance()->log(
+                Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i)
+            );
             continue;
         }
         result.append(variable->nameGet());
@@ -112,7 +119,7 @@ QStringList FormatStringSplitter::stringList() const {
     return result;
 }
 
-bool FormatStringSplitter::validate(const QString &name) {
+bool FormatStringSplitter::validate(const QString& name) {
     if (m_allowedPropertyNames.isEmpty()) {
         return true;
     }
@@ -124,20 +131,18 @@ void FormatStringSplitter::onFormatChanged() {
     QSet<int> numberSet;
     auto matches = formatPlaceholderRegexp->globalMatch(m_format);
 
-    for (const auto &match : matches) {
+    for (const auto& match : matches) {
         if (match.capturedTexts().size() == 2) {
             bool ok = false;
             auto number = match.capturedView(1).toInt(&ok);
             if (ok) {
                 numberSet.insert(number);
-            }
-            else {
+            } else {
                 errorStringSet(tr("Format string %1 is not convertible to number").arg(match.capturedView(0)));
                 formatValidSet(false);
                 return;
             }
-        }
-        else {
+        } else {
             errorStringSet(tr("Format string %1 is invalid").arg(match.capturedTexts().join(",")));
             formatValidSet(false);
             return;
@@ -150,15 +155,13 @@ void FormatStringSplitter::onFormatChanged() {
         errorStringSet("You need to enter at least one format string");
         formatValidSet(false);
         return;
-    }
-    else if (*numberList.begin() != 1) {
+    } else if (*numberList.begin() != 1) {
         errorStringSet(QString("Format strings need to start at 1, currently it is: %1").arg(*numberList.begin()));
         formatValidSet(false);
         return;
-    }
-    else {
+    } else {
         int previous = 0;
-        for (auto &number : numberList) {
+        for (auto& number : numberList) {
             if (number != previous + 1) {
                 errorStringSet(QString("Format string numbers need to be consecutive (%1 came after %2)").arg(number).arg(previous));
                 formatValidSet(false);
@@ -172,7 +175,7 @@ void FormatStringSplitter::onFormatChanged() {
     int newCount = static_cast<int>(numberList.size());
     int oldCount = m_variables->count();
     while (m_variables->count() < newCount) {
-        auto *var = new FormatStringVariable(this, m_variables->count());
+        auto* var = new FormatStringVariable(this, m_variables->count());
         connect(var, &FormatStringVariable::validChanged, this, &FormatStringSplitter::onVariableValidChanged);
         connect(var, &FormatStringVariable::nameChanged, this, [this]() {
             if (variablesValidGet() && formatValidGet()) {
@@ -187,7 +190,7 @@ void FormatStringSplitter::onFormatChanged() {
     }
     bool allValid = true;
     for (int i = 0; i < m_variables->count(); i++) {
-        auto *variable = m_variables->get<FormatStringVariable>(i);
+        auto* variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
             continue;
         }
@@ -210,7 +213,7 @@ void FormatStringSplitter::onVariableValidChanged() {
         return;
     }
     for (int i = 0; i < m_variables->count(); i++) {
-        auto *variable = m_variables->get<FormatStringVariable>(i);
+        auto* variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
             continue;
         }
@@ -223,13 +226,13 @@ void FormatStringSplitter::onVariableValidChanged() {
 }
 
 void FormatStringSplitter::onDataSourceChanged() {
-    for (auto &i : m_dataSourceConnections) {
+    for (auto& i : m_dataSourceConnections) {
         disconnect(i);
     }
     m_dataSourceConnections.clear();
     if (dataSourceGet()) {
         for (int i = 0; i < m_variables->count(); i++) {
-            auto *var = m_variables->get<FormatStringVariable>(i);
+            auto* var = m_variables->get<FormatStringVariable>(i);
             auto propertyIndex = dataSourceGet()->metaObject()->indexOfProperty(qPrintable(var->nameGet()));
             if (propertyIndex >= 0) {
                 auto sourceSignal = dataSourceGet()->metaObject()->property(propertyIndex).notifySignal();
@@ -241,17 +244,14 @@ void FormatStringSplitter::onDataSourceChanged() {
     }
 }
 
-FormatStringVariable::FormatStringVariable(FormatStringSplitter *parent, int index)
+FormatStringVariable::FormatStringVariable(FormatStringSplitter* parent, int index)
     : QObject(parent)
-    , m_index(index)
-{
-    connect(parent, &FormatStringSplitter::allowedPropertyNamesChanged, this, [this]() {
-        validSet(splitter()->validate(nameGet()));
-    });
+    , m_index(index) {
+    connect(parent, &FormatStringSplitter::allowedPropertyNamesChanged, this, [this]() { validSet(splitter()->validate(nameGet())); });
     connect(this, &FormatStringVariable::nameChanged, this, &FormatStringVariable::onNameChanged);
 }
 
-FormatStringSplitter *FormatStringVariable::splitter() {
+FormatStringSplitter* FormatStringVariable::splitter() {
     return qobject_cast<FormatStringSplitter*>(parent());
 }
 

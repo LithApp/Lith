@@ -29,18 +29,17 @@
 
 #include "lith.h"
 
-Uploader::Uploader(QObject *parent) : QObject(parent)
-{
-
+Uploader::Uploader(QObject* parent)
+    : QObject(parent) {
 }
 
-void Uploader::upload(const QString &path) {
+void Uploader::upload(const QString& path) {
     auto url = QUrl("https://api.imgur.com/3/image");
     qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
 
     auto* mgr = new QNetworkAccessManager(this);
 
-    QFile *file = nullptr;
+    QFile* file = nullptr;
     if (path.startsWith("file://")) {
         file = new QFile(QUrl(path).toLocalFile());
     } else if (path.startsWith("file:assets-library")) {
@@ -57,14 +56,12 @@ void Uploader::upload(const QString &path) {
             transform.translate(im.size().width() / 2.0, im.size().height() / 2.0);
             transform.rotate(90);
             im = im.transformed(transform);
-        }
-        else if (transformation == QImageIOHandler::TransformationRotate180) {
+        } else if (transformation == QImageIOHandler::TransformationRotate180) {
             QTransform transform;
             transform.translate(im.size().width() / 2.0, im.size().height() / 2.0);
             transform.rotate(180);
             im = im.transformed(transform);
-        }
-        else if (transformation == QImageIOHandler::TransformationRotate270) {
+        } else if (transformation == QImageIOHandler::TransformationRotate270) {
             QTransform transform;
             transform.translate(im.size().width() / 2.0, im.size().height() / 2.0);
             transform.rotate(270);
@@ -85,7 +82,7 @@ void Uploader::upload(const QString &path) {
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
     request.setRawHeader("Authorization", "Client-ID " + Lith::settingsGet()->imgurApiKeyGet().toUtf8());
 
-    auto *reply = mgr->post(request, file->readAll());
+    auto* reply = mgr->post(request, file->readAll());
     file->setParent(reply);
 
     connect(mgr, &QNetworkAccessManager::finished, this, &Uploader::onFinished);
@@ -110,24 +107,22 @@ void Uploader::uploadBinary(QImage data) {
     buffer.open(QIODevice::WriteOnly);
     data.save(&buffer, "PNG");
     buffer.close();
-    auto *reply = mgr->post(request, arr);
+    auto* reply = mgr->post(request, arr);
 
     connect(mgr, &QNetworkAccessManager::finished, this, &Uploader::onFinished);
 }
 
-void Uploader::onFinished(QNetworkReply *reply) {
+void Uploader::onFinished(QNetworkReply* reply) {
     workingSet(false);
     if (reply->isReadable()) {
         auto doc = QJsonDocument::fromJson(reply->readAll());
         qCritical() << QString(doc.toJson());
         if (doc["success"].toBool()) {
             emit success(doc["data"]["link"].toString());
-        }
-        else {
+        } else {
             emit error(doc["data"]["error"].toString());
         }
-    }
-    else {
+    } else {
         emit error(reply->errorString());
     }
     reply->deleteLater();

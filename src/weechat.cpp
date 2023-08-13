@@ -28,28 +28,29 @@
 
 namespace {
     using InitializationMap = QMap<QString, Weechat::Initialization>;
-    Q_GLOBAL_STATIC(const InitializationMap, c_initializationMap, {
-        { Weechat::MessageNames::c_handshake, Weechat::HANDSHAKE },
-        { Weechat::MessageNames::c_requestBuffers, Weechat::REQUEST_BUFFERS },
-        { Weechat::MessageNames::c_requestFirstLine, Weechat::REQUEST_FIRST_LINE },
-        { Weechat::MessageNames::c_requestHotlist, Weechat::REQUEST_HOTLIST },
-        { Weechat::MessageNames::c_requestNicklist, Weechat::REQUEST_NICKLIST }
-    });
-}
+    Q_GLOBAL_STATIC(
+        const InitializationMap, c_initializationMap,
+        {
+            {       Weechat::MessageNames::c_handshake,          Weechat::HANDSHAKE},
+            {  Weechat::MessageNames::c_requestBuffers,    Weechat::REQUEST_BUFFERS},
+            {Weechat::MessageNames::c_requestFirstLine, Weechat::REQUEST_FIRST_LINE},
+            {  Weechat::MessageNames::c_requestHotlist,    Weechat::REQUEST_HOTLIST},
+            { Weechat::MessageNames::c_requestNicklist,   Weechat::REQUEST_NICKLIST}
+    }
+    );
+}  // namespace
 
-Weechat::Weechat(BaseNetworkProxy *networkProxy, Lith *lith)
+Weechat::Weechat(BaseNetworkProxy* networkProxy, Lith* lith)
     : QObject(nullptr)
     , m_connection(new SocketHelper(this))
     , m_networkProxy(networkProxy)
-    , m_lith(lith)
-{
+    , m_lith(lith) {
     connect(m_connection, &SocketHelper::dataReceived, m_networkProxy, &BaseNetworkProxy::onDataReceived, Qt::QueuedConnection);
     connect(m_networkProxy, &BaseNetworkProxy::dataReceived, this, &Weechat::onDataReceived, Qt::QueuedConnection);
 
     if (m_networkProxy->mode() == BaseNetworkProxy::Replay) {
         lith->statusSet(Lith::REPLAY);
-    }
-    else {
+    } else {
         connect(m_connection, &SocketHelper::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
         connect(m_connection, &SocketHelper::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
         connect(m_connection, &SocketHelper::errorOccurred, this, &Weechat::onError, Qt::QueuedConnection);
@@ -65,48 +66,41 @@ Weechat::Weechat(BaseNetworkProxy *networkProxy, Lith *lith)
     }
 }
 
-const Lith *Weechat::lith() const {
+const Lith* Weechat::lith() const {
     return m_lith;
 }
 
-Lith *Weechat::lith() {
+Lith* Weechat::lith() {
     return m_lith;
 }
 
-constexpr std::array<ConstLatin1String, 5> supportedHashAlgos {{
-    ConstLatin1String("plain"),
-    ConstLatin1String("sha256"),
-    ConstLatin1String("sha512"),
-    ConstLatin1String("pbkdf2+sha256"),
-    ConstLatin1String("pbkdf2+sha512")
-}};
-QByteArray Weechat::hashPassword(const QString &password, const QString &algo, const QByteArray &salt, int iterations) {
+constexpr std::array<ConstLatin1String, 5> supportedHashAlgos {
+    {ConstLatin1String("plain"), ConstLatin1String("sha256"), ConstLatin1String("sha512"), ConstLatin1String("pbkdf2+sha256"),
+     ConstLatin1String("pbkdf2+sha512")}
+};
+QByteArray Weechat::hashPassword(const QString& password, const QString& algo, const QByteArray& salt, int iterations) {
     if (algo == QStringLiteral("plain")) {
         return password.toUtf8();
-    }
-    else if (algo == "sha256") {
+    } else if (algo == "sha256") {
         QCryptographicHash qch(QCryptographicHash::Sha256);
         qch.addData(salt);
         qch.addData(password.toUtf8());
         return qch.result();
-    }
-    else if (algo == "sha512") {
+    } else if (algo == "sha512") {
         QCryptographicHash qch(QCryptographicHash::Sha512);
         qch.addData(salt);
         qch.addData(password.toUtf8());
         return qch.result();
-    }
-    else if (algo == "pbkdf2+sha256") {
+    } else if (algo == "pbkdf2+sha256") {
         return QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha256, password.toUtf8(), salt, iterations, 32);
-    }
-    else if (algo == "pbkdf2+sha512") {
+    } else if (algo == "pbkdf2+sha512") {
         return QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha512, password.toUtf8(), salt, iterations, 64);
     }
     return {};
 }
 
 QByteArray Weechat::randomString(int length) {
-    QByteArray alphabet { "0123456789ABCDEF"};
+    QByteArray alphabet {"0123456789ABCDEF"};
     QByteArray result;
     auto rg = QRandomGenerator::securelySeeded();
     for (int i = 0; i < length; i++) {
@@ -118,7 +112,7 @@ QByteArray Weechat::randomString(int length) {
 void Weechat::init() {
     m_timeoutTimer->setInterval(5000);
     m_timeoutTimer->setSingleShot(true);
-    //connect(m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout, Qt::QueuedConnection);
+    // connect(m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout, Qt::QueuedConnection);
 
     connect(m_hotlistTimer, &QTimer::timeout, this, &Weechat::requestHotlist, Qt::QueuedConnection);
     m_hotlistTimer->setInterval(10000);
@@ -156,10 +150,10 @@ void Weechat::restart() {
 #ifndef __EMSCRIPTEN__
     if (!Lith::settingsGet()->useWebsocketsGet()) {
         m_connection->connectToTcpSocket(host, port, ssl);
-    } else { // BEWARE
-#endif // __EMSCRIPTEN__
+    } else {  // BEWARE
+#endif        // __EMSCRIPTEN__
         m_connection->connectToWebsocket(host, websocketEndpoint, port, ssl);
-}
+    }
     // BEWARE OF THE ELSE ABOVE
 }
 
@@ -176,7 +170,7 @@ void Weechat::onConnectionSettingsChanged() {
     }
 }
 
-void Weechat::onHandshakeAccepted(const StringMap &data) {
+void Weechat::onHandshakeAccepted(const StringMap& data) {
     if (!m_connection->isConnected()) {
         return;
     }
@@ -204,8 +198,13 @@ void Weechat::onHandshakeAccepted(const StringMap &data) {
     m_initializationStatus = (Initialization) (m_initializationStatus | HANDSHAKE);
 
     m_connection->write(QString("init"), QString(), hashString);
-    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestBuffers), QString("buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables"));
-    m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestFirstLine), QString("buffer:gui_buffers(*)/lines/last_line(-1)/data"));
+    m_connection->write(
+        QString("hdata"), QString("%1").arg(MessageNames::c_requestBuffers),
+        QString("buffer:gui_buffers(*) number,name,short_name,hidden,title,local_variables")
+    );
+    m_connection->write(
+        QString("hdata"), QString("%1").arg(MessageNames::c_requestFirstLine), QString("buffer:gui_buffers(*)/lines/last_line(-1)/data")
+    );
     m_connection->write(QString("hdata"), QString("%1").arg(MessageNames::c_requestHotlist), QString("hotlist:gui_hotlist(*)"));
     m_connection->write(QString("sync"));
     m_connection->write(QString("nicklist"), QString("%1").arg(MessageNames::c_requestNicklist));
@@ -216,7 +215,6 @@ void Weechat::requestHotlist() {
         m_connection->write(QString("hdata"), QString("handleHotlist;%1").arg(m_messageOrder++), QString("hotlist:gui_hotlist(*)"));
     }
 }
-
 
 void Weechat::onConnected() {
     m_reconnectTimer->stop();
@@ -229,7 +227,7 @@ void Weechat::onConnected() {
 
     lith()->statusSet(Lith::CONNECTED);
     QString hashAlgos;
-    for (const auto &i : supportedHashAlgos) {
+    for (const auto& i : supportedHashAlgos) {
         if (!hashAlgos.isEmpty()) {
             hashAlgos.append(":");
         }
@@ -237,9 +235,13 @@ void Weechat::onConnected() {
     }
 
     if (Lith::settingsGet()->handshakeAuthGet()) {
-        m_connection->write(QString("handshake"), QString("%1").arg(MessageNames::c_handshake), QString("password_hash_algo=%1,compression=%2").arg(hashAlgos).arg(Lith::settingsGet()->connectionCompressionGet() ? "zlib" : "off"));
-    }
-    else {
+        m_connection->write(
+            QString("handshake"), QString("%1").arg(MessageNames::c_handshake),
+            QString("password_hash_algo=%1,compression=%2")
+                .arg(hashAlgos)
+                .arg(Lith::settingsGet()->connectionCompressionGet() ? "zlib" : "off")
+        );
+    } else {
         StringMap data;
         data["password_hash_algo"] = "plain";
         onHandshakeAccepted(data);
@@ -263,39 +265,42 @@ void Weechat::onDisconnected() {
     m_reconnectTimer->start();
 }
 
-void Weechat::onDataReceived(const QByteArray &data) {
+void Weechat::onDataReceived(const QByteArray& data) {
     auto dataCopy(data);
     onMessageReceived(dataCopy);
 }
 
-void Weechat::onError(const QString &message) {
+void Weechat::onError(const QString& message) {
     lith()->statusSet(Lith::ERROR);
-    lith()->networkErrorStringSet("Connection failed: "+ message);
+    lith()->networkErrorStringSet("Connection failed: " + message);
 }
 
-bool Weechat::input(pointer_t ptr, const QString &data) {
+bool Weechat::input(pointer_t ptr, const QString& data) {
     // server doesn't reply to input commands directly so no message order here
     return m_connection->write(QString("input"), QString(), QString("0x%1 %2\n").arg(ptr, 0, 16).arg(data));
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {
     const auto* cLith = lith();
-    const auto *buffer = cLith->getBuffer(ptr);
+    const auto* buffer = cLith->getBuffer(ptr);
     if (buffer) {
         lith()->log(Logger::Protocol, buffer->nameGet(), QString("Fetching %1 lines").arg(count));
     } else {
         lith()->log(Logger::Unexpected, "Attempted to fetch lines for buffer with invalid buffer");
     }
-    m_connection->write(QString("hdata"), QString("handleFetchLines;%1").arg(m_messageOrder++), QString("buffer:0x%1/lines/last_line(-%2)/data").arg(ptr, 0, 16).arg(count));
+    m_connection->write(
+        QString("hdata"), QString("handleFetchLines;%1").arg(m_messageOrder++),
+        QString("buffer:0x%1/lines/last_line(-%2)/data").arg(ptr, 0, 16).arg(count)
+    );
     m_timeoutTimer->start(5000);
 }
 
-void Weechat::onMessageReceived(QByteArray &data) {
+void Weechat::onMessageReceived(QByteArray& data) {
     QDataStream s(&data, QIODevice::ReadOnly);
 
     WeeChatProtocol::String id = WeeChatProtocol::parse<WeeChatProtocol::String>(s);
 
-    std::array<char, 4> type{};
+    std::array<char, 4> type {};
     type.fill(0);
     s.readRawData(type.data(), 3);
 
@@ -305,31 +310,33 @@ void Weechat::onMessageReceived(QByteArray &data) {
         if (c_initializationMap->contains(id)) {
             // wtf, why can't I write this as |= ?
             m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap->value(id, UNINITIALIZED));
-            if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
+            if (!QMetaObject::invokeMethod(
+                    Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
+                )) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
             }
-        }
-        else {
+        } else {
             auto parts = id.split(";");
             auto name = parts.first();
-            if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
+            if (!QMetaObject::invokeMethod(
+                    Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
+                )) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(name));
             }
         }
-    }
-    else if (QString(type.data()) == QStringLiteral("htb")) {
+    } else if (QString(type.data()) == QStringLiteral("htb")) {
         WeeChatProtocol::HashTable htb = WeeChatProtocol::parse<WeeChatProtocol::HashTable>(s);
 
         onHandshakeAccepted(htb);
-    }
-    else if (QString(type.data()) == QStringLiteral("str")) {
+    } else if (QString(type.data()) == QStringLiteral("str")) {
         WeeChatProtocol::String str = WeeChatProtocol::parse<WeeChatProtocol::String>(s);
 
-        if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const FormattedString&, str))) {
+        if (!QMetaObject::invokeMethod(
+                Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const FormattedString&, str)
+            )) {
             lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
         }
-    }
-    else {
+    } else {
         lith()->log(Logger::Unexpected, QString("Was not able to handle message type: %1").arg(type.data()));
     }
 
@@ -359,8 +366,7 @@ void Weechat::onPingTimeout() {
         if (!m_connection->write(QString("ping"), QString("%1").arg(previousPing), QString("%1").arg(previousPing))) {
             restart();
         }
-    }
-    else {
-        //restart();
+    } else {
+        // restart();
     }
 }

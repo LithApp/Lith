@@ -9,7 +9,8 @@
 
 #include <cmath>
 
-WindowHelper::WindowHelper(QObject *parent) : QObject(parent) {
+WindowHelper::WindowHelper(QObject* parent)
+    : QObject(parent) {
     connect(this, &WindowHelper::darkThemeChanged, this, &WindowHelper::themeChanged);
     connect(this, &WindowHelper::useBlackChanged, this, &WindowHelper::themeChanged);
 }
@@ -34,7 +35,7 @@ void WindowHelper::init() {
     connect(Lith::settingsGet(), &Settings::useTrueBlackWithDarkThemeChanged, this, &WindowHelper::init);
 }
 
-const ColorTheme &WindowHelper::currentTheme() const {
+const ColorTheme& WindowHelper::currentTheme() const {
     if (m_darkTheme) {
         if (m_useBlack) {
             return *blackTheme;
@@ -44,7 +45,7 @@ const ColorTheme &WindowHelper::currentTheme() const {
     return *lightTheme;
 }
 
-const ColorTheme &WindowHelper::inverseTheme() const {
+const ColorTheme& WindowHelper::inverseTheme() const {
     if (m_darkTheme) {
         return *lightTheme;
     }
@@ -54,12 +55,17 @@ const ColorTheme &WindowHelper::inverseTheme() const {
     return *darkTheme;
 }
 
-QVariantMap WindowHelper::getSafeAreaMargins(QQuickWindow *window) {
-    QVariantMap result {{"top", 0.0}, {"bottom", 0.0}, {"left", 0.0}, {"right", 0.0}};
+QVariantMap WindowHelper::getSafeAreaMargins(QQuickWindow* window) {
+    QVariantMap result {
+        {   "top", 0.0},
+        {"bottom", 0.0},
+        {  "left", 0.0},
+        { "right", 0.0}
+    };
     if (!window) {
         return result;
     }
-    auto *platformWindow = static_cast<QPlatformWindow *>(window->handle());
+    auto* platformWindow = static_cast<QPlatformWindow*>(window->handle());
     if (!platformWindow) {
         return result;
     }
@@ -81,8 +87,9 @@ bool WindowHelper::detectSystemDarkStyle() {
     return false;
 #else
     const QColor textColor = QGuiApplication::palette().color(QPalette::Text);
-    return qSqrt(((textColor.red() * textColor.red()) * 0.299) +
-              ((textColor.green() * textColor.green()) * 0.587) +
-              ((textColor.blue() * textColor.blue()) * 0.114)) > 128;
+    return qSqrt(
+               ((textColor.red() * textColor.red()) * 0.299) + ((textColor.green() * textColor.green()) * 0.587) +
+               ((textColor.blue() * textColor.blue()) * 0.114)
+           ) > 128;
 #endif
 }

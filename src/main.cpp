@@ -42,8 +42,7 @@ Q_IMPORT_QML_PLUGIN(LithUIPlugin)
 Q_IMPORT_QML_PLUGIN(LithStylePlugin)
 // NOLINTEND
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName("Lith");
     QCoreApplication::setOrganizationDomain("ma.rtinbriza.cz");
     QCoreApplication::setApplicationName("Lith");
@@ -63,12 +62,13 @@ int main(int argc, char *argv[])
     qRegisterMetaType<FormattedString>();
     qRegisterMetaType<WeeChatProtocol::String>();
     qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "formattedString", "");
-    QMetaType::registerConverter<FormattedString, QString>([](const FormattedString &s){
+    QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {
         if (s.containsHtml()) {
             if (Lith::instance()->windowHelperGet()->lightThemeGet()) {
                 return s.toHtml(*lightTheme);
-            } else
+            } else {
                 return s.toHtml(*darkTheme);
+            }
         }
         return s.toPlain();
     });
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Nick>();
     qmlRegisterUncreatableType<Buffer>("lith", 1, 0, "Buffer", "");
     qRegisterMetaType<Buffer>();
-    //qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
+    // qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
     qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
     qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
     qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
@@ -104,10 +104,9 @@ int main(int argc, char *argv[])
     QFontDatabase::addApplicationFont(":/fonts/Inconsolata-Variable.ttf");
     QFont font("Inconsolata");
 #endif
-    if (fontFamilyFromSettings.length()
-        != 0) { // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
-        font = QFont(
-            fontFamilyFromSettings); // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
+    if (fontFamilyFromSettings.length() != 0) {  // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
+        font = QFont(fontFamilyFromSettings
+        );  // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
     }
     font.setKerning(false);
     font.setHintingPreference(QFont::PreferNoHinting);

@@ -22,19 +22,18 @@
 #include <QMetaProperty>
 #include <QTimer>
 
-Settings::Settings(QObject *parent)
-    : QObject(parent)
-{
+Settings::Settings(QObject* parent)
+    : QObject(parent) {
     // Code taken from qt-webassembly-examples
 
     // m_settings will be ready at some later point in time - when
     // QSettings::status() returns NoError. (apologies for the somewhat
     // convoluted std::function and lambda use below)
     auto settingsReady = [this]() {
-        const auto *mo = Settings::metaObject();
+        const auto* mo = Settings::metaObject();
         for (int i = 0; i < mo->propertyCount(); i++) {
             auto property = mo->property(i);
-            const auto *name = property.name();
+            const auto* name = property.name();
             auto defaultValue = property.read(this);
             auto settingsValue = m_settings.value(name, defaultValue);
             if (defaultValue != settingsValue) {
@@ -45,8 +44,8 @@ Settings::Settings(QObject *parent)
         m_ready = true;
         emit readyChanged();
     };
-    auto *testSettingsReady = new std::function<void(void)>();
-    *testSettingsReady = [this, testSettingsReady, settingsReady](){
+    auto* testSettingsReady = new std::function<void(void)>();
+    *testSettingsReady = [this, testSettingsReady, settingsReady]() {
         if (m_settings.status() == QSettings::NoError) {
             settingsReady();
             delete testSettingsReady;
@@ -69,9 +68,10 @@ void Settings::migrate() {
     }
 }
 
-void Settings::saveNetworkSettings(const QString &host, int port, bool encrypted, bool allowSelfSignedCertificates,
-                                   const QString &passphrase, bool handshakeAuth, bool connectionCompression,
-                                   bool useWebsockets, const QString &websocketsEndpoint) {
+void Settings::saveNetworkSettings(
+    const QString& host, int port, bool encrypted, bool allowSelfSignedCertificates, const QString& passphrase, bool handshakeAuth,
+    bool connectionCompression, bool useWebsockets, const QString& websocketsEndpoint
+) {
     bool changed = false;
 
     if (hostSet(host)) {
@@ -113,8 +113,7 @@ bool Settings::isReady() const {
     return m_ready;
 }
 
-Settings *Settings::instance()
-{
+Settings* Settings::instance() {
     static Settings self;
     return &self;
 }

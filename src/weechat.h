@@ -32,20 +32,20 @@ class Weechat : public QObject {
 public:
     Q_OBJECT
 public:
-    explicit Weechat(BaseNetworkProxy *networkProxy, Lith *lith = nullptr);
-    const Lith *lith() const;
-    Lith *lith();
+    explicit Weechat(BaseNetworkProxy* networkProxy, Lith* lith = nullptr);
+    const Lith* lith() const;
+    Lith* lith();
 
-    static QByteArray hashPassword(const QString &password, const QString &algo, const QByteArray &salt, int iterations);
+    static QByteArray hashPassword(const QString& password, const QString& algo, const QByteArray& salt, int iterations);
     static QByteArray randomString(int length);
 
     struct MessageNames {
         // these names actually correspond to slot names in Lith
-        inline static constexpr ConstLatin1String c_handshake { "handleHandshake" };
-        inline static constexpr ConstLatin1String c_requestBuffers { "handleBufferInitialization" };
-        inline static constexpr ConstLatin1String c_requestFirstLine { "handleFirstReceivedLine" };
-        inline static constexpr ConstLatin1String c_requestHotlist { "handleHotlistInitialization" };
-        inline static constexpr ConstLatin1String c_requestNicklist { "handleNicklistInitialization" };
+        inline static constexpr ConstLatin1String c_handshake {"handleHandshake"};
+        inline static constexpr ConstLatin1String c_requestBuffers {"handleBufferInitialization"};
+        inline static constexpr ConstLatin1String c_requestFirstLine {"handleFirstReceivedLine"};
+        inline static constexpr ConstLatin1String c_requestHotlist {"handleHotlistInitialization"};
+        inline static constexpr ConstLatin1String c_requestNicklist {"handleNicklistInitialization"};
     };
     enum Initialization {
         UNINITIALIZED = 0,
@@ -63,12 +63,12 @@ public slots:
     void start();
     void restart();
 
-    bool input(pointer_t ptr, const QString &data);
+    bool input(pointer_t ptr, const QString& data);
     void fetchLines(pointer_t ptr, int count);
 
 private slots:
 
-    void onMessageReceived(QByteArray &data);
+    void onMessageReceived(QByteArray& data);
     void onPongReceived(qint64 id);
 
     void requestHotlist();
@@ -76,33 +76,33 @@ private slots:
     void onPingTimeout();
 
     void onConnectionSettingsChanged();
-    
-    void onHandshakeAccepted(const StringMap &data);
+
+    void onHandshakeAccepted(const StringMap& data);
 
     void onConnected();
     void onDisconnected();
-    void onDataReceived(const QByteArray &data);
-    void onError(const QString &message);
+    void onDataReceived(const QByteArray& data);
+    void onError(const QString& message);
 
 private:
-    Initialization m_initializationStatus { UNINITIALIZED };
+    Initialization m_initializationStatus {UNINITIALIZED};
 
-    SocketHelper *m_connection { nullptr };
-    BaseNetworkProxy *m_networkProxy { nullptr };
-    bool m_restarting { false };
+    SocketHelper* m_connection {nullptr};
+    BaseNetworkProxy* m_networkProxy {nullptr};
+    bool m_restarting {false};
 
     QByteArray m_fetchBuffer;
-    qint32 m_bytesRemaining { 0 };
+    qint32 m_bytesRemaining {0};
 
-    QTimer *m_hotlistTimer { new QTimer(this) };
-    QTimer *m_timeoutTimer { new QTimer(this) };
-    QTimer *m_pingTimer { new QTimer(this) };
-    QTimer *m_reconnectTimer { new QTimer(this) };
+    QTimer* m_hotlistTimer {new QTimer(this)};
+    QTimer* m_timeoutTimer {new QTimer(this)};
+    QTimer* m_pingTimer {new QTimer(this)};
+    QTimer* m_reconnectTimer {new QTimer(this)};
 
-    qint64 m_messageOrder { 0 };
-    qint64 m_lastReceivedPong { 0 };
+    qint64 m_messageOrder {0};
+    qint64 m_lastReceivedPong {0};
 
-    Lith *m_lith;
+    Lith* m_lith;
 };
 
-#endif // WEECHAT_H
+#endif  // WEECHAT_H

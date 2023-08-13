@@ -25,17 +25,17 @@
 class ClipboardProxy : public QObject {
     Q_OBJECT
 public:
-    explicit ClipboardProxy(QObject *parent = nullptr);
+    explicit ClipboardProxy(QObject* parent = nullptr);
 
     Q_INVOKABLE bool hasImage();
 
     Q_INVOKABLE QString text();
     Q_INVOKABLE QImage image();
 
-    Q_INVOKABLE void setText(const QString &text);
+    Q_INVOKABLE void setText(const QString& text);
 
 private:
-    QClipboard *m_clipboard;
+    QClipboard* m_clipboard;
 };
 
-#endif // CLIPBOARDPROXY_H
+#endif  // CLIPBOARDPROXY_H

@@ -25,10 +25,9 @@ class NickListFilter : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, filterWord)
 public:
-    explicit NickListFilter(QObject *parent = nullptr);
+    explicit NickListFilter(QObject* parent = nullptr);
 
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const override;
 };
 
-
-#endif // NICKLISTFILTER_H
+#endif  // NICKLISTFILTER_H

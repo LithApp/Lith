@@ -24,22 +24,21 @@
 #include <QDebug>
 #include <QKeySequence>
 
-#define SETTING(type, name, ...) \
-PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
-    public: \
-    bool name ## Set (const type &o) { \
-        if (m_ ## name != o) { \
-            m_ ## name = o; \
+#define SETTING(type, name, ...)                     \
+    PROPERTY_NOSETTER(type, name, __VA_ARGS__)       \
+public:                                              \
+    bool name##Set(const type& o) {                  \
+        if (m_##name != o) {                         \
+            m_##name = o;                            \
             m_settings.setValue(STRINGIFY(name), o); \
-            m_settings.sync(); \
-            emit name ## Changed(); \
-            return true; \
-        } \
-        return false; \
+            m_settings.sync();                       \
+            emit name##Changed();                    \
+            return true;                             \
+        }                                            \
+        return false;                                \
     }
 
-#define DEPRECATED_SETTING(type, name, ...) \
-    PROPERTY(type, name, __VA_ARGS__)
+#define DEPRECATED_SETTING(type, name, ...) PROPERTY(type, name, __VA_ARGS__)
 
 /*
  * USAGE:
@@ -51,7 +50,7 @@ class Settings : public QObject {
 
     Q_PROPERTY(bool isReady READ isReady NOTIFY readyChanged)
 
-    static inline const QStringList c_hotlistDefaultFormat{"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
+    static inline const QStringList c_hotlistDefaultFormat {"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
 
     SETTING(int, lastOpenBuffer, -1)
 #if defined(Q_OS_MACOS)
@@ -99,7 +98,7 @@ class Settings : public QObject {
     SETTING(bool, connectionCompression, true)
 #ifndef __EMSCRIPTEN__
     SETTING(bool, useWebsockets, false)
-#endif // __EMSCRIPTEN__
+#endif  // __EMSCRIPTEN__
     SETTING(QString, websocketsEndpoint, "weechat")
 
     SETTING(bool, enableReadlineShortcuts, true)
@@ -140,16 +139,17 @@ class Settings : public QObject {
 
     // UNUSED SETTINGS
     // determine what to do about these later
-    DEPRECATED_SETTING(bool, hotlistShowUnreadCount, true) // Obsoleted by hotlistFormat
+    DEPRECATED_SETTING(bool, hotlistShowUnreadCount, true)  // Obsoleted by hotlistFormat
     // END OF UNUSED SETTINGS
 
 public:
     Q_PROPERTY(QStringList hotlistDefaultFormat MEMBER c_hotlistDefaultFormat CONSTANT)
 
 public slots:
-    void saveNetworkSettings(const QString& host, int port, bool encrypted, bool allowSelfSignedCertificates,
-                             const QString& passphrase, bool handshakeAuth, bool connectionCompression,
-                             bool useWebsockets, const QString& websocketsEndpoint);
+    void saveNetworkSettings(
+        const QString& host, int port, bool encrypted, bool allowSelfSignedCertificates, const QString& passphrase, bool handshakeAuth,
+        bool connectionCompression, bool useWebsockets, const QString& websocketsEndpoint
+    );
 
 signals:
     void networkSettingsChanged();
@@ -158,11 +158,12 @@ signals:
 public:
     static Settings* instance();
     bool isReady() const;
+
 private:
-    explicit Settings(QObject *parent = nullptr);
+    explicit Settings(QObject* parent = nullptr);
     void migrate();
     QSettings m_settings;
     bool m_ready = false;
 };
 
-#endif // SETTINGS_H
+#endif  // SETTINGS_H

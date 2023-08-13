@@ -1,9 +1,8 @@
 #include "search.h"
 #include "lith.h"
 
-Search::Search(Lith *parent)
-    : QObject{parent}
-{
+Search::Search(Lith* parent)
+    : QObject {parent} {
     connect(parent, &Lith::selectedBufferChanged, this, &Search::invalidate);
     connect(this, &Search::termChanged, this, &Search::invalidate);
     connect(parent, &Lith::selectedBufferChanged, this, [this]() {
@@ -24,11 +23,11 @@ Search::Search(Lith *parent)
     connect(this, &Search::highlightedMatchIndexChanged, this, &Search::previousEnabledChanged);
 }
 
-Lith *Search::lith() {
+Lith* Search::lith() {
     return qobject_cast<Lith*>(parent());
 }
 
-BufferLine *Search::highlightedLine() {
+BufferLine* Search::highlightedLine() {
     if (m_term.isEmpty()) {
         return nullptr;
     }
@@ -67,17 +66,15 @@ void Search::invalidate() {
     if (termGet().isEmpty()) {
         matchesSet({});
         return;
-    }
-    else {
+    } else {
         if (!lith()->selectedBuffer()) {
             matchesSet({});
             return;
-        }
-        else {
+        } else {
             QList<BufferLine*> lines;
-            auto *buf = lith()->selectedBuffer();
+            auto* buf = lith()->selectedBuffer();
             for (int i = 0; i < buf->lines()->count(); i++) {
-                auto *line = buf->lines()->get<BufferLine>(i);
+                auto* line = buf->lines()->get<BufferLine>(i);
                 if (line->searchCompare(termGet())) {
                     lines.append(line);
                 }
@@ -88,7 +85,7 @@ void Search::invalidate() {
     }
 }
 
-void Search::onMessagesAdded(const QModelIndex &parent, int first, int last) {
+void Search::onMessagesAdded(const QModelIndex& parent, int first, int last) {
     Q_UNUSED(parent)
     if (termGet().isEmpty()) {
         matchesSet({});
@@ -103,8 +100,8 @@ void Search::onMessagesAdded(const QModelIndex &parent, int first, int last) {
         Lith::instance()->log(Logger::Unexpected, "Search::onMessagesAdded was called with multiple lines, this shouldn't happen");
     }
 
-    auto *buf = lith()->selectedBuffer();
-    auto *line = buf->lines()->get<BufferLine>(first);
+    auto* buf = lith()->selectedBuffer();
+    auto* line = buf->lines()->get<BufferLine>(first);
     if (line->searchCompare(termGet())) {
         auto result = matchesGet();
         if (first == 0) {
@@ -112,8 +109,7 @@ void Search::onMessagesAdded(const QModelIndex &parent, int first, int last) {
             if (highlightedMatchIndexGet() >= 0) {
                 highlightedMatchIndexSet(highlightedMatchIndexGet() + 1);
             }
-        }
-        else {
+        } else {
             result.append(line);
         }
         matchesSet(result);
