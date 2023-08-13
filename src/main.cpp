@@ -43,6 +43,8 @@ Q_IMPORT_QML_PLUGIN(LithStylePlugin)
 // NOLINTEND
 
 int main(int argc, char* argv[]) {
+    Q_INIT_RESOURCE(assets);
+
     QCoreApplication::setOrganizationName("Lith");
     QCoreApplication::setOrganizationDomain("ma.rtinbriza.cz");
     QCoreApplication::setApplicationName("Lith");
@@ -51,8 +53,8 @@ int main(int argc, char* argv[]) {
 
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:///");
-    engine.addImportPath(":/qt/qml/LithUI/ui");
-    engine.addImportPath(":/qt/qml/LithStyle/ui/LithStyle");
+    engine.addImportPath(":/qt/qml/LithUI");
+    engine.addImportPath(":/qt/qml/LithStyle");
     QQuickStyle::setStyle("LithStyle");
 
     // Register types
@@ -119,7 +121,7 @@ int main(int argc, char* argv[]) {
     engine.rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
     engine.rootContext()->setContextProperty("uploader", new Uploader());
     engine.rootContext()->setContextProperty("settings", Lith::settingsGet());
-    engine.load(QUrl(QLatin1String("qrc:/qt/qml/LithUI/ui/main.qml")));
+    engine.load(QUrl(QLatin1String("qrc:/qt/qml/LithUI/main.qml")));
 
     QPixmap iconPixmap(":/icon.png");
     // Xorg didn't like the original 2k icon
