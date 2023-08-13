@@ -44,13 +44,13 @@ public:
     };
 
     explicit ColorTheme(Group group = LIGHT,
-                        const QString &name = {},
-                        const QStringList &weechatColors = {},
-                        const QStringList &extendedColors = {})
+                        QString name = {},
+                        QStringList weechatColors = {},
+                        QStringList extendedColors = {})
         : m_group(group)
-        , m_name(name)
-        , m_weechatColors(weechatColors)
-        , m_extendedColors(extendedColors)
+        , m_name(std::move(name))
+        , m_weechatColors(std::move(weechatColors))
+        , m_extendedColors(std::move(extendedColors))
     {}
 
     Q_INVOKABLE QString getIcon(const QString &name);
@@ -70,7 +70,7 @@ private:
 };
 Q_DECLARE_METATYPE(ColorTheme)
 
-static inline const ColorTheme lightTheme {
+Q_GLOBAL_STATIC(const ColorTheme, lightTheme,
     ColorTheme::LIGHT, QStringLiteral("light"),
     {
         "black",   "white",   "#444444", "#880000", "#ff4444", "#008800", "#33cc33", "#d2691e",
@@ -112,9 +112,9 @@ static inline const ColorTheme lightTheme {
         "#585858", "#626262", "#6c6c6c", "#767676", "#808080", "#8a8a8a", "#949494", "#9e9e9e",
         "#a8a8a8", "#b2b2b2", "#bcbcbc", "#c6c6c6", "#d0d0d0", "#dadada", "#e4e4e4", "#eeeeee"
     }
-};
+);
 
-static inline const ColorTheme darkTheme {
+Q_GLOBAL_STATIC(const ColorTheme, darkTheme,
     ColorTheme::DARK, QStringLiteral("dark"),
     {
         "#ffffff", "#2c2829", "#444444", "#880000", "#ff4444", "#33dd33", "#55ff55", "#d2691e",
@@ -156,9 +156,9 @@ static inline const ColorTheme darkTheme {
         "#585858", "#626262", "#6c6c6c", "#767676", "#808080", "#8a8a8a", "#949494", "#9e9e9e",
         "#a8a8a8", "#b2b2b2", "#bcbcbc", "#c6c6c6", "#d0d0d0", "#dadada", "#e4e4e4", "#eeeeee"
     }
-};
+);
 
-static inline const ColorTheme blackTheme {
+Q_GLOBAL_STATIC(const ColorTheme, blackTheme,
     ColorTheme::DARK, QStringLiteral("black"),
     {
         "white",   "black",   "#444444", "#880000", "#ff4444", "#33dd33", "#55ff55", "#d2691e",
@@ -200,7 +200,7 @@ static inline const ColorTheme blackTheme {
         "#585858", "#626262", "#6c6c6c", "#767676", "#808080", "#8a8a8a", "#949494", "#9e9e9e",
         "#a8a8a8", "#b2b2b2", "#bcbcbc", "#c6c6c6", "#d0d0d0", "#dadada", "#e4e4e4", "#eeeeee"
     }
-};
+);
 
 
 #endif // COLORTHEME_H

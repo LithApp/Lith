@@ -37,21 +37,21 @@ void WindowHelper::init() {
 const ColorTheme &WindowHelper::currentTheme() const {
     if (m_darkTheme) {
         if (m_useBlack) {
-            return blackTheme;
+            return *blackTheme;
         }
-        return darkTheme;
+        return *darkTheme;
     }
-    return lightTheme;
+    return *lightTheme;
 }
 
 const ColorTheme &WindowHelper::inverseTheme() const {
     if (m_darkTheme) {
-        return lightTheme;
+        return *lightTheme;
     }
     if (m_useBlack) {
-        return blackTheme;
+        return *blackTheme;
     }
-    return darkTheme;
+    return *darkTheme;
 }
 
 QVariantMap WindowHelper::getSafeAreaMargins(QQuickWindow *window) {

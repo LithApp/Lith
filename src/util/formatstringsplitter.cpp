@@ -9,7 +9,9 @@
 
 #include "lith.h"
 
-static const QRegularExpression formatPlaceholderRegexp("[%]([0-9]+)");
+namespace {
+    Q_GLOBAL_STATIC(const QRegularExpression, formatPlaceholderRegexp, "[%]([0-9]+)");
+}
 
 FormatStringSplitter::FormatStringSplitter(QObject *parent)
     : QObject{parent}
@@ -120,7 +122,7 @@ bool FormatStringSplitter::validate(const QString &name) {
 void FormatStringSplitter::onFormatChanged() {
     // Somehow it feels this method should be much shorter
     QSet<int> numberSet;
-    auto matches = formatPlaceholderRegexp.globalMatch(m_format);
+    auto matches = formatPlaceholderRegexp->globalMatch(m_format);
 
     for (const auto &match : matches) {
         if (match.capturedTexts().size() == 2) {

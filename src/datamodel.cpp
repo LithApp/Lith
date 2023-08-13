@@ -128,7 +128,7 @@ QStringList Buffer::getVisibleNicks() {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto *nick = m_nicks->get<Nick>(i);
         if (nick && nick->visibleGet() && nick->levelGet() == 0) {
-            result.append(QString(nick->nameGet()));
+            result.append(QString{nick->nameGet()});
         }
     }
     return result;
@@ -330,7 +330,7 @@ QString BufferLine::colorlessNicknameGet() {
 }
 
 QString BufferLine::colorlessTextGet() {
-    auto messageStripped = QTextDocumentFragment::fromHtml(QString(m_message)).toPlainText();
+    auto messageStripped = QTextDocumentFragment::fromHtml(QString{m_message}).toPlainText();
     return messageStripped;
 }
 

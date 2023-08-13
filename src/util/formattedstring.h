@@ -35,7 +35,7 @@ public:
             QColor toQColor(const ColorTheme &theme = getCurrentTheme()) const;
         };
 
-        Part(const QString &text) : text(text) {}
+        Part(QString text) : text(std::move(text)) {}
         bool containsHtml() const { return foreground.index >= 0 || background.index >= 0 || hyperlink || bold || underline || italic; }
         QString toHtml(const ColorTheme &theme) const;
 

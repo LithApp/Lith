@@ -66,9 +66,9 @@ int main(int argc, char *argv[])
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString &s){
         if (s.containsHtml()) {
             if (Lith::instance()->windowHelperGet()->lightThemeGet()) {
-                return s.toHtml(lightTheme);
+                return s.toHtml(*lightTheme);
             } else
-                return s.toHtml(darkTheme);
+                return s.toHtml(*darkTheme);
         }
         return s.toPlain();
     });

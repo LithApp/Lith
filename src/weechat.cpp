@@ -26,6 +26,17 @@
 #include <QCryptographicHash>
 #include <QRandomGenerator>
 
+namespace {
+    using InitializationMap = QMap<QString, Weechat::Initialization>;
+    Q_GLOBAL_STATIC(const InitializationMap, c_initializationMap, {
+        { Weechat::MessageNames::c_handshake, Weechat::HANDSHAKE },
+        { Weechat::MessageNames::c_requestBuffers, Weechat::REQUEST_BUFFERS },
+        { Weechat::MessageNames::c_requestFirstLine, Weechat::REQUEST_FIRST_LINE },
+        { Weechat::MessageNames::c_requestHotlist, Weechat::REQUEST_HOTLIST },
+        { Weechat::MessageNames::c_requestNicklist, Weechat::REQUEST_NICKLIST }
+    });
+}
+
 Weechat::Weechat(BaseNetworkProxy *networkProxy, Lith *lith)
     : QObject(nullptr)
     , m_connection(new SocketHelper(this))
@@ -62,15 +73,15 @@ Lith *Weechat::lith() {
     return m_lith;
 }
 
-const QStringList supportedHashAlgos {
-    "plain",
-    "sha256",
-    "sha512",
-    "pbkdf2+sha256",
-    "pbkdf2+sha512"
-};
+constexpr std::array<ConstLatin1String, 5> supportedHashAlgos {{
+    ConstLatin1String("plain"),
+    ConstLatin1String("sha256"),
+    ConstLatin1String("sha512"),
+    ConstLatin1String("pbkdf2+sha256"),
+    ConstLatin1String("pbkdf2+sha512")
+}};
 QByteArray Weechat::hashPassword(const QString &password, const QString &algo, const QByteArray &salt, int iterations) {
-    if (algo == "plain") {
+    if (algo == QStringLiteral("plain")) {
         return password.toUtf8();
     }
     else if (algo == "sha256") {
@@ -291,9 +302,9 @@ void Weechat::onMessageReceived(QByteArray &data) {
     if (QString(type.data()) == QStringLiteral("hda")) {
         WeeChatProtocol::HData hda = WeeChatProtocol::parse<WeeChatProtocol::HData>(s);
 
-        if (c_initializationMap.contains(id)) {
+        if (c_initializationMap->contains(id)) {
             // wtf, why can't I write this as |= ?
-            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap.value(id, UNINITIALIZED));
+            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap->value(id, UNINITIALIZED));
             if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
             }

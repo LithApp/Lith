@@ -16,13 +16,13 @@ class ReplayRecordingInfo : public QObject {
     PROPERTY_CONSTANT(qreal, size, -1)
     PROPERTY_CONSTANT(QString, absolutePath)
 public:
-    ReplayRecordingInfo(int version, QDateTime createdAt, int number, size_t size, const QString &absolutePath, QObject* parent = nullptr)
+    ReplayRecordingInfo(int version, QDateTime createdAt, int number, size_t size, QString absolutePath, QObject* parent = nullptr)
         : QObject(parent)
         , m_version(version)
         , m_createdAt(std::move(createdAt))
         , m_number(number)
         , m_size(static_cast<qreal>(size))
-        , m_absolutePath(absolutePath)
+        , m_absolutePath(std::move(absolutePath))
     {
 
     }

@@ -39,6 +39,24 @@ public:
     static QByteArray hashPassword(const QString &password, const QString &algo, const QByteArray &salt, int iterations);
     static QByteArray randomString(int length);
 
+    struct MessageNames {
+        // these names actually correspond to slot names in Lith
+        inline static constexpr ConstLatin1String c_handshake { "handleHandshake" };
+        inline static constexpr ConstLatin1String c_requestBuffers { "handleBufferInitialization" };
+        inline static constexpr ConstLatin1String c_requestFirstLine { "handleFirstReceivedLine" };
+        inline static constexpr ConstLatin1String c_requestHotlist { "handleHotlistInitialization" };
+        inline static constexpr ConstLatin1String c_requestNicklist { "handleNicklistInitialization" };
+    };
+    enum Initialization {
+        UNINITIALIZED = 0,
+        HANDSHAKE = 1 << 0,
+        REQUEST_BUFFERS = 1 << 1,
+        REQUEST_FIRST_LINE = 1 << 2,
+        REQUEST_HOTLIST = 1 << 3,
+        REQUEST_NICKLIST = 1 << 4,
+        COMPLETE = HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST
+    };
+
 public slots:
     void init();
 
@@ -67,30 +85,7 @@ private slots:
     void onError(const QString &message);
 
 private:
-    struct MessageNames {
-        // these names actually correspond to slot names in Lith
-        inline static const QString c_handshake { "handleHandshake" };
-        inline static const QString c_requestBuffers { "handleBufferInitialization" };
-        inline static const QString c_requestFirstLine { "handleFirstReceivedLine" };
-        inline static const QString c_requestHotlist { "handleHotlistInitialization" };
-        inline static const QString c_requestNicklist { "handleNicklistInitialization" };
-    };
-    enum Initialization {
-        UNINITIALIZED = 0,
-        HANDSHAKE = 1 << 0,
-        REQUEST_BUFFERS = 1 << 1,
-        REQUEST_FIRST_LINE = 1 << 2,
-        REQUEST_HOTLIST = 1 << 3,
-        REQUEST_NICKLIST = 1 << 4,
-        COMPLETE = HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST
-    } m_initializationStatus { UNINITIALIZED };
-    inline static const QMap<QString, Initialization> c_initializationMap {
-        { MessageNames::c_handshake, HANDSHAKE },
-        { MessageNames::c_requestBuffers, REQUEST_BUFFERS },
-        { MessageNames::c_requestFirstLine, REQUEST_FIRST_LINE },
-        { MessageNames::c_requestHotlist, REQUEST_HOTLIST },
-        { MessageNames::c_requestNicklist, REQUEST_NICKLIST }
-    };
+    Initialization m_initializationStatus { UNINITIALIZED };
 
     SocketHelper *m_connection { nullptr };
     BaseNetworkProxy *m_networkProxy { nullptr };

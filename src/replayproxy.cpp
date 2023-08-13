@@ -244,7 +244,7 @@ RecordProxy::RecordProxy(QObject *parent)
                 return entry.fileName() == BaseNetworkProxy::logFileNameTemplate.arg(i);
             }) == entries.end()) {
             slotSet(i);
-            selectedFileName = BaseNetworkProxy::logFileNameTemplate.arg(i);
+            selectedFileName = QString{BaseNetworkProxy::logFileNameTemplate}.arg(i);
             break;
         }
     }

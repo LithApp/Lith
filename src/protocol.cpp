@@ -52,7 +52,7 @@ LongInteger parse(QDataStream &s, bool *ok) {
     LongInteger r{};
     quint8 length = 0;
     s >> length;
-    QByteArray buf((int) length, 0);
+    QByteArray buf(static_cast<int>(length), 0);
     s.readRawData(buf.data(), length);
     r = buf.toLongLong();
     if (ok) {
@@ -67,7 +67,7 @@ String parse(QDataStream &s, bool canContainHtml, bool *ok) {
     uint32_t len = 0;
     r.clear();
     s >> len;
-    if (len == uint32_t(-1)) {
+    if (len == static_cast<uint32_t>(-1)) {
         r = String();
     } else if (len == 0) {
         r = "";
@@ -111,7 +111,7 @@ Pointer parse(QDataStream &s, bool *ok) {
     Pointer r{};
     quint8 length = 0;
     s >> length;
-    QByteArray buf((int) length, 0);
+    QByteArray buf(static_cast<int>(length), 0);
     s.readRawData(buf.data(), length);
     bool parseOk = false;
     r = buf.toULongLong(&parseOk, 16);
@@ -126,7 +126,7 @@ Time parse(QDataStream &s, bool *ok) {
     Time r{};
     quint8 length = 0;
     s >> length;
-    QByteArray buf((int) length, 0);
+    QByteArray buf(static_cast<int>(length), 0);
     s.readRawData(buf.data(), length);
     r = buf;
     if (ok) {
@@ -164,7 +164,7 @@ HashTable parse(QDataStream &s, bool *ok) {
     for (quint32 i = 0; i < count; i++) {
         auto key = parse<String>(s);
         auto value = parse<String>(s);
-        r.insert(QString(key), QString(value));
+        r.insert(QString{key}, QString{value});
     }
     if (ok) {
         *ok = true;
@@ -366,7 +366,7 @@ ArrayStr parse(QDataStream &s, bool *outerOk) {
             }
             return r;
         }
-        r.append(QString(str));
+        r.append(QString{str});
     }
     if (outerOk) {
         *outerOk = true;
@@ -623,7 +623,7 @@ FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHtml)
         carryOver();
     };
     auto getChar = [](QByteArray::const_iterator &it) -> QString {
-       if ((unsigned char) *it < 0x80) {
+       if (static_cast<unsigned char>(*it) < 0x80) {
            return QString(*it);
        }
        else {

@@ -5,7 +5,7 @@
 #include <QAbstractListModel>
 #include <QSharedPointer>
 
-typedef QSharedPointer<QObject> QObjectPointer;
+using QObjectPointer = QSharedPointer<QObject>;
 
 class QmlObjectList : public QAbstractListModel
 {
