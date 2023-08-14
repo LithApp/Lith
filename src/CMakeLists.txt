@@ -58,7 +58,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     enable_language("RC")
     set(LITH_SOURCES
         ${LITH_SOURCES}
-        dist/win/lith.rc
+        ../dist/win/lith.rc
     )
 endif()
 
@@ -149,7 +149,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
 endif()
 
 install(TARGETS Lith
-    BUNDLE DESTINATION .
+    BUNDLE DESTINATION ..
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
