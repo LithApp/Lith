@@ -147,3 +147,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     # This is a workaround, Qt doesn't include this plugin automatically for us
     qt_import_plugins(Lith INCLUDE Qt::QIosOptionalPlugin_NSPhotoLibraryPlugin)
 endif()
+
+install(TARGETS Lith
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
