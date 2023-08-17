@@ -218,7 +218,6 @@ void Weechat::requestHotlist() {
 
 void Weechat::onConnected() {
     m_reconnectTimer->stop();
-    m_reconnectTimer->setInterval(100);
 
     lith()->log(Logger::Protocol, "Connected to WeeChat, starting handshake");
 
@@ -314,6 +313,9 @@ void Weechat::onMessageReceived(QByteArray& data) {
                     Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
                 )) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
+            }
+            if (m_initializationStatus & COMPLETE) {
+                m_reconnectTimer->setInterval(100);
             }
         } else {
             auto parts = id.split(";");
