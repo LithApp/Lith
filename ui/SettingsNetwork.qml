@@ -142,9 +142,8 @@ ScrollView {
             Fields.Boolean {
                 id: selfSignedCertificateCheckbox
                 checked: lith.settings.allowSelfSignedCertificates
-
                 summary: qsTr("Allow self-signed certificates")
-                details: "(Less secure, not recommended)"
+                details: checked ? qsTr("Lith will allow self-signed server and chain certificates and mismatching certificate hostnames.") : qsTr("(Less secure, not recommended)")
             }
             Fields.String {
                 id: passphraseField

@@ -65,20 +65,11 @@ void SocketHelper::connectToWebsocket(const QString& hostname, const QString& en
 
     connect(m_webSocket, &QWebSocket::connected, this, &SocketHelper::onConnected);
     connect(m_webSocket, &QWebSocket::disconnected, this, &SocketHelper::onDisconnected);
-    connect(m_webSocket, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::errorOccurred), this, &SocketHelper::onError);
-
+    connect(m_webSocket, &QWebSocket::errorOccurred, this, &SocketHelper::onError);
     connect(m_webSocket, &QWebSocket::binaryMessageReceived, this, &SocketHelper::onBinaryMessageReceived);
 
-    QList<QSslError> expectedSslErrors;
-    if (Lith::settingsGet()->allowSelfSignedCertificatesGet()) {
-#ifndef __EMSCRIPTEN__
-        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
-        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
-#endif  // __EMSCRIPTEN__
-    }
-#ifndef __EMSCRIPTEN__
-    m_webSocket->ignoreSslErrors(expectedSslErrors);
-#endif
+    // SSL errors need to be connected directly to handle ignoring some of them (if that's enabled)
+    connect(m_webSocket, &QWebSocket::sslErrors, this, &SocketHelper::onSslErrors, Qt::DirectConnection);
 
     m_webSocket->open(QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
 }
@@ -90,31 +81,13 @@ void SocketHelper::connectToTcpSocket(const QString& hostname, int port, bool en
     m_tcpSocket = new QSslSocket(this);
     m_tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
-    QList<QSslError> expectedSslErrors;
-    if (Lith::settingsGet()->allowSelfSignedCertificatesGet()) {
-        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificate));
-        expectedSslErrors.append(QSslError(QSslError::SelfSignedCertificateInChain));
-    }
-    m_tcpSocket->ignoreSslErrors(expectedSslErrors);
-
-  #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-    connect(
-        m_tcpSocket, static_cast<void (QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::errorOccurred), this,
-        &SocketHelper::onError, Qt::QueuedConnection
-    );
-  #else
-    connect(
-        m_tcpSocket, static_cast<void (QSslSocket::*)(QSslSocket::SocketError)>(&QAbstractSocket::error), this, &SocketHelper::onError,
-        Qt::QueuedConnection
-    );
-  #endif
-    connect(
-        m_tcpSocket, static_cast<void (QSslSocket::*)(const QList<QSslError>&)>(&QSslSocket::sslErrors), this, &SocketHelper::onSslErrors,
-        Qt::QueuedConnection
-    );
+    connect(m_tcpSocket, &QAbstractSocket::errorOccurred, this, &SocketHelper::onError, Qt::QueuedConnection);
     connect(m_tcpSocket, &QSslSocket::readyRead, this, &SocketHelper::onReadyRead, Qt::QueuedConnection);
     connect(m_tcpSocket, &QSslSocket::connected, this, &SocketHelper::onConnected, Qt::QueuedConnection);
     connect(m_tcpSocket, &QSslSocket::disconnected, this, &SocketHelper::onDisconnected, Qt::QueuedConnection);
+
+    // SSL errors need to be connected directly to handle ignoring some of them (if that's enabled)
+    connect(m_tcpSocket, &QSslSocket::sslErrors, this, &SocketHelper::onSslErrors, Qt::DirectConnection);
 
     if (encrypted) {
         m_tcpSocket->connectToHostEncrypted(hostname, port);
@@ -213,8 +186,29 @@ void SocketHelper::onBinaryMessageReceived(const QByteArray& data) {
 
 #ifndef __EMSCRIPTEN__
 void SocketHelper::onSslErrors(const QList<QSslError>& errors) {
-    for (const auto& i : errors) {
-        lith()->log(Logger::Network, "SSL error: " + i.errorString());
+    QList<QSslError> ignoredSslErrors;
+    for (const auto& error : errors) {
+        if (Lith::settingsGet()->allowSelfSignedCertificatesGet()) {
+            if (error.error() == QSslError::SelfSignedCertificate) {
+                ignoredSslErrors.append(error);
+            }
+            if (error.error() == QSslError::SelfSignedCertificateInChain) {
+                ignoredSslErrors.append(error);
+            }
+            if (error.error() == QSslError::HostNameMismatch) {
+                ignoredSslErrors.append(error);
+            }
+        }
+        lith()->log(Logger::Network, "SSL error: " + error.errorString());
+    }
+
+    if (!ignoredSslErrors.isEmpty()) {
+        if (m_tcpSocket) {
+            m_tcpSocket->ignoreSslErrors(ignoredSslErrors);
+        }
+        if (m_webSocket) {
+            m_webSocket->ignoreSslErrors(ignoredSslErrors);
+        }
     }
 }
 
