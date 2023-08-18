@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
-import QtQuick 2.12
-import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.4
-//import Qt.labs.platform 1.1
-import QtQuick.Dialogs 6.2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+//import Qt.labs.platform
+import QtQuick.Dialogs
 import QtCore
 
 import Lith.Core
