@@ -3,7 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import "SettingsFields" as Fields
-import lith
+import Lith.Core
+import LithStyle
 
 Dialog {
     id: root
@@ -14,7 +15,7 @@ Dialog {
     closePolicy: autocomplete.visible ? Popup.CloseOnPressOutside : (Popup.CloseOnEscape | Popup.CloseOnPressOutside)
     onVisibleChanged: {
         if (visible) {
-            formatSplitter.fromStringList(lith.settings.hotlistFormat)
+            formatSplitter.fromStringList(Lith.settings.hotlistFormat)
         }
         if (!visible) {
             autocomplete.visible = false
@@ -22,10 +23,10 @@ Dialog {
     }
 
     onAccepted: {
-        lith.settings.hotlistFormat = formatSplitter.stringList
+        Lith.settings.hotlistFormat = formatSplitter.stringList
     }
     onRejected: {
-        formatSplitter.fromStringList(lith.settings.hotlistFormat)
+        formatSplitter.fromStringList(Lith.settings.hotlistFormat)
     }
 
     header: Fields.Header {
@@ -162,7 +163,7 @@ Dialog {
                             FormatStringSplitter {
                                 id: formatSplitter
                                 allowedPropertyNames: reflection.stringProperties
-                                dataSource: lith.selectedBuffer
+                                dataSource: Lith.selectedBuffer
                             }
                         }
 
@@ -238,7 +239,7 @@ Dialog {
 
             Fields.Base {
                 summary: qsTr("Preview")
-                details: qsTr("Data from %1").arg(lith.selectedBuffer ? lith.selectedBuffer.name : "N/A")
+                details: qsTr("Data from %1").arg(Lith.selectedBuffer ? Lith.selectedBuffer.name : "N/A")
 
                 rowComponent: Label {
                     id: preview
@@ -247,7 +248,7 @@ Dialog {
                     elide: Label.ElideRight
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                     property bool displaysError: formatSplitter.errorString.length > 0
-                    text: lith.selectedBuffer ? displaysError ? formatSplitter.errorString : formatSplitter.formattedData : ""
+                    text: Lith.selectedBuffer ? displaysError ? formatSplitter.errorString : formatSplitter.formattedData : ""
                     opacity: displaysError ? 1.0 : 0.5
                     color: displaysError ? "red" : palette.windowText
                 }
@@ -255,10 +256,10 @@ Dialog {
 
             Fields.Button {
                 summary: qsTr("Undo current changes")
-                enabled: formatSplitter.stringList.toString() !== lith.settings.hotlistFormat.toString()
+                enabled: formatSplitter.stringList.toString() !== Lith.settings.hotlistFormat.toString()
 
                 text: qsTr("Reset")
-                onClicked: formatSplitter.fromStringList(lith.settings.hotlistFormat)
+                onClicked: formatSplitter.fromStringList(Lith.settings.hotlistFormat)
             }
 
             Fields.Base {
@@ -269,7 +270,7 @@ Dialog {
 
                     Button {
                         text: qsTr("Default")
-                        onClicked: formatSplitter.fromStringList(lith.settings.hotlistDefaultFormat)
+                        onClicked: formatSplitter.fromStringList(Lith.settings.hotlistDefaultFormat)
                         Layout.preferredWidth: 180
                     }
                     Button {

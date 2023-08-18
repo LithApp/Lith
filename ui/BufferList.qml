@@ -19,14 +19,15 @@ import QtQuick 2.12
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
+import Lith.Core
 
 Rectangle {
     id: root
     color: palette.window
 
-    readonly property real delegateWidth: root.width - (lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
+    readonly property real delegateWidth: root.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
-    readonly property bool controlRowOnBottom: (window.platform.mobile && lith.settings.platformBufferControlPosition) || (!window.platform.mobile && !lith.settings.platformBufferControlPosition)
+    readonly property bool controlRowOnBottom: (window.platform.mobile && Lith.settings.platformBufferControlPosition) || (!window.platform.mobile && !Lith.settings.platformBufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
     function clear() {
         filterField.clear()
@@ -66,11 +67,11 @@ Rectangle {
             id: filterField
             Layout.fillWidth: true
             placeholderText: qsTr("Filter buffers")
-            text: lith.buffers.filterWord
+            text: Lith.buffers.filterWord
             onTextChanged: {
-                lith.buffers.filterWord = text
+                Lith.buffers.filterWord = text
                 if (text === "")
-                    bufferList.currentIndex = lith.selectedBufferIndex
+                    bufferList.currentIndex = Lith.selectedBufferIndex
             }
 
             Keys.onPressed: (event) => {
@@ -83,14 +84,14 @@ Rectangle {
                     event.accepted = true
                 }
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                    lith.selectedBuffer = bufferList.currentItem.buffer
+                    Lith.selectedBuffer = bufferList.currentItem.buffer
                     filterField.text = ""
-                    bufferList.currentIndex = lith.selectedBufferIndex
+                    bufferList.currentIndex = Lith.selectedBufferIndex
                     root.close()
                 }
                 if (event.key === Qt.Key_Escape) {
                     filterField.text = ""
-                    bufferList.currentIndex = lith.selectedBufferIndex
+                    bufferList.currentIndex = Lith.selectedBufferIndex
                 }
             }
         }
@@ -108,14 +109,14 @@ Rectangle {
         }
         height: parent.height - controlRow.height - 15
 
-        model: lith.buffers
-        currentIndex: lith.selectedBufferIndex
+        model: Lith.buffers
+        currentIndex: Lith.selectedBufferIndex
         highlightMoveDuration: root.position > 0.0 ? 120 : 0
 
         Connections {
-            target: lith
+            target: Lith
             function onSelectedBufferIndexChanged() {
-                bufferList.currentIndex = lith.selectedBufferIndex
+                bufferList.currentIndex = Lith.selectedBufferIndex
             }
         }
 
@@ -130,7 +131,7 @@ Rectangle {
             id: bufferDelegate
             width: root.delegateWidth
 
-            checked: lith.selectedBuffer == buffer
+            checked: Lith.selectedBuffer == buffer
             highlighted: bufferList.currentIndex === index
 
             required property var modelData
@@ -139,12 +140,12 @@ Rectangle {
             text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name : ""
 
             onClicked: {
-                lith.selectedBuffer = buffer
+                Lith.selectedBuffer = buffer
                 root.close()
             }
             onPressAndHold: {
-                if (lith.selectedBuffer === buffer) {
-                    lith.selectedBuffer = null
+                if (Lith.selectedBuffer === buffer) {
+                    Lith.selectedBuffer = null
                     root.close()
                 }
             }

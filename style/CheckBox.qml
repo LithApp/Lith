@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Templates as T
 
+import Lith.Core
+
 T.CheckBox {
     id: control
     checked: true
@@ -16,7 +18,7 @@ T.CheckBox {
     background: Item {}
 
     indicator: Item {
-        implicitWidth: 26 * Math.max(1.0, lith.settings.baseFontSize / 20)
+        implicitWidth: 26 * Math.max(1.0, Lith.settings.baseFontSize / 20)
         implicitHeight: implicitWidth
         anchors.verticalCenter: parent.verticalCenter
         Rectangle {

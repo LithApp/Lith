@@ -12,7 +12,7 @@ T.TextArea {
     placeholderTextColor: disabledPalette.text
     verticalAlignment: Text.AlignVCenter
 
-    font.pointSize: lith.settings.baseFontSize
+    font.pointSize: Lith.settings.baseFontSize
 
     property color backgroundColor: "transparent"
     property real animationSpeed: 300

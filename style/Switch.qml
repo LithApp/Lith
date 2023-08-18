@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Templates 2.12 as T
 
+import Lith.Core
+
 T.Switch {
     id: control
 
@@ -13,7 +15,7 @@ T.Switch {
     property color onColor: palette.highlight
     property color offColor: palette.window
 
-    font.pointSize: lith.settings.baseFontSize
+    font.pointSize: Lith.settings.baseFontSize
 
     indicator: Rectangle {
         implicitWidth: 44

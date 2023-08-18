@@ -18,7 +18,8 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
-import lith 1.0
+import Lith.Core
+import LithStyle
 
 TextField {
     id: inputField
@@ -41,7 +42,7 @@ TextField {
 
     onAccepted: {
         if (text.length > 0) {
-            if (lith.selectedBuffer.input(text)) {
+            if (Lith.selectedBuffer.input(text)) {
                 text = ""
             }
         }
@@ -49,18 +50,18 @@ TextField {
 
     property var previousBuffer: null
     Connections {
-        target: lith
+        target: Lith
         function onSelectedBufferChanged() {
             inputField.forceActiveFocus()
 
-            if (lith.settings.useLocalInputBar) {
+            if (Lith.settings.useLocalInputBar) {
                 if (previousBuffer)
                     previousBuffer.lastUserInput = inputField.text
-                if (lith.selectedBuffer)
-                    inputField.text = lith.selectedBuffer.lastUserInput
+                if (Lith.selectedBuffer)
+                    inputField.text = Lith.selectedBuffer.lastUserInput
                 else
                     inputField.text = ""
-                previousBuffer = lith.selectedBuffer
+                previousBuffer = Lith.selectedBuffer
             }
         }
     }
@@ -132,7 +133,7 @@ TextField {
             i = 0
             lastWord = inputField.text.substring(i, cursorPosition).trim().toLocaleLowerCase()
         }
-        var nicks = lith.selectedBuffer.getVisibleNicks()
+        var nicks = Lith.selectedBuffer.getVisibleNicks()
 
         for (var y = 0; y < nicks.length; y++) {
             if (nicks[y].toLocaleLowerCase().startsWith(lastWord) && lastWord !== "") {
@@ -173,7 +174,7 @@ TextField {
     }
 
     Connections {
-        target: uploader
+        target: Uploader
         function onSuccess(url) {
             if (inputField.length !== 0 && !inputField.text.endsWith(" "))
                 inputField.pasteText(" ")
@@ -182,72 +183,72 @@ TextField {
         function onError(message) {
             console.warn("IMAGE UPLOAD ERROR")
             console.warn(message)
-            lith.errorString = message
+            Lith.errorString = message
         }
     }
 
     Shortcut {
-        sequences: lith.settings.shortcutSearchBuffer
+        sequences: Lith.settings.shortcutSearchBuffer
         onActivated: bufferDrawer.open()
     }
     Shortcut {
-        sequences: lith.settings.shortcutNicklist
+        sequences: Lith.settings.shortcutNicklist
         onActivated: nickDrawer.open()
     }
     Shortcut {
-        sequences: lith.settings.shortcutAutocomplete
+        sequences: Lith.settings.shortcutAutocomplete
         onActivated: autocomplete();
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToNextBuffer
-        onActivated: lith.selectedBufferIndex += 1
+        sequences: Lith.settings.shortcutSwitchToNextBuffer
+        onActivated: Lith.selectedBufferIndex += 1
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToPreviousBuffer
-        onActivated: lith.selectedBufferIndex -= 1
+        sequences: Lith.settings.shortcutSwitchToPreviousBuffer
+        onActivated: Lith.selectedBufferIndex -= 1
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer1
-        onActivated: lith.switchToBufferNumber(1)
+        sequences: Lith.settings.shortcutSwitchToBuffer1
+        onActivated: Lith.switchToBufferNumber(1)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer2
-        onActivated: lith.switchToBufferNumber(2)
+        sequences: Lith.settings.shortcutSwitchToBuffer2
+        onActivated: Lith.switchToBufferNumber(2)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer3
-        onActivated: lith.switchToBufferNumber(3)
+        sequences: Lith.settings.shortcutSwitchToBuffer3
+        onActivated: Lith.switchToBufferNumber(3)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer4
-        onActivated: lith.switchToBufferNumber(4)
+        sequences: Lith.settings.shortcutSwitchToBuffer4
+        onActivated: Lith.switchToBufferNumber(4)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer5
-        onActivated: lith.switchToBufferNumber(5)
+        sequences: Lith.settings.shortcutSwitchToBuffer5
+        onActivated: Lith.switchToBufferNumber(5)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer6
-        onActivated: lith.switchToBufferNumber(6)
+        sequences: Lith.settings.shortcutSwitchToBuffer6
+        onActivated: Lith.switchToBufferNumber(6)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer7
-        onActivated: lith.switchToBufferNumber(7)
+        sequences: Lith.settings.shortcutSwitchToBuffer7
+        onActivated: Lith.switchToBufferNumber(7)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer8
-        onActivated: lith.switchToBufferNumber(8)
+        sequences: Lith.settings.shortcutSwitchToBuffer8
+        onActivated: Lith.switchToBufferNumber(8)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer9
-        onActivated: lith.switchToBufferNumber(9)
+        sequences: Lith.settings.shortcutSwitchToBuffer9
+        onActivated: Lith.switchToBufferNumber(9)
     }
     Shortcut {
-        sequences: lith.settings.shortcutSwitchToBuffer10
-        onActivated: lith.switchToBufferNumber(10)
+        sequences: Lith.settings.shortcutSwitchToBuffer10
+        onActivated: Lith.switchToBufferNumber(10)
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+W"
         onActivated: {
             var str = inputField.text.replace(/\s+$/, '')
@@ -256,7 +257,7 @@ TextField {
         }
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+D"
         onActivated: {
             var str = inputField.text
@@ -265,7 +266,7 @@ TextField {
         }
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+K"
         onActivated: {
             var right = inputField.text.slice(inputField.cursorPosition)
@@ -274,7 +275,7 @@ TextField {
         }
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+U"
         onActivated: {
             var left = inputField.text.slice(0, inputField.cursorPosition - 1)
@@ -283,7 +284,7 @@ TextField {
         }
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+Y"
         onActivated: {
             if (clipboardProxy.text.length > 0)
@@ -291,22 +292,22 @@ TextField {
         }
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+F"
         onActivated: inputField.cursorPosition++
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+B"
         onActivated: inputField.cursorPosition--
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+A"
         onActivated: inputField.cursorPosition = 0
     }
     Shortcut {
-        enabled: lith.settings.enableReadlineShortcuts
+        enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+E"
         onActivated: inputField.cursorPosition = inputField.text.length
     }

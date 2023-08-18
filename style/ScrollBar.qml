@@ -5,6 +5,8 @@ import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
+import Lith.Core
+
 T.ScrollBar {
     id: control
 
@@ -17,11 +19,11 @@ T.ScrollBar {
     visible: control.policy !== T.ScrollBar.AlwaysOff
     minimumSize: orientation === Qt.Horizontal ? height / width : width / height
     hoverEnabled: true
-    policy: lith.settings.scrollbarsOverlayContents ? ScrollBar.AsNeeded : ScrollBar.AlwaysOn
+    policy: Lith.settings.scrollbarsOverlayContents ? ScrollBar.AsNeeded : ScrollBar.AlwaysOn
 
     contentItem: Rectangle {
-        implicitWidth: control.interactive ? lith.settings.scrollbarsOverlayContents ? 6 : 8 : 2
-        implicitHeight: control.interactive ? lith.settings.scrollbarsOverlayContents  ? 6 : 8 : 2
+        implicitWidth: control.interactive ? Lith.settings.scrollbarsOverlayContents ? 6 : 8 : 2
+        implicitHeight: control.interactive ? Lith.settings.scrollbarsOverlayContents  ? 6 : 8 : 2
 
         radius: width / 2
         color: control.pressed ? control.palette.dark : control.palette.mid

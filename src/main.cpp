@@ -63,7 +63,6 @@ int main(int argc, char* argv[]) {
     qRegisterMetaType<WeeChatProtocol::HData*>();
     qRegisterMetaType<FormattedString>();
     qRegisterMetaType<WeeChatProtocol::String>();
-    qmlRegisterUncreatableType<FormattedString>("lith", 1, 0, "formattedString", "");
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {
         if (s.containsHtml()) {
             if (Lith::instance()->windowHelperGet()->lightThemeGet()) {
@@ -74,26 +73,6 @@ int main(int argc, char* argv[]) {
         }
         return s.toPlain();
     });
-    qmlRegisterUncreatableType<ColorTheme>("lith", 1, 0, "colorTheme", "");
-    qRegisterMetaType<ColorTheme>();
-    qmlRegisterUncreatableType<BufferLine>("lith", 1, 0, "Line", "");
-    qRegisterMetaType<BufferLine>();
-    qmlRegisterUncreatableType<Lith>("lith", 1, 0, "Lith", "");
-    qRegisterMetaType<Lith>();
-    qmlRegisterUncreatableType<Nick>("lith", 1, 0, "Nick", "");
-    qRegisterMetaType<Nick>();
-    qmlRegisterUncreatableType<Buffer>("lith", 1, 0, "Buffer", "");
-    qRegisterMetaType<Buffer>();
-    // qmlRegisterUncreatableType<LineModel>("lith", 1, 0, "LineModel", "");
-    qmlRegisterUncreatableType<ClipboardProxy>("lith", 1, 0, "ClipboardProxy", "");
-    qmlRegisterUncreatableType<Settings>("lith", 1, 0, "Settings", "");
-    qmlRegisterUncreatableType<Uploader>("lith", 1, 0, "Uploader", "");
-    qmlRegisterUncreatableType<WindowHelper>("lith", 1, 0, "WindowHelper", "");
-    qmlRegisterUncreatableType<BaseNetworkProxy>("lith", 1, 0, "NetworkProxy", "");
-    qmlRegisterUncreatableType<ReplayProxy>("lith", 1, 0, "ReplayProxy", "");
-    qmlRegisterUncreatableType<RecordProxy>("lith", 1, 0, "RecordProxy", "");
-    qmlRegisterType<FormatStringSplitter>("lith", 1, 0, "FormatStringSplitter");
-    qmlRegisterType<Reflection>("lith", 1, 0, "Reflection");
 
     // Initialize UI helpers and fonts
     Settings::instance();
@@ -116,11 +95,7 @@ int main(int argc, char* argv[]) {
     app.setFont(font);
     app.setFont(font, "monospace");
 
-    // Inject properties and start the engine
-    engine.rootContext()->setContextProperty("lith", Lith::instance());
-    engine.rootContext()->setContextProperty("clipboardProxy", new ClipboardProxy());
-    engine.rootContext()->setContextProperty("uploader", new Uploader());
-    engine.rootContext()->setContextProperty("settings", Lith::settingsGet());
+    // Start the engine
     engine.load(QUrl(QLatin1String("qrc:/qt/qml/LithUI/main.qml")));
 
     QPixmap iconPixmap(":/icon.png");

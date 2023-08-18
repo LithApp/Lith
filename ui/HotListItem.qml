@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 
-import lith 1.0
+import Lith.Core
+import LithStyle
 
 Rectangle {
     id: root
@@ -12,8 +13,8 @@ Rectangle {
 
     property real layoutSpacing
     readonly property real textSize: theLabel.font.pointSize
-    readonly property int labelType: lith.settings.hotlistCompact ? Label.Small : Label.Regular
-    readonly property real padding: lith.settings.hotlistCompact ? 8 : 16
+    readonly property int labelType: Lith.settings.hotlistCompact ? Label.Small : Label.Regular
+    readonly property real padding: Lith.settings.hotlistCompact ? 8 : 16
 
     signal clicked
 
@@ -25,7 +26,7 @@ Rectangle {
         id: itemLayout
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: lith.settings.hotlistCompact ? 1 : 3
+        spacing: Lith.settings.hotlistCompact ? 1 : 3
         Label {
             id: theLabel
             size: root.labelType

@@ -44,6 +44,8 @@ class NotificationHandler;
 
 class Lith : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 public:
     enum Status {
         UNCONFIGURED,
@@ -76,6 +78,9 @@ private:
 
 public:
     static Lith* instance();
+    static Lith* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        return instance();
+    }
 
     Weechat* weechat();
 

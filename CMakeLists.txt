@@ -49,6 +49,8 @@ endif()
 
 qt_standard_project_setup(REQUIRES 6.5)
 
+set(QML_IMPORT_PATH ${QML_IMPORT_PATH} ${CMAKE_BINARY_DIR}/imports CACHE STRING "" FORCE)
+
 add_subdirectory(assets)
 add_subdirectory(style)
 add_subdirectory(ui)

@@ -25,9 +25,15 @@
 
 class Uploader : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
     PROPERTY(bool, working)
 public:
     explicit Uploader(QObject* parent = nullptr);
+    static Uploader* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        return new Uploader(qmlEngine);
+    }
+
 
 public slots:
     void upload(const QString& path);

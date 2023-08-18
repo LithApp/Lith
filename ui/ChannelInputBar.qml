@@ -19,8 +19,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 import QtQml 2.12
 
-import lith 1.0
-
+import Lith.Core
 
 Item {
     id: root
@@ -54,7 +53,7 @@ Item {
             icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
             focusPolicy: Qt.NoFocus
             flat: true
-            visible: settings.showSearchButton
+            visible: Lith.settings.showSearchButton
             onClicked: {
                 Window.activeFocusItem.focus = false
                 root.requestSearchBar()
@@ -71,7 +70,7 @@ Item {
             icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
             focusPolicy: Qt.NoFocus
             flat: true
-            visible: settings.showAutocompleteButton
+            visible: Lith.settings.showAutocompleteButton
             onClicked: {
                 channelTextInput.autocomplete();
             }
@@ -97,11 +96,11 @@ Item {
 
         Button {
             id: imageButton
-            visible: settings.showGalleryButton
+            visible: Lith.settings.showGalleryButton
             Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            property bool isBusy: uploader.working
+            property bool isBusy: Uploader.working
             icon.source: isBusy ? "" : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
             enabled: !isBusy
             focusPolicy: Qt.NoFocus
@@ -126,7 +125,7 @@ Item {
             Layout.fillHeight: true
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
-            visible: settings.showSendButton
+            visible: Lith.settings.showSendButton
             focusPolicy: Qt.NoFocus
             flat: true
             ToolTip.text: "Send the message"
@@ -134,7 +133,7 @@ Item {
             ToolTip.delay: 800
             onClicked: {
                 if (channelTextInput.text.length > 0) {
-                    lith.selectedBuffer.input(channelTextInput.text)
+                    Lith.selectedBuffer.input(channelTextInput.text)
                     channelTextInput.text = ""
                 }
             }

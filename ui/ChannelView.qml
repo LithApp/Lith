@@ -21,7 +21,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Dialogs 6.2
 import QtCore
 
-import lith 1.0
+import Lith.Core
 
 ColumnLayout {
     spacing: 0
@@ -48,12 +48,12 @@ ColumnLayout {
         clip: true
 
         ColumnLayout {
-            visible: !lith.selectedBuffer
+            visible: !Lith.selectedBuffer
             anchors.fill: parent
             anchors.margins: 6
             Label {
                 Layout.fillWidth: true
-                text: "Version %1".arg(lith.gitVersion)
+                text: "Version %1".arg(Lith.gitVersion)
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 horizontalAlignment: Label.AlignHCenter
             }
@@ -92,7 +92,7 @@ ColumnLayout {
             id: channelMessageList
             width: parent.width
             height: parent.height - 1
-            visible: lith.selectedBuffer
+            visible: Lith.selectedBuffer
         }
 
         DropHandler {
@@ -105,7 +105,7 @@ ColumnLayout {
 
     HotList {
         id: hotlist
-        visible: lith.settings.hotlistEnabled
+        visible: Lith.settings.hotlistEnabled
         Layout.fillWidth: true
         Layout.preferredHeight: visible ? implicitHeight : 0
     }

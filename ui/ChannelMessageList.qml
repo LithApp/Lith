@@ -18,6 +18,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import Lith.Core
+
 ListView {
     id: listView
 
@@ -38,12 +40,12 @@ ListView {
     boundsMovement: Flickable.StopAtBounds
     readonly property color overshootMarkerColor: palette.highlight
 
-    readonly property real delegateWidth: listView.width - (lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
+    readonly property real delegateWidth: listView.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
-        font.pointSize: settings.baseFontSize
+        font.pointSize: Lith.settings.baseFontSize
     }
 
     ScrollBar.vertical: ScrollBar {
@@ -52,13 +54,13 @@ ListView {
 
     orientation: Qt.Vertical
     verticalLayoutDirection: ListView.BottomToTop
-    spacing: lith.settings.messageSpacing
-    model: lith.selectedBuffer ? lith.selectedBuffer.lines_filtered : null
+    spacing: Lith.settings.messageSpacing
+    model: Lith.selectedBuffer ? Lith.selectedBuffer.lines_filtered : null
     delegate: ChannelMessage {
         messageModel: modelData
         readonly property string sectionName: ListView.section
         readonly property string nextSectionName: ListView.nextSection
-        header: lith.settings.showDateHeaders && sectionName !== nextSectionName ? sectionName : ""
+        header: Lith.settings.showDateHeaders && sectionName !== nextSectionName ? sectionName : ""
         width: listView.delegateWidth
     }
 
@@ -67,13 +69,13 @@ ListView {
     section.property: "modelData.dateString"
 
     Connections {
-        target: lith.search
+        target: Lith.search
         function onHighlightedMatchIndexChanged() {
-            if (!lith.search.highlightedLine)
+            if (!Lith.search.highlightedLine)
                 return
             for(var i = 0; i < listView.model.count(); i++) {
                 var modelLine = listView.model.at(i)
-                if (lith.search.highlightedLine === modelLine) {
+                if (Lith.search.highlightedLine === modelLine) {
                     listView.positionViewAtIndex(i, ListView.Contain)
                     break
                 }
@@ -86,10 +88,10 @@ ListView {
     }
 
     function fillTopOfList() {
-        if (!lith.selectedBuffer)
+        if (!Lith.selectedBuffer)
             return
         if (visibleArea.heightRatio >= 0.5 || yPosition + visibleArea.heightRatio <= 0.5) {
-            lith.selectedBuffer.fetchMoreLines()
+            Lith.selectedBuffer.fetchMoreLines()
         }
     }
 

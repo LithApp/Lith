@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Templates as T
 
+import Lith.Core
+
 T.Label {
     enum Size {
         Tiny,
@@ -17,17 +19,17 @@ T.Label {
     font.pointSize: {
         switch (size) {
         case Label.Tiny:
-            return lith.settings.baseFontSize * 0.75
+            return Lith.settings.baseFontSize * 0.75
         case Label.Small:
-            return lith.settings.baseFontSize * 0.875
+            return Lith.settings.baseFontSize * 0.875
         case Label.Regular:
-            return lith.settings.baseFontSize
+            return Lith.settings.baseFontSize
         case Label.Medium:
-            return lith.settings.baseFontSize * 1.125
+            return Lith.settings.baseFontSize * 1.125
         case Label.Large:
-            return lith.settings.baseFontSize * 1.25
+            return Lith.settings.baseFontSize * 1.25
         case Label.Header:
-            return lith.settings.baseFontSize * 1.375
+            return Lith.settings.baseFontSize * 1.375
         }
     }
 }

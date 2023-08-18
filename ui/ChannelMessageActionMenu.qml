@@ -19,7 +19,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
-import lith 1.0
+import Lith.Core
+import LithStyle
 
 /* Hold-to-copy action menu */
 
@@ -86,7 +87,7 @@ Dialog {
                     maximumLineCount: 2
                     elide: Text.ElideRight
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
+                    text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), Lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
                 }
 
                 visible: !(nickname == "")
@@ -153,7 +154,7 @@ Dialog {
         }
 
         ColumnLayout {
-            visible: lith.settings.showInternalData
+            visible: Lith.settings.showInternalData
             Layout.fillWidth: true
             Layout.margins: 6
             Label {

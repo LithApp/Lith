@@ -25,7 +25,7 @@ Dialog {
         ListView {
             id: bufferListView
             spacing: 0
-            model: lith.unfilteredBuffers
+            model: Lith.unfilteredBuffers
             header: Item {
                 width: bufferListView.width
                 height: headerTextBuffer.height

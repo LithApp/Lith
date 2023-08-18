@@ -18,6 +18,9 @@ import QtQuick 2.12
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
+import Lith.Core
+import LithStyle
+
 Drawer {
     id: root
     SystemPalette {
@@ -61,13 +64,13 @@ Drawer {
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 9
-        visible: lith && lith.selectedBuffer
+        visible: Lith.selectedBuffer
 
         Label {
             Layout.alignment: Qt.AlignHCenter
             horizontalAlignment: Label.AlignHCenter
             Layout.fillWidth: true
-            text: lith.selectedBuffer ? lith.selectedBuffer.full_name : ""
+            text: Lith.selectedBuffer ? Lith.selectedBuffer.full_name : ""
             size: Label.Medium
             color: palette.windowText
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
@@ -78,8 +81,8 @@ Drawer {
             horizontalAlignment: Label.AlignHCenter
             Layout.fillWidth: true
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
-            text: lith.selectedBuffer ? lith.selectedBuffer.title : ""
+            visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
+            text: Lith.selectedBuffer ? Lith.selectedBuffer.title : ""
             color: palette.windowText
             onLinkActivated: {
                 linkHandler.show(link, this)
@@ -95,8 +98,8 @@ Drawer {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
             horizontalAlignment: Label.AlignHCenter
-            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
-            text: lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(lith.selectedBuffer.normals).arg(lith.selectedBuffer.voices).arg(lith.selectedBuffer.ops).arg(lith.selectedBuffer.normals + lith.selectedBuffer.voices + lith.selectedBuffer.ops) : ""
+            visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
+            text: Lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(Lith.selectedBuffer.normals).arg(Lith.selectedBuffer.voices).arg(Lith.selectedBuffer.ops).arg(Lith.selectedBuffer.normals + Lith.selectedBuffer.voices + Lith.selectedBuffer.ops) : ""
             size: Label.Tiny
             color: palette.windowText
             opacity: 0.7
@@ -104,7 +107,7 @@ Drawer {
         }
 
         GridLayout {
-            visible: lith.settings.showInternalData
+            visible: Lith.settings.showInternalData
             Layout.leftMargin: 6
             Layout.rightMargin: 6
             Layout.fillWidth: true
@@ -114,16 +117,16 @@ Drawer {
                 Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                 size: Label.Tiny
-                text: "Number: " + (lith.selectedBuffer ? lith.selectedBuffer.number : "N/A")
+                text: "Number: " + (Lith.selectedBuffer ? Lith.selectedBuffer.number : "N/A")
             }
             Label {
                 Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                 size: Label.Tiny
-                text: "Pointer: " + (lith.selectedBuffer ? "0x" + lith.selectedBuffer.ptr.toString(16) : "N/A")
+                text: "Pointer: " + (Lith.selectedBuffer ? "0x" + Lith.selectedBuffer.ptr.toString(16) : "N/A")
             }
             Repeater {
-                model: lith.selectedBuffer ? lith.selectedBuffer.local_variables_stringList : null
+                model: Lith.selectedBuffer ? Lith.selectedBuffer.local_variables_stringList : null
                 Label {
                     Layout.fillWidth: true
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
@@ -143,7 +146,7 @@ Drawer {
         }
 
         Item {
-            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
+            visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
             Layout.fillWidth: true
             height: nickFilter.height
             TextField {
@@ -154,7 +157,7 @@ Drawer {
                     right: parent.right
                     margins: 3
                 }
-                onTextChanged: lith.selectedBufferNicks.filterWord = text
+                onTextChanged: Lith.selectedBufferNicks.filterWord = text
 
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Up) {
@@ -175,11 +178,11 @@ Drawer {
 
         ListView {
             id: nickListView
-            visible: lith.selectedBuffer && lith.selectedBuffer.isChannel
+            visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
             clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
-            model: lith.selectedBufferNicks
+            model: Lith.selectedBufferNicks
             currentIndex: 0
 
             delegate: ItemDelegate {

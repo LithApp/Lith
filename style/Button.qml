@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls.impl
 import QtQuick.Templates 2.15 as T
 
+import Lith.Core
+
 T.Button {
     id: control
 
@@ -18,7 +20,7 @@ T.Button {
     icon.width: 28
     icon.height: 28
 
-    font.pointSize: lith.settings.baseFontSize
+    font.pointSize: Lith.settings.baseFontSize
 
     contentItem: Item {
         opacity: control.enabled ? 1.0 : 0.5

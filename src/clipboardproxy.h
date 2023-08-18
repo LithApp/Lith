@@ -21,11 +21,17 @@
 #include <QObject>
 #include <QClipboard>
 #include <QPixmap>
+#include <QQmlEngine>
 
 class ClipboardProxy : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 public:
     explicit ClipboardProxy(QObject* parent = nullptr);
+    static ClipboardProxy* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        return new ClipboardProxy(qmlEngine);
+    }
 
     Q_INVOKABLE bool hasImage();
 

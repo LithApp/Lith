@@ -50,6 +50,7 @@ private slots:
  */
 class FormatStringSplitter : public QObject {
     Q_OBJECT
+    QML_ELEMENT
     PROPERTY(QString, format)
     // List of properties that are allowed - it would be nice to retrieve them from the object directly but it doesn't work when it's null
     PROPERTY(QStringList, allowedPropertyNames)

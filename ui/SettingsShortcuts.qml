@@ -19,6 +19,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 import "SettingsFields" as Fields
+import Lith.Core
 
 ScrollView {
     id: root
@@ -50,27 +51,27 @@ ScrollView {
             Fields.Boolean {
                 summary: qsTr("Enable readline shortcuts")
                 details: "(^W, ^D, etc.)"
-                checked: lith.settings.enableReadlineShortcuts
+                checked: Lith.settings.enableReadlineShortcuts
             }
 
             Fields.String {
                 summary: qsTr("Open buffer search")
-                text: lith.settings.shortcutSearchBuffer.join(", ")
+                text: Lith.settings.shortcutSearchBuffer.join(", ")
             }
 
             Fields.String {
                 summary: qsTr("Autocomplete")
-                text: lith.settings.shortcutAutocomplete.join(", ")
+                text: Lith.settings.shortcutAutocomplete.join(", ")
             }
 
             Fields.String {
                 summary: qsTr("Switch to next buffer")
-                text: lith.settings.shortcutSwitchToNextBuffer.join(", ")
+                text: Lith.settings.shortcutSwitchToNextBuffer.join(", ")
             }
 
             Fields.String {
                 summary: qsTr("Switch to previous buffer")
-                text: lith.settings.shortcutSwitchToPreviousBuffer.join(", ")
+                text: Lith.settings.shortcutSwitchToPreviousBuffer.join(", ")
             }
         }
         Item {

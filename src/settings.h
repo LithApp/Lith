@@ -47,6 +47,8 @@ public:                                              \
  */
 class Settings : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
 
     Q_PROPERTY(bool isReady READ isReady NOTIFY readyChanged)
 

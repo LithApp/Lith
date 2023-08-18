@@ -25,6 +25,7 @@
 
 class FormattedString {
     Q_GADGET
+    QML_NAMED_ELEMENT(formattedString)
     Q_PROPERTY(int length READ length CONSTANT)
     Q_PROPERTY(QStringList urls READ urls CONSTANT)
 public:

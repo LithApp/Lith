@@ -20,6 +20,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 
 // This has to be here otherwise the plugin won't get linked
+import Lith.Core
 import LithStyle
 
 ApplicationWindow {
@@ -32,7 +33,7 @@ ApplicationWindow {
     flags: platform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
 
     property bool landscapeMode: !platform.mobile & width > height
-    property string currentTheme: lith.windowHelper.darkTheme ? "dark" : "light"
+    property string currentTheme: Lith.windowHelper.darkTheme ? "dark" : "light"
 
     property alias platform: platform
     QtObject {
@@ -78,13 +79,13 @@ ApplicationWindow {
     }
 
     onActiveChanged: {
-        if (active && lith.debugVersion && platform.desktop)
+        if (active && Lith.debugVersion && platform.desktop)
             debugWindowLoader.item.raise()
     }
 
     Loader {
         id: debugWindowLoader
-        active: lith.debugVersion && platform.desktop
+        active: Lith.debugVersion && platform.desktop
         source: "util/DebugWindow.qml"
         property bool firstLoadX: true
         property bool firstLoadY: true

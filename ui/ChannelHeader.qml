@@ -18,7 +18,8 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
-import lith 1.0
+import Lith.Core
+import LithStyle
 
 Rectangle {
     id: root
@@ -87,7 +88,7 @@ Rectangle {
                         x: Math.min((parent.width - width + replayInfoLayout.width + 1) / 2, parent.width - width - 6)
                         color: palette.text
                         font.bold: true
-                        text: lith.selectedBuffer ? lith.selectedBuffer.name : "Lith"
+                        text: Lith.selectedBuffer ? Lith.selectedBuffer.name : "Lith"
                         renderType: Text.NativeRendering
                         anchors.verticalCenter: parent.verticalCenter
                         width: Math.min(implicitWidth, parent.width)
@@ -97,24 +98,24 @@ Rectangle {
 
                 RowLayout {
                     id: replayInfoLayout
-                    visible: lith.networkProxy.recording || lith.status === Lith.REPLAY
+                    visible: Lith.networkProxy.recording || Lith.status === Lith.REPLAY
                     Layout.alignment: Qt.AlignRight
                     Label {
                         size: Label.Tiny
                         Layout.alignment: Qt.AlignVCenter
                         text: {
-                            if (lith.networkProxy.recording)
-                                return ("Recording into slot %1").arg(lith.networkProxy.slot)
-                            else if (lith.networkProxy.replaying)
-                                return ("Replaying event %1/%2").arg(lith.networkProxy.currentEvent).arg(lith.networkProxy.totalEvents)
-                            else if (lith.status === Lith.REPLAY)
-                                return ("Replayed %1 events").arg(lith.networkProxy.totalEvents)
+                            if (Lith.networkProxy.recording)
+                                return ("Recording into slot %1").arg(Lith.networkProxy.slot)
+                            else if (Lith.networkProxy.replaying)
+                                return ("Replaying event %1/%2").arg(Lith.networkProxy.currentEvent).arg(Lith.networkProxy.totalEvents)
+                            else if (Lith.status === Lith.REPLAY)
+                                return ("Replayed %1 events").arg(Lith.networkProxy.totalEvents)
                             else
                                 return ""
                         }
                         SequentialAnimation on color {
                             id: breathingAnimation
-                            running: lith.networkProxy.recording
+                            running: Lith.networkProxy.recording
                             loops: Animation.Infinite
                             property color firstColor: palette.text
                             onFirstColorChanged: breathingAnimation.restart()
@@ -128,9 +129,9 @@ Rectangle {
                     Rectangle {
                         color: "red"
                         Layout.alignment: Qt.AlignVCenter
-                        visible: lith.networkProxy.recording
+                        visible: Lith.networkProxy.recording
 
-                        width: lith.settings.baseFontSize * 1.25
+                        width: Lith.settings.baseFontSize * 1.25
                         height: width
                         radius: width / 2
                     }
@@ -140,16 +141,16 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 color: palette.text
-                visible: !lith.selectedBuffer || lith.selectedBuffer.title.length > 0
+                visible: !Lith.selectedBuffer || Lith.selectedBuffer.title.length > 0
                 clip: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                text: lith.selectedBuffer ? lith.selectedBuffer.title.toPlain() :
-                      lith.status === Lith.UNCONFIGURED ? "Not configured" :
-                      lith.status === Lith.CONNECTING ? "Connecting" :
-                      lith.status === Lith.CONNECTED ? "Connected" :
-                      lith.status === Lith.DISCONNECTED ? "Disconnected" :
-                      lith.status === Lith.ERROR ? "Error: " + lith.errorString :
-                      lith.status === Lith.REPLAY ? "Replaying a recording" :
+                text: Lith.selectedBuffer ? Lith.selectedBuffer.title.toPlain() :
+                      Lith.status === Lith.UNCONFIGURED ? "Not configured" :
+                      Lith.status === Lith.CONNECTING ? "Connecting" :
+                      Lith.status === Lith.CONNECTED ? "Connected" :
+                      Lith.status === Lith.DISCONNECTED ? "Disconnected" :
+                      Lith.status === Lith.ERROR ? "Error: " + Lith.errorString :
+                      Lith.status === Lith.REPLAY ? "Replaying a recording" :
                                                    ""
                 elide: Text.ElideRight
                 maximumLineCount: 2
@@ -177,12 +178,12 @@ Rectangle {
                 nickDrawer.visible = !nickDrawer.visible
                 if(!window.platform.mobile) nickDrawer.open()
             }
-            icon.source: lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
-                         lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+currentTheme+"/transfer.png" :
-                         lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+currentTheme+"/smile.png" :
-                         lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+currentTheme+"/no-wifi.png" :
-                         lith.status === Lith.ERROR        ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
-                         lith.status === Lith.REPLAY       ? (lith.networkProxy.replaying ? "qrc:/navigation/"+currentTheme+"/play-color.png" : "qrc:/navigation/"+currentTheme+"/pause-color.png") :
+            icon.source: Lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
+                         Lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+currentTheme+"/transfer.png" :
+                         Lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+currentTheme+"/smile.png" :
+                         Lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+currentTheme+"/no-wifi.png" :
+                         Lith.status === Lith.ERROR        ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
+                         Lith.status === Lith.REPLAY       ? (Lith.networkProxy.replaying ? "qrc:/navigation/"+currentTheme+"/play-color.png" : "qrc:/navigation/"+currentTheme+"/pause-color.png") :
                                                              "qrc:/navigation/"+currentTheme+"/dizzy.png"
             ToolTip.text: "Open channel information"
             ToolTip.visible: nickListButton.hovered

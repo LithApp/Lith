@@ -6,9 +6,11 @@
 #include <QList>
 #include <QColor>
 #include <QPalette>
+#include <QQmlEngine>
 
 class ColorTheme {
     Q_GADGET
+    QML_NAMED_ELEMENT(colorTheme)
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QStringList weechatColors READ weechatColors CONSTANT)
     Q_PROPERTY(QStringList extendedColors READ extendedColors CONSTANT)

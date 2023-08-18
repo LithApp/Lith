@@ -19,6 +19,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import LithStyle
+
 Dialog {
     id: root
     modal: true

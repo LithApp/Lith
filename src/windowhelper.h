@@ -7,6 +7,8 @@
 
 class WindowHelper : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     PROPERTY_READONLY(bool, darkTheme, false)
     PROPERTY_READONLY(bool, useBlack, false)
     Q_PROPERTY(bool lightTheme READ lightThemeGet NOTIFY darkThemeChanged)

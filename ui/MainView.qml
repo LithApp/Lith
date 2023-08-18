@@ -2,6 +2,8 @@ import QtQuick 2
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1
 
+import Lith.Core
+
 Item {
     id: mainView
 
@@ -17,7 +19,7 @@ Item {
         property real left: 0.0
         property real right: 0.0
         function refresh() {
-            var result = lith.windowHelper.getSafeAreaMargins(window)
+            var result = Lith.windowHelper.getSafeAreaMargins(window)
             top = result["top"]
             bottom = result["bottom"]
             left = result["left"]
@@ -130,14 +132,14 @@ Item {
         dragOutHandleTopMargin: channelView.messageArea.y
         dragOutHandleBottomMargin: height - channelView.messageArea.y - channelView.messageArea.height
         Component.onCompleted: {
-            if (lith.settings.showBufferListOnStartup)
+            if (Lith.settings.showBufferListOnStartup)
                 lastState = DynamicDrawer.State.Open
             else
                 lastState = DynamicDrawer.State.Closed
         }
 
         onIsClosedChanged: {
-            bufferList.currentIndex = lith.selectedBufferIndex
+            bufferList.currentIndex = Lith.selectedBufferIndex
 
             if (!isClosed) {
                 bufferList.clear()
@@ -212,7 +214,7 @@ Item {
         topPadding: 0
 
         property string currentLink
-        property string currentExtension: lith.getLinkFileExtension(currentLink)
+        property string currentExtension: Lith.getLinkFileExtension(currentLink)
         property bool containsImage: currentExtension.endsWith("png") ||
                                      currentExtension.endsWith("jpg") ||
                                      currentExtension.endsWith("jpeg")||
@@ -231,9 +233,9 @@ Item {
         }
 
         function show(link, item) {
-            if (lith.settings.openLinksDirectly) {
+            if (Lith.settings.openLinksDirectly) {
                 currentLink = link
-                openCurrentLink(!lith.settings.openLinksDirectlyInBrowser)
+                openCurrentLink(!Lith.settings.openLinksDirectlyInBrowser)
             }
             else {
                 if (item === null)

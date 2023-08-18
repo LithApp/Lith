@@ -2,17 +2,17 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
-import lith 1.0
+import Lith.Core
 
 ListView {
     id: root
-    model: lith.buffers
+    model: Lith.buffers
 
     // TODO this should really be calculated from the size of the listview and the items but it isn't
     // I don't really want to deal with this now though
     implicitWidth: contentItem.childrenRect.width
     implicitHeight: contentItem.childrenRect.height
-    spacing: lith.settings.hotlistCompact ? 3 : 6
+    spacing: Lith.settings.hotlistCompact ? 3 : 6
 
     Reflection {
         id: reflection
@@ -24,7 +24,7 @@ ListView {
         id: delegateBody
 
         onClicked: {
-            lith.selectedBufferIndex = index
+            Lith.selectedBufferIndex = index
         }
 
         required property var modelData
@@ -41,13 +41,13 @@ ListView {
             dataSource: delegateBody.modelData
         }
         Connections {
-            target: lith.settings
+            target: Lith.settings
             function onHotlistFormatChanged() {
-                formatSplitter.fromStringList(lith.settings.hotlistFormat)
+                formatSplitter.fromStringList(Lith.settings.hotlistFormat)
             }
         }
         Component.onCompleted: {
-            formatSplitter.fromStringList(lith.settings.hotlistFormat)
+            formatSplitter.fromStringList(Lith.settings.hotlistFormat)
         }
     }
 }

@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Templates as T
 
+import Lith.Core
+
 T.ItemDelegate {
     id: control
 
@@ -17,7 +19,7 @@ T.ItemDelegate {
     icon.height: 24
     icon.color: control.palette.text
 
-    font.pointSize: lith.settings.baseFontSize
+    font.pointSize: Lith.settings.baseFontSize
 
     contentItem: Label {
         verticalAlignment: Label.AlignVCenter

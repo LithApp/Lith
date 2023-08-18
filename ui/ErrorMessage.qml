@@ -18,14 +18,16 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
+import Lith.Core
+
 Rectangle {
     clip: true
     height: errorText.text.length > 0 ? 46 : 0
     width: parent.width
     //visible: height != 0
     gradient: Gradient {
-        GradientStop { position: 0.0; color: lith.windowHelper.darkTheme ? "#881111" : "#bb2222" }
-        GradientStop { position: 0.22; color: lith.windowHelper.darkTheme ? "#aa1111" : "#dd3333" }
+        GradientStop { position: 0.0; color: Lith.windowHelper.darkTheme ? "#881111" : "#bb2222" }
+        GradientStop { position: 0.22; color: Lith.windowHelper.darkTheme ? "#aa1111" : "#dd3333" }
     }
     Behavior on height {
         NumberAnimation {
@@ -47,7 +49,7 @@ Rectangle {
             Layout.fillHeight: true
             Layout.fillWidth: true
             verticalAlignment: Label.AlignVCenter
-            text: lith.errorString
+            text: Lith.errorString
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             maximumLineCount: 2
             elide: Text.ElideRight
@@ -57,7 +59,7 @@ Rectangle {
             icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
             Layout.preferredWidth: 32
             Layout.preferredHeight: 32
-            onClicked: lith.errorString = ""
+            onClicked: Lith.errorString = ""
         }
     }
 }

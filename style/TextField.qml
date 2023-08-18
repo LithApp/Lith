@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Templates 2.12 as T
 
+import Lith.Core
+
 T.TextField {
     id: control
 
@@ -15,7 +17,7 @@ T.TextField {
     placeholderTextColor: colorUtils.setAlpha(disabledPalette.text, 0.5)
     verticalAlignment: Text.AlignVCenter
 
-    font.pointSize: lith.settings.baseFontSize
+    font.pointSize: Lith.settings.baseFontSize
 
     property color borderColor: "transparent"
     property color backgroundColor: colorUtils.mixColors(palette.text, palette.window, 0.05)

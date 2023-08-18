@@ -9,7 +9,6 @@ set(LITH_SOURCES
     lith.h
     logger.cpp
     logger.h
-    main.cpp
     notificationhandler.h
     notificationhandler.cpp
     protocol.cpp
@@ -44,8 +43,10 @@ set(LITH_SOURCES
     windowhelper.h
 )
 
+set(QML_IMPORT_PATH ${QML_IMPORT_PATH} ${CMAKE_CURRENT_BINARY_DIR} CACHE STRING "" FORCE)
+
 configure_file(cmakedefs.h.in ${CMAKE_CURRENT_BINARY_DIR}/defs/cmakedefs.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/defs .)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/defs . util)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(LITH_SOURCES
@@ -64,8 +65,18 @@ endif()
 
 qt_add_executable(Lith
     MACOSX_BUNDLE
-    ${LITH_SOURCES}
+    main.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/defs/cmakedefs.h
 )
+
+qt_add_qml_module(Lith
+    NO_PLUGIN
+    URI Lith.Core
+    VERSION 1.0
+    SOURCES ${LITH_SOURCES}
+    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/imports/Lith/Core
+)
+
 
 target_compile_definitions(Lith PRIVATE
     IMGUR_API_KEY=\"${IMGUR_API_KEY}\"

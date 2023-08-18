@@ -38,6 +38,8 @@ class Lith;
 
 class Nick : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     PROPERTY(char, visible)
     PROPERTY(char, group)
     PROPERTY(int, level)
@@ -57,6 +59,8 @@ public:
 
 class Buffer : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     Q_DISABLE_COPY_MOVE(Buffer)
     Q_PROPERTY(pointer_t ptr READ ptr NOTIFY ptrChanged)
     PROPERTY(int, number, 0)
@@ -140,6 +144,8 @@ private:
 
 class BufferLine : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     PROPERTY(pointer_t, ptr)
     PROPERTY(QDateTime, date)
     PROPERTY(bool, displayed)

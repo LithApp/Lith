@@ -19,7 +19,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
-import lith 1.0
+import Lith.Core
 
 Dialog {
     id: nickListActionMenuDialog
@@ -87,7 +87,7 @@ Dialog {
                     Layout.margins: 9
                     text: name
                     onClicked: {
-                        lith.selectedBuffer.input("/" + operation + " " + nickname)
+                        Lith.selectedBuffer.input("/" + operation + " " + nickname)
                         nickListActionMenuDialog.close()
                         nickDrawer.close()
                     }
@@ -100,7 +100,7 @@ Dialog {
             }
         }
         ColumnLayout {
-            visible: lith.settings.showInternalData
+            visible: Lith.settings.showInternalData
             Layout.fillWidth: true
             Layout.margins: 6
 

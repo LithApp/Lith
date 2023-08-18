@@ -2,6 +2,7 @@
 #define REFLECTION_H
 
 #include <QObject>
+#include <QQmlEngine>
 
 /**
  * @brief The Reflection class
@@ -12,6 +13,7 @@
  */
 class Reflection : public QObject {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(QString className READ classNameGet WRITE setClassName NOTIFY classNameChanged REQUIRED)
     Q_PROPERTY(QStringList stringProperties READ stringPropertiesGet NOTIFY classNameChanged)
 public:

@@ -10,6 +10,8 @@ class Weechat;
 
 class ReplayRecordingInfo : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     PROPERTY_CONSTANT(int, version)
     PROPERTY_CONSTANT(QDateTime, createdAt)
     PROPERTY_CONSTANT(int, number, -1)
@@ -30,6 +32,8 @@ public:
 
 class BaseNetworkProxy : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     Q_PROPERTY(int currentReplayVersion READ currentReplayVersionGet CONSTANT)
     Q_PROPERTY(bool recording READ recording NOTIFY recordingChanged)
     Q_PROPERTY(bool replaying READ replaying NOTIFY replayingChanged)
@@ -79,6 +83,8 @@ private:
 
 class ReplayProxy : public BaseNetworkProxy {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     Q_PROPERTY(int totalEvents READ totalEventsGet NOTIFY loadingFinished)
     Q_PROPERTY(int currentEvent READ currentEventGet NOTIFY currentEventChanged)
 public:

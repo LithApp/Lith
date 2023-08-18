@@ -47,9 +47,9 @@ Dialog {
     function showVideo(url) {
         currentUrl = url
         delegateVideo.source = url
-        delegateVideo.infinite = lith.settings.loopVideosByDefault
+        delegateVideo.infinite = Lith.settings.loopVideosByDefault
         delegateVideo.playedOnce = false
-        audio.volume = lith.settings.muteVideosByDefault ? 0.0 : 1.0
+        audio.volume = Lith.settings.muteVideosByDefault ? 0.0 : 1.0
         videoWrapper.visible = true
         imageWrapper.visible = false
         root.open()

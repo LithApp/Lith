@@ -19,7 +19,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4
 
-import lith 1.0
+import Lith.Core
 
 Item {
     id: root
@@ -28,12 +28,12 @@ Item {
     //property var previousMessageModel: ListView.view.contentItem.children[index-1].messageModel
     //property var nextMessageModel: ListView.view.contentItem.children[index+1].messageModel
 
-    height: (lith.settings.terminalLikeChat ? terminalLineLayout.height : messageBubble.height) + (headerLabel.visible ? headerLabel.height : 0)
+    height: (Lith.settings.terminalLikeChat ? terminalLineLayout.height : messageBubble.height) + (headerLabel.visible ? headerLabel.height : 0)
 
-    opacity: messageModel.searchCompare(lith.search.term) ? 1.0 : 0.3
+    opacity: messageModel.searchCompare(Lith.search.term) ? 1.0 : 0.3
 
     property alias header: headerLabel.text
-    readonly property bool isHighlighted: lith.search.highlightedLine && messageModel && lith.search.highlightedLine === messageModel
+    readonly property bool isHighlighted: Lith.search.highlightedLine && messageModel && Lith.search.highlightedLine === messageModel
 
     Connections {
         target: messageMouseArea
@@ -59,7 +59,7 @@ Item {
     /* Disabled until this feature gets completed
     Item {
         id: messageBubble
-        visible: !lith.settings.terminalLikeChat
+        visible: !Lith.settings.terminalLikeChat
         width: messageBubbleText.width + 30
         height: messageBubbleText.height + 30
 
@@ -141,7 +141,7 @@ Item {
 
     ColumnLayout {
         id: terminalLineLayout
-        visible: lith.settings.terminalLikeChat
+        visible: Lith.settings.terminalLikeChat
         width: parent.width
         y: headerLabel.visible ? headerLabel.height + 1 : 1
         spacing: 0
@@ -150,7 +150,7 @@ Item {
             spacing: 0
             Label {
                 Layout.alignment: Qt.AlignTop
-                text: messageModel.date.toLocaleString(Qt.locale(), lith.settings.timestampFormat) + "\u00A0"
+                text: messageModel.date.toLocaleString(Qt.locale(), Lith.settings.timestampFormat) + "\u00A0"
                 color: disabledPalette.text
                 textFormat: Text.RichText
                 renderType: Text.NativeRendering
@@ -160,8 +160,8 @@ Item {
             Label {
                 Layout.alignment: Qt.AlignTop
                 font.bold: true
-                visible: lith.settings.nickCutoffThreshold !== 0
-                text: messageModel.prefix.toTrimmedHtml(lith.settings.nickCutoffThreshold) + "\u00A0"
+                visible: Lith.settings.nickCutoffThreshold !== 0
+                text: messageModel.prefix.toTrimmedHtml(Lith.settings.nickCutoffThreshold) + "\u00A0"
                 color: palette.text
                 textFormat: Text.RichText
                 renderType: Text.NativeRendering
@@ -190,9 +190,9 @@ Item {
                 RowLayout {
                     id: thumbnailLayout
                     Layout.fillWidth: true
-                    visible: settings.showImageThumbnails
+                    visible: Lith.settings.showImageThumbnails
                     Repeater {
-                        model: settings.showImageThumbnails ? messageModel.message.urls : null
+                        model: Lith.settings.showImageThumbnails ? messageModel.message.urls : null
                         Rectangle {
                             implicitHeight: 100
                             implicitWidth: thumbnailImage.sourceSize.width === 0 ? 100 : height * (thumbnailImage.sourceSize.width / thumbnailImage.sourceSize.height)

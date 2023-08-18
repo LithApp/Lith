@@ -2,13 +2,14 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import lith
+import Lith.Core
+import LithStyle
 
 // Had to use a wrapper Item to enforce parent layout boundaries... shouldn't be necessary, really, but I probably made a mistake in some higher level
 Item {
     id: root
 
-    property var search: lith.search
+    property var search: Lith.search
     property int currentIndex: -1
     property int currentMessageIndex: currentIndex >= 0 && currentIndex < search.matches.length ? search.matches[currentIndex] : -1
 
@@ -94,7 +95,7 @@ Item {
             icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
             flat: true
             focusPolicy: Qt.NoFocus
-            onClicked: lith.search.term = ""
+            onClicked: Lith.search.term = ""
         }
 
         ColumnLayout {
@@ -112,7 +113,7 @@ Item {
                 id: totalCountLabel
                 visible: resultsMetrics.width * 3.5 < rootLayout.width
                 size: Label.Small
-                text: qsTr("Total: %1 lines").arg(lith.selectedBuffer ? lith.selectedBuffer.lines.count : "N/A")
+                text: qsTr("Total: %1 lines").arg(Lith.selectedBuffer ? Lith.selectedBuffer.lines.count : "N/A")
                 opacity: 0.7
             }
             Label {
