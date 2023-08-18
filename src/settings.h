@@ -94,7 +94,7 @@ class Settings : public QObject {
     SETTING(bool, encrypted, true)
     SETTING(bool, allowSelfSignedCertificates, false)
     SETTING(QString, passphrase)
-    SETTING(bool, handshakeAuth, false)
+    SETTING(bool, handshakeAuth, true)
     SETTING(bool, connectionCompression, true)
 #ifndef __EMSCRIPTEN__
     SETTING(bool, useWebsockets, false)
