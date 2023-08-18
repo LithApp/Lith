@@ -92,21 +92,21 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Lith.ipa
-        path: build_ios/src/Lith.ipa
+        path: build_ios/Lith.ipa
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/src/Lith.ipa" renameto="Lith-iOS-${TAG_NAME}.ipa"
+            ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="$TAG_NAME" filename="build_ios/Lith.ipa" renameto="Lith-iOS-${TAG_NAME}.ipa"
         fi
     - name: Upload to Testflight
       if: github.event_name == 'create'
       run: |
         export TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            xcrun altool --validate-app --file build_ios/src/Lith.ipa --type ios --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
-            xcrun altool --upload-app --file build_ios/src/Lith.ipa --type ios --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+            xcrun altool --validate-app --file build_ios/Lith.ipa --type ios --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
+            xcrun altool --upload-app --file build_ios/Lith.ipa --type ios --username "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}"
         fi
 
   Android:
