@@ -7,7 +7,7 @@ on:
   create:
 
 env:
-    QT_VERSION: '6.5.1'
+    QT_VERSION: '6.5.2'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
     EM_VERSION: '3.1.25'
 
@@ -321,27 +321,25 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
     - name: Generate .dmg
       run: |
-        "$Qt6_DIR"/bin/macdeployqt build_macos/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
+        "$Qt6_DIR"/bin/macdeployqt build_macos/src/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
     - name: Create a fancier .dmg
       run: |
         mkdir tmpmountpoint/
         mv build_macos/Lith.dmg build_macos/Lith_qt.dmg
         hdiutil attach build_macos/Lith_qt.dmg -mountpoint tmpmountpoint/
         git clone https://github.com/create-dmg/create-dmg.git
-        # ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --codesign=Z52EFCPL6D --volname Lith --background ./dist/macos/dmgbg.png build_macos/Lith.dmg build_macos/Lith.app
-        # ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --codesign Z52EFCPL6D --volname Lith --background ./dist/macos/dmgbg.png build_macos/Lith.dmg tmpmountpoint/Lith.app
         ./create-dmg/create-dmg --app-drop-link 484 200 --icon-size 128 --window-size 980 512 --text-size 16 --icon "Lith.app" 100 200 --volname Lith --background ./dist/macos/dmgbg.png build_macos/Lith.dmg tmpmountpoint/Lith.app
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
       with:
         name: Lith.dmg
-        path: build_macos/Lith.dmg
+        path: build_macos/src/Lith.dmg
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/Lith.dmg" renameto="Lith-macOS-${TAG_NAME}.dmg"
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/src/Lith.dmg" renameto="Lith-macOS-${TAG_NAME}.dmg"
         fi
 

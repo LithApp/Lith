@@ -5,28 +5,26 @@
 #include <QAbstractListModel>
 #include <QSharedPointer>
 
-typedef QSharedPointer<QObject> QObjectPointer;
+using QObjectPointer = QSharedPointer<QObject>;
 
-class QmlObjectList : public QAbstractListModel
-{
+class QmlObjectList : public QAbstractListModel {
     Q_OBJECT
+    Q_DISABLE_COPY_MOVE(QmlObjectList)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
-    Q_DISABLE_COPY(QmlObjectList)
-    virtual ~QmlObjectList() {
+    ~QmlObjectList() override {
         mData.clear();
     }
 
-    template <typename T>
-    inline static QmlObjectList* create(QObject *parent = Q_NULLPTR) {
-        return new QmlObjectList(T::staticMetaObject, parent);
+    template <typename T> inline static QmlObjectList* create(QObject* parent = Q_NULLPTR) {
+        return new QmlObjectList(&T::staticMetaObject, parent);
     }
 
     void prepend(QObjectPointer object);
     void prepend(QObject* object);
-    void append(QObject *object);
+    void append(QObject* object);
 
-    bool insert(const int& i, QObject *object);
+    bool insert(const int& i, QObject* object);
 
     Q_INVOKABLE int count();
 
@@ -43,18 +41,20 @@ public:
      */
     void append(const QVariantMap& properties);
 
-    Q_INVOKABLE bool removeRow(int row, const QModelIndex &parent = QModelIndex());
+    Q_INVOKABLE bool removeRow(int row, const QModelIndex& parent = QModelIndex());
 
-    Q_INVOKABLE bool removeItem(QObject *item);
+    Q_INVOKABLE bool removeItem(QObject* item);
 
     Q_INVOKABLE inline void removeFirst() {
-        if(!mData.isEmpty())
+        if (!mData.isEmpty()) {
             removeRow(0);
+        }
     }
 
     Q_INVOKABLE inline void removeLast() {
-        if(!mData.isEmpty())
+        if (!mData.isEmpty()) {
             removeRow(rowCount() - 1);
+        }
     }
 
     Q_INVOKABLE QVariant at(const int& i);
@@ -65,34 +65,29 @@ public:
         return at(count() - 1);
     }
 
-    template <typename T>
-    inline T *get(const int &i) {
+    template <typename T> inline T* get(int i) {
         return qobject_cast<T*>(mData.at(i).data());
     }
-    template <typename T>
-    inline T *getLast() {
+    template <typename T> inline T* getLast() {
         return qobject_cast<T*>(last().data());
     }
-    template <typename T>
-    inline T *getFirst() {
+    template <typename T> inline T* getFirst() {
         return qobject_cast<T*>(first().data());
     }
 
 protected:
-    QVariant data(const QModelIndex &index, int role) const;
-
-    QHash<int, QByteArray> roleNames() const;
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex& index, int role) const override;
+    QHash<int, QByteArray> roleNames() const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
 signals:
     void countChanged();
 
 private:
-    QmlObjectList(const QMetaObject& m, QObject *parent = Q_NULLPTR);
+    explicit QmlObjectList(const QMetaObject* m, QObject* parent = Q_NULLPTR);
 
-    const QMetaObject&              mMetaObject;
-    QList<QObjectPointer>         mData;
+    const QMetaObject* mMetaObject;
+    QList<QObjectPointer> mData;
 };
 
-#endif // QMLOBJECTLIST_H
+#endif  // QMLOBJECTLIST_H

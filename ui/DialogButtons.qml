@@ -16,7 +16,7 @@ Rectangle {
     property string acceptText: qsTr("Ok")
     property string rejectText: qsTr("Cancel")
     property bool acceptable: true
-    property var dialog
+    property var dialog: null
     signal accepted
     signal rejected
 

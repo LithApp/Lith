@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
-
 #ifndef IOSCLIPBOARD_H
 #define IOSCLIPBOARD_H
 
@@ -27,4 +26,4 @@ bool iosHasImage();
 QString getIosUrl();
 QImage getIosImage();
 
-#endif // IOSCLIPBOARD_H
+#endif  // IOSCLIPBOARD_H

@@ -8,8 +8,7 @@
 class Lith;
 class Buffer;
 class BufferLine;
-class Search : public QObject
-{
+class Search : public QObject {
     Q_OBJECT
     PROPERTY(QString, term, "")
     PROPERTY(QList<BufferLine*>, matches)
@@ -18,10 +17,10 @@ class Search : public QObject
     Q_PROPERTY(bool nextEnabled READ nextEnabled NOTIFY nextEnabledChanged)
     Q_PROPERTY(bool previousEnabled READ previousEnabled NOTIFY previousEnabledChanged)
 public:
-    explicit Search(Lith *parent = nullptr);
+    explicit Search(Lith* parent = nullptr);
 
-    Lith *lith();
-    BufferLine *highlightedLine();
+    Lith* lith();
+    BufferLine* highlightedLine();
     bool nextEnabled() const;
     bool previousEnabled() const;
 
@@ -32,7 +31,7 @@ public slots:
 
 private slots:
     void invalidate();
-    void onMessagesAdded(const QModelIndex &parent, int first, int last);
+    void onMessagesAdded(const QModelIndex& parent, int first, int last);
 
 signals:
     void nextEnabledChanged();
@@ -43,4 +42,4 @@ private:
     QPointer<Buffer> m_currentBuffer;
 };
 
-#endif // SEARCH_H
+#endif  // SEARCH_H

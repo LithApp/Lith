@@ -10,7 +10,7 @@ Dialog {
     modal: true
     anchors.centerIn: Overlay.overlay
     width: 400
-    implicitHeight: Math.min(header.height + mainItem.implicitHeight + footer.height, mainView.height)
+    implicitHeight: Math.min(header.height + mainItem.implicitHeight + footer.height, (mainView ? mainView.height : 1000))
     closePolicy: autocomplete.visible ? Popup.CloseOnPressOutside : (Popup.CloseOnEscape | Popup.CloseOnPressOutside)
     onVisibleChanged: {
         if (visible) {

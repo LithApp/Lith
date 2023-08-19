@@ -72,45 +72,46 @@ private:
     Q_PROPERTY(NotificationHandler* notificationHandler READ notificationHandler CONSTANT)
 
     Q_PROPERTY(QString gitVersion READ gitVersion CONSTANT)
+    Q_PROPERTY(bool debugVersion READ debugVersion CONSTANT)
 
 public:
-    static Lith *_self;
-    static Lith *instance();
+    static Lith* instance();
 
-    Weechat *weechat();
+    Weechat* weechat();
 
     QString statusString() const;
 
     QString errorStringGet();
-    void errorStringSet(const QString &o);
-    void networkErrorStringSet(const QString &o);
+    void errorStringSet(const QString& o);
+    void networkErrorStringSet(const QString& o);
 
-    Settings* settingsGet();
-    QAbstractItemModel *logger();
+    static Settings* settingsGet();
+    QAbstractItemModel* logger();
     Search* search();
-    BaseNetworkProxy *networkProxy();
-    NotificationHandler *notificationHandler();
+    BaseNetworkProxy* networkProxy();
+    NotificationHandler* notificationHandler();
 
-    QString gitVersion() const;
+    static QString gitVersion();
+    static bool debugVersion();
 
     void log(Logger::EventType type, QString summary) {
-        m_logger->log(Logger::Event{type, summary});
+        m_logger->log(Logger::Event {type, std::move(summary)});
     }
     void log(Logger::EventType type, QString context, QString summary, QString details = QString()) {
-        m_logger->log(Logger::Event{type, context, summary, details});
+        m_logger->log(Logger::Event {type, std::move(context), std::move(summary), std::move(details)});
     }
 
-    ProxyBufferList *buffers();
-    QmlObjectList *unfilteredBuffers();
-    Buffer *selectedBuffer();
-    void selectedBufferSet(Buffer *b);
-    int selectedBufferIndex();
+    ProxyBufferList* buffers();
+    QmlObjectList* unfilteredBuffers();
+    Buffer* selectedBuffer();
+    void selectedBufferSet(Buffer* b);
+    int selectedBufferIndex() const;
     void selectedBufferIndexSet(int index);
-    NickListFilter *selectedBufferNicks();
+    NickListFilter* selectedBufferNicks();
     Q_INVOKABLE void switchToBufferNumber(int number);
 
     // TODO hack, this shouldn't be in this class
-    Q_INVOKABLE QString getLinkFileExtension(const QString &url);
+    Q_INVOKABLE static QString getLinkFileExtension(const QString& url);
 
 public slots:
     void resetData();
@@ -118,46 +119,46 @@ public slots:
 
     void selectBufferNumber(int bufferNumber);
 
-    void handleBufferInitialization(const WeeChatProtocol::HData &hda);
-    void handleFirstReceivedLine(const WeeChatProtocol::HData &hda);
-    void handleHotlistInitialization(const WeeChatProtocol::HData &hda);
-    void handleNicklistInitialization(const WeeChatProtocol::HData &hda);
+    void handleBufferInitialization(const WeeChatProtocol::HData& hda);
+    void handleFirstReceivedLine(const WeeChatProtocol::HData& hda);
+    void handleHotlistInitialization(const WeeChatProtocol::HData& hda);
+    void handleNicklistInitialization(const WeeChatProtocol::HData& hda);
 
-    void handleFetchLines(const WeeChatProtocol::HData &hda);
-    void handleHotlist(const WeeChatProtocol::HData &hda);
+    void handleFetchLines(const WeeChatProtocol::HData& hda);
+    void handleHotlist(const WeeChatProtocol::HData& hda);
 
-    void _buffer_opened(const WeeChatProtocol::HData &hda);
-    void _buffer_type_changed(const WeeChatProtocol::HData &hda);
-    void _buffer_moved(const WeeChatProtocol::HData &hda);
-    void _buffer_merged(const WeeChatProtocol::HData &hda);
-    void _buffer_unmerged(const WeeChatProtocol::HData &hda);
-    void _buffer_hidden(const WeeChatProtocol::HData &hda);
-    void _buffer_unhidden(const WeeChatProtocol::HData &hda);
-    void _buffer_renamed(const WeeChatProtocol::HData &hda);
-    void _buffer_title_changed(const WeeChatProtocol::HData &hda);
-    void _buffer_localvar_added(const WeeChatProtocol::HData &hda);
-    void _buffer_localvar_changed(const WeeChatProtocol::HData &hda);
-    void _buffer_localvar_removed(const WeeChatProtocol::HData &hda);
-    void _buffer_closing(const WeeChatProtocol::HData &hda);
-    void _buffer_cleared(const WeeChatProtocol::HData &hda);
-    void _buffer_line_added(const WeeChatProtocol::HData &hda);
-    void _nicklist(const WeeChatProtocol::HData &hda);
-    void _nicklist_diff(const WeeChatProtocol::HData &hda);
-    void _pong(const FormattedString &str);
+    void _buffer_opened(const WeeChatProtocol::HData& hda);
+    void _buffer_type_changed(const WeeChatProtocol::HData& hda);
+    void _buffer_moved(const WeeChatProtocol::HData& hda);
+    void _buffer_merged(const WeeChatProtocol::HData& hda);
+    void _buffer_unmerged(const WeeChatProtocol::HData& hda);
+    void _buffer_hidden(const WeeChatProtocol::HData& hda);
+    void _buffer_unhidden(const WeeChatProtocol::HData& hda);
+    void _buffer_renamed(const WeeChatProtocol::HData& hda);
+    void _buffer_title_changed(const WeeChatProtocol::HData& hda);
+    void _buffer_localvar_added(const WeeChatProtocol::HData& hda);
+    void _buffer_localvar_changed(const WeeChatProtocol::HData& hda);
+    void _buffer_localvar_removed(const WeeChatProtocol::HData& hda);
+    void _buffer_closing(const WeeChatProtocol::HData& hda);
+    void _buffer_cleared(const WeeChatProtocol::HData& hda);
+    void _buffer_line_added(const WeeChatProtocol::HData& hda);
+    void _nicklist(const WeeChatProtocol::HData& hda);
+    void _nicklist_diff(const WeeChatProtocol::HData& hda);
+    void _pong(const FormattedString& str);
 
 public:
-    const Buffer *getBuffer(pointer_t ptr) const;
-    const BufferLine *getLine(pointer_t bufPtr, pointer_t linePtr) const;
-    const HotListItem *getHotlist(pointer_t ptr) const;
+    const Buffer* getBuffer(pointer_t ptr) const;
+    const BufferLine* getLine(pointer_t bufPtr, pointer_t linePtr) const;
+    const HotListItem* getHotlist(pointer_t ptr) const;
 
 protected:
-    void addBuffer(pointer_t ptr, Buffer *b);
+    void addBuffer(pointer_t ptr, Buffer* b);
     void removeBuffer(pointer_t ptr);
-    Buffer *getBuffer(pointer_t ptr);
-    void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine *line, bool overwrite = false);
-    BufferLine *getLine(pointer_t bufPtr, pointer_t linePtr);
-    void addHotlist(pointer_t ptr, HotListItem *hotlist);
-    HotListItem *getHotlist(pointer_t ptr);
+    Buffer* getBuffer(pointer_t ptr);
+    void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine* line, bool overwrite = false);
+    BufferLine* getLine(pointer_t bufPtr, pointer_t linePtr);
+    void addHotlist(pointer_t ptr, HotListItem* hotlist);
+    HotListItem* getHotlist(pointer_t ptr);
 
 signals:
     void selectedBufferChanged();
@@ -166,22 +167,22 @@ signals:
     void pongReceived(qint64 id);
 
 private:
-    explicit Lith(QObject *parent = 0);
+    explicit Lith(QObject* parent = nullptr);
 
 #ifndef Q_OS_WASM
-    QThread *m_weechatThread { nullptr };
+    QThread* m_weechatThread {nullptr};
 #endif
-    BaseNetworkProxy *m_networkProxy { nullptr };
-    Weechat *m_weechat { nullptr };
-    QmlObjectList *m_buffers { nullptr };
-    ProxyBufferList *m_proxyBufferList { nullptr };
-    NickListFilter *m_selectedBufferNicks { nullptr };
-    MessageFilterList *m_messageBufferList { nullptr };
-    Logger *m_logger { nullptr };
-    FilteredLogger *m_filteredLogger { nullptr };
-    Search *m_search { nullptr };
-    NotificationHandler *m_notificationHandler { nullptr };
-    int m_selectedBufferIndex { -1 };
+    BaseNetworkProxy* m_networkProxy {nullptr};
+    Weechat* m_weechat {nullptr};
+    QmlObjectList* m_buffers {nullptr};
+    ProxyBufferList* m_proxyBufferList {nullptr};
+    NickListFilter* m_selectedBufferNicks {nullptr};
+    MessageFilterList* m_messageBufferList {nullptr};
+    Logger* m_logger {nullptr};
+    FilteredLogger* m_filteredLogger {nullptr};
+    Search* m_search {nullptr};
+    NotificationHandler* m_notificationHandler {nullptr};
+    int m_selectedBufferIndex {-1};
 
     QString m_lastNetworkError {};
     QString m_error {};
@@ -196,10 +197,9 @@ class ProxyBufferList : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, filterWord)
 public:
-    ProxyBufferList(QObject *parent = nullptr, QAbstractListModel *parentModel = nullptr);
+    ProxyBufferList(QObject* parent = nullptr, QAbstractListModel* parentModel = nullptr);
 
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const override;
 };
 
-
-#endif // LITH_H
+#endif  // LITH_H

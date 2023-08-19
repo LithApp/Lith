@@ -22,20 +22,18 @@
 #include <QMetaProperty>
 #include <QTimer>
 
-Settings::Settings(QObject *parent)
-    : QObject(parent)
-    , m_settings()
-{
+Settings::Settings(QObject* parent)
+    : QObject(parent) {
     // Code taken from qt-webassembly-examples
 
     // m_settings will be ready at some later point in time - when
     // QSettings::status() returns NoError. (apologies for the somewhat
     // convoluted std::function and lambda use below)
-    auto settingsReady = [this](){
-        auto mo = Settings::metaObject();
+    auto settingsReady = [this]() {
+        const auto* mo = Settings::metaObject();
         for (int i = 0; i < mo->propertyCount(); i++) {
             auto property = mo->property(i);
-            auto name = property.name();
+            const auto* name = property.name();
             auto defaultValue = property.read(this);
             auto settingsValue = m_settings.value(name, defaultValue);
             if (defaultValue != settingsValue) {
@@ -46,8 +44,8 @@ Settings::Settings(QObject *parent)
         m_ready = true;
         emit readyChanged();
     };
-    std::function<void(void)> *testSettingsReady = new std::function<void(void)>();
-    *testSettingsReady = [this, testSettingsReady, settingsReady](){
+    auto* testSettingsReady = new std::function<void(void)>();
+    *testSettingsReady = [this, testSettingsReady, settingsReady]() {
         if (m_settings.status() == QSettings::NoError) {
             settingsReady();
             delete testSettingsReady;
@@ -61,7 +59,7 @@ Settings::Settings(QObject *parent)
 void Settings::migrate() {
     // When migrating another variable, it may be possible to come up with a smarter way to do this.
     // I think checking that m_settings contains something that's not present in the metaobject should be enough
-    if (hotlistShowUnreadCountGet() == false) {
+    if (!hotlistShowUnreadCountGet()) {
         if (hotlistFormatGet() == c_hotlistDefaultFormat) {
             m_settings.remove("hotlistShowUnreadCount");
             m_settings.sync();
@@ -70,42 +68,52 @@ void Settings::migrate() {
     }
 }
 
-void Settings::saveNetworkSettings(const QString host, int port, bool encrypted, bool allowSelfSignedCertificates,
-                                   const QString &passphrase, bool handshakeAuth, bool connectionCompression,
-                                   bool useWebsockets, const QString &websocketsEndpoint) {
+void Settings::saveNetworkSettings(
+    const QString& host, int port, bool encrypted, bool allowSelfSignedCertificates, const QString& passphrase, bool handshakeAuth,
+    bool connectionCompression, bool useWebsockets, const QString& websocketsEndpoint
+) {
     bool changed = false;
 
-    if (hostSet(host))
+    if (hostSet(host)) {
         changed = true;
-    if (portSet(port))
+    }
+    if (portSet(port)) {
         changed = true;
-    if (encryptedSet(encrypted))
+    }
+    if (encryptedSet(encrypted)) {
         changed = true;
-    if (allowSelfSignedCertificatesSet(allowSelfSignedCertificates))
+    }
+    if (allowSelfSignedCertificatesSet(allowSelfSignedCertificates)) {
         changed = true;
-    if (!passphrase.isEmpty() && passphraseSet(passphrase))
+    }
+    if (!passphrase.isEmpty() && passphraseSet(passphrase)) {
         changed = true;
-    if (handshakeAuthSet(handshakeAuth))
+    }
+    if (handshakeAuthSet(handshakeAuth)) {
         changed = true;
-    if (connectionCompressionSet(connectionCompression))
+    }
+    if (connectionCompressionSet(connectionCompression)) {
         changed = true;
+    }
 #ifndef __EMSCRIPTEN__
-    if (useWebsocketsSet(useWebsockets))
+    if (useWebsocketsSet(useWebsockets)) {
         changed = true;
+    }
 #endif
-    if (websocketsEndpointSet(websocketsEndpoint))
+    if (websocketsEndpointSet(websocketsEndpoint)) {
         changed = true;
+    }
 
-    if (changed)
+    if (changed) {
         emit networkSettingsChanged();
+    }
 }
 
 bool Settings::isReady() const {
     return m_ready;
 }
 
-Settings *Settings::instance()
-{
+Settings* Settings::instance() {
     static Settings self;
     return &self;
 }

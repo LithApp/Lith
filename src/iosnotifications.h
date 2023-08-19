@@ -4,4 +4,4 @@
 void iosRegisterForNotifications();
 void iosUnregisterForNotifications();
 
-#endif // IOSNOTIFICATIONS_H
+#endif  // IOSNOTIFICATIONS_H

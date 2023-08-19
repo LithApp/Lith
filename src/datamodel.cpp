@@ -28,13 +28,12 @@
 #include <QXmlStreamReader>
 #include <QDomDocument>
 
-Buffer::Buffer(Lith *parent, pointer_t pointer)
+Buffer::Buffer(Lith* parent, pointer_t pointer)
     : QObject(parent)
     , m_lines(QmlObjectList::create<BufferLine>(this))
     , m_nicks(QmlObjectList::create<Nick>(this))
     , m_proxyLinesFiltered(new MessageFilterList(this, m_lines))
-    , m_ptr(pointer)
-{
+    , m_ptr(pointer) {
     connect(this, &Buffer::hotMessagesChanged, this, &Buffer::totalUnreadMessagesChanged);
     connect(this, &Buffer::unreadMessagesChanged, this, &Buffer::totalUnreadMessagesChanged);
 }
@@ -44,15 +43,15 @@ Buffer::~Buffer() {
     m_lines->clear();
 }
 
-Lith *Buffer::lith() {
+Lith* Buffer::lith() {
     return qobject_cast<Lith*>(parent());
 }
 
-void Buffer::prependLine(BufferLine *line) {
+void Buffer::prependLine(BufferLine* line) {
     m_lines->prepend(line);
 }
 
-void Buffer::appendLine(BufferLine *line) {
+void Buffer::appendLine(BufferLine* line) {
     m_lines->append(line);
 }
 
@@ -60,14 +59,14 @@ FormattedString Buffer::titleGet() const {
     return m_title;
 }
 
-void Buffer::titleSet(const FormattedString &o) {
+void Buffer::titleSet(const FormattedString& o) {
     if (m_title != o) {
         m_title = o;
         emit titleChanged();
     }
 }
 
-bool Buffer::isAfterInitialFetch() {
+bool Buffer::isAfterInitialFetch() const {
     return m_afterInitialFetch;
 }
 
@@ -75,17 +74,17 @@ pointer_t Buffer::ptr() const {
     return m_ptr;
 }
 
-QmlObjectList *Buffer::lines() {
+QmlObjectList* Buffer::lines() {
     return m_lines;
 }
 
-QmlObjectList *Buffer::nicks() {
+QmlObjectList* Buffer::nicks() {
     return m_nicks;
 }
 
-Nick *Buffer::getNick(pointer_t ptr) {
+Nick* Buffer::getNick(pointer_t ptr) {
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto* n = m_nicks->get<Nick>(i);
         if (n && n->ptrGet() == ptr) {
             return n;
         }
@@ -101,7 +100,7 @@ Nick *Buffer::getNick(pointer_t ptr) {
     */
 }
 
-void Buffer::addNick(pointer_t ptr, Nick *nick) {
+void Buffer::addNick(pointer_t ptr, Nick* nick) {
     nick->ptrSet(ptr);
     m_nicks->append(nick);
     emit nicksChanged();
@@ -109,7 +108,7 @@ void Buffer::addNick(pointer_t ptr, Nick *nick) {
 
 void Buffer::removeNick(pointer_t ptr) {
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto* n = m_nicks->get<Nick>(i);
         if (n && n->ptrGet() == ptr) {
             m_nicks->removeRow(i);
             emit nicksChanged();
@@ -126,9 +125,9 @@ void Buffer::clearNicks() {
 QStringList Buffer::getVisibleNicks() {
     QStringList result;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto nick = m_nicks->get<Nick>(i);
+        auto* nick = m_nicks->get<Nick>(i);
         if (nick && nick->visibleGet() && nick->levelGet() == 0) {
-            result.append(nick->nameGet());
+            result.append(QString {nick->nameGet()});
         }
     }
     return result;
@@ -137,10 +136,13 @@ QStringList Buffer::getVisibleNicks() {
 int Buffer::normalsGet() const {
     int total = 0;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto* n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'> </span></body></html>")
+            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() ==
+                                                          "<html><body><span style='white-space: pre-wrap;'> "
+                                                          "</span></body></html>") {
                 total++;
+            }
         }
     }
     return total;
@@ -149,10 +151,11 @@ int Buffer::normalsGet() const {
 int Buffer::voicesGet() const {
     int total = 0;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto* n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>+</span></body></html>")
+            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>+</span></body></html>") {
                 total++;
+            }
         }
     }
     return total;
@@ -161,10 +164,11 @@ int Buffer::voicesGet() const {
 int Buffer::opsGet() const {
     int total = 0;
     for (int i = 0; i < m_nicks->count(); i++) {
-        auto n = m_nicks->get<Nick>(i);
+        auto* n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>@</span></body></html>")
+            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>@</span></body></html>") {
                 total++;
+            }
         }
     }
     return total;
@@ -194,13 +198,14 @@ int Buffer::totalUnreadMessagesGet() const {
     return hotMessagesGet() + unreadMessagesGet();
 }
 
-MessageFilterList *Buffer::lines_filtered() {
+MessageFilterList* Buffer::lines_filtered() {
     return m_proxyLinesFiltered;
 }
 
-bool Buffer::input(const QString &data) {
-    if (!m_ptr)
+bool Buffer::input(const QString& data) const {
+    if (!m_ptr) {
         return false;
+    }
 
     static QRegularExpression inputRegularExpression("\n|\r\n|\r");
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
@@ -209,8 +214,11 @@ bool Buffer::input(const QString &data) {
 
         auto data_split = data.split(inputRegularExpression);
 
-        for (auto &data_single_line : data_split) {
-            QMetaObject::invokeMethod(Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr), Q_ARG(QString, data_single_line));
+        for (auto& data_single_line : data_split) {
+            QMetaObject::invokeMethod(
+                Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr),
+                Q_ARG(QString, data_single_line)
+            );
             success_list.append(success);
         }
         return !success_list.contains(false);
@@ -220,11 +228,12 @@ bool Buffer::input(const QString &data) {
 
 void Buffer::fetchMoreLines() {
     m_afterInitialFetch = true;
-    if (!m_ptr)
+    if (!m_ptr) {
         return;
+    }
     if (m_lines->count() >= m_lastRequestedCount) {
         QMetaObject::invokeMethod(Lith::instance()->weechat(), "fetchLines", Q_ARG(pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25));
-        //Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
+        // Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
         m_lastRequestedCount = m_lines->count() + 25;
     }
 }
@@ -235,27 +244,24 @@ void Buffer::clearHotlist() {
     hotMessagesSet(0);
 }
 
-BufferLine::BufferLine(Buffer *parent)
-    : QObject(parent)
-{
+BufferLine::BufferLine(Buffer* parent)
+    : QObject(parent) {
     // connections to changed signals are required because FormattedString isn't directly connected to signals that can directly modify it
     // having it here results in fewer connections and that means lower cpu load when the signals are fired
-    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
-    connect(Lith::instance()->settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
+    connect(Lith::settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
+    connect(Lith::settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
     connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::messageChanged);
     connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::prefixChanged);
 }
 
-BufferLine::~BufferLine() {
-}
-
-Buffer *BufferLine::buffer() {
+Buffer* BufferLine::buffer() {
     return qobject_cast<Buffer*>(parent());
 }
 
-Lith *BufferLine::lith() {
-    if (buffer())
+Lith* BufferLine::lith() {
+    if (buffer()) {
         return buffer()->lith();
+    }
     return nullptr;
 }
 
@@ -267,14 +273,13 @@ FormattedString BufferLine::prefixGet() const {
     return m_prefix;
 }
 
-void BufferLine::prefixSet(const FormattedString &o) {
+void BufferLine::prefixSet(const FormattedString& o) {
     if (m_prefix != o) {
         m_prefix = o;
         // TODO this is probably wrong
         if (m_prefix.toPlain().startsWith("@") || m_prefix.toPlain().startsWith("+")) {
             m_nick = m_prefix.toPlain().mid(1);
-        }
-        else {
+        } else {
             m_nick = m_prefix.toPlain();
         }
         emit prefixChanged();
@@ -289,7 +294,7 @@ FormattedString BufferLine::messageGet() const {
     return m_message;
 }
 
-void BufferLine::messageSet(const FormattedString &o) {
+void BufferLine::messageSet(const FormattedString& o) {
     if (m_message != o) {
         m_message = o;
         emit messageChanged();
@@ -302,8 +307,9 @@ bool BufferLine::isSelfMsgGet() {
 
 QColor BufferLine::nickColorGet() const {
     // TODO this is suspicious at best
-    if (m_prefix.count() > 2)
+    if (m_prefix.count() > 2) {
         return m_prefix.at(2).foreground.toQColor(Lith::instance()->windowHelperGet()->inverseTheme());
+    }
     return QColor();
 }
 
@@ -320,56 +326,54 @@ QString BufferLine::colorlessNicknameGet() {
 }
 
 QString BufferLine::colorlessTextGet() {
-    auto messageStripped = QTextDocumentFragment::fromHtml(m_message).toPlainText();
+    auto messageStripped = QTextDocumentFragment::fromHtml(QString {m_message}).toPlainText();
     return messageStripped;
 }
 
-QObject *BufferLine::bufferGet() {
+QObject* BufferLine::bufferGet() {
     return parent();
 }
 
-bool BufferLine::searchCompare(const QString &term) {
+bool BufferLine::searchCompare(const QString& term) {
     // TODO search parameters, case insensitive and nick+message always
-    if (term.isEmpty())
+    if (term.isEmpty()) {
         return true;
-    if (!Lith::instance()->settingsGet()->showJoinPartQuitMessagesGet() && isJoinPartQuitMsgGet())
+    }
+    if (!Lith::settingsGet()->showJoinPartQuitMessagesGet() && isJoinPartQuitMsgGet()) {
         return false;
+    }
     auto lowerTerm = term.toLower();
-    if (m_prefix.toPlain().toLower().contains(lowerTerm))
+    if (m_prefix.toPlain().toLower().contains(lowerTerm)) {
         return true;
-    if (m_message.toPlain().toLower().contains(lowerTerm))
+    }
+    if (m_message.toPlain().toLower().contains(lowerTerm)) {
         return true;
-    if (m_date.toString(Lith::instance()->settingsGet()->timestampFormatGet()).contains(lowerTerm))
+    }
+    if (m_date.toString(Lith::settingsGet()->timestampFormatGet()).contains(lowerTerm)) {
         return true;
+    }
     return false;
 }
 
-Nick::Nick(Buffer *parent)
-    : QObject(parent)
-{
-
+Nick::Nick(Buffer* parent)
+    : QObject(parent) {
 }
 
-Nick::~Nick() {
-}
-
-QString Nick::colorlessName() const
-{
+QString Nick::colorlessName() const {
     return m_name.toPlain();
 }
 
-HotListItem::HotListItem(QObject *parent)
-    : QObject(parent)
-{
+HotListItem::HotListItem(QObject* parent)
+    : QObject(parent) {
     connect(this, &HotListItem::countChanged, this, &HotListItem::onCountChanged);
     connect(this, &HotListItem::bufferChanged, this, &HotListItem::onCountChanged);
 }
 
-Buffer *HotListItem::bufferGet() {
+Buffer* HotListItem::bufferGet() {
     return m_buffer;
 }
 
-void HotListItem::bufferSet(Buffer *o) {
+void HotListItem::bufferSet(Buffer* o) {
     if (m_buffer != o) {
         m_buffer = o;
         emit bufferChanged();
@@ -381,12 +385,10 @@ void HotListItem::onCountChanged() {
         if (countGet().count() >= 3) {
             bufferGet()->hotMessagesSet(countGet()[2]);
             bufferGet()->unreadMessagesSet(countGet()[1]);
-        }
-        else if (countGet().count() >= 2) {
+        } else if (countGet().count() >= 2) {
             bufferGet()->hotMessagesSet(0);
             bufferGet()->unreadMessagesSet(countGet()[1]);
-        }
-        else {
+        } else {
             bufferGet()->hotMessagesSet(0);
             bufferGet()->unreadMessagesSet(0);
         }

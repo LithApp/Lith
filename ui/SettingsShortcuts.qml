@@ -25,13 +25,7 @@ ScrollView {
     clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
-    function onAccepted() {
-        save()
-    }
     function save() {
-    }
-    function onRejected() {
-        restore()
     }
     function restore() {
     }

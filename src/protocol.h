@@ -31,7 +31,7 @@ namespace WeeChatProtocol {
     struct HData {
         struct Item {
             QList<Pointer> pointers;
-            QMap<QString,QVariant> objects;
+            QMap<QString, QVariant> objects;
         };
 
         QStringList keys;
@@ -43,26 +43,26 @@ namespace WeeChatProtocol {
     using ArrayInt = QList<int>;
     using ArrayStr = QStringList;
 
-    template <typename T> T parse(QDataStream &s, bool canContainHtml, bool *ok = nullptr);
-    template <typename T> T parse(QDataStream &s, bool *ok = nullptr);
+    template <typename T> T parse(QDataStream& s, bool canContainHtml, bool* ok = nullptr);
+    template <typename T> T parse(QDataStream& s, bool* ok = nullptr);
 
-    template <> Char parse(QDataStream &s, bool *ok);
-    template <> Integer parse(QDataStream &s, bool *ok);
-    template <> LongInteger parse(QDataStream &s, bool *ok);
-    template <> String parse(QDataStream &s, bool canContainHTML, bool *ok);
-    template <> String parse(QDataStream &s, bool *ok);
-    template <> Buffer parse(QDataStream &s, bool *ok);
-    template <> Pointer parse(QDataStream &s, bool *ok);
-    template <> Time parse(QDataStream &s, bool *ok);
-    template <> HashTable parse(QDataStream &s, bool *ok);
-    template <> HData parse(QDataStream &s, bool *ok);
-    template <> ArrayInt parse(QDataStream &s, bool *ok);
-    template <> ArrayStr parse(QDataStream &s, bool *ok);
+    template <> Char parse(QDataStream& s, bool* ok);
+    template <> Integer parse(QDataStream& s, bool* ok);
+    template <> LongInteger parse(QDataStream& s, bool* ok);
+    template <> String parse(QDataStream& s, bool canContainHTML, bool* ok);
+    template <> String parse(QDataStream& s, bool* ok);
+    template <> Buffer parse(QDataStream& s, bool* ok);
+    template <> Pointer parse(QDataStream& s, bool* ok);
+    template <> Time parse(QDataStream& s, bool* ok);
+    template <> HashTable parse(QDataStream& s, bool* ok);
+    template <> HData parse(QDataStream& s, bool* ok);
+    template <> ArrayInt parse(QDataStream& s, bool* ok);
+    template <> ArrayStr parse(QDataStream& s, bool* ok);
 
-    FormattedString convertColorsToHtml(const QByteArray &data, bool canContainHTML);
-};
+    FormattedString convertColorsToHtml(const QByteArray& data, bool canContainHTML);
+};  // namespace WeeChatProtocol
 
 Q_DECLARE_METATYPE(WeeChatProtocol::HData);
 Q_DECLARE_METATYPE(WeeChatProtocol::HData*);
 
-#endif // PROTOCOL_H
+#endif  // PROTOCOL_H

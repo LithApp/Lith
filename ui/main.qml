@@ -77,6 +77,36 @@ ApplicationWindow {
         }
     }
 
+    onActiveChanged: {
+        if (active && lith.debugVersion && platform.desktop)
+            debugWindowLoader.item.raise()
+    }
+
+    Loader {
+        id: debugWindowLoader
+        active: lith.debugVersion && platform.desktop
+        source: "util/DebugWindow.qml"
+        property bool firstLoadX: true
+        property bool firstLoadY: true
+        onLoaded: {
+            item.x = window.x + window.width
+            item.y = window.y
+            item.raise()
+        }
+        Connections {
+            target: window
+            enabled: debugWindowLoader.firstLoadX || debugWindowLoader.firstLoadY
+            function onXChanged() {
+                debugWindowLoader.item.x = window.x + window.width
+                debugWindowLoader.firstLoadX = false
+            }
+            function onYChanged() {
+                debugWindowLoader.item.y = window.y
+                debugWindowLoader.firstLoadY = false
+            }
+        }
+    }
+
     SystemPalette {
         id: palette
     }

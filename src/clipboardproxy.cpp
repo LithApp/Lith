@@ -25,17 +25,15 @@
 
 #include "iosclipboard.h"
 
-
-ClipboardProxy::ClipboardProxy(QObject *parent)
+ClipboardProxy::ClipboardProxy(QObject* parent)
     : QObject(parent)
-    , m_clipboard(QApplication::clipboard())
-{
+    , m_clipboard(QApplication::clipboard()) {
 }
 
 bool ClipboardProxy::hasImage() {
 #ifdef Q_OS_IOS
     return iosHasImage();
-#else // not iOS
+#else  // not iOS
     return m_clipboard->mimeData()->hasImage();
 #endif
 }
@@ -44,23 +42,22 @@ QString ClipboardProxy::text() {
 #ifdef Q_OS_IOS
     if (iosHasUrl()) {
         return getIosUrl();
-    }
-    else {
+    } else {
         return m_clipboard->text();
     }
-#else // not iOS
+#else  // not iOS
     return m_clipboard->text();
 #endif
 }
 
-QImage ClipboardProxy::image() {    
+QImage ClipboardProxy::image() {
 #ifdef Q_OS_IOS
     return getIosImage();
-#else // not iOS
+#else  // not iOS
     return m_clipboard->image();
 #endif
 }
 
-void ClipboardProxy::setText(const QString &text) {
+void ClipboardProxy::setText(const QString& text) {
     m_clipboard->setText(text);
 }

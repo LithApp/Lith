@@ -50,14 +50,14 @@ class Nick : public QObject {
 
     Q_PROPERTY(QString colorlessName READ colorlessName NOTIFY nameChanged)
 public:
-    Nick(Buffer *parent = nullptr);
-    virtual ~Nick();
+    explicit Nick(Buffer* parent = nullptr);
 
     QString colorlessName() const;
 };
 
 class Buffer : public QObject {
     Q_OBJECT
+    Q_DISABLE_COPY_MOVE(Buffer)
     Q_PROPERTY(pointer_t ptr READ ptr NOTIFY ptrChanged)
     PROPERTY(int, number, 0)
     PROPERTY(FormattedString, name)
@@ -72,8 +72,8 @@ class Buffer : public QObject {
     Q_PROPERTY(int totalUnreadMessages READ totalUnreadMessagesGet NOTIFY totalUnreadMessagesChanged)
 
     Q_PROPERTY(MessageFilterList* lines_filtered READ lines_filtered CONSTANT)
-    Q_PROPERTY(QmlObjectList *lines READ lines CONSTANT)
-    Q_PROPERTY(QmlObjectList *nicks READ nicks CONSTANT)
+    Q_PROPERTY(QmlObjectList* lines READ lines CONSTANT)
+    Q_PROPERTY(QmlObjectList* nicks READ nicks CONSTANT)
     Q_PROPERTY(int normals READ normalsGet NOTIFY nicksChanged)
     Q_PROPERTY(int voices READ voicesGet NOTIFY nicksChanged)
     Q_PROPERTY(int ops READ opsGet NOTIFY nicksChanged)
@@ -83,25 +83,25 @@ class Buffer : public QObject {
 
     PROPERTY(QString, lastUserInput, "")
 public:
-    Buffer(Lith *parent, pointer_t pointer);
-    virtual ~Buffer();
+    Buffer(Lith* parent, pointer_t pointer);
+    ~Buffer() override;
 
-    Lith *lith();
+    Lith* lith();
 
-    //BufferLine *getLine(pointer_t ptr);
-    void prependLine(BufferLine *line);
-    void appendLine(BufferLine *line);
+    // BufferLine *getLine(pointer_t ptr);
+    void prependLine(BufferLine* line);
+    void appendLine(BufferLine* line);
 
     FormattedString titleGet() const;
-    void titleSet(const FormattedString &o);
+    void titleSet(const FormattedString& o);
 
-    bool isAfterInitialFetch();
+    bool isAfterInitialFetch() const;
 
     pointer_t ptr() const;
-    QmlObjectList *lines();
-    QmlObjectList *nicks();
-    MessageFilterList *lines_filtered();
-    Q_INVOKABLE Nick *getNick(pointer_t ptr);
+    QmlObjectList* lines();
+    QmlObjectList* nicks();
+    MessageFilterList* lines_filtered();
+    Q_INVOKABLE Nick* getNick(pointer_t ptr);
     void addNick(pointer_t ptr, Nick* nick);
     void removeNick(pointer_t ptr);
     void clearNicks();
@@ -124,17 +124,17 @@ signals:
     void ptrChanged();
 
 public slots:
-    bool input(const QString &data);
+    bool input(const QString& data) const;
     void fetchMoreLines();
     void clearHotlist();
 
 private:
-    QmlObjectList *m_lines { nullptr };
-    QmlObjectList *m_nicks { nullptr };
-    MessageFilterList *m_proxyLinesFiltered { nullptr };
+    QmlObjectList* m_lines {nullptr};
+    QmlObjectList* m_nicks {nullptr};
+    MessageFilterList* m_proxyLinesFiltered {nullptr};
     pointer_t m_ptr = 0;
-    bool m_afterInitialFetch { false };
-    int m_lastRequestedCount { 0 };
+    bool m_afterInitialFetch {false};
+    int m_lastRequestedCount {0};
     FormattedString m_title {};
 };
 
@@ -156,23 +156,22 @@ class BufferLine : public QObject {
     Q_PROPERTY(bool isSelfMsg READ isSelfMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(QColor nickColor READ nickColorGet NOTIFY messageChanged)
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
-    Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged) // used here because segments is already chopped up
-    Q_PROPERTY(QObject *buffer READ bufferGet CONSTANT)
+    Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged)  // used here because segments is already chopped up
+    Q_PROPERTY(QObject* buffer READ bufferGet CONSTANT)
 public:
-    BufferLine(Buffer *parent);
-    virtual ~BufferLine();
+    explicit BufferLine(Buffer* parent);
 
-    Buffer *buffer();
-    Lith *lith();
+    Buffer* buffer();
+    Lith* lith();
 
-    void setParent(Buffer *parent);
+    void setParent(Buffer* parent);
 
     QString dateString() const;
     FormattedString prefixGet() const;
-    void prefixSet(const FormattedString &o);
+    void prefixSet(const FormattedString& o);
     QString nickGet() const;
     FormattedString messageGet() const;
-    void messageSet(const FormattedString &o);
+    void messageSet(const FormattedString& o);
 
     bool isJoinPartQuitMsgGet();
     bool isPrivMsgGet();
@@ -181,7 +180,7 @@ public:
     QString colorlessNicknameGet();
     QString colorlessTextGet();
 
-    QObject *bufferGet();
+    QObject* bufferGet();
 
     Q_INVOKABLE bool searchCompare(const QString& term);
 
@@ -202,10 +201,10 @@ class HotListItem : public QObject {
     PROPERTY(QList<int>, count)
     Q_PROPERTY(Buffer* buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)
 public:
-    HotListItem(QObject *parent = nullptr);
+    explicit HotListItem(QObject* parent = nullptr);
 
-    Buffer *bufferGet();
-    void bufferSet(Buffer *o);
+    Buffer* bufferGet();
+    void bufferSet(Buffer* o);
 
 signals:
     void bufferChanged();
@@ -216,4 +215,4 @@ private slots:
 private:
     QPointer<Buffer> m_buffer;
 };
-#endif // DATAMODEL_H
+#endif  // DATAMODEL_H

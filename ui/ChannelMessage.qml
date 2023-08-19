@@ -24,7 +24,6 @@ import lith 1.0
 Item {
     id: root
     z: index
-    width: ListView.view.width // + timeMetrics.width
     property var messageModel: null
     //property var previousMessageModel: ListView.view.contentItem.children[index-1].messageModel
     //property var nextMessageModel: ListView.view.contentItem.children[index+1].messageModel
@@ -51,7 +50,7 @@ Item {
         pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
         hoverEnabled: true
         acceptedButtons: (window.platform.mobile ? Qt.LeftButton : 0) | Qt.RightButton
-        cursorShape: messageText.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.IBeamCursor
+        cursorShape: messageText.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
         onPressAndHold: {
             channelMessageActionMenu.show(messageModel)
         }

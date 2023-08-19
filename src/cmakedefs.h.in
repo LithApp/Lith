@@ -9,4 +9,6 @@
 #define COMMIT_HASH "${COMMIT_HASH}"
 #define GIT_STATE "${GIT_STATE}"
 
+#define CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}"
+
 #endif // CMAKEDEFS_H_IN
