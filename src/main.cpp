@@ -52,9 +52,6 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    engine.addImportPath("qrc:///");
-    engine.addImportPath(":/qt/qml/LithUI");
-    engine.addImportPath(":/qt/qml/LithStyle");
     QQuickStyle::setStyle("Lith.Style");
 
     // Register types
