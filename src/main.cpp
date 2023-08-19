@@ -39,7 +39,7 @@
 #include <QtQml/qqmlextensionplugin.h>
 // NOLINTSTART
 Q_IMPORT_QML_PLUGIN(LithUIPlugin)
-Q_IMPORT_QML_PLUGIN(LithStylePlugin)
+Q_IMPORT_QML_PLUGIN(Lith_StylePlugin)
 // NOLINTEND
 
 int main(int argc, char* argv[]) {
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     engine.addImportPath("qrc:///");
     engine.addImportPath(":/qt/qml/LithUI");
     engine.addImportPath(":/qt/qml/LithStyle");
-    QQuickStyle::setStyle("LithStyle");
+    QQuickStyle::setStyle("Lith.Style");
 
     // Register types
     qRegisterMetaType<StringMap>();

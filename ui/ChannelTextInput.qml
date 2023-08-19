@@ -19,7 +19,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import Lith.Core
-import LithStyle
+import Lith.Style
 
 TextField {
     id: inputField

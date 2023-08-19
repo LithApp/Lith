@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
-import LithStyle
+import Lith.Style
 
 // Had to use a wrapper Item to enforce parent layout boundaries... shouldn't be necessary, really, but I probably made a mistake in some higher level
 Item {

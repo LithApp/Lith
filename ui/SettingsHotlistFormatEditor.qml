@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 import "SettingsFields" as Fields
 import Lith.Core
-import LithStyle
+import Lith.Style
 
 Dialog {
     id: root

@@ -19,7 +19,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import LithStyle
+import Lith.Style
 
 Dialog {
     id: root

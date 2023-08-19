@@ -17,10 +17,10 @@ set(LITHSTYLE_QML
 
 qt_add_qml_module(LithStyle
     STATIC
-    URI LithStyle
+    URI Lith.Style
     VERSION 1.0
     QML_FILES ${LITHSTYLE_QML}
-    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/imports/LithStyle
+    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/imports/Lith/Style
 )
 
 set(QML_IMPORT_PATH ${QML_IMPORT_PATH} ${CMAKE_CURRENT_SOURCE_DIR} CACHE STRING "" FORCE)

@@ -19,7 +19,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
-import LithStyle
+import Lith.Style
 
 Drawer {
     id: root
