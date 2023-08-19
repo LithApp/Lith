@@ -58,11 +58,6 @@ int main(int argc, char* argv[]) {
     QQuickStyle::setStyle("Lith.Style");
 
     // Register types
-    qRegisterMetaType<StringMap>();
-    qRegisterMetaType<WeeChatProtocol::HData>();
-    qRegisterMetaType<WeeChatProtocol::HData*>();
-    qRegisterMetaType<FormattedString>();
-    qRegisterMetaType<WeeChatProtocol::String>();
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {
         if (s.containsHtml()) {
             if (Lith::instance()->windowHelperGet()->lightThemeGet()) {
