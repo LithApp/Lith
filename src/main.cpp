@@ -38,7 +38,7 @@
 
 #include <QtQml/qqmlextensionplugin.h>
 // NOLINTSTART
-Q_IMPORT_QML_PLUGIN(LithUIPlugin)
+Q_IMPORT_QML_PLUGIN(Lith_UIPlugin)
 Q_IMPORT_QML_PLUGIN(Lith_StylePlugin)
 // NOLINTEND
 
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
     app.setFont(font, "monospace");
 
     // Start the engine
-    engine.load(QUrl(QLatin1String("qrc:/qt/qml/LithUI/main.qml")));
+    engine.load(QUrl(QLatin1String("qrc:/qt/qml/Lith/UI/main.qml")));
 
     QPixmap iconPixmap(":/icon.png");
     // Xorg didn't like the original 2k icon
