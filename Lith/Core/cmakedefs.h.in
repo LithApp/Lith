@@ -1,0 +1,25 @@
+#ifndef CMAKEDEFS_H_IN
+#define CMAKEDEFS_H_IN
+
+#define PROJECT_VERSION "${PROJECT_VERSION}"
+#define PROJECT_VERSION_MAJOR \
+    $ {                       \
+        PROJECT_VERSION_MAJOR \
+    }
+#define PROJECT_VERSION_MINOR \
+    $ {                       \
+        PROJECT_VERSION_MINOR \
+    }
+#define PROJECT_VERSION_PATCH \
+    $ {                       \
+        PROJECT_VERSION_PATCH \
+    }
+
+#define COMMIT_HASH "${COMMIT_HASH}"
+#define GIT_STATE "${GIT_STATE}"
+
+#define CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}"
+
+#define IMGUR_API_KEY "${IMGUR_API_KEY}"
+
+#endif  // CMAKEDEFS_H_IN

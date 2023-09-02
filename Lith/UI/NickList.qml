@@ -71,7 +71,7 @@ Drawer {
             horizontalAlignment: Label.AlignHCenter
             Layout.fillWidth: true
             text: Lith.selectedBuffer ? Lith.selectedBuffer.full_name : ""
-            size: Label.Medium
+            font.pointSize: FontSizes.medium
             color: palette.windowText
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
@@ -100,7 +100,7 @@ Drawer {
             horizontalAlignment: Label.AlignHCenter
             visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
             text: Lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(Lith.selectedBuffer.normals).arg(Lith.selectedBuffer.voices).arg(Lith.selectedBuffer.ops).arg(Lith.selectedBuffer.normals + Lith.selectedBuffer.voices + Lith.selectedBuffer.ops) : ""
-            size: Label.Tiny
+            font.pointSize: FontSizes.tiny
             color: palette.windowText
             opacity: 0.7
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
@@ -116,13 +116,13 @@ Drawer {
             Label {
                 Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                size: Label.Tiny
+                font.pointSize: FontSizes.tiny
                 text: "Number: " + (Lith.selectedBuffer ? Lith.selectedBuffer.number : "N/A")
             }
             Label {
                 Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                size: Label.Tiny
+                font.pointSize: FontSizes.tiny
                 text: "Pointer: " + (Lith.selectedBuffer ? "0x" + Lith.selectedBuffer.ptr.toString(16) : "N/A")
             }
             Repeater {
@@ -130,7 +130,7 @@ Drawer {
                 Label {
                     Layout.fillWidth: true
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    size: Label.Tiny
+                    font.pointSize: FontSizes.tiny
                     text: modelData
                 }
             }

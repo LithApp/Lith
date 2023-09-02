@@ -21,7 +21,7 @@
 #include "common.h"
 #include "qmlobjectlist.h"
 #include "protocol.h"
-#include "util/messagelistfilter.h"
+#include "messagelistfilter.h"
 
 #include <QObject>
 #include <QDateTime>

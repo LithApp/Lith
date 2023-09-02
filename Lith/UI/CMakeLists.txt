@@ -34,23 +34,37 @@ set(LITH_QML
     SettingsInterface.qml
     SettingsNetwork.qml
     SettingsShortcuts.qml
-    main.qml
     util/DebugWindow.qml
     util/PaletteSwitch.qml
 )
 
+qt_add_library(LithUI STATIC)
 qt_add_qml_module(LithUI
-    STATIC
     URI Lith.UI
     VERSION 1.0
     QML_FILES ${LITH_QML}
-    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/imports/Lith/UI
+    IMPORTS QtMultimedia
 )
+qt_import_qml_plugins(LithUI)
 
-set(QML_IMPORT_PATH ${QML_IMPORT_PATH} ${CMAKE_CURRENT_SOURCE_DIR} CACHE STRING "" FORCE)
+if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    # This is a workaround, Qt doesn't include this plugin automatically for us
+    qt_import_plugins(LithUI INCLUDE Qt::QIosOptionalPlugin_NSPhotoLibraryPlugin )
+endif()
+
+target_link_libraries(LithUI PRIVATE
+    LithCore
+    Qt::Qml
+    Qt::Quick
+    Qt::Multimedia
+    Qt::QuickControls2
+    Qt::QuickLayouts
+    Qt::QuickDialogs2
+    Qt::QuickTemplates2
+)
 
 install(TARGETS LithUI
     BUNDLE DESTINATION ..
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
+)

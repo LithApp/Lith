@@ -49,15 +49,14 @@ endif()
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-set(QML_IMPORT_PATH ${QML_IMPORT_PATH} ${CMAKE_BINARY_DIR}/imports CACHE STRING "" FORCE)
-
 add_subdirectory(assets)
-add_subdirectory(style)
-add_subdirectory(ui)
-add_subdirectory(src)
+add_subdirectory(Lith/Style)
+add_subdirectory(Lith/UI)
+add_subdirectory(Lith/Core)
+add_subdirectory(Lith/Lith)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dist/linux/app.lith.Lith.appdata.xml DESTINATION share/metainfo)
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dist/linux/app.lith.Lith.desktop DESTINATION share/applications)
-    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/linux/hicolor DESTINATION share/icons)
+    install(FILES ${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.appdata.xml DESTINATION share/metainfo)
+    install(FILES ${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.desktop DESTINATION share/applications)
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/icons/linux/hicolor DESTINATION share/icons)
 endif()

@@ -314,7 +314,6 @@ ScrollView {
                             Button {
                                 id: saveToDocumentsButton
                                 visible: !beingRecorded
-                                minimumWidth: 0
                                 font.pointSize: Lith.settings.baseFontSize * 0.875
                                 horizontalPadding: 8
                                 verticalPadding: 2
@@ -328,7 +327,6 @@ ScrollView {
                                 id: deleteRecordingButton
                                 visible: !beingRecorded
                                 Layout.leftMargin: 4
-                                minimumWidth: 0
                                 Layout.preferredHeight: Math.max(deleteRecordingButton.implicitHeight, saveToDocumentsButton.implicitHeight)
                                 font.pointSize: Lith.settings.baseFontSize * 0.875
                                 horizontalPadding: 8

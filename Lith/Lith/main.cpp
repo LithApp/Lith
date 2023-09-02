@@ -14,15 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
-#include "weechat.h"
-#include "uploader.h"
-#include "clipboardproxy.h"
-#include "datamodel.h"
 #include "settings.h"
 #include "lith.h"
 #include "windowhelper.h"
-#include "util/formatstringsplitter.h"
-#include "util/reflection.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -40,6 +34,7 @@
 // NOLINTSTART
 Q_IMPORT_QML_PLUGIN(Lith_UIPlugin)
 Q_IMPORT_QML_PLUGIN(Lith_StylePlugin)
+Q_IMPORT_QML_PLUGIN(Lith_CorePlugin)
 // NOLINTEND
 
 int main(int argc, char* argv[]) {
@@ -52,6 +47,7 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    engine.addImportPath(QStringLiteral(":/"));
 
     // Register types
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {
@@ -87,7 +83,7 @@ int main(int argc, char* argv[]) {
     app.setFont(font, "monospace");
 
     // Start the engine
-    engine.load(QUrl(QLatin1String("qrc:/qt/qml/Lith/UI/main.qml")));
+    engine.load(QUrl(QLatin1String("qrc:/qt/qml/Lith/Lith/main.qml")));
 
     QPixmap iconPixmap(":/icon.png");
     // Xorg didn't like the original 2k icon

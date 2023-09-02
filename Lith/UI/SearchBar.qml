@@ -112,12 +112,12 @@ Item {
             Label {
                 id: totalCountLabel
                 visible: resultsMetrics.width * 3.5 < rootLayout.width
-                size: Label.Small
+                font.pointSize: FontSizes.small
                 text: qsTr("Total: %1 lines").arg(Lith.selectedBuffer ? Lith.selectedBuffer.lines.count : "N/A")
                 opacity: 0.7
             }
             Label {
-                size: Label.Small
+                font.pointSize: FontSizes.small
                 visible: resultsMetrics.width * 3.5 < rootLayout.width
                 text: search.term.length === 0 ? qsTr("Start typing to search")
                                                : search.highlightedMatchIndex >= 0 ? qsTr("Showing match %1 of %2").arg(search.highlightedMatchIndex + 1).arg(search.matches.length)

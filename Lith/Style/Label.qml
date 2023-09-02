@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Templates as T
 
 import Lith.Core
+import Lith.Style
 
 T.Label {
     enum Size {
@@ -31,5 +32,6 @@ T.Label {
         case Label.Header:
             return Lith.settings.baseFontSize * 1.375
         }
+        return Lith.settings.baseFontSize
     }
 }

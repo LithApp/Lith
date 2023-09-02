@@ -20,6 +20,7 @@
 #define SETTINGS_H
 
 #include "common.h"
+#include "defs/cmakedefs.h"
 #include <QSettings>
 #include <QDebug>
 #include <QKeySequence>

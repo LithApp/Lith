@@ -24,7 +24,7 @@
 
 #include "qmlobjectlist.h"
 
-#include "util/formattedstring.h"
+#include "formattedstring.h"
 
 #if !defined(LITH_PLATFORM_MOBILE) && !defined(LITH_PLATFORM_DESKTOP)
   #if defined(Q_OS_IOS) || defined(Q_OS_ANDROID)

@@ -20,6 +20,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
+import Lith.Style
 
 Dialog {
     id: nickListActionMenuDialog
@@ -44,7 +45,7 @@ Dialog {
         id: nickActionNicknameText
         text: nickname
         horizontalAlignment: Qt.AlignCenter
-        size: Label.Medium
+        font.pointSize: FontSizes.medium
         font.bold: true
     }
 

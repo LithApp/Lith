@@ -25,8 +25,8 @@
 #include "windowhelper.h"
 #include "search.h"
 #include "replayproxy.h"
-#include "util/nicklistfilter.h"
-#include "util/messagelistfilter.h"
+#include "nicklistfilter.h"
+#include "messagelistfilter.h"
 
 #include "notificationhandler.h"
 

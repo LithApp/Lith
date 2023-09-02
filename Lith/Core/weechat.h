@@ -20,7 +20,7 @@
 #include "common.h"
 #include "settings.h"
 #include "replayproxy.h"
-#include "util/sockethelper.h"
+#include "sockethelper.h"
 
 #include <QSslSocket>
 #include <QDataStream>

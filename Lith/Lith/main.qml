@@ -22,6 +22,7 @@ import QtQuick.Layouts
 // This has to be here otherwise the plugin won't get linked
 import Lith.Core
 import Lith.Style
+import Lith.UI
 
 ApplicationWindow {
     id: window

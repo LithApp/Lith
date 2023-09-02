@@ -382,7 +382,7 @@ ScrollView {
                     Switch {
                         id: openLinksDirectlyInBrowserSwitch
                         checked: Lith.settings.openLinksDirectlyInBrowser
-                        onColor: offColor
+                        //onColor: offColor
                     }
                     // Layout balancing wrapper
                     Item {

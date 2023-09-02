@@ -101,7 +101,7 @@ Rectangle {
                     visible: Lith.networkProxy.recording || Lith.status === Lith.REPLAY
                     Layout.alignment: Qt.AlignRight
                     Label {
-                        size: Label.Tiny
+                        font.pointSize: FontSizes.tiny
                         Layout.alignment: Qt.AlignVCenter
                         text: {
                             if (Lith.networkProxy.recording)
@@ -154,7 +154,7 @@ Rectangle {
                                                    ""
                 elide: Text.ElideRight
                 maximumLineCount: 2
-                size: Label.Tiny
+                font.pointSize: FontSizes.tiny
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 renderType: Text.NativeRendering

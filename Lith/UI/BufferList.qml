@@ -20,6 +20,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
+import Lith.Style
 
 Rectangle {
     id: root
@@ -164,7 +165,7 @@ Rectangle {
                 radius: 2
                 Label {
                     text: buffer && buffer.number > 0 ? buffer.number : ""
-                    size: Label.Small
+                    font.pointSize: FontSizes.small
                     anchors.centerIn: parent
                     color: disabledPalette.text
                     opacity: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4

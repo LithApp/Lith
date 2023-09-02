@@ -17,7 +17,7 @@
 
 #include "lith.h"
 
-#include "cmakedefs.h"
+#include "defs/cmakedefs.h"
 #include "datamodel.h"
 #include "weechat.h"
 #include "windowhelper.h"

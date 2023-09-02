@@ -55,7 +55,7 @@ Dialog {
         topPadding: 20
         text: qsTr("Copy")
         font.bold: true
-        size: Label.Medium
+        font.pointSize: FontSizes.medium
         horizontalAlignment: Label.AlignHCenter
     }
 

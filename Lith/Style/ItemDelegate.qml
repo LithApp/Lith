@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Templates as T
 
 import Lith.Core
+import Lith.Style
 
 T.ItemDelegate {
     id: control
