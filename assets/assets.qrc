@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
         <file>icon.png</file>
         <file>fonts/Inconsolata-Variable.ttf</file>
         <file>navigation/dark/album-folder.png</file>

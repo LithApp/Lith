@@ -52,7 +52,6 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    QQuickStyle::setStyle("Lith.Style");
 
     // Register types
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {
