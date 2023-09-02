@@ -36,6 +36,8 @@
         <string>Launch</string>
         <key>NSCameraUsageDescription</key>
         <string>Used to upload photos to the chat</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Microphone is not actually used but it's required by QtMultimedia</string>
         <key>NSPhotoLibraryUsageDescription</key>
         <string>Used to upload photos to the chat</string>
         <key>UIFileSharingEnabled</key>
