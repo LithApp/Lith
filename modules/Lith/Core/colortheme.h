@@ -8,7 +8,9 @@
 #include <QPalette>
 #include <QQmlEngine>
 
-class ColorTheme {
+#include "lithcore_export.h"
+
+class LITHCORE_EXPORT ColorTheme {
     Q_GADGET
     QML_NAMED_ELEMENT(colorTheme)
     Q_PROPERTY(QString name READ name CONSTANT)

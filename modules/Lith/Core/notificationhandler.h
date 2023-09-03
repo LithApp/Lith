@@ -2,9 +2,10 @@
 #define NOTIFICATIONHANDLER_H
 
 #include "common.h"
+#include "lithcore_export.h"
 
 class Lith;
-class NotificationHandler : public QObject {
+class LITHCORE_EXPORT NotificationHandler : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool valid READ validGet NOTIFY validChanged)
     Q_PROPERTY(QString deviceToken READ deviceTokenGet WRITE deviceTokenSet NOTIFY deviceTokenChanged)

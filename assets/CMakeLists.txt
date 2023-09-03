@@ -3,13 +3,6 @@ set(LITH_RESOURCES
     assets.qrc
 )
 
-qt_add_library(LithAssets
-    STATIC
+qt_add_library(LithAssets STATIC
     ${LITH_RESOURCES}
-)
-
-install(TARGETS LithAssets
-    BUNDLE DESTINATION ..
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

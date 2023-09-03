@@ -21,9 +21,10 @@
 #include <QString>
 #include <QList>
 
+#include "lithcore_export.h"
 #include "colortheme.h"
 
-class FormattedString {
+class LITHCORE_EXPORT FormattedString {
     Q_GADGET
     QML_NAMED_ELEMENT(formattedString)
     Q_PROPERTY(int length READ length CONSTANT)
@@ -39,7 +40,7 @@ public:
         Part(QString text)
             : text(std::move(text)) {
         }
-        bool containsHtml() const {
+        inline bool containsHtml() const {
             return foreground.index >= 0 || background.index >= 0 || hyperlink || bold || underline || italic;
         }
         QString toHtml(const ColorTheme& theme) const;

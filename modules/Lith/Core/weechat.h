@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "replayproxy.h"
 #include "sockethelper.h"
+#include "lithcore_export.h"
 
 #include <QSslSocket>
 #include <QDataStream>
@@ -28,7 +29,7 @@
 
 class Lith;
 
-class Weechat : public QObject {
+class LITHCORE_EXPORT Weechat : public QObject {
 public:
     Q_OBJECT
 public:
@@ -36,8 +37,8 @@ public:
     const Lith* lith() const;
     Lith* lith();
 
-    static QByteArray hashPassword(const QString& password, const QString& algo, const QByteArray& salt, int iterations);
-    static QByteArray randomString(int length);
+    LITHCORE_EXPORT static QByteArray hashPassword(const QString& password, const QString& algo, const QByteArray& salt, int iterations);
+    LITHCORE_EXPORT static QByteArray randomString(int length);
 
     struct MessageNames {
         // these names actually correspond to slot names in Lith

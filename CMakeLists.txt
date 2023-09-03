@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+include(GenerateExportHeader)
+
 set(VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
 
 if (VERSION)
@@ -48,6 +50,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 qt_standard_project_setup(REQUIRES 6.5)
+
+set(LITH_INSTALL_MODULEDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/Lith/modules")
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 
 add_subdirectory(assets)
 add_subdirectory(modules/Lith/Style)

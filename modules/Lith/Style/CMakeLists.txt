@@ -19,7 +19,7 @@ set(LITHSTYLE_SOURCES
     constants.cpp constants.h
 )
 
-qt_add_library(LithStyle STATIC
+qt_add_library(LithStyle
     ${LITHSTYLE_SOURCES}
 )
 qt_add_qml_module(LithStyle
@@ -40,7 +40,13 @@ target_link_libraries(LithStyle PRIVATE
 )
 
 install(TARGETS LithStyle
-    BUNDLE DESTINATION ..
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+install(TARGETS LithStyleplugin
+    LIBRARY DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/Style/
+)
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/qmldir
+    ${CMAKE_CURRENT_BINARY_DIR}/LithStyle.qmltypes
+    DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/Style/
 )

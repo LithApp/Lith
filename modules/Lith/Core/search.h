@@ -3,12 +3,13 @@
 
 #include "common.h"
 #include "datamodel.h"
+#include "lithcore_export.h"
 #include <QPointer>
 
 class Lith;
 class Buffer;
 class BufferLine;
-class Search : public QObject {
+class LITHCORE_EXPORT Search : public QObject {
     Q_OBJECT
     PROPERTY(QString, term, "")
     PROPERTY(QList<BufferLine*>, matches)

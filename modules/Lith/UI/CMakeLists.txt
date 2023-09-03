@@ -38,7 +38,7 @@ set(LITH_QML
     util/PaletteSwitch.qml
 )
 
-qt_add_library(LithUI STATIC)
+qt_add_library(LithUI)
 qt_add_qml_module(LithUI
     URI Lith.UI
     VERSION 1.0
@@ -64,7 +64,13 @@ target_link_libraries(LithUI PRIVATE
 )
 
 install(TARGETS LithUI
-    BUNDLE DESTINATION ..
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+install(TARGETS LithUIplugin
+    LIBRARY DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/UI/
+)
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/qmldir
+    ${CMAKE_CURRENT_BINARY_DIR}/LithUI.qmltypes
+    DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/UI/
 )

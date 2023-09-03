@@ -22,9 +22,6 @@ qt_import_qml_plugins(Lith)
 
 target_link_libraries(Lith PRIVATE
     LithAssets
-    LithStyleplugin
-    LithUIplugin
-    LithCoreplugin
     LithCore
     Qt::Gui
     Qt::GuiPrivate
@@ -88,7 +85,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
 endif()
 
 install(TARGETS Lith
-    BUNDLE DESTINATION ..
+    BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

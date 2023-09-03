@@ -2,13 +2,14 @@
 #define REPLAYPROXY_H
 
 #include "common.h"
+#include "lithcore_export.h"
 #include <QDateTime>
 #include <QFile>
 #include <QTimer>
 
 class Weechat;
 
-class ReplayRecordingInfo : public QObject {
+class LITHCORE_EXPORT ReplayRecordingInfo : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
@@ -30,7 +31,7 @@ public:
     Q_INVOKABLE QString store();
 };
 
-class BaseNetworkProxy : public QObject {
+class LITHCORE_EXPORT BaseNetworkProxy : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
@@ -81,7 +82,7 @@ private:
     Mode m_mode;
 };
 
-class ReplayProxy : public BaseNetworkProxy {
+class LITHCORE_EXPORT ReplayProxy : public BaseNetworkProxy {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
@@ -126,7 +127,7 @@ private:
     QDataStream m_logDataStream;
 };
 
-class RecordProxy : public BaseNetworkProxy {
+class LITHCORE_EXPORT RecordProxy : public BaseNetworkProxy {
     Q_OBJECT
     PROPERTY(int, slot, -1)
 public:

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QQmlEngine>
 
+#include "lithcore_export.h"
+
 /**
  * @brief The Reflection class
  * This class provides a way to access information about an internal data type.
@@ -11,7 +13,7 @@
  * You need to set the \p className property and then the other properties will contain names of properties that are convertible to string
  * (and other types may be added later)
  */
-class Reflection : public QObject {
+class LITHCORE_EXPORT Reflection : public QObject {
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString className READ classNameGet WRITE setClassName NOTIFY classNameChanged REQUIRED)

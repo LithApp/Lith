@@ -21,6 +21,7 @@
 
 #include "common.h"
 #include "defs/cmakedefs.h"
+#include "lithcore_export.h"
 #include <QSettings>
 #include <QDebug>
 #include <QKeySequence>
@@ -46,14 +47,14 @@ public:                                              \
  * just add a SETTING to the class header and it'll get exposed to
  * QML and C++ code through the Settings singleton object
  */
-class Settings : public QObject {
+class LITHCORE_EXPORT Settings : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
 
     Q_PROPERTY(bool isReady READ isReady NOTIFY readyChanged)
 
-    static inline const QStringList c_hotlistDefaultFormat {"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
+    LITHCORE_EXPORT static inline const QStringList c_hotlistDefaultFormat {"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
 
     SETTING(int, lastOpenBuffer, -1)
 #if defined(Q_OS_MACOS)

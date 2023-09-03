@@ -18,10 +18,11 @@
 #define NICKLISTFILTER_H
 
 #include "common.h"
+#include "lithcore_export.h"
 
 #include <QSortFilterProxyModel>
 
-class NickListFilter : public QSortFilterProxyModel {
+class LITHCORE_EXPORT NickListFilter : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, filterWord)
 public:

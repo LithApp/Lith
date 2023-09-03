@@ -18,10 +18,11 @@
 #define MESSAGELISTFILTER_H
 
 #include "common.h"
+#include "lithcore_export.h"
 
 #include <QSortFilterProxyModel>
 
-class MessageFilterList : public QSortFilterProxyModel {
+class LITHCORE_EXPORT MessageFilterList : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, filterWord)
 public:

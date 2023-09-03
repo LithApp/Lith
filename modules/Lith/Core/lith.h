@@ -27,6 +27,7 @@
 #include "replayproxy.h"
 #include "nicklistfilter.h"
 #include "messagelistfilter.h"
+#include "lithcore_export.h"
 
 #include "notificationhandler.h"
 
@@ -42,7 +43,7 @@ class HotListItem;
 class BaseNetworkProxy;
 class NotificationHandler;
 
-class Lith : public QObject {
+class LITHCORE_EXPORT Lith : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON
@@ -198,7 +199,7 @@ private:
     QSharedPointer<Buffer> m_logBuffer;
 };
 
-class ProxyBufferList : public QSortFilterProxyModel {
+class LITHCORE_EXPORT ProxyBufferList : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, filterWord)
 public:

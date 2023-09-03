@@ -32,9 +32,9 @@
 
 #include <QtQml/qqmlextensionplugin.h>
 // NOLINTSTART
-Q_IMPORT_QML_PLUGIN(Lith_UIPlugin)
-Q_IMPORT_QML_PLUGIN(Lith_StylePlugin)
-Q_IMPORT_QML_PLUGIN(Lith_CorePlugin)
+// Q_IMPORT_QML_PLUGIN(Lith_UIPlugin)
+// Q_IMPORT_QML_PLUGIN(Lith_StylePlugin)
+// Q_IMPORT_QML_PLUGIN(Lith_CorePlugin)
 // NOLINTEND
 
 int main(int argc, char* argv[]) {
@@ -48,6 +48,10 @@ int main(int argc, char* argv[]) {
 
     QQmlApplicationEngine engine;
     engine.addImportPath(QStringLiteral(":/"));
+    // This is used when installed, varies by platform
+    engine.addImportPath(QStringLiteral(LITH_INSTALL_MODULEDIR));
+    // This is used when running from the build folder only
+    engine.addImportPath(QStringLiteral("../modules"));
 
     // Register types
     QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {

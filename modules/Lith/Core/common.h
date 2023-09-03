@@ -23,8 +23,8 @@
 #include <cstdint>
 
 #include "qmlobjectlist.h"
-
 #include "formattedstring.h"
+#include "lithcore_export.h"
 
 #if !defined(LITH_PLATFORM_MOBILE) && !defined(LITH_PLATFORM_DESKTOP)
   #if defined(Q_OS_IOS) || defined(Q_OS_ANDROID)
@@ -35,7 +35,7 @@
 #endif  // Q_OS_IOS || Q_OS_ANDROID
 
 // Thanks Silicomancer
-class ConstLatin1String : public QLatin1String {
+class LITHCORE_EXPORT ConstLatin1String : public QLatin1String {
 public:
     explicit constexpr ConstLatin1String(const char* const s)
         : QLatin1String(s, static_cast<int>(std::char_traits<char>::length(s))) {

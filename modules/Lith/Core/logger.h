@@ -18,12 +18,13 @@
 #define LOGGER_H
 
 #include "common.h"
+#include "lithcore_export.h"
 
 #include <QAbstractTableModel>
 #include <QSortFilterProxyModel>
 #include <QDateTime>
 
-class Logger : public QAbstractTableModel {
+class LITHCORE_EXPORT Logger : public QAbstractTableModel {
     Q_OBJECT
 public:
     enum EventType {
@@ -79,7 +80,7 @@ private:
     QList<QPair<QDateTime, Event>> m_events;
 };
 
-class FilteredLogger : public QSortFilterProxyModel {
+class LITHCORE_EXPORT FilteredLogger : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, contextFilter, "")
     PROPERTY(bool, showLineAdded, false)

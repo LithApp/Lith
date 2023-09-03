@@ -18,6 +18,7 @@
 #define PROTOCOL_H
 
 #include "common.h"
+#include "lithcore_export.h"
 
 namespace WeeChatProtocol {
     using Char = char;
@@ -28,7 +29,7 @@ namespace WeeChatProtocol {
     using Pointer = pointer_t;
     using Time = QString;
     using HashTable = StringMap;
-    struct HData {
+    struct LITHCORE_EXPORT HData {
         struct Item {
             QList<Pointer> pointers;
             QMap<QString, QVariant> objects;
@@ -59,7 +60,7 @@ namespace WeeChatProtocol {
     template <> ArrayInt parse(QDataStream& s, bool* ok);
     template <> ArrayStr parse(QDataStream& s, bool* ok);
 
-    FormattedString convertColorsToHtml(const QByteArray& data, bool canContainHTML);
+    LITHCORE_EXPORT FormattedString convertColorsToHtml(const QByteArray& data, bool canContainHTML);
 };  // namespace WeeChatProtocol
 
 Q_DECLARE_METATYPE(WeeChatProtocol::HData);

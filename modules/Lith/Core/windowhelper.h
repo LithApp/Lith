@@ -2,10 +2,11 @@
 #define WINDOWHELPER_H
 
 #include "common.h"
+#include "lithcore_export.h"
 
 #include <QQuickWindow>
 
-class WindowHelper : public QObject {
+class LITHCORE_EXPORT WindowHelper : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")

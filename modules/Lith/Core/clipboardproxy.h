@@ -23,7 +23,9 @@
 #include <QPixmap>
 #include <QQmlEngine>
 
-class ClipboardProxy : public QObject {
+#include "lithcore_export.h"
+
+class LITHCORE_EXPORT ClipboardProxy : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON

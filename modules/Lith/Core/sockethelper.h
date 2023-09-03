@@ -10,9 +10,11 @@
 #endif  // __EMSCRIPTEN__
 #include <QSslError>
 
+#include "lithcore_export.h"
+
 class Weechat;
 class Lith;
-class SocketHelper : public QObject {
+class LITHCORE_EXPORT SocketHelper : public QObject {
     Q_OBJECT
 public:
     explicit SocketHelper(Weechat* parent = nullptr);

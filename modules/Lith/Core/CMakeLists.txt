@@ -53,8 +53,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
 endif()
 
 qt_add_library(LithCore
-    STATIC
-        ${LITH_CORE_SOURCES}
+    ${LITH_CORE_SOURCES}
 )
 qt_add_qml_module(LithCore
     URI Lith.Core
@@ -62,6 +61,8 @@ qt_add_qml_module(LithCore
     QML_FILES
 )
 qt_import_qml_plugins(LithCore)
+
+generate_export_header(LithCore)
 
 target_link_libraries(LithCore PRIVATE
     LithAssets
@@ -87,8 +88,9 @@ target_include_directories(LithCore PUBLIC
 )
 
 install(TARGETS LithCore
-    BUNDLE DESTINATION ..
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+install(TARGETS LithCoreplugin
+    LIBRARY DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/Core/
 )
 

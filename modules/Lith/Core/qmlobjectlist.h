@@ -5,9 +5,11 @@
 #include <QAbstractListModel>
 #include <QSharedPointer>
 
+#include "lithcore_export.h"
+
 using QObjectPointer = QSharedPointer<QObject>;
 
-class QmlObjectList : public QAbstractListModel {
+class LITHCORE_EXPORT QmlObjectList : public QAbstractListModel {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(QmlObjectList)
     Q_PROPERTY(int count READ count NOTIFY countChanged)

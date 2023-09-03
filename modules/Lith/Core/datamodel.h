@@ -22,6 +22,7 @@
 #include "qmlobjectlist.h"
 #include "protocol.h"
 #include "messagelistfilter.h"
+#include "lithcore_export.h"
 
 #include <QObject>
 #include <QDateTime>
@@ -36,7 +37,7 @@ class Lith;
 
 #include <cstdint>
 
-class Nick : public QObject {
+class LITHCORE_EXPORT Nick : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
@@ -57,7 +58,7 @@ public:
     QString colorlessName() const;
 };
 
-class Buffer : public QObject {
+class LITHCORE_EXPORT Buffer : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
@@ -142,7 +143,7 @@ private:
     FormattedString m_title {};
 };
 
-class BufferLine : public QObject {
+class LITHCORE_EXPORT BufferLine : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
@@ -202,7 +203,7 @@ private:
     QString m_nick;
 };
 
-class HotListItem : public QObject {
+class LITHCORE_EXPORT HotListItem : public QObject {
     Q_OBJECT
     PROPERTY(QList<int>, count)
     Q_PROPERTY(Buffer* buffer READ bufferGet WRITE bufferSet NOTIFY bufferChanged)

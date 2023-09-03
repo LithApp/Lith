@@ -18,12 +18,13 @@
 #define UPLOADER_H
 
 #include "common.h"
+#include "lithcore_export.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QImage>
 
-class Uploader : public QObject {
+class LITHCORE_EXPORT Uploader : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON

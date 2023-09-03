@@ -3,11 +3,12 @@
 
 #include <QObject>
 #include "common.h"
+#include "lithcore_export.h"
 
 class FormatStringSplitter;
 class Buffer;
 
-class FormatStringVariable : public QObject {
+class LITHCORE_EXPORT FormatStringVariable : public QObject {
     Q_OBJECT
     PROPERTY_CONSTANT(int, index)
     PROPERTY(QString, name)
@@ -48,7 +49,7 @@ private slots:
  * @todo The signal connections and change handling is a MESS, I definitely left a few bugs in there
  * @todo It would be nice to allow simple operations with the variables, especially ternary operators
  */
-class FormatStringSplitter : public QObject {
+class LITHCORE_EXPORT FormatStringSplitter : public QObject {
     Q_OBJECT
     QML_ELEMENT
     PROPERTY(QString, format)
