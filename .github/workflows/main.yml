@@ -321,18 +321,18 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
     - name: Generate .dmg
       run: |
-        "$Qt6_DIR"/bin/macdeployqt build_macos/src/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
+        "$Qt6_DIR"/bin/macdeployqt build_macos/app/Lith.app -qmldir=. -dmg -appstore-compliant -codesign=Z52EFCPL6D
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
       with:
         name: Lith.dmg
-        path: build_macos/src/Lith.dmg
+        path: build_macos/app/Lith.dmg
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/src/Lith.dmg" renameto="Lith-macOS-${TAG_NAME}.dmg"
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_macos/app/Lith.dmg" renameto="Lith-macOS-${TAG_NAME}.dmg"
         fi
 
