@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     Q_INIT_RESOURCE(assets);
 
     QCoreApplication::setOrganizationName("Lith");
-    QCoreApplication::setOrganizationDomain("ma.rtinbriza.cz");
+    QCoreApplication::setOrganizationDomain("lith.app");
     QCoreApplication::setApplicationName("Lith");
 
     QApplication app(argc, argv);
