@@ -15,8 +15,7 @@ qt_add_executable(Lith
     ${LITH_SOURCES}
 )
 qt_add_qml_module(Lith
-    URI Lith.Lith
-    VERSION 1.0
+    URI App # Seems to have to to be like this in this case, otherwise there are build directory name clashes when linking the binary
     QML_FILES main.qml
 )
 qt_import_qml_plugins(Lith)
