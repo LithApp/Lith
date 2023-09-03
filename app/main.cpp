@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
     app.setFont(font, "monospace");
 
     // Start the engine
-    engine.load(QUrl(QLatin1String("qrc:/qt/qml/Lith/Lith/main.qml")));
+    engine.load(QUrl(QLatin1String("qrc:/qt/qml/App/main.qml")));
 
     QPixmap iconPixmap(":/icon.png");
     // Xorg didn't like the original 2k icon
