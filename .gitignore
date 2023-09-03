@@ -1,6 +1,7 @@
 *.pro.user*
 CMakeLists.txt.user*
 build
+build_*
 android_openssl
 build_android
 build_ios
