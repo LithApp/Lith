@@ -27,21 +27,21 @@ import Lith.UI
 ApplicationWindow {
     id: window
     visible: true
-    width: Platform.mobile ? 480 : 1024
+    width: LithPlatform.mobile ? 480 : 1024
     height: 800
     title: "Lith"
 
-    flags: Platform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
+    flags: LithPlatform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
 
     onActiveChanged: {
-        if (active && Lith.debugVersion && Platform.desktop)
+        if (active && Lith.debugVersion && LithPlatform.desktop && debugWindowLoader.item)
             debugWindowLoader.item.raise()
     }
 
     Loader {
         id: debugWindowLoader
-        active: Lith.debugVersion && platform.desktop
-        source: "util/DebugWindow.qml"
+        active: Lith.debugVersion && LithPlatform.desktop
+        source: "qrc:/qt/qml/Lith/UI/util/DebugWindow.qml"
         property bool firstLoadX: true
         property bool firstLoadY: true
         onLoaded: {

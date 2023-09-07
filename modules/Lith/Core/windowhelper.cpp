@@ -1,6 +1,6 @@
 #include "windowhelper.h"
 #include "lith.h"
-#include "platform.h"
+#include "lithplatform.h"
 
 #include <QApplication>
 #include <QPalette>
@@ -76,7 +76,7 @@ void WindowHelper::updateSafeAreaMargins(QQuickWindow* window) {
     if (!window) {
         return;
     }
-    if (Platform::instance()->desktop()) {
+    if (LithPlatform::instance()->isDesktop()) {
         bool isLandscape = window->width() > window->height();
         landscapeModeSet(isLandscape);
     }

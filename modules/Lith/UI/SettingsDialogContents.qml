@@ -32,7 +32,7 @@ Item {
         }
 
         Repeater {
-            model: Platform.mobile ? [qsTr("Connection"), qsTr("Interface")]
+            model: LithPlatform.mobile ? [qsTr("Connection"), qsTr("Interface")]
                                           : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
 
             delegate: TabButton {
@@ -63,7 +63,7 @@ Item {
 
         SettingsShortcuts {
             id: settingsShortcuts
-            enabled: !Platform.mobile
+            enabled: !LithPlatform.mobile
         }
     }
 

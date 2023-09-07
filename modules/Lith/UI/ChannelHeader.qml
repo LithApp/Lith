@@ -172,7 +172,7 @@ Rectangle {
             flat: true
             onClicked: {
                 nickDrawer.visible = !nickDrawer.visible
-                if(!Platform.mobile) nickDrawer.open()
+                if(!LithPlatform.mobile) nickDrawer.open()
             }
             icon.source: Lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/sleeping.png" :
                          Lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/transfer.png" :

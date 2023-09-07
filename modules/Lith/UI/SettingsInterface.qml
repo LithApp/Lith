@@ -124,7 +124,7 @@ ScrollView {
                 id: fontChangeButton
                 summary: "Font family"
                 details: "(requires restart)"
-                visible: !Platform.mobile
+                visible: !LithPlatform.mobile
                 text: Lith.settings.baseFontFamily
                 onClicked: fontDialog.open()
             }
@@ -305,7 +305,7 @@ ScrollView {
 
             Fields.Boolean {
                 id: platformBufferControlPositionCheckbox
-                summary: Platform.mobile ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
+                summary: LithPlatform.mobile ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
                 checked: Lith.settings.platformBufferControlPosition
             }
 
@@ -375,8 +375,8 @@ ScrollView {
                                 hoverEnabled: true
 
                                 ToolTip.text: insideLithLabel.text
-                                ToolTip.visible: Platform.mobile ? insideLithMouse.containsPress : insideLithMouse.containsMouse
-                                ToolTip.delay: Platform.mobile ? 0 : 800
+                                ToolTip.visible: LithPlatform.mobile ? insideLithMouse.containsPress : insideLithMouse.containsMouse
+                                ToolTip.delay: LithPlatform.mobile ? 0 : 800
                             }
                         }
                     }
@@ -405,8 +405,8 @@ ScrollView {
                                 hoverEnabled: true
 
                                 ToolTip.text: inBrowserLabel.text
-                                ToolTip.visible: Platform.mobile ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
-                                ToolTip.delay: Platform.mobile ? 0 : 800
+                                ToolTip.visible: LithPlatform.mobile ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
+                                ToolTip.delay: LithPlatform.mobile ? 0 : 800
                             }
                         }
                     }
@@ -432,14 +432,14 @@ ScrollView {
             Fields.Boolean {
                 id: enableNotificationsCheckbox
                 summary: qsTr("Enable notifications")
-                details: Platform.ios ? qsTr("This setting won't do anything for now, we need to implement a server and WeeChat plugin to actually pass notifications to Lith.") : ""
+                details: LithPlatform.ios ? qsTr("This setting won't do anything for now, we need to implement a server and WeeChat plugin to actually pass notifications to Lith.") : ""
                 checked: Lith.settings.enableNotifications
             }
 
             Fields.Base {
                 id: deviceTokenField
                 summary: "Device token"
-                visible: Platform.ios
+                visible: LithPlatform.ios
 
                 rowComponent: Label {
                     Layout.preferredWidth: settingsPaneLayout.width / 2

@@ -28,11 +28,11 @@ Rectangle {
 
     readonly property real delegateWidth: root.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
-    readonly property bool controlRowOnBottom: (Platform.mobile && Lith.settings.PlatformBufferControlPosition) || (!Platform.mobile && !Lith.settings.PlatformBufferControlPosition)
+    readonly property bool controlRowOnBottom: (LithPlatform.mobile && Lith.settings.LithPlatform.ufferControlPosition) || (!LithPlatform.mobile && !Lith.settings.LithPlatform.ufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
     function clear() {
         filterField.clear()
-        if (Platform.mobile)
+        if (LithPlatform.mobile)
             filterField.focus = false
         else
             filterField.forceActiveFocus()

@@ -50,7 +50,7 @@ Item {
         anchors.fill: parent
         pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
         hoverEnabled: true
-        acceptedButtons: (Platform.mobile ? Qt.LeftButton : 0) | Qt.RightButton
+        acceptedButtons: (LithPlatform.mobile ? Qt.LeftButton : 0) | Qt.RightButton
         cursorShape: messageText.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
         onPressAndHold: {
             channelMessageActionMenu.show(messageModel)

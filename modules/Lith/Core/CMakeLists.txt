@@ -10,8 +10,8 @@ set(LITH_CORE_SOURCES
     logger.h
     notificationhandler.h
     notificationhandler.cpp
-    platform.cpp
-    platform.h
+    lithplatform.cpp
+    lithplatform.h
     protocol.cpp
     protocol.h
     qmlobjectlist.cpp

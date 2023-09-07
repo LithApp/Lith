@@ -30,7 +30,7 @@ Drawer {
 
     onVisibleChanged: {
         if (visible) {
-            if (Platform.mobile) {
+            if (LithPlatform.mobile) {
                 Qt.inputMethod.hide()
                 showKeyboardTimer.start()
             }

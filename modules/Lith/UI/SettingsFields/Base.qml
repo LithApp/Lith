@@ -59,8 +59,8 @@ Rectangle {
                         hoverEnabled: true
 
                         ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
-                        ToolTip.visible: Platform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
-                        ToolTip.delay: Platform.mobile ? 0 : 800
+                        ToolTip.visible: LithPlatform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
+                        ToolTip.delay: LithPlatform.mobile ? 0 : 800
                     }
                 }
                 Label {
