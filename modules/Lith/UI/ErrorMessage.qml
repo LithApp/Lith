@@ -27,8 +27,8 @@ Rectangle {
     width: parent.width
     //visible: height != 0
     gradient: Gradient {
-        GradientStop { position: 0.0; color: Lith.windowHelper.darkTheme ? "#881111" : "#bb2222" }
-        GradientStop { position: 0.22; color: Lith.windowHelper.darkTheme ? "#aa1111" : "#dd3333" }
+        GradientStop { position: 0.0; color: WindowHelper.darkTheme ? "#881111" : "#bb2222" }
+        GradientStop { position: 0.22; color: WindowHelper.darkTheme ? "#aa1111" : "#dd3333" }
     }
     Behavior on height {
         NumberAnimation {

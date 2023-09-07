@@ -62,7 +62,6 @@ private:
     Q_PROPERTY(QString statusString READ statusString NOTIFY statusChanged)
     Q_PROPERTY(QString errorString READ errorStringGet WRITE errorStringSet NOTIFY errorStringChanged)
     Q_PROPERTY(Settings* settings READ settingsGet CONSTANT)
-    PROPERTY_PTR(WindowHelper, windowHelper)
 
     Q_PROPERTY(ProxyBufferList* buffers READ buffers CONSTANT)
     Q_PROPERTY(QmlObjectList* unfilteredBuffers READ unfilteredBuffers CONSTANT)

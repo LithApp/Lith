@@ -32,9 +32,9 @@ class LITHCORE_EXPORT WindowHelper : public QObject {
     Q_PROPERTY(SafeAreaMargins* safeAreaMargins READ safeAreaMargins CONSTANT)
     PROPERTY_READONLY_PRIVATESETTER(bool, landscapeMode, false)
 public:
-    explicit WindowHelper(QObject* parent = nullptr);
+    static WindowHelper* instance();
     static WindowHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
-        return new WindowHelper(qmlEngine);
+        return instance();
     }
 
     void init();
@@ -55,6 +55,7 @@ signals:
     void themeChanged();
 
 private:
+    explicit WindowHelper();
     static bool detectSystemDarkStyle();
 
     SafeAreaMargins* m_safeAreaMargins = nullptr;

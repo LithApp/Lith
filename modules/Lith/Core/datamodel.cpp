@@ -250,8 +250,8 @@ BufferLine::BufferLine(Buffer* parent)
     // having it here results in fewer connections and that means lower cpu load when the signals are fired
     connect(Lith::settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
     connect(Lith::settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
-    connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::messageChanged);
-    connect(Lith::instance()->windowHelperGet(), &WindowHelper::themeChanged, this, &BufferLine::prefixChanged);
+    connect(WindowHelper::instance(), &WindowHelper::themeChanged, this, &BufferLine::messageChanged);
+    connect(WindowHelper::instance(), &WindowHelper::themeChanged, this, &BufferLine::prefixChanged);
 }
 
 Buffer* BufferLine::buffer() {
@@ -308,7 +308,7 @@ bool BufferLine::isSelfMsgGet() {
 QColor BufferLine::nickColorGet() const {
     // TODO this is suspicious at best
     if (m_prefix.count() > 2) {
-        return m_prefix.at(2).foreground.toQColor(Lith::instance()->windowHelperGet()->inverseTheme());
+        return m_prefix.at(2).foreground.toQColor(WindowHelper::instance()->inverseTheme());
     }
     return QColor();
 }

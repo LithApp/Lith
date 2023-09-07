@@ -54,9 +54,9 @@ int main(int argc, char* argv[]) {
     engine.addImportPath(QStringLiteral("../modules"));
 
     // Initialize UI helpers and fonts
+    WindowHelper::instance()->init();
     Settings::instance();
     Lith::instance();
-    Lith::instance()->windowHelperGet()->init();
     auto fontFamilyFromSettings = Lith::settingsGet()->baseFontFamilyGet();
 #if defined(Q_OS_IOS) || defined(Q_OS_MACOS)
     QFont font("Menlo");

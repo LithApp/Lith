@@ -163,7 +163,7 @@ FormattedString& FormattedString::operator+=(const QString& s) {
 }
 
 const ColorTheme& FormattedString::getCurrentTheme() {
-    return Lith::instance()->windowHelperGet()->currentTheme();
+    return WindowHelper::instance()->currentTheme();
 }
 
 void FormattedString::clear() {

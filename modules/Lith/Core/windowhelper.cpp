@@ -10,13 +10,18 @@
 
 #include <cmath>
 
-WindowHelper::WindowHelper(QObject* parent)
-    : QObject(parent)
+WindowHelper::WindowHelper()
+    : QObject()
     , m_safeAreaMargins(new SafeAreaMargins(this)) {
     connect(this, &WindowHelper::darkThemeChanged, this, &WindowHelper::themeChanged);
     connect(this, &WindowHelper::useBlackChanged, this, &WindowHelper::themeChanged);
 
     QTimer::singleShot(0, this, &WindowHelper::init);
+}
+
+WindowHelper* WindowHelper::instance() {
+    static WindowHelper self;
+    return &self;
 }
 
 void WindowHelper::init() {
