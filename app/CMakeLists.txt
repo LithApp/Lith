@@ -23,6 +23,8 @@ qt_import_qml_plugins(Lith)
 target_link_libraries(Lith PRIVATE
     LithAssets
     LithCore
+    LithUI
+    LithStyle
     Qt::Gui
     Qt::GuiPrivate
     Qt::Multimedia
@@ -36,6 +38,15 @@ target_link_libraries(Lith PRIVATE
     Qt::Widgets
     Qt::Xml
 )
+
+get_target_property(PLUGIN_TARGET_TYPE LithCore TYPE)
+if (PLUGIN_TARGET_TYPE STREQUAL STATIC_LIBRARY)
+    target_link_libraries(Lith PRIVATE
+        LithCoreplugin
+        LithUIplugin
+        LithStyleplugin
+    )
+endif()
 
 target_compile_definitions(Lith
     PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
