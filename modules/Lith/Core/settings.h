@@ -54,7 +54,7 @@ class LITHCORE_EXPORT Settings : public QObject {
 
     Q_PROPERTY(bool isReady READ isReady NOTIFY readyChanged)
 
-    LITHCORE_EXPORT static inline const QStringList c_hotlistDefaultFormat {"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
+    static inline const QStringList c_hotlistDefaultFormat {"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
 
     SETTING(int, lastOpenBuffer, -1)
 #if defined(Q_OS_MACOS)
