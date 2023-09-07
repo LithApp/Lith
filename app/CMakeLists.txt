@@ -93,6 +93,12 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
         "-framework usernotifications"
         -F/System/Library/Frameworks
     )
+
+    if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
+        # This is a workaround, Qt doesn't include this plugin automatically for us
+        # It needs to be referenced against the app, not the module that actually uses it
+        qt_import_plugins(Lith INCLUDE Qt::QIosOptionalPlugin_NSPhotoLibraryPlugin )
+    endif()
 endif()
 
 install(TARGETS Lith
