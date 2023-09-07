@@ -51,14 +51,27 @@ endif()
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-set(LITH_INSTALL_MODULEDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/Lith/modules")
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+# I'm pretty sure I'm doing something wrong with this but I haven't found a better way to create the macOS bundle
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(LITH_INSTALL_LIBDIR "Lith.app/Contents/Frameworks/")
+else()
+    set(LITH_INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+endif()
+if (UNIX AND NOT APPLE)
+    set(LITH_INSTALL_MODULEDIR "${CMAKE_INSTALL_PREFIX}/${LITH_INSTALL_LIBDIR}/Lith/modules")
+else()
+    set(LITH_INSTALL_MODULEDIR "${CMAKE_INSTALL_PREFIX}/${LITH_INSTALL_LIBDIR}/modules")
+endif()
+
+#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LITH_INSTALL_LIBDIR}")
 
 add_subdirectory(assets)
 add_subdirectory(modules/Lith/Style)
 add_subdirectory(modules/Lith/UI)
 add_subdirectory(modules/Lith/Core)
 add_subdirectory(app)
+
+add_dependencies(Lith LithStyleplugin LithUIplugin LithCoreplugin)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     install(FILES ${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.appdata.xml DESTINATION share/metainfo)

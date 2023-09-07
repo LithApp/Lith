@@ -39,6 +39,7 @@
 Lith* Lith::instance() {
     static Lith* _self = nullptr;
     if (!_self) {
+        Q_INIT_RESOURCE(assets);
         _self = new Lith();
     }
     return _self;

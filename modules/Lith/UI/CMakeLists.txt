@@ -54,6 +54,7 @@ endif()
 
 target_link_libraries(LithUI PRIVATE
     LithCore
+    LithAssets
     Qt::Qml
     Qt::Quick
     Qt::Multimedia
@@ -64,7 +65,7 @@ target_link_libraries(LithUI PRIVATE
 )
 
 install(TARGETS LithUI
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${LITH_INSTALL_LIBDIR}
 )
 install(TARGETS LithUIplugin
     LIBRARY DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/UI/

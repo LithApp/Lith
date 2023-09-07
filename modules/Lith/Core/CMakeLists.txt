@@ -87,10 +87,20 @@ target_include_directories(LithCore PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+set_target_properties(LithCore PROPERTIES
+    MACOSX_PACKAGE_LOCATION Contents
+)
+
 install(TARGETS LithCore
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${LITH_INSTALL_LIBDIR}
 )
 install(TARGETS LithCoreplugin
     LIBRARY DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/Core/
 )
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/qmldir
+    ${CMAKE_CURRENT_BINARY_DIR}/LithCore.qmltypes
+    DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/Core/
+)
+
 

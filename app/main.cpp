@@ -38,8 +38,6 @@
 // NOLINTEND
 
 int main(int argc, char* argv[]) {
-    Q_INIT_RESOURCE(assets);
-
     QCoreApplication::setOrganizationName("Lith");
     QCoreApplication::setOrganizationDomain("lith.app");
     QCoreApplication::setApplicationName("Lith");
@@ -51,6 +49,8 @@ int main(int argc, char* argv[]) {
     // This is used when installed, varies by platform
     engine.addImportPath(QStringLiteral(LITH_INSTALL_MODULEDIR));
     // This is used when running from the build folder only
+    engine.addImportPath(QStringLiteral("../../../../modules"));
+    engine.addImportPath(QStringLiteral("../../.."));
     engine.addImportPath(QStringLiteral("../modules"));
 
     // Register types
