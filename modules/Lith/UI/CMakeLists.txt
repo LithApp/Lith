@@ -5,6 +5,7 @@ set(LITH_QML
     ChannelMessage.qml
     ChannelMessageActionMenu.qml
     ChannelMessageList.qml
+    ChannelMessageThumbnail.qml
     ChannelTextInput.qml
     ChannelView.qml
     DataBrowser.qml

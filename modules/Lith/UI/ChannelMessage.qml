@@ -189,47 +189,16 @@ Item {
                     }
                 }
 
-                RowLayout {
+                Flow {
                     id: thumbnailLayout
                     Layout.fillWidth: true
+                    spacing: 6
                     visible: Lith.settings.showImageThumbnails
                     Repeater {
                         model: Lith.settings.showImageThumbnails ? messageModel.message.urls : null
-                        Rectangle {
-                            implicitHeight: 100
-                            implicitWidth: thumbnailImage.sourceSize.width === 0 ? 100 : height * (thumbnailImage.sourceSize.width / thumbnailImage.sourceSize.height)
-                            radius: 6
-                            clip: true
-                            color: "transparent"
-                            border.width: 1
-                            border.color: palette.text
-                            visible: modelData.endsWith(".jpg") || modelData.endsWith(".png")
-                            Image {
-                                id: thumbnailImage
-                                z: -1
-                                anchors.fill: parent
-                                fillMode: Image.PreserveAspectFit
-                                source: modelData.endsWith(".jpg") || modelData.endsWith(".png") ? modelData : ""
-
-                                Label {
-                                    id: thumbnailCross
-                                    text: "❌"
-                                    visible: parent.status === Image.Error
-                                    anchors.centerIn: parent
-                                    color: "red"
-                                    Label {
-                                        anchors {
-                                            top: parent.bottom
-                                            horizontalCenter: parent.horizontalCenter
-                                        }
-                                        text: "Error"
-                                    }
-                                }
-                            }
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: linkHandler.show(modelData, root)
-                            }
+                        ChannelMessageThumbnail {
+                            thumbnailUrl: modelData
+                            maximumWidth: thumbnailLayout.width
                         }
                     }
                 }
