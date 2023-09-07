@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
+import Lith.Style
 
 Item {
     id: mainView
@@ -12,42 +13,30 @@ Item {
     width: parent.width - leftMargin - rightMargin
     height: parent.height - topMargin - bottomMargin
 
-    QtObject {
-        id: safeAreaMargins
-        property real top: 0.0
-        property real bottom: 0.0
-        property real left: 0.0
-        property real right: 0.0
-        function refresh() {
-            var result = Lith.windowHelper.getSafeAreaMargins(window)
-            top = result["top"]
-            bottom = result["bottom"]
-            left = result["left"]
-            right = result["right"]
-        }
-    }
-
     Component.onCompleted: {
-        safeAreaMargins.refresh()
+        WindowHelper.updateSafeAreaMargins(window)
     }
     onWidthChanged: {
-        safeAreaMargins.refresh()
+        WindowHelper.updateSafeAreaMargins(window)
+    }
+    onHeightChanged: {
+        WindowHelper.updateSafeAreaMargins(window)
     }
 
     property real topMargin: {
-        if (window.platform.ios) {
+        if (Platform.ios) {
             if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
                 let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
                 let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
                 if (focusItemBottomBoundary > keyboardTopBoundary) {
-                    return Qt.inputMethod.keyboardRectangle.height + safeAreaMargins.top
+                    return Qt.inputMethod.keyboardRectangle.height + WindowHelper.safeAreaMargins.top
                 }
             }
         }
-        return safeAreaMargins.top
+        return WindowHelper.safeAreaMargins.top
     }
     property real bottomMargin:{
-        if (window.platform.ios) {
+        if (Platform.ios) {
             let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
             let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
             if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
@@ -57,10 +46,10 @@ Item {
                     return 0
             }
         }
-        return safeAreaMargins.bottom
+        return WindowHelper.safeAreaMargins.bottom
     }
-    property real leftMargin: safeAreaMargins.left
-    property real rightMargin: safeAreaMargins.right
+    property real leftMargin: WindowHelper.safeAreaMargins.left
+    property real rightMargin: WindowHelper.safeAreaMargins.right
 
     Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
     Behavior on bottomMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
@@ -68,11 +57,17 @@ Item {
     Behavior on rightMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
     Rectangle {
+        id: windowBackground
+        anchors.fill: parent
+        color: palette.base
+    }
+
+    Rectangle {
         z: 9999
         y: -topMargin
         width: parent.width
         height: topMargin
-        color: palette.base
+        color: LithPalette.regular.base
     }
 
     Rectangle {
@@ -80,7 +75,7 @@ Item {
         y: parent.height
         width: parent.width
         height: topMargin
-        color: palette.base
+        color: LithPalette.regular.base
     }
 
     Rectangle {
@@ -88,7 +83,7 @@ Item {
         x: -leftMargin
         width: leftMargin
         height: parent.height
-        color: palette.base
+        color: LithPalette.regular.base
     }
 
     Rectangle {
@@ -96,7 +91,7 @@ Item {
         x: parent.width
         width: leftMargin
         height: parent.height
-        color: palette.base
+        color: LithPalette.regular.base
     }
 
     ErrorMessage {
@@ -113,12 +108,12 @@ Item {
         enabled: {
             if (!nickDrawer.isClosed)
                 return false
-            if (!window.landscapeMode && !bufferDrawer.isClosed)
+            if (!window.WindowHelper.landscapeMode && !bufferDrawer.isClosed)
                 return false
             return true
         }
         anchors {
-            left: landscapeMode ? bufferDrawer.right : parent.left
+            left: WindowHelper.landscapeMode ? bufferDrawer.right : parent.left
             right: parent.right
             top: errorMessage.bottom
             bottom: parent.bottom
@@ -150,7 +145,7 @@ Item {
             id: bufferList
             anchors.fill: parent
             onClose: {
-                if (!landscapeMode)
+                if (!WindowHelper.landscapeMode)
                     bufferDrawer.hide()
                 if (channelView.textInput.visible)
                     channelView.textInput.forceActiveFocus()
@@ -274,9 +269,9 @@ Item {
                 focusPolicy: Qt.NoFocus
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
-                icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
+                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/copy.png"
                 onClicked: {
-                    clipboardProxy.setText(linkHandler.currentLink)
+                    ClipboardProxy.setText(linkHandler.currentLink)
                     linkHandler.visible = false
                 }
             }
@@ -288,12 +283,12 @@ Item {
                     linkHandler.openCurrentLink(false)
                     linkHandler.visible = false
                 }
-                icon.source: "qrc:/navigation/"+currentTheme+"/resize.png"
+                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/resize.png"
             }
             Button {
                 visible: linkHandler.containsImage || linkHandler.containsVideo
                 focusPolicy: Qt.NoFocus
-                icon.source: "qrc:/navigation/"+currentTheme+"/image.png"
+                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/image.png"
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {

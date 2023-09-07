@@ -15,7 +15,7 @@ T.Label {
     }
     property int size: Label.Size.Regular
 
-    color: palette.windowText
+    color: LithPalette.regular.windowText
 
     font.pointSize: {
         switch (size) {

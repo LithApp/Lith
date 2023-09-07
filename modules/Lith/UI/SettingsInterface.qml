@@ -21,6 +21,7 @@ import QtQuick.Dialogs
 
 import "SettingsFields" as Fields
 import Lith.Core
+import Lith.Style
 
 ScrollView {
     id: root
@@ -112,7 +113,7 @@ ScrollView {
         ColumnLayout {
             id: settingsPaneLayout
             anchors.horizontalCenter: parent.horizontalCenter
-            width: window.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
+            width: window.WindowHelper.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
             spacing: -1
 
             Fields.Header {
@@ -123,7 +124,7 @@ ScrollView {
                 id: fontChangeButton
                 summary: "Font family"
                 details: "(requires restart)"
-                visible: !window.platform.mobile
+                visible: !Platform.mobile
                 text: Lith.settings.baseFontFamily
                 onClicked: fontDialog.open()
             }
@@ -304,7 +305,7 @@ ScrollView {
 
             Fields.Boolean {
                 id: platformBufferControlPositionCheckbox
-                summary: window.platform.mobile ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
+                summary: Platform.mobile ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
                 checked: Lith.settings.platformBufferControlPosition
             }
 
@@ -367,15 +368,15 @@ ScrollView {
                             maximumLineCount: 2
                             elide: Label.ElideRight
                             text: qsTr("Inside Lith (if possible)")
-                            color: openLinksDirectlyInBrowserSwitch.checked ? disabledPalette.text : palette.text
+                            color: openLinksDirectlyInBrowserSwitch.checked ? LithPalette.disabled.text : LithPalette.regular.text
                             MouseArea {
                                 id: insideLithMouse
                                 anchors.fill: parent
                                 hoverEnabled: true
 
                                 ToolTip.text: insideLithLabel.text
-                                ToolTip.visible: window.platform.mobile ? insideLithMouse.containsPress : insideLithMouse.containsMouse
-                                ToolTip.delay: window.platform.mobile ? 0 : 800
+                                ToolTip.visible: Platform.mobile ? insideLithMouse.containsPress : insideLithMouse.containsMouse
+                                ToolTip.delay: Platform.mobile ? 0 : 800
                             }
                         }
                     }
@@ -397,15 +398,15 @@ ScrollView {
                             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                             maximumLineCount: 2
                             text: qsTr("In a web browser")
-                            color: openLinksDirectlyInBrowserSwitch.checked ? palette.text : disabledPalette.text
+                            color: openLinksDirectlyInBrowserSwitch.checked ? LithPalette.regular.text : LithPalette.disabled.text
                             MouseArea {
                                 id: inBrowserMouse
                                 anchors.fill: parent
                                 hoverEnabled: true
 
                                 ToolTip.text: inBrowserLabel.text
-                                ToolTip.visible: window.platform.mobile ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
-                                ToolTip.delay: window.platform.mobile ? 0 : 800
+                                ToolTip.visible: Platform.mobile ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
+                                ToolTip.delay: Platform.mobile ? 0 : 800
                             }
                         }
                     }
@@ -431,14 +432,14 @@ ScrollView {
             Fields.Boolean {
                 id: enableNotificationsCheckbox
                 summary: qsTr("Enable notifications")
-                details: platform.ios ? qsTr("This setting won't do anything for now, we need to implement a server and WeeChat plugin to actually pass notifications to Lith.") : ""
+                details: Platform.ios ? qsTr("This setting won't do anything for now, we need to implement a server and WeeChat plugin to actually pass notifications to Lith.") : ""
                 checked: Lith.settings.enableNotifications
             }
 
             Fields.Base {
                 id: deviceTokenField
                 summary: "Device token"
-                visible: platform.ios
+                visible: Platform.ios
 
                 rowComponent: Label {
                     Layout.preferredWidth: settingsPaneLayout.width / 2
@@ -447,7 +448,7 @@ ScrollView {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            clipboardProxy.setText(Lith.notificationHandler.deviceToken)
+                            ClipboardProxy.setText(Lith.notificationHandler.deviceToken)
                             deviceTokenField.details = qsTr("Copied to clipboard")
                         }
                     }

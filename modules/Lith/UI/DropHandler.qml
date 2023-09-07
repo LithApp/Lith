@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import Lith.Style
+
 DropArea {
     id: dropArea
     anchors.fill: parent
@@ -42,7 +44,7 @@ DropArea {
         radius: 3
         opacity: dropArea.containsDrag ? 0.9 : 0.0
         Behavior on opacity { NumberAnimation { duration: 60 } }
-        color: palette.alternateBase
+        color: LithPalette.regular.alternateBase
         Column {
             spacing: 9
             anchors.centerIn: parent

@@ -12,7 +12,7 @@ T.BusyIndicator {
             Repeater {
                 model: 8
                 delegate: Rectangle {
-                    color: palette.text
+                    color: LithPalette.regular.text
                     width: control.width * 0.22
                     height: width
                     radius: width / 2

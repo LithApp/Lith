@@ -20,6 +20,8 @@ import QtQuick.Layouts
 import QtMultimedia as Multimedia
 //import QtWebView
 
+import Lith.Core
+
 Dialog {
     id: root
     modal: true
@@ -136,8 +138,8 @@ Dialog {
 
                 opacity: 0.6
 
-                source: delegateVideo.infinite ? "qrc:/navigation/"+currentTheme+"/reload.png" :
-                                                 "qrc:/navigation/"+currentTheme+"/reload-disabled.png"
+                source: delegateVideo.infinite ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/reload.png" :
+                                                 "qrc:/navigation/"+WindowHelper.currentThemeName+"/reload-disabled.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -159,8 +161,8 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: 0.6
-                source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/"+currentTheme+"/pause.png" :
-                                                                                              "qrc:/navigation/"+currentTheme+"/play.png"
+                source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/pause.png" :
+                                                                                              "qrc:/navigation/"+WindowHelper.currentThemeName+"/play.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -190,7 +192,7 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: delegateVideo.hasAudio ? 0.6 : 0.0
-                source: audio.volume > 0.0 ? "qrc:/navigation/"+currentTheme+"/volume.png" : "qrc:/navigation/"+currentTheme+"/mute.png"
+                source: audio.volume > 0.0 ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/volume.png" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/mute.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -392,7 +394,7 @@ Dialog {
                     imageWrapper.visible = false
                     root.visible = false
                 }
-                icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
+                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
                 icon.width: 12
                 icon.height: 12
             }
@@ -435,9 +437,9 @@ Dialog {
                         focusPolicy: Qt.NoFocus
                         Layout.preferredHeight: 40
                         Layout.preferredWidth: height
-                        icon.source: "qrc:/navigation/"+currentTheme+"/copy.png"
+                        icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/copy.png"
                         onClicked: {
-                            clipboardProxy.setText(root.currentUrl)
+                            ClipboardProxy.setText(root.currentUrl)
                         }
                     }
                     Button {
@@ -447,7 +449,7 @@ Dialog {
                         onClicked: {
                             Qt.openUrlExternally(root.currentUrl)
                         }
-                        icon.source: "qrc:/navigation/"+currentTheme+"/resize.png"
+                        icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/resize.png"
                     }
                 }
             }
@@ -467,7 +469,7 @@ Dialog {
     /*
     Rectangle {
         id: webWrapper
-        color: palette.text
+        color: LithPalette.regular.text
         Layout.fillWidth: true
         height: delegateWeb.height + 2
         Layout.preferredHeight: delegateWeb.height

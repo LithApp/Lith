@@ -1,9 +1,12 @@
 import QtQuick
 
+import Lith.Core
+import Lith.Style
+
 Rectangle {
     id: drawer
     property bool isClosed: position === 0.0
-    width: visible ? landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainView.width + mainView.leftMargin : 0
+    width: visible ? WindowHelper.landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainView.width + mainView.leftMargin : 0
     property real dragOutHandleTopMargin: 0
     property real dragOutHandleBottomMargin: 0
 
@@ -86,13 +89,13 @@ Rectangle {
             rightMargin: -1
         }
         width: 1
-        color: palette.text
+        color: LithPalette.regular.text
         opacity: 0.5
     }
 
     Rectangle {
         id: backdrop
-        visible: !landscapeMode && opacity > 0.0
+        visible: !WindowHelper.landscapeMode && opacity > 0.0
         opacity: bufferDrawer.position
         anchors {
             top: parent.top
@@ -113,7 +116,7 @@ Rectangle {
 
     Rectangle {
         id: dragHandle
-        visible: landscapeMode && !drawer.isClosed
+        visible: WindowHelper.landscapeMode && !drawer.isClosed
         z: 1
         x: 320
         width: 11
@@ -121,7 +124,7 @@ Rectangle {
             top: parent.top
             bottom: parent.bottom
         }
-        color: palette.text
+        color: LithPalette.regular.text
         opacity: dragHandleMouse.drag.active ? 0.35 : dragHandleMouse.containsMouse ? 0.25 : 0.0
         Behavior on opacity {
             NumberAnimation {

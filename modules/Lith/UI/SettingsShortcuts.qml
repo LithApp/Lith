@@ -38,7 +38,7 @@ ScrollView {
         ColumnLayout {
             id: settingsPaneLayout
             anchors.horizontalCenter: parent.horizontalCenter
-            width: window.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
+            width: window.WindowHelper.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
             spacing: -1
 
             // BIG TODO, this whole layout is disabled

@@ -47,10 +47,6 @@ Dialog {
         visible = true
     }
 
-    SystemPalette {
-        id: palette
-    }
-
     header: Label {
         topPadding: 20
         text: qsTr("Copy")
@@ -60,7 +56,7 @@ Dialog {
     }
 
     GridLayout {
-        columns: window.landscapeMode ? 2 : 1
+        columns: window.WindowHelper.landscapeMode ? 2 : 1
         width: parent.width - 2
         x: 1
 
@@ -94,7 +90,7 @@ Dialog {
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
-                    clipboardProxy.setText(label1.text)
+                    ClipboardProxy.setText(label1.text)
                 }
             }
             Button {
@@ -121,7 +117,7 @@ Dialog {
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
-                    clipboardProxy.setText(label2.text)
+                    ClipboardProxy.setText(label2.text)
                 }
             }
             Button {
@@ -148,7 +144,7 @@ Dialog {
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
-                    clipboardProxy.setText(label3.text)
+                    ClipboardProxy.setText(label3.text)
                 }
             }
         }

@@ -19,6 +19,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import Lith.Core
+import Lith.Style
 
 Rectangle {
     clip: true
@@ -53,10 +54,10 @@ Rectangle {
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             maximumLineCount: 2
             elide: Text.ElideRight
-            color: palette.text
+            color: LithPalette.regular.text
         }
         Button {
-            icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
             Layout.preferredWidth: 32
             Layout.preferredHeight: 32
             onClicked: Lith.errorString = ""

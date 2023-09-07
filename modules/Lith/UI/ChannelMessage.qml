@@ -20,6 +20,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import Lith.Core
+import Lith.Style
 
 Item {
     id: root
@@ -49,7 +50,7 @@ Item {
         anchors.fill: parent
         pressAndHoldInterval: 400 // does this do anything? or is it just for signals?
         hoverEnabled: true
-        acceptedButtons: (window.platform.mobile ? Qt.LeftButton : 0) | Qt.RightButton
+        acceptedButtons: (Platform.mobile ? Qt.LeftButton : 0) | Qt.RightButton
         cursorShape: messageText.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
         onPressAndHold: {
             channelMessageActionMenu.show(messageModel)
@@ -73,14 +74,14 @@ Item {
             }
             x: 3
             y: 3
-            color: palette.dark
+            color: LithPalette.regular.dark
             width: 36
             height: 36
             radius: height / 2
             Label {
                 anchors.centerIn: parent
                 text: messageModel.colorlessNickname.substring(0, 2)
-                color: palette.window
+                color: LithPalette.regular.window
                 textFormat: Text.RichText
                 renderType: Text.NativeRendering
             }
@@ -107,7 +108,7 @@ Item {
                 width: Math.min(implicitWidth, root.width - 75)
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 text: messageModel.message
-                color: palette.text
+                color: LithPalette.regular.text
                 textFormat: Text.RichText
                 renderType: Text.NativeRendering
             }
@@ -126,15 +127,15 @@ Item {
             anchors.fill: parent
             z: -1
             height: 1
-            color: colorUtils.mixColors(palette.text, palette.window, 0.1)
+            color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.1)
         }
     }
 
     Rectangle {
         anchors.fill: terminalLineLayout
-        color: messageModel.highlight ? colorUtils.setAlpha(palette.highlight, 0.5) : isHighlighted ? colorUtils.setAlpha(palette.text, 0.1) : "transparent"
+        color: messageModel.highlight ? ColorUtils.setAlpha(LithPalette.regular.highlight, 0.5) : isHighlighted ? ColorUtils.setAlpha(LithPalette.regular.text, 0.1) : "transparent"
         border {
-            color: palette.highlight
+            color: LithPalette.regular.highlight
             width: root.isHighlighted ? 1.5 : 0
         }
     }
@@ -151,18 +152,19 @@ Item {
             Label {
                 Layout.alignment: Qt.AlignTop
                 text: messageModel.date.toLocaleString(Qt.locale(), Lith.settings.timestampFormat) + "\u00A0"
-                color: disabledPalette.text
+                color: LithPalette.disabled.text
                 textFormat: Text.RichText
                 renderType: Text.NativeRendering
                 lineHeight: messageText.lineHeight
                 lineHeightMode: messageText.lineHeightMode
             }
             Label {
+                id: nickLabel
                 Layout.alignment: Qt.AlignTop
                 font.bold: true
                 visible: Lith.settings.nickCutoffThreshold !== 0
                 text: messageModel.prefix.toTrimmedHtml(Lith.settings.nickCutoffThreshold) + "\u00A0"
-                color: palette.text
+                color: LithPalette.regular.text
                 textFormat: Text.RichText
                 renderType: Text.NativeRendering
                 lineHeight: messageText.lineHeight
@@ -177,7 +179,7 @@ Item {
                     text: messageModel.message
                     Layout.fillWidth: true
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                    color: palette.text
+                    color: LithPalette.regular.text
                     textFormat: Text.RichText
                     renderType: Text.NativeRendering
                     lineHeight: font.pixelSize + 1

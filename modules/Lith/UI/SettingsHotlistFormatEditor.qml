@@ -64,9 +64,9 @@ Dialog {
         Rectangle {
             width: parent.width
             height: parent.height
-            border.color: Qt.rgba(palette.buttonText.r, palette.buttonText.g, palette.buttonText.b, 0.2)
+            border.color: Qt.rgba(LithPalette.regular.buttonText.r, LithPalette.regular.buttonText.g, LithPalette.regular.buttonText.b, 0.2)
             border.width: 1
-            color: palette.window
+            color: LithPalette.regular.window
             clip: true
             ScrollView {
                 id: autocompleteScrollView
@@ -87,12 +87,12 @@ Dialog {
                             visible: modelData && autocomplete.parent && "%1".arg(modelData).startsWith(autocomplete.parent.text)
                             width: suggestionLabel.width + 27
                             height: suggestionLabel.height + 18
-                            color: colorUtils.setAlpha(palette.buttonText, autocompleteDelegateMouse.pressed ? 0.25 : autocompleteDelegateMouse.containsMouse ? 0.15 : 0.1)
+                            color: ColorUtils.setAlpha(LithPalette.regular.buttonText, autocompleteDelegateMouse.pressed ? 0.25 : autocompleteDelegateMouse.containsMouse ? 0.15 : 0.1)
                             Label {
                                 id: suggestionLabel
                                 anchors.centerIn: parent
                                 text: modelData
-                                color: palette.buttonText
+                                color: LithPalette.regular.buttonText
                             }
                             MouseArea {
                                 id: autocompleteDelegateMouse
@@ -250,7 +250,7 @@ Dialog {
                     property bool displaysError: formatSplitter.errorString.length > 0
                     text: Lith.selectedBuffer ? displaysError ? formatSplitter.errorString : formatSplitter.formattedData : ""
                     opacity: displaysError ? 1.0 : 0.5
-                    color: displaysError ? "red" : palette.windowText
+                    color: displaysError ? "red" : LithPalette.regular.windowText
                 }
             }
 
@@ -286,7 +286,7 @@ Dialog {
             anchors.fill: parent
             anchors.margins: 1
             visible: false
-            color: palette.window
+            color: LithPalette.regular.window
             ScrollView {
                 id: helpScrollView
                 anchors.fill: parent
@@ -363,7 +363,7 @@ Dialog {
                         Layout.fillWidth: true
                         Layout.margins: 6
                         height: 1
-                        color: palette.windowText
+                        color: LithPalette.regular.windowText
                         opacity: 0.3
                     }
 
@@ -389,7 +389,7 @@ Dialog {
                         Layout.fillWidth: true
                         Layout.margins: 6
                         height: 1
-                        color: palette.windowText
+                        color: LithPalette.regular.windowText
                         opacity: 0.3
                     }
                     Label {

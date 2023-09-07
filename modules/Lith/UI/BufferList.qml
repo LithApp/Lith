@@ -24,24 +24,20 @@ import Lith.Style
 
 Rectangle {
     id: root
-    color: palette.window
+    color: LithPalette.regular.window
 
     readonly property real delegateWidth: root.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
-    readonly property bool controlRowOnBottom: (window.platform.mobile && Lith.settings.platformBufferControlPosition) || (!window.platform.mobile && !Lith.settings.platformBufferControlPosition)
+    readonly property bool controlRowOnBottom: (Platform.mobile && Lith.settings.PlatformBufferControlPosition) || (!Platform.mobile && !Lith.settings.PlatformBufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
     function clear() {
         filterField.clear()
-        if (window.platform.mobile)
+        if (Platform.mobile)
             filterField.focus = false
         else
             filterField.forceActiveFocus()
     }
     signal close
-
-    SystemPalette {
-        id: palette
-    }
 
     RowLayout {
         id: controlRow
@@ -58,7 +54,7 @@ Rectangle {
             id: settingsButton
             Layout.preferredWidth: height
             flat: true
-            icon.source: "qrc:/navigation/"+currentTheme+"/cogwheel.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/cogwheel.png"
             onClicked: settingsDialog.visible = true
             ToolTip.text: "Open settings"
             ToolTip.visible: settingsButton.hovered
@@ -167,7 +163,7 @@ Rectangle {
                     text: buffer && buffer.number > 0 ? buffer.number : ""
                     font.pointSize: FontSizes.small
                     anchors.centerIn: parent
-                    color: disabledPalette.text
+                    color: LithPalette.disabled.text
                     opacity: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
                 }
                 Behavior on opacity { NumberAnimation { duration: 100 } }
@@ -175,8 +171,8 @@ Rectangle {
             Rectangle {
                 id: hotMessageIndicator
                 visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
-                color: modelData.hotMessages ? colorUtils.darken(palette.highlight, 1.3) : palette.alternateBase
-                border.color: palette.text
+                color: modelData.hotMessages ? ColorUtils.darken(LithPalette.regular.highlight, 1.3) : LithPalette.regular.alternateBase
+                border.color: LithPalette.regular.text
                 border.width: 1
                 height: parent.height - 12
                 width: Math.max(height, hotListItemCount.width + 6)
@@ -188,7 +184,7 @@ Rectangle {
                     id: hotListItemCount
                     text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
                     anchors.centerIn: parent
-                    color: modelData.hotMessages > 0 ? palette.highlightedText : palette.windowText
+                    color: modelData.hotMessages > 0 ? LithPalette.regular.highlightedText : LithPalette.regular.windowText
                 }
             }
         }
@@ -204,7 +200,7 @@ Rectangle {
         }
 
         height: 1
-        color: palette.text
+        color: LithPalette.regular.text
         opacity: 0.5
     }
 }

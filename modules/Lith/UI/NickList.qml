@@ -23,9 +23,6 @@ import Lith.Style
 
 Drawer {
     id: root
-    SystemPalette {
-        id: palette
-    }
 
     signal requestSearchBar
 
@@ -33,7 +30,7 @@ Drawer {
 
     onVisibleChanged: {
         if (visible) {
-            if (platform.mobile) {
+            if (Platform.mobile) {
                 Qt.inputMethod.hide()
                 showKeyboardTimer.start()
             }
@@ -58,7 +55,7 @@ Drawer {
 
     Rectangle {
         anchors.fill: parent
-        color: palette.window
+        color: LithPalette.regular.window
     }
 
     ColumnLayout {
@@ -72,7 +69,7 @@ Drawer {
             Layout.fillWidth: true
             text: Lith.selectedBuffer ? Lith.selectedBuffer.full_name : ""
             font.pointSize: FontSizes.medium
-            color: palette.windowText
+            color: LithPalette.regular.windowText
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
 
@@ -83,7 +80,7 @@ Drawer {
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
             text: Lith.selectedBuffer ? Lith.selectedBuffer.title : ""
-            color: palette.windowText
+            color: LithPalette.regular.windowText
             onLinkActivated: {
                 linkHandler.show(link, this)
             }
@@ -101,7 +98,7 @@ Drawer {
             visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
             text: Lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(Lith.selectedBuffer.normals).arg(Lith.selectedBuffer.voices).arg(Lith.selectedBuffer.ops).arg(Lith.selectedBuffer.normals + Lith.selectedBuffer.voices + Lith.selectedBuffer.ops) : ""
             font.pointSize: FontSizes.tiny
-            color: palette.windowText
+            color: LithPalette.regular.windowText
             opacity: 0.7
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }

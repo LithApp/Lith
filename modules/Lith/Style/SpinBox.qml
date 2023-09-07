@@ -57,7 +57,7 @@ T.SpinBox {
 
     background: Rectangle {
         implicitWidth: 140
-        color: enabled ? control.palette.base : control.palette.button
-        border.color: control.palette.button
+        color: enabled ? control.LithPalette.regular.base : control.LithPalette.regular.button
+        border.color: control.LithPalette.regular.button
     }
 }

@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
+import Lith.Style
 
 Rectangle {
     id: root
@@ -27,7 +28,7 @@ Rectangle {
 
     color: "transparent"
     border.width: 1
-    border.color: palette.light
+    border.color: LithPalette.regular.light
 
     ColumnLayout {
         id: column
@@ -58,8 +59,8 @@ Rectangle {
                         hoverEnabled: true
 
                         ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
-                        ToolTip.visible: window.platform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
-                        ToolTip.delay: window.platform.mobile ? 0 : 800
+                        ToolTip.visible: Platform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
+                        ToolTip.delay: Platform.mobile ? 0 : 800
                     }
                 }
                 Label {

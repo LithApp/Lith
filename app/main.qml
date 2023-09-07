@@ -27,60 +27,14 @@ import Lith.UI
 ApplicationWindow {
     id: window
     visible: true
-    width: platform.mobile ? 480 : 1024
+    width: Platform.mobile ? 480 : 1024
     height: 800
     title: "Lith"
 
-    flags: platform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
-
-    property bool landscapeMode: !platform.mobile & width > height
-    property string currentTheme: Lith.windowHelper.darkTheme ? "dark" : "light"
-
-    property alias platform: platform
-    QtObject {
-        id: platform
-        readonly property bool mobile: ios || android
-        readonly property bool desktop: windows || macos || linux || wasm
-        readonly property bool unknown: !mobile && !desktop
-
-        readonly property bool ios: Qt.platform.os === "ios"
-        readonly property bool android: Qt.platform.os === "android"
-        readonly property bool windows: Qt.platform.os === "windows"
-        readonly property bool macos: Qt.platform.os === "osx"
-        readonly property bool linux: Qt.platform.os === "linux"
-        readonly property bool wasm: Qt.platform.os === "wasm"
-    }
-
-    // TODO find a more sensible place for this
-    QtObject {
-        id: colorUtils
-        function mixColors(a, b, ratio) {
-            var c = Qt.color(a)
-            c.r = a.r * ratio + b.r * (1 - ratio)
-            c.g = a.g * ratio + b.g * (1 - ratio)
-            c.b = a.b * ratio + b.b * (1 - ratio)
-            c.a = a.a * ratio + b.a * (1 - ratio)
-            return c
-        }
-        function setAlpha(c, alpha) {
-            var modified = Qt.color(c)
-            modified.a = alpha
-            return modified
-        }
-        function darken(c, ratio) {
-            var modified = Qt.color(c)
-            modified.hslLightness = Math.min(Math.max(modified.hslLightness / ratio, 0.0), 1.0)
-            return modified
-        }
-        function lighten(c, ratio) {
-            var modified = Qt.color(c)
-            modified.hslLightness = Math.min(Math.max(modified.hslLightness * ratio, 0.0), 1.0)
-            return modified
-        }
-    }
+    flags: Platform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
 
     onActiveChanged: {
-        if (active && Lith.debugVersion && platform.desktop)
+        if (active && Lith.debugVersion && Platform.desktop)
             debugWindowLoader.item.raise()
     }
 
@@ -97,7 +51,7 @@ ApplicationWindow {
         }
         Connections {
             target: window
-            enabled: debugWindowLoader.firstLoadX || debugWindowLoader.firstLoadY
+            enabled: debugWindowLoader.item && (debugWindowLoader.firstLoadX || debugWindowLoader.firstLoadY)
             function onXChanged() {
                 debugWindowLoader.item.x = window.x + window.width
                 debugWindowLoader.firstLoadX = false
@@ -107,20 +61,6 @@ ApplicationWindow {
                 debugWindowLoader.firstLoadY = false
             }
         }
-    }
-
-    SystemPalette {
-        id: palette
-    }
-    SystemPalette {
-        id: disabledPalette
-        colorGroup: SystemPalette.Disabled
-    }
-
-    Rectangle {
-        id: windowBackground
-        anchors.fill: parent
-        color: palette.base
     }
 
     MainView { }

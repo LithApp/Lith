@@ -21,6 +21,7 @@ import QtQuick.Layouts
 import "SettingsFields" as Fields
 
 import Lith.Core
+import Lith.Style
 
 ScrollView {
     id: root
@@ -92,7 +93,7 @@ ScrollView {
         ColumnLayout {
             id: settingsPaneLayout
             anchors.horizontalCenter: parent.horizontalCenter
-            width: window.landscapeMode ? Math.min(Math.min(480, 1.33 * implicitWidth), parent.width) : parent.width
+            width: window.WindowHelper.landscapeMode ? Math.min(Math.min(480, 1.33 * implicitWidth), parent.width) : parent.width
             spacing: -1
 
             Fields.Header {
@@ -263,8 +264,8 @@ ScrollView {
 
                         width: ListView.view.width
                         implicitHeight: recordingLayout.implicitHeight + recordingLayout.y * 2
-                        color: index % 2 ? palette.alternateBase : palette.base
-                        border.color: palette.light
+                        color: index % 2 ? LithPalette.regular.alternateBase : LithPalette.regular.base
+                        border.color: LithPalette.regular.light
                         border.width: 1
                         RowLayout {
                             id: recordingLayout
@@ -347,7 +348,7 @@ ScrollView {
                         height: recordingResultPopupRectangle.height
                         modal: true
                         Overlay.modal: Rectangle {
-                            color: colorUtils.setAlpha(palette.window, 0.7)
+                            color: ColorUtils.setAlpha(LithPalette.regular.window, 0.7)
                         }
                         onVisibleChanged: {
                             if (visible)
@@ -357,8 +358,8 @@ ScrollView {
                         }
                         Rectangle {
                             id: recordingResultPopupRectangle
-                            color: palette.window
-                            border.color: colorUtils.mixColors(palette.text, palette.window, 0.3)
+                            color: LithPalette.regular.window
+                            border.color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.3)
                             border.width: 1
                             implicitWidth: recordingResultPopupLabel.width + 2 * recordingResultPopupLabel.x
                             implicitHeight: recordingResultPopupLabel.implicitHeight + 2 * recordingResultPopupLabel.y
@@ -373,9 +374,9 @@ ScrollView {
                                         recordingResultPopup.visible = true
                                 }
                                 onLinkActivated: (link) => {
-                                    clipboardProxy.setText(link)
+                                    ClipboardProxy.setText(link)
                                     // oof, this is not nice
-                                    text += "<br><font color=\"%1\">%2</font>".arg(colorUtils.mixColors(palette.text, palette.window, 0.6)).arg(qsTr("Path copied to clipboard."))
+                                    text += "<br><font color=\"%1\">%2</font>".arg(ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.6)).arg(qsTr("Path copied to clipboard."))
                                 }
                             }
                         }

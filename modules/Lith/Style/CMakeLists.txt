@@ -6,6 +6,7 @@ set(LITHSTYLE_QML
     Dialog.qml
     ItemDelegate.qml
     Label.qml
+    LithPalette.qml
     Popup.qml
     ScrollBar.qml
     SpinBox.qml
@@ -13,6 +14,10 @@ set(LITHSTYLE_QML
     TabButton.qml
     TextArea.qml
     TextField.qml
+)
+
+set_source_files_properties(LithPalette.qml PROPERTIES
+    QT_QML_SINGLETON_TYPE TRUE
 )
 
 set(LITHSTYLE_SOURCES

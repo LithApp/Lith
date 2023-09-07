@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
+import Lith.Style
+
 T.TabButton {
     id: control
 
@@ -31,12 +33,12 @@ T.TabButton {
     }
 
     background: Rectangle {
-        color: control.flat ? palette.button : "transparent"
+        color: control.flat ? LithPalette.regular.button : "transparent"
         radius: 2
 
         Rectangle {
             anchors.fill: parent
-            color: palette.text
+            color: LithPalette.regular.text
             radius: 2
             opacity: control.pressed ? 0.3 : control.hovered ? 0.2 : 0.0
             Behavior on opacity { NumberAnimation { duration: 100 } }
@@ -48,7 +50,7 @@ T.TabButton {
                 bottom: parent.bottom
             }
             height: 4
-            color: control.checked ? palette.highlight : palette.button
+            color: control.checked ? LithPalette.regular.highlight : LithPalette.regular.button
         }
     }
 }

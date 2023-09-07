@@ -1,6 +1,9 @@
 import QtQuick
 import QtQuick.Templates as T
 
+import Lith.Core
+import Lith.Style
+
 T.Dialog {
     padding: 0
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -16,22 +19,18 @@ T.Dialog {
                              + (implicitHeaderHeight > 0 ? implicitHeaderHeight + spacing : 0)
                              + (implicitFooterHeight > 0 ? implicitFooterHeight + spacing : 0))
 
-    SystemPalette {
-        id: palette
-    }
-
     background: Rectangle {
-        color: palette.window
+        color: LithPalette.regular.window
 
         border.width: borderless ? 0 : 1
-        border.color: palette.light
+        border.color: LithPalette.regular.light
     }
 
     T.Overlay.modal: Rectangle {
-        color: colorUtils.setAlpha(palette.window, 0.7)
+        color: ColorUtils.setAlpha(LithPalette.regular.window, 0.7)
     }
 
     T.Overlay.modeless: Rectangle {
-        color: colorUtils.setAlpha(palette.window, 0.7)
+        color: ColorUtils.setAlpha(LithPalette.regular.window, 0.7)
     }
 }

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Templates as T
 
 import Lith.Core
+import Lith.Style
 
 T.TextField {
     id: control
@@ -12,15 +13,15 @@ T.TextField {
                              contentHeight + topPadding + bottomPadding)
 
     padding: 9
-    color: palette.text
-    selectionColor: palette.highlight
-    placeholderTextColor: colorUtils.setAlpha(disabledPalette.text, 0.5)
+    color: LithPalette.regular.text
+    selectionColor: LithPalette.regular.highlight
+    placeholderTextColor: ColorUtils.setAlpha(LithPalette.disabled.text, 0.5)
     verticalAlignment: Text.AlignVCenter
 
     font.pointSize: Lith.settings.baseFontSize
 
     property color borderColor: "transparent"
-    property color backgroundColor: colorUtils.mixColors(palette.text, palette.window, 0.05)
+    property color backgroundColor: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.05)
     property real animationSpeed: 300
 
     background: Rectangle {
@@ -28,8 +29,8 @@ T.TextField {
             if (control.borderColor != Qt.color("transparent"))
                 return control.borderColor
             if (control.activeFocus)
-                return palette.midlight
-            return palette.button
+                return LithPalette.regular.midlight
+            return LithPalette.regular.button
         }
 
         border {

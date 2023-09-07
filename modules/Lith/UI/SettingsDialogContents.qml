@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import Lith.Core
+
 Item {
     id: root
     implicitWidth: Math.max(Math.max(tabBar.implicitWidth, stackLayout.implicitWidth), dialogButtons.implicitWidth)
@@ -30,7 +32,7 @@ Item {
         }
 
         Repeater {
-            model: window.platform.mobile ? [qsTr("Connection"), qsTr("Interface")]
+            model: Platform.mobile ? [qsTr("Connection"), qsTr("Interface")]
                                           : [qsTr("Connection"), qsTr("Interface"), qsTr("Shortcuts")]
 
             delegate: TabButton {
@@ -61,7 +63,7 @@ Item {
 
         SettingsShortcuts {
             id: settingsShortcuts
-            enabled: !window.platform.mobile
+            enabled: !Platform.mobile
         }
     }
 

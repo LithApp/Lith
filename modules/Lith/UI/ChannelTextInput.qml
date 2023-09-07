@@ -28,7 +28,7 @@ TextField {
     renderType: TextInput.NativeRendering
 
     borderColor: backgroundColor
-    color: palette.text
+    color: LithPalette.regular.text
 
 
     // Second part of a hack to show more lines of text when writing a long message
@@ -271,7 +271,7 @@ TextField {
         onActivated: {
             var right = inputField.text.slice(inputField.cursorPosition)
             inputField.text = inputField.text.slice(0, inputField.cursorPosition - 1)
-            clipboardProxy.setText(right)
+            ClipboardProxy.setText(right)
         }
     }
     Shortcut {
@@ -280,15 +280,15 @@ TextField {
         onActivated: {
             var left = inputField.text.slice(0, inputField.cursorPosition - 1)
             inputField.text = inputField.text.slice(inputField.cursorPosition)
-            clipboardProxy.setText(left)
+            ClipboardProxy.setText(left)
         }
     }
     Shortcut {
         enabled: Lith.settings.enableReadlineShortcuts
         sequence: "Ctrl+Y"
         onActivated: {
-            if (clipboardProxy.text.length > 0)
-                inputField.text = clipboardProxy.text()
+            if (ClipboardProxy.text.length > 0)
+                inputField.text = ClipboardProxy.text()
         }
     }
     Shortcut {
@@ -313,11 +313,11 @@ TextField {
     }
     Keys.onPressed: (event) => {
         if (event.matches(StandardKey.Paste)) {
-            if (clipboardProxy.hasImage()) {
-                uploader.uploadBinary(clipboardProxy.image())
+            if (ClipboardProxy.hasImage()) {
+                Uploader.uploadBinary(ClipboardProxy.image())
             }
             else {
-                pasteText(clipboardProxy.text())
+                pasteText(ClipboardProxy.text())
             }
             event.accepted = true
         }

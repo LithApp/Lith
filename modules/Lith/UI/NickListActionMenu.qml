@@ -35,10 +35,6 @@ Dialog {
     property var nickModel
     readonly property string nickname: nickModel ? nickModel.colorlessName : ""
 
-    SystemPalette {
-        id: palette
-    }
-
     header: Label {
         topPadding: 20
         bottomPadding: 10
@@ -76,7 +72,7 @@ Dialog {
     }
 
     GridLayout {
-        columns: window.landscapeMode ? 2 : 1
+        columns: window.WindowHelper.landscapeMode ? 2 : 1
 
         width: parent.width
         anchors.centerIn: parent

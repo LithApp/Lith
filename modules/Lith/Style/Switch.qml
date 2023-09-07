@@ -12,8 +12,8 @@ T.Switch {
                              implicitContentHeight + topPadding + bottomPadding,
                              implicitIndicatorHeight + topPadding + bottomPadding)
 
-    property color onColor: palette.highlight
-    property color offColor: palette.window
+    property color onColor: LithPalette.regular.highlight
+    property color offColor: LithPalette.regular.window
 
     font.pointSize: Lith.settings.baseFontSize
 
@@ -22,7 +22,7 @@ T.Switch {
         implicitHeight: 24
 
         radius: height / 2
-        color: palette.button
+        color: LithPalette.regular.button
 
         Rectangle {
             id: shadow
@@ -48,7 +48,7 @@ T.Switch {
             radius: height / 2
             color: control.checked ? control.onColor : control.offColor
             Behavior on color { ColorAnimation { duration: 100 } }
-            border.color: palette.midlight
+            border.color: LithPalette.regular.midlight
             border.width: 1
         }
     }

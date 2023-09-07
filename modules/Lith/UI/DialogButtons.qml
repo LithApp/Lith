@@ -2,9 +2,11 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import Lith.Style
+
 Rectangle {
     id: root
-    color: palette.window
+    color: LithPalette.regular.window
     implicitHeight: layout.implicitHeight + 2 * layout.y
 
     property Item additionalButton
@@ -25,14 +27,14 @@ Rectangle {
         visible: !root.dialog || !root.dialog.borderless
         color: "transparent"
         border.width: 1
-        border.color: palette.light
+        border.color: LithPalette.regular.light
     }
 
     Rectangle {
         visible: root.dialog && root.dialog.borderless
         width: parent.width
         height: 1
-        color: palette.light
+        color: LithPalette.regular.light
     }
 
     RowLayout {

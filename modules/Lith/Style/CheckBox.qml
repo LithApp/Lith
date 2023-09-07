@@ -24,7 +24,7 @@ T.CheckBox {
         Rectangle {
             radius: 3
             anchors.fill: parent
-            color: palette.button
+            color: LithPalette.regular.button
             Rectangle {
                 id: shadow
                 visible: control.enabled
@@ -51,7 +51,7 @@ T.CheckBox {
                 height: 4.5
                 radius: 2
                 anchors.centerIn: parent
-                color: palette.windowText
+                color: LithPalette.regular.windowText
                 visible: control.checked
             }
 
@@ -60,7 +60,7 @@ T.CheckBox {
                 height: 18
                 radius: 2
                 anchors.centerIn: parent
-                color: palette.windowText
+                color: LithPalette.regular.windowText
                 visible: control.checked
             }
         }
@@ -73,7 +73,7 @@ T.CheckBox {
         text: control.text
         font: control.font
         opacity: enabled ? 1.0 : 0.3
-        color: palette.windowText
+        color: LithPalette.regular.windowText
         verticalAlignment: Text.AlignVCenter
     }
 }

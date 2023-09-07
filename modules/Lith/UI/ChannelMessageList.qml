@@ -19,6 +19,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
+import Lith.Style
 
 ListView {
     id: listView
@@ -38,7 +39,7 @@ ListView {
     // The ListView jumps around when new messages are being loaded while dragging, to avoid that annoyance, handle overshoots by ourselves.
     // Second part of this is at the bottom, overshooting is marked with expanding rectangles
     boundsMovement: Flickable.StopAtBounds
-    readonly property color overshootMarkerColor: palette.highlight
+    readonly property color overshootMarkerColor: LithPalette.regular.highlight
 
     readonly property real delegateWidth: listView.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
@@ -119,7 +120,7 @@ ListView {
         }
         width: height
         flat: false
-        icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
+        icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
         opacity: listView.atYEnd ? 0.0 : 0.5
         visible: opacity > 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }
@@ -132,7 +133,7 @@ ListView {
         width: parent.width
         height: Math.pow(Math.max(0, Math.abs(listView.verticalOvershoot)), 0.3)
         gradient: Gradient {
-            GradientStop { position: 1.0; color: colorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
+            GradientStop { position: 1.0; color: ColorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
             GradientStop { position: 0.0; color: listView.overshootMarkerColor }
         }
         visible: listView.dragging && listView.verticalOvershoot < 0
@@ -145,7 +146,7 @@ ListView {
         width: parent.width
         height: Math.pow(Math.max(0, listView.verticalOvershoot), 0.3)
         gradient: Gradient {
-            GradientStop { position: 0.0; color: colorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
+            GradientStop { position: 0.0; color: ColorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
             GradientStop { position: 1.0; color: listView.overshootMarkerColor }
         }
         visible: listView.dragging && listView.verticalOvershoot > 0

@@ -18,7 +18,7 @@ T.ItemDelegate {
 
     icon.width: 24
     icon.height: 24
-    icon.color: control.palette.text
+    icon.color: control.LithPalette.regular.text
 
     font.pointSize: Lith.settings.baseFontSize
 
@@ -26,17 +26,17 @@ T.ItemDelegate {
         verticalAlignment: Label.AlignVCenter
         text: control.text
         font: control.font
-        color: control.checked ? palette.highlightedText : palette.text
+        color: control.checked ? LithPalette.regular.highlightedText : LithPalette.regular.text
         size: Label.Large
     }
 
     background: Rectangle {
         implicitWidth: 64
         implicitHeight: 32
-        color: control.checked     ? colorUtils.setAlpha(palette.highlight, 0.7) :
-               control.highlighted ? colorUtils.setAlpha(palette.highlight, 0.6) :
-               control.pressed     ? colorUtils.setAlpha(palette.text, 0.1) :
-               control.hovered     ? colorUtils.setAlpha(palette.text, 0.2) :
-                                     palette.base
+        color: control.checked     ? ColorUtils.setAlpha(LithPalette.regular.highlight, 0.7) :
+               control.highlighted ? ColorUtils.setAlpha(LithPalette.regular.highlight, 0.6) :
+               control.pressed     ? ColorUtils.setAlpha(LithPalette.regular.text, 0.1) :
+               control.hovered     ? ColorUtils.setAlpha(LithPalette.regular.text, 0.2) :
+                                     LithPalette.regular.base
     }
 }

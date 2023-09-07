@@ -98,7 +98,7 @@ ColumnLayout {
             id: dropHandler
             anchors.fill: parent
             onTextEntered: textInput.text += t
-            onUrlEntered: uploader.upload(u)
+            onUrlEntered: Uploader.upload(u)
         }
     }
 
@@ -136,7 +136,7 @@ ColumnLayout {
         onAccepted: {
             //inputField.text += " " + fileUrl
             //imageButton.isBusy = false
-            uploader.upload(fileDialog.selectedFile)
+            Uploader.upload(fileDialog.selectedFile)
             Qt.inputMethod.hide()
             inputBar.textInput.forceActiveFocus()
         }

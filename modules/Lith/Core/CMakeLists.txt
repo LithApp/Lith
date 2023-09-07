@@ -10,6 +10,8 @@ set(LITH_CORE_SOURCES
     logger.h
     notificationhandler.h
     notificationhandler.cpp
+    platform.cpp
+    platform.h
     protocol.cpp
     protocol.h
     qmlobjectlist.cpp
@@ -24,6 +26,8 @@ set(LITH_CORE_SOURCES
     uploader.h
     colortheme.cpp
     colortheme.h
+    colorutils.cpp
+    colorutils.h
     formatstringsplitter.cpp
     formatstringsplitter.h
     formattedstring.cpp

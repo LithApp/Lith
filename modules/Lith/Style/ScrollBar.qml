@@ -26,7 +26,7 @@ T.ScrollBar {
         implicitHeight: control.interactive ? Lith.settings.scrollbarsOverlayContents  ? 6 : 8 : 2
 
         radius: width / 2
-        color: control.pressed ? control.palette.dark : control.palette.mid
+        color: control.pressed ? control.LithPalette.regular.dark : control.LithPalette.regular.mid
         opacity: 0.0
 
         states: State {

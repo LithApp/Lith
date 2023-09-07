@@ -53,18 +53,6 @@ int main(int argc, char* argv[]) {
     engine.addImportPath(QStringLiteral("../../.."));
     engine.addImportPath(QStringLiteral("../modules"));
 
-    // Register types
-    QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {
-        if (s.containsHtml()) {
-            if (Lith::instance()->windowHelperGet()->lightThemeGet()) {
-                return s.toHtml(*lightTheme);
-            } else {
-                return s.toHtml(*darkTheme);
-            }
-        }
-        return s.toPlain();
-    });
-
     // Initialize UI helpers and fonts
     Settings::instance();
     Lith::instance();

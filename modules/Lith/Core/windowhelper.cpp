@@ -1,5 +1,6 @@
 #include "windowhelper.h"
 #include "lith.h"
+#include "platform.h"
 
 #include <QApplication>
 #include <QPalette>
@@ -10,9 +11,12 @@
 #include <cmath>
 
 WindowHelper::WindowHelper(QObject* parent)
-    : QObject(parent) {
+    : QObject(parent)
+    , m_safeAreaMargins(new SafeAreaMargins(this)) {
     connect(this, &WindowHelper::darkThemeChanged, this, &WindowHelper::themeChanged);
     connect(this, &WindowHelper::useBlackChanged, this, &WindowHelper::themeChanged);
+
+    QTimer::singleShot(0, this, &WindowHelper::init);
 }
 
 void WindowHelper::init() {
@@ -55,26 +59,28 @@ const ColorTheme& WindowHelper::inverseTheme() const {
     return *darkTheme;
 }
 
-QVariantMap WindowHelper::getSafeAreaMargins(QQuickWindow* window) {
-    QVariantMap result {
-        {   "top", 0.0},
-        {"bottom", 0.0},
-        {  "left", 0.0},
-        { "right", 0.0}
-    };
+QString WindowHelper::currentThemeName() const {
+    return m_darkTheme ? QStringLiteral("dark") : QStringLiteral("light");
+}
+
+SafeAreaMargins* WindowHelper::safeAreaMargins() {
+    return m_safeAreaMargins;
+}
+
+void WindowHelper::updateSafeAreaMargins(QQuickWindow* window) {
     if (!window) {
-        return result;
+        return;
+    }
+    if (Platform::instance()->desktop()) {
+        bool isLandscape = window->width() > window->height();
+        landscapeModeSet(isLandscape);
     }
     auto* platformWindow = static_cast<QPlatformWindow*>(window->handle());
     if (!platformWindow) {
-        return result;
+        return;
     }
     QMargins margins = platformWindow->safeAreaMargins();
-    result["top"] = margins.top();
-    result["bottom"] = margins.bottom();
-    result["left"] = margins.left();
-    result["right"] = margins.right();
-    return result;
+    m_safeAreaMargins->setMargins(margins);
 }
 
 bool WindowHelper::detectSystemDarkStyle() {
@@ -92,4 +98,15 @@ bool WindowHelper::detectSystemDarkStyle() {
                ((textColor.blue() * textColor.blue()) * 0.114)
            ) > 128;
 #endif
+}
+
+SafeAreaMargins::SafeAreaMargins(QObject* parent)
+    : QObject(parent) {
+}
+
+void SafeAreaMargins::setMargins(QMarginsF margins) {
+    leftSet(margins.left());
+    rightSet(margins.right());
+    topSet(margins.top());
+    bottomSet(margins.bottom());
 }

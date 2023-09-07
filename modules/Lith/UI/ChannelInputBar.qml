@@ -20,6 +20,7 @@ import QtQuick.Controls
 import QtQml
 
 import Lith.Core
+import Lith.Style
 
 Item {
     id: root
@@ -50,7 +51,7 @@ Item {
             Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/loupe.png"
             focusPolicy: Qt.NoFocus
             flat: true
             visible: Lith.settings.showSearchButton
@@ -67,7 +68,7 @@ Item {
             Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+currentTheme+"/download-rotated.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/download-rotated.png"
             focusPolicy: Qt.NoFocus
             flat: true
             visible: Lith.settings.showAutocompleteButton
@@ -101,7 +102,7 @@ Item {
             Layout.fillHeight: true
             Layout.preferredWidth: height
             property bool isBusy: Uploader.working
-            icon.source: isBusy ? "" : "qrc:/navigation/"+currentTheme+"/image-gallery.png"
+            icon.source: isBusy ? "" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/image-gallery.png"
             enabled: !isBusy
             focusPolicy: Qt.NoFocus
             flat: true
@@ -124,7 +125,7 @@ Item {
             Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+currentTheme+"/paper-plane.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/paper-plane.png"
             visible: Lith.settings.showSendButton
             focusPolicy: Qt.NoFocus
             flat: true
@@ -147,6 +148,6 @@ Item {
             right: parent.right
         }
         height: 1
-        color: colorUtils.mixColors(palette.text, palette.window, 0.3)
+        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.3)
     }
 }

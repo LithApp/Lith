@@ -53,14 +53,14 @@ T.Button {
 
             text: control.text
             font: control.font
-            color: control.checked || control.highlighted ? control.palette.brightText :
-                   control.flat && !control.down ? (control.visualFocus ? control.palette.highlight : control.palette.windowText) : control.palette.buttonText
+            color: control.checked || control.highlighted ? control.LithPalette.regular.brightText :
+                   control.flat && !control.down ? (control.visualFocus ? control.LithPalette.regular.highlight : control.LithPalette.regular.windowText) : control.LithPalette.regular.buttonText
         }
     }
 
     background: Rectangle {
         clip: true
-        color: !control.flat || (control.hovered && control.enabled) || control.pressed ? palette.button : palette.window
+        color: !control.flat || (control.hovered && control.enabled) || control.pressed ? LithPalette.regular.button : LithPalette.regular.window
         Behavior on color { ColorAnimation { duration: 100 } }
         radius: 3
 
@@ -84,7 +84,7 @@ T.Button {
         Rectangle {
             visible: false
             anchors.fill: parent
-            color: palette.text
+            color: LithPalette.regular.text
             radius: parent.radius
             opacity: control.pressed ? 0.3 : control.hovered ? 0.2 : 0.0
             Behavior on opacity { NumberAnimation { duration: 100 } }

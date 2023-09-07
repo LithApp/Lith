@@ -21,7 +21,7 @@ Rectangle {
     implicitWidth: visible ? Math.max(itemLayout.width + root.padding, implicitHeight) : -layoutSpacing
     implicitHeight: textSize + root.padding
     radius: 3
-    color: hot > 0 ? palette.highlight : palette.text
+    color: hot > 0 ? LithPalette.regular.highlight : LithPalette.regular.text
     Row {
         id: itemLayout
         anchors.verticalCenter: parent.verticalCenter
@@ -31,7 +31,7 @@ Rectangle {
             id: theLabel
             size: root.labelType
             font.bold: true
-            color: hot ? palette.highlightedText : palette.window
+            color: hot ? LithPalette.regular.highlightedText : LithPalette.regular.window
         }
     }
     MouseArea {

@@ -23,11 +23,7 @@ import Lith.Style
 
 Rectangle {
     id: root
-    color: palette.window
-
-    SystemPalette {
-        id: palette
-    }
+    color: LithPalette.regular.window
 
     height: headerLayout.height + 12
 
@@ -44,7 +40,7 @@ Rectangle {
             bottom: parent.bottom
         }
         height: 1
-        color: palette.text
+        color: LithPalette.regular.text
         opacity: 0.5
     }
 
@@ -58,7 +54,7 @@ Rectangle {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: implicitHeight
             flat: true
-            icon.source: "qrc:/navigation/"+currentTheme+"/menu.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/menu.png"
             onClicked: {
                 bufferDrawer.toggle()
             }
@@ -86,7 +82,7 @@ Rectangle {
                         id: bufferNameLabel
                         // First part is calculated as half of the area the parent item got, second part is putting the label to the right side of its parent (when space runs out)
                         x: Math.min((parent.width - width + replayInfoLayout.width + 1) / 2, parent.width - width - 6)
-                        color: palette.text
+                        color: LithPalette.regular.text
                         font.bold: true
                         text: Lith.selectedBuffer ? Lith.selectedBuffer.name : "Lith"
                         renderType: Text.NativeRendering
@@ -117,9 +113,9 @@ Rectangle {
                             id: breathingAnimation
                             running: Lith.networkProxy.recording
                             loops: Animation.Infinite
-                            property color firstColor: palette.text
+                            property color firstColor: LithPalette.regular.text
                             onFirstColorChanged: breathingAnimation.restart()
-                            property color secondColor: colorUtils.mixColors(palette.text, palette.highlight, 0.5)
+                            property color secondColor: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.highlight, 0.5)
                             onSecondColorChanged: breathingAnimation.restart()
                             property real animationDuration: 3000
                             ColorAnimation { from: breathingAnimation.firstColor; to: breathingAnimation.secondColor; duration: breathingAnimation.animationDuration }
@@ -140,7 +136,7 @@ Rectangle {
             Label {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: palette.text
+                color: LithPalette.regular.text
                 visible: !Lith.selectedBuffer || Lith.selectedBuffer.title.length > 0
                 clip: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -176,15 +172,15 @@ Rectangle {
             flat: true
             onClicked: {
                 nickDrawer.visible = !nickDrawer.visible
-                if(!window.platform.mobile) nickDrawer.open()
+                if(!Platform.mobile) nickDrawer.open()
             }
-            icon.source: Lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
-                         Lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+currentTheme+"/transfer.png" :
-                         Lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+currentTheme+"/smile.png" :
-                         Lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+currentTheme+"/no-wifi.png" :
-                         Lith.status === Lith.ERROR        ? "qrc:/navigation/"+currentTheme+"/sleeping.png" :
-                         Lith.status === Lith.REPLAY       ? (Lith.networkProxy.replaying ? "qrc:/navigation/"+currentTheme+"/play-color.png" : "qrc:/navigation/"+currentTheme+"/pause-color.png") :
-                                                             "qrc:/navigation/"+currentTheme+"/dizzy.png"
+            icon.source: Lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/sleeping.png" :
+                         Lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/transfer.png" :
+                         Lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/smile.png" :
+                         Lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/no-wifi.png" :
+                         Lith.status === Lith.ERROR        ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/sleeping.png" :
+                         Lith.status === Lith.REPLAY       ? (Lith.networkProxy.replaying ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/play-color.png" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/pause-color.png") :
+                                                             "qrc:/navigation/"+WindowHelper.currentThemeName+"/dizzy.png"
             ToolTip.text: "Open channel information"
             ToolTip.visible: nickListButton.hovered
             ToolTip.delay: 800

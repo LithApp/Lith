@@ -7,9 +7,9 @@ T.TextArea {
     implicitHeight: 40
 
     padding: 6
-    color: palette.text
-    selectionColor: palette.highlight
-    placeholderTextColor: disabledPalette.text
+    color: LithPalette.regular.text
+    selectionColor: LithPalette.regular.highlight
+    placeholderTextColor: LithPalette.disabled.text
     verticalAlignment: Text.AlignVCenter
 
     font.pointSize: Lith.settings.baseFontSize
@@ -72,7 +72,7 @@ T.TextArea {
         }
 
         Rectangle {
-            color: palette.text
+            color: LithPalette.regular.text
             opacity: 0.06
             anchors.fill: parent
         }

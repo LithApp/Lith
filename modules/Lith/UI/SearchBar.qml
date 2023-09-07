@@ -34,7 +34,7 @@ Item {
             right: parent.right
         }
         height: 1
-        color: colorUtils.mixColors(palette.text, palette.window, 0.3)
+        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.3)
     }
 
     RowLayout {
@@ -48,7 +48,7 @@ Item {
             id: searchModeButton
             Layout.preferredHeight: implicitHeight - 2
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+currentTheme+"/loupe.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/loupe.png"
             focusPolicy: Qt.NoFocus
             flat: true
             onClicked: root.visible = false
@@ -60,7 +60,7 @@ Item {
                 mipmap: true
                 width: parent.width / 3.5
                 height: width
-                source: "qrc:/navigation/"+currentTheme+"/close.png"
+                source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
                 anchors {
                     top: parent.top
                     right: parent.right
@@ -92,7 +92,7 @@ Item {
             Layout.preferredHeight: implicitHeight - 16
             Layout.minimumWidth: height
             Layout.alignment: Qt.AlignVCenter
-            icon.source: "qrc:/navigation/"+currentTheme+"/close.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
             flat: true
             focusPolicy: Qt.NoFocus
             onClicked: Lith.search.term = ""
@@ -143,7 +143,7 @@ Item {
             }
         }
         Button {
-            icon.source: "qrc:/navigation/"+currentTheme+"/down-arrow.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
             Layout.preferredHeight: implicitHeight - 2
             Layout.minimumWidth: height
             flat: true
@@ -152,7 +152,7 @@ Item {
             enabled: search.previousEnabled
         }
         Button {
-            icon.source: "qrc:/navigation/"+currentTheme+"/up-arrow.png"
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/up-arrow.png"
             Layout.preferredHeight: implicitHeight - 2
             Layout.minimumWidth: height
             flat: true

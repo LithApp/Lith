@@ -40,6 +40,18 @@ Lith* Lith::instance() {
     static Lith* _self = nullptr;
     if (!_self) {
         Q_INIT_RESOURCE(assets);
+
+        // Register types
+        QMetaType::registerConverter<FormattedString, QString>([](const FormattedString& s) {
+            if (s.containsHtml()) {
+                if (Lith::instance()->windowHelperGet()->lightThemeGet()) {
+                    return s.toHtml(*lightTheme);
+                } else {
+                    return s.toHtml(*darkTheme);
+                }
+            }
+            return s.toPlain();
+        });
         _self = new Lith();
     }
     return _self;
