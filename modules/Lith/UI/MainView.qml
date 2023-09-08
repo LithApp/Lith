@@ -13,6 +13,9 @@ Item {
     width: parent.width - leftMargin - rightMargin
     height: parent.height - topMargin - bottomMargin
 
+    implicitWidth: LithPlatform.mobile ? 480 : 1024
+    implicitHeight: 800
+
     Component.onCompleted: {
         WindowHelper.updateSafeAreaMargins(window)
     }

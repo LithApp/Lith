@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 include(GenerateExportHeader)
+include(cmake/CPM.cmake)
+
+option(LITH_FEATURE_QHOT "Download and build https://github.com/patrickelectric/qhot - a live-reloading tool for UI development." OFF)
 
 set(VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
 
@@ -49,6 +52,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(Qt6 COMPONENTS DBus REQUIRED)
 endif()
 
+
 qt_standard_project_setup(REQUIRES 6.5)
 
 # I'm pretty sure I'm doing something wrong with this but I haven't found a better way to create the macOS bundle
@@ -78,3 +82,28 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     install(FILES ${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.desktop DESTINATION share/applications)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/icons/linux/hicolor DESTINATION share/icons)
 endif()
+
+if (LITH_FEATURE_QHOT)
+    CPMAddPackage(
+        NAME qhot
+        GIT_REPOSITORY https://github.com/MartinBriza/qhot.git
+        GIT_TAG e0d5c4b5f02a3ec1940de2f5ea647abf77fdc960
+    )
+    get_property(qhot_BINARY_DIR TARGET qhot PROPERTY BINARY_DIR)
+    get_property(qhot_NAME TARGET qhot PROPERTY NAME)
+    set(qhot_FULL_BINARY_PATH "${qhot_BINARY_DIR}/${qhot_NAME}")
+    add_executable(Lith-qhot EXCLUDE_FROM_ALL
+        dist/Lith-qhot.sh
+    )
+    add_dependencies(Lith-qhot qhot)
+    set_target_properties(Lith-qhot PROPERTIES
+        LINKER_LANGUAGE NONE
+        OUTPUT_NAME dist/Lith-qhot.sh
+    )
+    configure_file(dist/Lith-qhot.sh.in dist/Lith-qhot.sh
+        @ONLY
+        FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    )
+endif()
+
+feature_summary(WHAT ALL)

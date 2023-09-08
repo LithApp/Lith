@@ -1,0 +1,6 @@
+{
+    "import-path": ["../../../modules"],
+    "plugin-path": ["../../../modules"],
+    "quick-controls-conf": "../assets/qtquickcontrols2.conf",
+    "app-name": "Lith"
+}
