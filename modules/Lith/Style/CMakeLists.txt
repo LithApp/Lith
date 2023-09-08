@@ -36,12 +36,21 @@ qt_import_qml_plugins(LithStyle)
 
 target_link_libraries(LithStyle PRIVATE
     LithCore
+    QCoro6::Coro
     Qt6::Gui
     Qt6::Quick
     Qt::QuickControls2
     Qt::QuickLayouts
     Qt::QuickDialogs2
     Qt::QuickTemplates2
+)
+
+target_include_directories(LithStyle PRIVATE
+    ${qtkeychain_SOURCE_DIR}
+    ${qtkeychain_BINARY_DIR}
+    ${qcoro_SOURCE_DIR}
+    ${qcoro_SOURCE_DIR}/qcoro/core
+    ${qcoro_BINARY_DIR}/qcoro/core
 )
 
 install(TARGETS LithStyle

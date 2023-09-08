@@ -8,11 +8,34 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+include(CMakeDependentOption)
 include(FeatureSummary)
 include(GenerateExportHeader)
 include(cmake/CPM.cmake)
 
-option(LITH_FEATURE_QHOT "Download and build https://github.com/patrickelectric/qhot - a live-reloading tool for UI development." OFF)
+if(NOT CMAKE_CROSSCOMPILING)
+    # Doesn't make sense when running on another device
+    option(LITH_FEATURE_QHOT "Download and build https://github.com/patrickelectric/qhot - a live-reloading tool for UI development." OFF)
+endif()
+cmake_dependent_option(LITH_FORCE_DOWNLOAD_DEPENDENCIES "Force downloading 3rd party dependencies even if they are installed. This is the default on all platforms except Linux." OFF LINUX ON)
+cmake_dependent_option(LITH_FORCE_LOCAL_PACKAGES_ONLY "Completely disable downloading 3rd party dependencies, only the ones from find_package will be used. This is enabled by default on Linux only." ON LINUX OFF)
+
+if(NOT CMAKE_SYSTEM_NAME STREQUAL Emscripten)
+    # There's no WebAssembly backend
+    option(LITH_FEATURE_KEYCHAIN "Use QtKeychain to store credentials securely" ON)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LITH_DEPENDENCY_ENABLE_DBUS ON)
+else()
+    set(LITH_DEPENDENCY_ENABLE_DBUS OFF)
+endif()
+
+if(LITH_FEATURE_KEYCHAIN)
+    set(LITH_DEPENDENCY_ENABLE_KEYCHAIN ON)
+else()
+    set(LITH_DEPENDENCY_ENABLE_KEYCHAIN OFF)
+endif()
 
 set(VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
 
@@ -49,10 +72,52 @@ execute_process(
 )
 
 find_package(Qt6 COMPONENTS Widgets Gui Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (LITH_DEPENDENCY_ENABLE_DBUS)
     find_package(Qt6 COMPONENTS DBus REQUIRED)
 endif()
 
+if (LITH_FORCE_DOWNLOAD_DEPENDENCIES)
+    message(STATUS "All dependencies will be downloaded and built")
+    set(CPM_USE_LOCAL_PACKAGES OFF CACHE BOOL "" FORCE)
+    set(CPM_LOCAL_PACKAGES_ONLY OFF CACHE BOOL "" FORCE)
+elseif(LITH_FORCE_LOCAL_PACKAGES_ONLY)
+    message(STATUS "CMake will enforce use your systemwide dependencies")
+    set(CPM_USE_LOCAL_PACKAGES ON CACHE BOOL "" FORCE)
+    set(CPM_LOCAL_PACKAGES_ONLY ON CACHE BOOL "" FORCE)
+else()
+    message(STATUS "CMake will try to use your systemwide dependencies, if installed")
+    set(CPM_USE_LOCAL_PACKAGES ON CACHE BOOL "" FORCE)
+    set(CPM_LOCAL_PACKAGES_ONLY OFF CACHE BOOL "" FORCE)
+endif()
+
+if(LITH_DEPENDENCY_ENABLE_KEYCHAIN)
+    CPMAddPackage(
+        NAME Qt6Keychain
+        GIT_REPOSITORY https://github.com/frankosterfeld/qtkeychain.git
+        GIT_TAG 0.14.1
+        OPTIONS "BUILD_WITH_QT6 ON" "USE_CREDENTIAL_STORE ON" "BUILD_SHARED_LIBS OFF"
+    )
+endif()
+
+set(LITH_QCORO_DEPENDENCY_MODULES
+    Core
+    Network
+    WebSockets
+)
+if (LITH_DEPENDENCY_ENABLE_DBUS)
+    list(APPEND LITH_QCORO_DEPENDENCY_MODULES
+        "DBus"
+    )
+endif()
+CPMAddPackage(
+    NAME QCoro6
+    GIT_REPOSITORY https://github.com/danvratil/qcoro
+    # Using a newer hash because there's a build issue with one override
+    GIT_TAG b1bde3bdb36e3efdd13e62bae2eed8224734f15f
+    VERSION 0.9.0
+    OPTIONS "QCORO_BUILD_EXAMPLES OFF" "BUILD_TESTING OFF" "QCORO_WITH_QTDBUS ${LITH_DEPENDENCY_ENABLE_DBUS}"
+    FIND_PACKAGE_ARGUMENTS "COMPONENTS ${LITH_QCORO_DEPENDENCY_MODULES} REQUIRED"
+)
 
 qt_standard_project_setup(REQUIRES 6.5)
 get_target_property(QT_MOC_EXECUTABLE Qt::moc IMPORTED_LOCATION)

@@ -25,6 +25,7 @@ target_link_libraries(Lith PRIVATE
     LithCore
     LithUI
     LithStyle
+    QCoro6::Coro
     Qt::Gui
     Qt::GuiPrivate
     Qt::Multimedia
@@ -37,6 +38,14 @@ target_link_libraries(Lith PRIVATE
     Qt::WebSockets
     Qt::Widgets
     Qt::Xml
+)
+
+target_include_directories(Lith PRIVATE
+    ${qtkeychain_SOURCE_DIR}
+    ${qtkeychain_BINARY_DIR}
+    ${qcoro_SOURCE_DIR}
+    ${qcoro_SOURCE_DIR}/qcoro/core
+    ${qcoro_BINARY_DIR}/qcoro/core
 )
 
 get_target_property(PLUGIN_TARGET_TYPE LithCore TYPE)

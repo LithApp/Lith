@@ -70,6 +70,7 @@ generate_export_header(LithCore)
 
 target_link_libraries(LithCore PRIVATE
     LithAssets
+    QCoro6::Coro
     Qt::Gui
     Qt::GuiPrivate
     Qt::Multimedia
@@ -78,6 +79,19 @@ target_link_libraries(LithCore PRIVATE
     Qt::WebSockets
     Qt::Widgets
     Qt::Xml
+)
+if (LITH_DEPENDENCY_ENABLE_KEYCHAIN)
+    target_link_libraries(LithCore PRIVATE
+        qt6keychain
+    )
+endif()
+
+target_include_directories(LithCore PRIVATE
+    ${qtkeychain_SOURCE_DIR}
+    ${qtkeychain_BINARY_DIR}
+    ${qcoro_SOURCE_DIR}
+    ${qcoro_SOURCE_DIR}/qcoro/core
+    ${qcoro_BINARY_DIR}/qcoro/core
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
