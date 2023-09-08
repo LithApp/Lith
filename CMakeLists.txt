@@ -55,6 +55,9 @@ endif()
 
 
 qt_standard_project_setup(REQUIRES 6.5)
+get_target_property(QT_MOC_EXECUTABLE Qt::moc IMPORTED_LOCATION)
+get_filename_component(QT_BINARY_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
+get_filename_component(QT_INSTALL_PREFIX ${QT_BINARY_PREFIX} DIRECTORY)
 
 # I'm pretty sure I'm doing something wrong with this but I haven't found a better way to create the macOS bundle
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -88,23 +91,36 @@ if (LITH_FEATURE_QHOT)
     CPMAddPackage(
         NAME qhot
         GIT_REPOSITORY https://github.com/MartinBriza/qhot.git
-        GIT_TAG e0d5c4b5f02a3ec1940de2f5ea647abf77fdc960
+        GIT_TAG 942aa3d6fb1badf8952b4fb127d6881861611771
     )
     get_property(qhot_BINARY_DIR TARGET qhot PROPERTY BINARY_DIR)
     get_property(qhot_NAME TARGET qhot PROPERTY NAME)
-    set(qhot_FULL_BINARY_PATH "${qhot_BINARY_DIR}/${qhot_NAME}")
-    add_executable(Lith-qhot EXCLUDE_FROM_ALL
-        dist/Lith-qhot.sh
-    )
+
+    add_executable(Lith-qhot EXCLUDE_FROM_ALL)
+    add_dependencies(Lith Lith-qhot)
     add_dependencies(Lith-qhot qhot)
-    set_target_properties(Lith-qhot PROPERTIES
-        LINKER_LANGUAGE NONE
-        OUTPUT_NAME dist/Lith-qhot.sh
-    )
-    configure_file(dist/Lith-qhot.sh.in dist/Lith-qhot.sh
-        @ONLY
-        FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-    )
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(qhot_FULL_BINARY_PATH "${CMAKE_BINARY_DIR}/${qhot_NAME}.exe")
+        set_target_properties(Lith-qhot PROPERTIES
+            LINKER_LANGUAGE NONE
+            OUTPUT_NAME Lith-qhot
+            SUFFIX .bat
+        )
+        configure_file(dist/Lith-qhot.bat.in Lith-qhot.bat
+            @ONLY
+            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+        )
+    else()
+        set(qhot_FULL_BINARY_PATH "${qhot_BINARY_DIR}/${qhot_NAME}")
+        set_target_properties(Lith-qhot PROPERTIES
+            LINKER_LANGUAGE NONE
+            OUTPUT_NAME Lith-qhot.sh
+        )
+        configure_file(dist/Lith-qhot.sh.in dist/Lith-qhot.sh
+            @ONLY
+            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+        )
+    endif()
 endif()
 
 feature_summary(WHAT ALL)

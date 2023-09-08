@@ -206,7 +206,7 @@ jobs:
       shell: bash
       run: |
         cd build_win/release
-        "$Qt6_DIR"/bin/windeployqt.exe Lith.exe --verbose 2 --release --compiler-runtime --qmldir ../..
+        "$Qt6_DIR"/bin/windeployqt.exe Lith.exe LithCore.dll LithStyle.dll LithUI.dll --verbose 2 --release --compiler-runtime --qmldir ../..
         7z a ../../Lith.zip *
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'

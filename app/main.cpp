@@ -48,6 +48,7 @@ int main(int argc, char* argv[]) {
     engine.addImportPath(QStringLiteral(":/"));
     // This is used when installed, varies by platform
     engine.addImportPath(QStringLiteral(LITH_INSTALL_MODULEDIR));
+    engine.addImportPath(QStringLiteral("./modules"));
     // This is used when running from the build folder only
     engine.addImportPath(QStringLiteral("../../../../modules"));
     engine.addImportPath(QStringLiteral("../../.."));
