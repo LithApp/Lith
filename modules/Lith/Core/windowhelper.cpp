@@ -20,8 +20,11 @@ WindowHelper::WindowHelper()
 }
 
 WindowHelper* WindowHelper::instance() {
-    static WindowHelper self;
-    return &self;
+    static WindowHelper* self = nullptr;
+    if (!self) {
+        self = new WindowHelper();
+    }
+    return self;
 }
 
 void WindowHelper::init() {

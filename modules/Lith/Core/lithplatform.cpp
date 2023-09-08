@@ -5,8 +5,11 @@ LithPlatform::LithPlatform()
 }
 
 LithPlatform* LithPlatform::instance() {
-    static LithPlatform self;
-    return &self;
+    static LithPlatform* self = nullptr;
+    if (!self) {
+        self = new LithPlatform();
+    }
+    return self;
 }
 
 bool LithPlatform::isIos() {
