@@ -116,7 +116,7 @@ if (LITH_FEATURE_QHOT)
             LINKER_LANGUAGE NONE
             OUTPUT_NAME Lith-qhot.sh
         )
-        configure_file(dist/Lith-qhot.sh.in dist/Lith-qhot.sh
+        configure_file(dist/Lith-qhot.sh.in Lith-qhot.sh
             @ONLY
             FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
         )
