@@ -37,6 +37,10 @@ else()
     set(LITH_DEPENDENCY_ENABLE_KEYCHAIN OFF)
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+    set(ANDROID_OPENSSL_PATH "${ANDROID_SDK_ROOT}/android_openssl/ssl_3" CACHE STRING "Path to the folder with https://github.com/KDAB/android_openssl.git")
+endif()
+
 set(VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
 
 if (VERSION)
@@ -96,7 +100,7 @@ if(LITH_DEPENDENCY_ENABLE_KEYCHAIN)
         GIT_REPOSITORY https://github.com/frankosterfeld/qtkeychain.git
         GIT_TAG 0.14.1
         EXCLUDE_FROM_ALL ON
-        OPTIONS "BUILD_WITH_QT6 ON" "USE_CREDENTIAL_STORE ON" "BUILD_SHARED_LIBS OFF"
+        OPTIONS "BUILD_WITH_QT6 ON" "USE_CREDENTIAL_STORE ON" "BUILD_SHARED_LIBS OFF" "BUILD_TRANSLATIONS OFF"
     )
 endif()
 

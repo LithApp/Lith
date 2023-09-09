@@ -21,6 +21,8 @@ On desktop systems, you can run WeeChat on the same device as Lith but the main 
 remote connections, especially on mobile platforms and iOS in particular. The remote WeeChat server needs to be
 directly over the internet either through a TCP socket or WebSockets.
 
+There is also a browser version of Lith you can try right now thanks to WebAssembly: https://lith.app/Lith/Lith.html .
+
 ### Features
 
 - Inline preview of images and videos
@@ -52,6 +54,7 @@ Lith currently supports the following platforms:
  - (Beta) **Linux**: https://flathub.org/apps/details/app.lith.Lith
  - (Alpha) Windows: https://github.com/LithApp/Lith/releases
  - (Alpha) macOS: https://github.com/LithApp/Lith/releases
+ - (Alpha) WebAssembly: https://lith.app/Lith/Lith.html
 
 
 ## Build instructions

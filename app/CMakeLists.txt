@@ -17,7 +17,7 @@ qt_add_executable(Lith
 set_target_properties(Lith PROPERTIES
     QT_QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/modules"
     QT_QML_ROOT_PATH "${CMAKE_SOURCE_DIR}"
-    QT_ANDROID_EXTRA_LIBS "/home/mbriza/tools/Android/SDK/android_openssl/ssl_3/x86_64/libssl_3.so;/home/mbriza/tools/Android/SDK/android_openssl/ssl_3/x86_64/libcrypto_3.so"
+    QT_ANDROID_EXTRA_LIBS "${ANDROID_OPENSSL_PATH}/${ANDROID_ABI}/libssl_3.so;${ANDROID_OPENSSL_PATH}/${ANDROID_ABI}/libcrypto_3.so"
 )
 qt_finalize_target(Lith)
 qt_add_qml_module(Lith
@@ -25,7 +25,7 @@ qt_add_qml_module(Lith
     QML_FILES main.qml
 )
 qt_import_qml_plugins(Lith)
-if(ANDROID)
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     qt_android_generate_deployment_settings(LithStyleplugin)
     qt_android_generate_deployment_settings(Lith)
     qt_android_add_apk_target(Lith)
