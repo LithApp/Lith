@@ -22,8 +22,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 1        
-        fetch-tags: true
+        fetch-depth: 1
+
     - name: Import signing keys
       run: |
         security create-keychain -p password build.keychain
@@ -126,7 +126,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-        fetch-tags: true
 
     - name: Set up CPM cache
       id: cache-cpm
@@ -186,7 +185,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-        fetch-tags: true
 
     - name: Set up CPM cache
       id: cache-cpm
@@ -245,7 +243,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-        fetch-tags: true
 
     - name: Set up CPM cache
       id: cache-cpm
@@ -306,7 +303,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-        fetch-tags: true
     - name: Install Make
       run: |
         sudo apt update
@@ -349,10 +345,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-        fetch-tags: true
-    - name: "Inject build variables"
-      run: |
-        sed -i "s/#IMGUR_API_KEY=/IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }}/" Lith.pro
     - uses: bilelmoussaoui/flatpak-github-actions@v2
       with:
         bundle: "app.Lith.Lith.flatpak"
@@ -403,7 +395,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-        fetch-tags: true
 
     - name: Set up CPM cache
       id: cache-cpm
