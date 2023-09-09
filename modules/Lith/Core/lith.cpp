@@ -36,6 +36,13 @@
   #include <QtDBus/QDBusConnectionInterface>
 #endif  // __linux
 
+Lith::~Lith() {
+#ifndef __EMSCRIPTEN__
+    m_weechatThread->quit();
+    m_weechatThread->wait();
+#endif  // __EMSCRIPTEN__
+}
+
 Lith* Lith::instance() {
     static Lith* _self = nullptr;
     if (!_self) {

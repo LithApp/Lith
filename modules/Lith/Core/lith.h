@@ -77,6 +77,7 @@ private:
     Q_PROPERTY(bool debugVersion READ debugVersion CONSTANT)
 
 public:
+    ~Lith();
     static Lith* instance();
     static Lith* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
         return instance();
