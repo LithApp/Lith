@@ -84,6 +84,7 @@ jobs:
         version: ${{env.QT_VERSION}}
         set-env: false
         modules: ${{env.QT_MODULES}} qtquick3d
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt-host
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -91,6 +92,7 @@ jobs:
         version: ${{env.QT_VERSION}}
         target: ios
         modules: ${{env.QT_MODULES}} qtquick3d
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
     - name: Build the iOS binary
@@ -144,6 +146,7 @@ jobs:
         set-env: false
         aqtversion: '==3.1.*'
         modules: ${{env.QT_MODULES}}
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt-host
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -154,6 +157,7 @@ jobs:
         arch: android_armv7
         aqtversion: '==3.1.*'
         modules: ${{env.QT_MODULES}}
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
     - name: Get OpenSSL
@@ -201,6 +205,7 @@ jobs:
         version: ${{env.QT_VERSION}}
         set-env: false
         aqtversion: '==3.1.*'
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt-host
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -211,6 +216,7 @@ jobs:
         arch: wasm_singlethread
         modules: ${{env.QT_MODULES}}
         aqtversion: '==3.1.*'
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
     - uses: mymindstorm/setup-emsdk@v11
@@ -258,6 +264,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
     - name: Add msbuild to PATH
@@ -322,6 +329,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
     - name: Build the application
@@ -410,6 +418,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
+        cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
     - name: Build the application
