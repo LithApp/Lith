@@ -401,7 +401,7 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
         // hotlist
         auto hlPtr = i.pointers.first();
         auto bufPtr = qvariant_cast<pointer_t>(i.objects["buffer"]);
-        auto* hl = getHotlist(hlPtr);
+        auto hl = getHotlist(hlPtr);
         auto* buf = getBuffer(bufPtr);
         if (!buf) {
             qWarning() << "Got a hotlist item" << QString("%1").arg(hlPtr, 16, 16, QChar('0')) << "for nonexistent buffer"
@@ -409,8 +409,9 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
             continue;
         }
         if (!hl) {
-            hl = new HotListItem(this);
+            hl = QSharedPointer<HotListItem>::create(this);
             hl->bufferSet(buf);
+            addHotlist(hlPtr, hl);
         }
         for (auto [key, value] : i.objects.asKeyValueRange()) {
             if (key == "buffer") {
@@ -741,11 +742,11 @@ void Lith::addHotlist(pointer_t ptr, QSharedPointer<HotListItem> hotlist) {
     m_hotList[ptr] = hotlist;
 }
 
-HotListItem* Lith::getHotlist(pointer_t ptr) {
+QSharedPointer<HotListItem> Lith::getHotlist(pointer_t ptr) {
     if (m_hotList.contains(ptr)) {
-        return m_hotList[ptr].get();
+        return m_hotList[ptr];
     }
-    return nullptr;
+    return {};
 }
 
 const Buffer* Lith::getBuffer(pointer_t ptr) const {
@@ -755,11 +756,11 @@ const Buffer* Lith::getBuffer(pointer_t ptr) const {
     return nullptr;
 }
 
-const HotListItem* Lith::getHotlist(pointer_t ptr) const {
+QSharedPointer<const HotListItem> Lith::getHotlist(pointer_t ptr) const {
     if (m_hotList.contains(ptr)) {
-        return m_hotList[ptr].get();
+        return m_hotList[ptr];
     }
-    return nullptr;
+    return {};
 }
 
 ProxyBufferList::ProxyBufferList(QObject* parent, QAbstractListModel* parentModel)

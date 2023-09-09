@@ -155,7 +155,7 @@ public slots:
 public:
     const Buffer* getBuffer(pointer_t ptr) const;
     const BufferLine* getLine(pointer_t bufPtr, pointer_t linePtr) const;
-    const HotListItem* getHotlist(pointer_t ptr) const;
+    QSharedPointer<const HotListItem> getHotlist(pointer_t ptr) const;
 
 protected:
     void addBuffer(pointer_t ptr, Buffer* b);
@@ -164,7 +164,7 @@ protected:
     void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine* line, bool overwrite = false);
     BufferLine* getLine(pointer_t bufPtr, pointer_t linePtr);
     void addHotlist(pointer_t ptr, QSharedPointer<HotListItem> hotlist);
-    HotListItem* getHotlist(pointer_t ptr);
+    QSharedPointer<HotListItem> getHotlist(pointer_t ptr);
 
 signals:
     void selectedBufferChanged();
