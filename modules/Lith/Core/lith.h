@@ -163,7 +163,7 @@ protected:
     Buffer* getBuffer(pointer_t ptr);
     void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine* line, bool overwrite = false);
     BufferLine* getLine(pointer_t bufPtr, pointer_t linePtr);
-    void addHotlist(pointer_t ptr, HotListItem* hotlist);
+    void addHotlist(pointer_t ptr, QSharedPointer<HotListItem> hotlist);
     HotListItem* getHotlist(pointer_t ptr);
 
 signals:
@@ -195,7 +195,7 @@ private:
 
     QMap<pointer_t, QPointer<Buffer>> m_bufferMap {};
     QMap<pointer_t, QMap<pointer_t, QPointer<BufferLine>>> m_lineMap;
-    QMap<pointer_t, QPointer<HotListItem>> m_hotList;
+    QMap<pointer_t, QSharedPointer<HotListItem>> m_hotList;
     Buffer* m_logBuffer = nullptr;
 };
 

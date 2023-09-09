@@ -337,7 +337,7 @@ void Lith::handleHotlistInitialization(const WeeChatProtocol::HData& hda) {
         // hotlist
         auto ptr = i.pointers.first();
         auto bufPtr = i.objects["buffer"].value<pointer_t>();
-        auto* item = new HotListItem(this);
+        auto item = QSharedPointer<HotListItem>::create();
         auto* buffer = getBuffer(bufPtr);
         if (buffer) {
             item->bufferSet(buffer);
@@ -733,7 +733,7 @@ const BufferLine* Lith::getLine(pointer_t bufPtr, pointer_t linePtr) const {
     return nullptr;
 }
 
-void Lith::addHotlist(pointer_t ptr, HotListItem* hotlist) {
+void Lith::addHotlist(pointer_t ptr, QSharedPointer<HotListItem> hotlist) {
     if (m_hotList.contains(ptr)) {
         // TODO
         qCritical() << "Hotlist with ptr" << QString("%1").arg(ptr, 8, 16, QChar('0')) << "already exists";
@@ -743,7 +743,7 @@ void Lith::addHotlist(pointer_t ptr, HotListItem* hotlist) {
 
 HotListItem* Lith::getHotlist(pointer_t ptr) {
     if (m_hotList.contains(ptr)) {
-        return m_hotList[ptr];
+        return m_hotList[ptr].get();
     }
     return nullptr;
 }
@@ -757,7 +757,7 @@ const Buffer* Lith::getBuffer(pointer_t ptr) const {
 
 const HotListItem* Lith::getHotlist(pointer_t ptr) const {
     if (m_hotList.contains(ptr)) {
-        return m_hotList[ptr];
+        return m_hotList[ptr].get();
     }
     return nullptr;
 }
