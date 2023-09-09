@@ -19,7 +19,6 @@ set_target_properties(Lith PROPERTIES
     QT_QML_ROOT_PATH "${CMAKE_SOURCE_DIR}"
     QT_ANDROID_EXTRA_LIBS "${ANDROID_OPENSSL_PATH}/${ANDROID_ABI}/libssl_3.so;${ANDROID_OPENSSL_PATH}/${ANDROID_ABI}/libcrypto_3.so"
 )
-qt_finalize_target(Lith)
 qt_add_qml_module(Lith
     URI App # Seems to have to to be like this in this case, otherwise there are build directory name clashes when linking the binary
     QML_FILES main.qml
@@ -123,6 +122,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     # It needs to be referenced against the app, not the module that actually uses it
     qt_import_plugins(Lith INCLUDE Qt::QIosOptionalPlugin_NSPhotoLibraryPlugin )
 endif()
+
+qt_finalize_target(Lith)
 
 install(TARGETS Lith
     BUNDLE DESTINATION .
