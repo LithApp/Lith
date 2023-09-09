@@ -150,10 +150,12 @@ void Weechat::restart() {
 #ifndef __EMSCRIPTEN__
     if (!Lith::settingsGet()->useWebsocketsGet()) {
         m_connection->connectToTcpSocket(host, port, ssl);
-    } else {  // BEWARE
-#endif        // __EMSCRIPTEN__
+    } else {
+#endif  // __EMSCRIPTEN__
         m_connection->connectToWebsocket(host, websocketEndpoint, port, ssl);
+#ifndef __EMSCRIPTEN__
     }
+#endif  // __EMSCRIPTEN__
     // BEWARE OF THE ELSE ABOVE
 }
 

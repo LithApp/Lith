@@ -121,7 +121,7 @@ jobs:
         fi
 
   Android:
-    if: false && github.event_name == 'create'
+    if: github.event_name == 'create'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -174,17 +174,16 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: android-build-debug.apk
-        path: build_android/android-build//build/outputs/apk/debug/android-build-debug.apk
+        path: build_android/app/android-build/Lith.apk
     - name: Upload to GitHub
       if: github.event_name == 'create'
       run: |
         TAG_NAME=$(./dist/get-tag-name.sh)
         if [[ "$TAG_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/android-build//build/outputs/apk/debug/android-build-debug.apk" renameto="Lith-android-${TAG_NAME}.apk"
+            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="$TAG_NAME" filename="build_android/app/android-build/Lith.apk" renameto="Lith-android-${TAG_NAME}.apk"
         fi
 
   Webassembly:
-    if: false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -224,6 +223,7 @@ jobs:
     - uses: mymindstorm/setup-emsdk@v11
       with:
         version: ${{env.EM_VERSION}}
+
     - name: Build the Emscripten binary
       run: |
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/wasm/build.sh

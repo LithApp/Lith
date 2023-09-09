@@ -35,6 +35,9 @@
 // Q_IMPORT_QML_PLUGIN(Lith_UIPlugin)
 // Q_IMPORT_QML_PLUGIN(Lith_StylePlugin)
 // Q_IMPORT_QML_PLUGIN(Lith_CorePlugin)
+#ifdef Q_OS_WASM
+Q_IMPORT_PLUGIN(QWasmIntegrationPlugin)
+#endif
 // NOLINTEND
 
 int main(int argc, char* argv[]) {

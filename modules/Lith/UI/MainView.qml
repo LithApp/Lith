@@ -27,7 +27,7 @@ Item {
     }
 
     property real topMargin: {
-        if (LithPlatform.ios) {
+        if (LithPlatform.mobile) {
             if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
                 let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
                 let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
@@ -39,7 +39,7 @@ Item {
         return WindowHelper.safeAreaMargins.top
     }
     property real bottomMargin:{
-        if (LithPlatform.ios) {
+        if (LithPlatform.mobile) {
             let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
             let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
             if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {

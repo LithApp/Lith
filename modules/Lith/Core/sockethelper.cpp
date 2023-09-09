@@ -68,8 +68,10 @@ void SocketHelper::connectToWebsocket(const QString& hostname, const QString& en
     connect(m_webSocket, &QWebSocket::errorOccurred, this, &SocketHelper::onError);
     connect(m_webSocket, &QWebSocket::binaryMessageReceived, this, &SocketHelper::onBinaryMessageReceived);
 
+#ifndef __EMSCRIPTEN__
     // SSL errors need to be connected directly to handle ignoring some of them (if that's enabled)
     connect(m_webSocket, &QWebSocket::sslErrors, this, &SocketHelper::onSslErrors, Qt::DirectConnection);
+#endif  // __EMSCRIPTEN__
 
     m_webSocket->open(QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
 }

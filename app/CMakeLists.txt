@@ -11,14 +11,30 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 qt_add_executable(Lith
-    MACOSX_BUNDLE
+    MACOSX_BUNDLE MANUAL_FINALIZATION
     ${LITH_SOURCES}
 )
+set_target_properties(Lith PROPERTIES
+    QT_QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/modules"
+    QT_QML_ROOT_PATH "${CMAKE_SOURCE_DIR}"
+    QT_ANDROID_EXTRA_LIBS "/home/mbriza/tools/Android/SDK/android_openssl/ssl_3/x86_64/libssl_3.so;/home/mbriza/tools/Android/SDK/android_openssl/ssl_3/x86_64/libcrypto_3.so"
+)
+qt_finalize_target(Lith)
 qt_add_qml_module(Lith
     URI App # Seems to have to to be like this in this case, otherwise there are build directory name clashes when linking the binary
     QML_FILES main.qml
 )
 qt_import_qml_plugins(Lith)
+if(ANDROID)
+    qt_android_generate_deployment_settings(LithStyleplugin)
+    qt_android_generate_deployment_settings(Lith)
+    qt_android_add_apk_target(Lith)
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    target_link_libraries(Lith PRIVATE
+        Qt6::QWasmIntegrationPlugin
+    )
+endif()
 
 target_link_libraries(Lith PRIVATE
     LithAssets
@@ -103,11 +119,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
         -F/System/Library/Frameworks
     )
 
-    if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
-        # This is a workaround, Qt doesn't include this plugin automatically for us
-        # It needs to be referenced against the app, not the module that actually uses it
-        qt_import_plugins(Lith INCLUDE Qt::QIosOptionalPlugin_NSPhotoLibraryPlugin )
-    endif()
+    # This is a workaround, Qt doesn't include this plugin automatically for us
+    # It needs to be referenced against the app, not the module that actually uses it
+    qt_import_plugins(Lith INCLUDE Qt::QIosOptionalPlugin_NSPhotoLibraryPlugin )
 endif()
 
 install(TARGETS Lith

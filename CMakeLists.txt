@@ -17,8 +17,8 @@ if(NOT CMAKE_CROSSCOMPILING)
     # Doesn't make sense when running on another device
     option(LITH_FEATURE_QHOT "Download and build https://github.com/patrickelectric/qhot - a live-reloading tool for UI development." OFF)
 endif()
-cmake_dependent_option(LITH_FORCE_DOWNLOAD_DEPENDENCIES "Force downloading 3rd party dependencies even if they are installed. This is the default on all platforms except Linux." OFF LINUX ON)
-cmake_dependent_option(LITH_FORCE_LOCAL_PACKAGES_ONLY "Completely disable downloading 3rd party dependencies, only the ones from find_package will be used. This is enabled by default on Linux only." ON LINUX OFF)
+option(LITH_FORCE_DOWNLOAD_DEPENDENCIES "Force downloading 3rd party dependencies even if they are installed." OFF)
+option(LITH_FORCE_LOCAL_PACKAGES_ONLY "Completely disable downloading 3rd party dependencies, only the ones from find_package will be used." OFF)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Emscripten)
     # There's no WebAssembly backend
@@ -95,6 +95,7 @@ if(LITH_DEPENDENCY_ENABLE_KEYCHAIN)
         NAME Qt6Keychain
         GIT_REPOSITORY https://github.com/frankosterfeld/qtkeychain.git
         GIT_TAG 0.14.1
+        EXCLUDE_FROM_ALL ON
         OPTIONS "BUILD_WITH_QT6 ON" "USE_CREDENTIAL_STORE ON" "BUILD_SHARED_LIBS OFF"
     )
 endif()
@@ -115,6 +116,7 @@ CPMAddPackage(
     # Using a newer hash because there's a build issue with one override
     GIT_TAG b1bde3bdb36e3efdd13e62bae2eed8224734f15f
     VERSION 0.9.0
+    EXCLUDE_FROM_ALL ON
     OPTIONS "QCORO_BUILD_EXAMPLES OFF" "BUILD_TESTING OFF" "QCORO_WITH_QTDBUS ${LITH_DEPENDENCY_ENABLE_DBUS}"
     FIND_PACKAGE_ARGUMENTS "COMPONENTS ${LITH_QCORO_DEPENDENCY_MODULES} REQUIRED"
 )
@@ -123,6 +125,7 @@ qt_standard_project_setup(REQUIRES 6.5)
 get_target_property(QT_MOC_EXECUTABLE Qt::moc IMPORTED_LOCATION)
 get_filename_component(QT_BINARY_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
 get_filename_component(QT_INSTALL_PREFIX ${QT_BINARY_PREFIX} DIRECTORY)
+qcoro_enable_coroutines()
 
 # I'm pretty sure I'm doing something wrong with this but I haven't found a better way to create the macOS bundle
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -157,6 +160,7 @@ if (LITH_FEATURE_QHOT)
         NAME qhot
         GIT_REPOSITORY https://github.com/MartinBriza/qhot.git
         GIT_TAG 942aa3d6fb1badf8952b4fb127d6881861611771
+        EXCLUDE_FROM_ALL ON
     )
     get_property(qhot_BINARY_DIR TARGET qhot PROPERTY BINARY_DIR)
     get_property(qhot_NAME TARGET qhot PROPERTY NAME)

@@ -89,10 +89,10 @@ Qt always needs to be installed outside of Lith's build system. Other dependenci
 - `LITH_FEATURE_KEYCHAIN` - `ON` by default. Enables keychain integration on Linux, macOS, Windows, iOS and Android.
 - `LITH_FEATURE_QHOT` - `OFF` by default. Builds internal `qhot` instance and adds a target to automatically run Lith
                         in `qhot`. Not useful for end users.
-- `LITH_FORCE_DOWNLOAD_DEPENDENCIES` - `OFF` in Linux, `ON` elsewhere. Makes CPM go for downloading packages from
+- `LITH_FORCE_DOWNLOAD_DEPENDENCIES` - `OFF` by default. Makes CPM go for downloading packages from
                                        GitHub without checking local system. This option takes preference over
                                        `LITH_FORCE_LOCAL_PACKAGES_ONLY`.
-- `LITH_FORCE_LOCAL_PACKAGES_ONLY` - `ON` in Linux, `OFF` elsewhere. Enforces usage of only packages installed on local
+- `LITH_FORCE_LOCAL_PACKAGES_ONLY` - `OFF` by default. Enforces usage of only packages installed on local
                                      system.
 
 ## Get in touch
