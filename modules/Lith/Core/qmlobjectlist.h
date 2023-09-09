@@ -18,11 +18,10 @@ public:
         mData.clear();
     }
 
-    template <typename T> inline static QmlObjectList* create(QObject* parent = Q_NULLPTR) {
-        return new QmlObjectList(&T::staticMetaObject, parent);
+    template <typename T> inline static QmlObjectList* create(QObject* parent = Q_NULLPTR, bool deleteChildren = true) {
+        return new QmlObjectList(&T::staticMetaObject, parent, deleteChildren);
     }
 
-    void prepend(QObjectPointer object);
     void prepend(QObject* object);
     void append(QObject* object);
 
@@ -86,10 +85,11 @@ signals:
     void countChanged();
 
 private:
-    explicit QmlObjectList(const QMetaObject* m, QObject* parent = Q_NULLPTR);
+    explicit QmlObjectList(const QMetaObject* m, QObject* parent = Q_NULLPTR, bool deleteChildren = true);
 
     const QMetaObject* mMetaObject;
     QList<QObjectPointer> mData;
+    bool mDeleteChildren = true;
 };
 
 #endif  // QMLOBJECTLIST_H

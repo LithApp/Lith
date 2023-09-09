@@ -193,7 +193,7 @@ Lith::Lith(QObject* parent)
 #endif
     , m_networkProxy(BaseNetworkProxy::create(this))
     , m_weechat(new Weechat(m_networkProxy, this))
-    , m_buffers(QmlObjectList::create<Buffer>())
+    , m_buffers(QmlObjectList::create<Buffer>(this, false))
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
     , m_selectedBufferNicks(new NickListFilter(this))
     , m_logger(new Logger(this))
@@ -223,7 +223,7 @@ void Lith::resetData() {
 
     m_buffers->clear();
     if (!m_logBuffer) {
-        m_logBuffer = QSharedPointer<Buffer>::create(this, 0);
+        m_logBuffer = new Buffer(this, 0);
         m_logBuffer->nameSet(FormattedString("Lith Log"));
         auto eventToLine = [](Buffer* parent, const QDateTime& dateTime, const Logger::Event& event) -> BufferLine* {
             auto* logLine = new BufferLine(parent);
@@ -249,12 +249,12 @@ void Lith::resetData() {
         };
         if (settingsGet()->enableLoggingGet()) {
             for (const auto& eventPair : m_logger->events()) {
-                m_logBuffer->prependLine(eventToLine(m_logBuffer.data(), eventPair.first, eventPair.second));
+                m_logBuffer->prependLine(eventToLine(m_logBuffer, eventPair.first, eventPair.second));
             }
         }
         connect(m_logger, &Logger::eventAdded, this, [this, eventToLine](const QDateTime& dateTime, const Logger::Event& event) {
             if (settingsGet()->enableLoggingGet()) {
-                m_logBuffer->prependLine(eventToLine(m_logBuffer.data(), dateTime, event));
+                m_logBuffer->prependLine(eventToLine(m_logBuffer, dateTime, event));
             }
         });
         connect(settingsGet(), &Settings::enableLoggingChanged, this, [this]() {
@@ -263,10 +263,10 @@ void Lith::resetData() {
                 m_buffers->prepend(m_logBuffer);
                 selectedBufferSet(previousSelectedBuffer);
             } else {
-                if (selectedBuffer() == m_logBuffer.data()) {
+                if (selectedBuffer() == m_logBuffer) {
                     selectedBufferIndexSet(-1);
                 }
-                m_buffers->removeItem(m_logBuffer.data());
+                m_buffers->removeItem(m_logBuffer);
             }
         });
     }

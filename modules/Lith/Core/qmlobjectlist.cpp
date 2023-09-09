@@ -7,6 +7,16 @@
 
 #define ValidateIndex(m_i) ((m_i) < 0 || (m_i) >= rowCount())
 
+static void nullDeleter(QObject* obj) {
+}
+
+QObjectPointer makeShared(QObject* object, bool shouldDelete) {
+    if (shouldDelete) {
+        return QObjectPointer(object);
+    }
+    return QObjectPointer(object, nullDeleter);
+}
+
 void QmlObjectList::append(const QVariantMap& properties) {
     auto* newObj = mMetaObject->newInstance();
     if (newObj == Q_NULLPTR) {
@@ -29,15 +39,7 @@ void QmlObjectList::append(const QVariantMap& properties) {
 void QmlObjectList::prepend(QObject* object) {
     Q_ASSERT(object->metaObject() == mMetaObject);
     beginInsertRows(QModelIndex(), 0, 0);
-    mData.prepend(QObjectPointer(object));
-    endInsertRows();
-    emit countChanged();
-}
-
-void QmlObjectList::prepend(QObjectPointer object) {
-    Q_ASSERT(object->metaObject() == mMetaObject);
-    beginInsertRows(QModelIndex(), 0, 0);
-    mData.prepend(std::move(object));
+    mData.prepend(makeShared(object, mDeleteChildren));
     endInsertRows();
     emit countChanged();
 }
@@ -52,7 +54,7 @@ bool QmlObjectList::insert(const int& i, QObject* object) {
         return false;
     }
     beginInsertRows(QModelIndex(), i, i);
-    mData.insert(i, QObjectPointer(object));
+    mData.insert(i, makeShared(object, mDeleteChildren));
     endInsertRows();
     emit countChanged();
     return true;
@@ -121,9 +123,10 @@ int QmlObjectList::rowCount(const QModelIndex& parent) const {
     return static_cast<int>(mData.count());
 }
 
-QmlObjectList::QmlObjectList(const QMetaObject* m, QObject* parent)
+QmlObjectList::QmlObjectList(const QMetaObject* m, QObject* parent, bool deleteChildren)
     : QAbstractListModel(parent)
-    , mMetaObject(m) {
+    , mMetaObject(m)
+    , mDeleteChildren(deleteChildren) {
 }
 
 void QmlObjectList::clear() {
