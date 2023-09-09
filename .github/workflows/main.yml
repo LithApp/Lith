@@ -74,7 +74,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/cpm-cache
-        key: ${{ runner.os }}-cpm-${{ hashFiles('**/') }}
+        key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: |
           ${{ runner.os }}-cpm-
 
@@ -132,7 +132,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/cpm-cache
-        key: ${{ runner.os }}-cpm-${{ hashFiles('**/') }}
+        key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: |
           ${{ runner.os }}-cpm-
 
@@ -191,7 +191,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/cpm-cache
-        key: ${{ runner.os }}-cpm-${{ hashFiles('**/') }}
+        key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: |
           ${{ runner.os }}-cpm-
 
@@ -249,7 +249,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/cpm-cache
-        key: ${{ runner.os }}-cpm-${{ hashFiles('**/') }}
+        key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: |
           ${{ runner.os }}-cpm-
 
@@ -313,7 +313,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/cpm-cache
-        key: ${{ runner.os }}-cpm-${{ hashFiles('**/') }}
+        key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: |
           ${{ runner.os }}-cpm-
 
@@ -401,7 +401,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/cpm-cache
-        key: ${{ runner.os }}-cpm-${{ hashFiles('**/') }}
+        key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: |
           ${{ runner.os }}-cpm-
 
