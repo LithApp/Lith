@@ -25,6 +25,7 @@ T.BusyIndicator {
                 to: 360
                 duration: 1000
                 loops: NumberAnimation.Infinite
+                running: visible
                 easing {
                     type: Easing.InOutQuad
                     amplitude: 1.0
