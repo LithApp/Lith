@@ -17,65 +17,35 @@ T.TextArea {
     property color backgroundColor: "transparent"
     property real animationSpeed: 300
 
-    cursorDelegate: Item {
-        width: 3
-        height: control.font.pixelSize + 2
-        Rectangle {
-            visible: control.cursorVisible
-            color: control.color
-            anchors {
-                fill: parent
-                leftMargin: 2
-            }
-            SequentialAnimation on opacity {
-                loops: Animation.Infinite
-                running: true
-                NumberAnimation {
-                    from: 0
-                    to: 1
-                    duration: control.animationSpeed
-                    easing.type: Easing.OutQuad
-                }
-                PauseAnimation {
-                    duration: control.animationSpeed * 2
-                }
-                NumberAnimation {
-                    from: 1
-                    to: 0
-                    duration: control.animationSpeed
-                    easing.type: Easing.OutQuad
-                }
-                PauseAnimation {
-                    duration: control.animationSpeed * 2
-                }
-            }
+    background: Rectangle {
+        property color actualBorderColor: {
+            if (control.borderColor != Qt.color("transparent"))
+                return control.borderColor
+            if (control.activeFocus)
+                return LithPalette.regular.midlight
+            return LithPalette.regular.button
         }
-    }
 
-    background: Item {
-        implicitWidth: 200
-        implicitHeight: 40
+        border {
+            color: actualBorderColor
+            width: 1
+        }
+
+        color: control.backgroundColor
+        anchors.fill: parent
 
         Label {
-            visible: control.text.length === 0
-            anchors {
-                fill: parent
-                margins: 6
-                leftMargin: 7
-            }
-            verticalAlignment: Text.AlignVCenter
+            visible: control.text.length === 0 && !control.activeFocus
+            width: parent.width
+            height: parent.height
+            elide: Text.ElideRight
+            verticalAlignment: control.verticalAlignment
             horizontalAlignment: control.horizontalAlignment
+            leftPadding: control.leftPadding
+            rightPadding: control.rightPadding
             font.pointSize: control.font.pointSize
             color: control.placeholderTextColor
-
             text: control.placeholderText
         }
-
-        Rectangle {
-            color: LithPalette.regular.text
-            opacity: 0.06
-            anchors.fill: parent
-        }
     }
-
 }

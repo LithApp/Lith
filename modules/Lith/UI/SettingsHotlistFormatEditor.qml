@@ -162,6 +162,7 @@ Dialog {
                                 id: formatSplitter
                                 allowedPropertyNames: reflection.stringProperties
                                 dataSource: Lith.selectedBuffer
+                                onErrorStringChanged: console.warn(errorString)
                             }
                         }
 
@@ -247,8 +248,7 @@ Dialog {
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                     property bool displaysError: formatSplitter.errorString.length > 0
                     text: Lith.selectedBuffer ? displaysError ? formatSplitter.errorString : formatSplitter.formattedData : ""
-                    opacity: displaysError ? 1.0 : 0.5
-                    color: displaysError ? "red" : LithPalette.regular.windowText
+                    color: displaysError ? "red" : LithPalette.disabled.text
                 }
             }
 
@@ -361,8 +361,7 @@ Dialog {
                         Layout.fillWidth: true
                         Layout.margins: 6
                         height: 1
-                        color: LithPalette.regular.windowText
-                        opacity: 0.3
+                        color: LithPalette.disabled.text
                     }
 
                     Label {
@@ -375,9 +374,9 @@ Dialog {
                         Layout.fillWidth: true
                         spacing: 0
                         Repeater {
-                            model: reflection.bufferStringProperties
+                            model: reflection.stringProperties
                             Label {
-                                opacity: 0.7
+                                color: LithPalette.disabled.text
                                 Layout.leftMargin: 18
                                 text: modelData
                             }
@@ -387,8 +386,7 @@ Dialog {
                         Layout.fillWidth: true
                         Layout.margins: 6
                         height: 1
-                        color: LithPalette.regular.windowText
-                        opacity: 0.3
+                        color: LithPalette.disabled.text
                     }
                     Label {
                         Layout.fillWidth: true

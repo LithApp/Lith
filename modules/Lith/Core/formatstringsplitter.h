@@ -10,6 +10,8 @@ class Buffer;
 
 class LITHCORE_EXPORT FormatStringVariable : public QObject {
     Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
     PROPERTY_CONSTANT(int, index)
     PROPERTY(QString, name)
     PROPERTY_READONLY_PRIVATESETTER(bool, valid, false)

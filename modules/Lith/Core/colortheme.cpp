@@ -36,5 +36,6 @@ QPalette ColorTheme::palette() const {
     palette.setBrush(QPalette::Highlight, QColor(0xcc, 0x33, 0x33));
     palette.setBrush(QPalette::HighlightedText, Qt::white);
     palette.setBrush(QPalette::Disabled, QPalette::Text, mix(text, window, 0.6));
+    palette.setBrush(QPalette::Disabled, QPalette::Button, mix(button, window, 0.45));
     return palette;
 }

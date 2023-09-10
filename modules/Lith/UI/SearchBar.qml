@@ -6,7 +6,7 @@ import Lith.Core
 import Lith.Style
 
 // Had to use a wrapper Item to enforce parent layout boundaries... shouldn't be necessary, really, but I probably made a mistake in some higher level
-Item {
+Rectangle {
     id: root
 
     property var search: Lith.search
@@ -26,6 +26,8 @@ Item {
 
     implicitHeight: rootLayout.implicitHeight + 1
     implicitWidth: rootLayout.implicitWidth
+
+    color: LithPalette.regular.window
 
     Rectangle {
         anchors {
@@ -114,7 +116,7 @@ Item {
                 visible: resultsMetrics.width * 3.5 < rootLayout.width
                 font.pointSize: FontSizes.small
                 text: qsTr("Total: %1 lines").arg(Lith.selectedBuffer ? Lith.selectedBuffer.lines.count : "N/A")
-                opacity: 0.7
+                color: LithPalette.disabled.text
             }
             Label {
                 font.pointSize: FontSizes.small
@@ -126,7 +128,7 @@ Item {
             Label {
                 Layout.alignment: Qt.AlignHCenter
                 visible: resultsMetrics.width * 3.5 >= rootLayout.width
-                opacity: search.term.length === 0 || search.highlightedMatchIndex < 0 ? 0.7 : 1
+                color: search.term.length === 0 || search.highlightedMatchIndex < 0 ? LithPalette.disabled.text : LithPalette.regular.text
                 text: search.term.length === 0 || search.highlightedMatchIndex < 0 ? "N/A" : search.highlightedMatchIndex + 1
             }
             Rectangle {

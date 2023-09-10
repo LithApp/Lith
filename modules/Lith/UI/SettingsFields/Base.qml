@@ -70,7 +70,7 @@ Rectangle {
                     Layout.rightMargin: visible ? 6 : 0
                     elide: Label.ElideRight
                     font.pointSize: summary.font.pointSize * 0.7
-                    opacity: 0.8
+                    color: LithPalette.disabled.text
                     visible: text.length > 0
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                     maximumLineCount: 4

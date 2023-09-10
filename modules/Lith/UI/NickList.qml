@@ -100,8 +100,7 @@ Drawer {
             visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
             text: Lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(Lith.selectedBuffer.normals).arg(Lith.selectedBuffer.voices).arg(Lith.selectedBuffer.ops).arg(Lith.selectedBuffer.normals + Lith.selectedBuffer.voices + Lith.selectedBuffer.ops) : ""
             font.pointSize: FontSizes.tiny
-            color: LithPalette.regular.windowText
-            opacity: 0.7
+            color: LithPalette.disabled.text
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
 
@@ -196,5 +195,16 @@ Drawer {
                 }
             }
         }
+    }
+    Rectangle {
+        visible: !root.isClosed
+        anchors {
+            top: parent.top
+            left: parent.left
+            bottom: parent.bottom
+            rightMargin: -1
+        }
+        width: 1
+        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
     }
 }

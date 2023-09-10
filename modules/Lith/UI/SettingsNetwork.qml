@@ -209,7 +209,7 @@ ScrollView {
                     spacing: -1
 
                     Label {
-                        opacity: 0.5
+                        color: LithPalette.disabled.text
                         text: qsTr("There were no present recordings on startup.")
                         visible: recordingsListView.count === 0
                         anchors.centerIn: parent
@@ -283,7 +283,7 @@ ScrollView {
                             Label {
                                 visible: beingRecorded
                                 text: qsTr("This slot is currently being overwritten.")
-                                opacity: 0.8
+                                color: LithPalette.disabled.text
                                 Layout.minimumWidth: font.pixelSize * 15
                                 Layout.maximumWidth: Layout.minimumWidth
                                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere

@@ -120,8 +120,7 @@ Item {
         }
 
         height: 1
-        color: LithPalette.regular.text
-        opacity: 0.5
+        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
     }
 
     Item {
@@ -197,10 +196,8 @@ Item {
                         text: buffer && buffer.number > 0 ? buffer.number : ""
                         font.pointSize: FontSizes.small
                         anchors.centerIn: parent
-                        color: LithPalette.disabled.text
-                        opacity: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
+                        color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? LithPalette.regular.text : LithPalette.disabled.text
                     }
-                    Behavior on opacity { NumberAnimation { duration: 100 } }
                 }
                 Rectangle {
                     id: hotMessageIndicator

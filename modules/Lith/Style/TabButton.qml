@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
+import Lith.Core
 import Lith.Style
 
 T.TabButton {
@@ -19,8 +20,6 @@ T.TabButton {
     icon.width: 28
     icon.height: 28
 
-    property color backgroundColor: "transparent"
-
     contentItem: IconLabel {
         spacing: control.spacing
         mirrored: control.mirrored
@@ -29,20 +28,18 @@ T.TabButton {
         icon: control.icon
         text: control.text
         font: control.font
-        color: control.checked ? control.palette.windowText : control.palette.brightText
+        color: control.checked ? LithPalette.regular.windowText : ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.window, 0.75)
+
     }
 
     background: Rectangle {
-        color: control.flat ? LithPalette.regular.button : "transparent"
+        color: {
+            if (control.flat)
+                return "transparent"
+            return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.buttonText, control.pressed ? 0.75 : control.hovered ? 0.9 : 1.0)
+        }
         radius: 2
 
-        Rectangle {
-            anchors.fill: parent
-            color: LithPalette.regular.text
-            radius: 2
-            opacity: control.pressed ? 0.3 : control.hovered ? 0.2 : 0.0
-            Behavior on opacity { NumberAnimation { duration: 100 } }
-        }
         Rectangle {
             anchors {
                 left: parent.left
@@ -50,7 +47,7 @@ T.TabButton {
                 bottom: parent.bottom
             }
             height: 4
-            color: control.checked ? LithPalette.regular.highlight : LithPalette.regular.button
+            color: control.checked ? LithPalette.regular.highlight : ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.75)
         }
     }
 }

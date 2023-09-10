@@ -40,8 +40,7 @@ Rectangle {
             bottom: parent.bottom
         }
         height: 1
-        color: LithPalette.regular.text
-        opacity: 0.5
+        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
     }
 
     RowLayout {

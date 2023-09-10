@@ -18,26 +18,46 @@ T.Switch {
     font.pointSize: Lith.settings.baseFontSize
 
     indicator: Rectangle {
+        id: backgroundRect
         implicitWidth: 44
         implicitHeight: 24
 
         radius: height / 2
-        color: LithPalette.regular.button
 
-        Rectangle {
-            id: shadow
-            visible: control.enabled
-            anchors.fill: parent
-            radius: parent.radius
-            opacity: control.pressed ? 0.12 : control.hovered ? 0.08 : 0.06
-            property color startColor: control.pressed ? "black" : "white"
-            Behavior on startColor { ColorAnimation { duration: 100 } }
-            property color endColor: control.hovered && !control.pressed ? "white" : "transparent"
-            Behavior on endColor { ColorAnimation { duration: 100 } }
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: shadow.startColor }
-                GradientStop { position: 0.6; color: shadow.endColor }
+        color: {
+            if (control.flat)
+                return LithPalette.regular.window
+            if (!control.enabled) {
+                if (control.down) {
+                    return ColorUtils.darken(LithPalette.disabled.button, 1.1)
+                }
+                else {
+                    return LithPalette.disabled.button
+                }
             }
+            return LithPalette.regular.button
+        }
+        property color startColor: {
+            if (!control.enabled)
+                return backgroundRect.color
+            if (control.pressed)
+                return ColorUtils.darken(LithPalette.regular.button, 1.1)
+            if (control.hovered || !control.flat)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            return backgroundRect.color
+        }
+        property color endColor: {
+            if (!control.enabled)
+                return backgroundRect.color
+            if (control.hovered && !control.pressed)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            return backgroundRect.color
+        }
+        Behavior on startColor { ColorAnimation { duration: 100 } }
+        Behavior on endColor { ColorAnimation { duration: 100 } }
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: backgroundRect.startColor }
+            GradientStop { position: 0.6; color: backgroundRect.endColor }
         }
 
         Rectangle {
@@ -46,9 +66,9 @@ T.Switch {
             width: parent.height
             height: parent.height
             radius: height / 2
-            color: control.checked ? control.onColor : control.offColor
+            color: ColorUtils.mixColors((control.checked ? control.onColor : control.offColor), LithPalette.regular.window, control.hovered ? 0.9 : 1.0)
             Behavior on color { ColorAnimation { duration: 100 } }
-            border.color: LithPalette.regular.midlight
+            border.color: ColorUtils.mixColors(LithPalette.regular.midlight, LithPalette.regular.window, control.enabled ? 1.0 : 0.5)
             border.width: 1
         }
     }

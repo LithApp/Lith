@@ -17,29 +17,47 @@ T.CheckBox {
 
     background: Item {}
 
-    indicator: Item {
+    indicator: Rectangle {
+        id: backgroundRect
         implicitWidth: 26 * Math.max(1.0, Lith.settings.baseFontSize / 20)
         implicitHeight: implicitWidth
         anchors.verticalCenter: parent.verticalCenter
-        Rectangle {
-            radius: 3
-            anchors.fill: parent
-            color: LithPalette.regular.button
-            Rectangle {
-                id: shadow
-                visible: control.enabled
-                anchors.fill: parent
-                radius: parent.radius
-                opacity: control.pressed ? 0.12 : control.hovered ? 0.08 : 0.06
-                property color startColor: control.pressed ? "black" : "white"
-                Behavior on startColor { ColorAnimation { duration: 100 } }
-                property color endColor: control.hovered && !control.pressed ? "white" : "transparent"
-                Behavior on endColor { ColorAnimation { duration: 100 } }
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: shadow.startColor }
-                    GradientStop { position: 0.6; color: shadow.endColor }
+
+        radius: 3
+        color: {
+            if (control.flat)
+                return LithPalette.regular.window
+            if (!control.enabled) {
+                if (control.down) {
+                    return ColorUtils.darken(LithPalette.disabled.button, 1.1)
+                }
+                else {
+                    return LithPalette.disabled.button
                 }
             }
+            return LithPalette.regular.button
+        }
+        property color startColor: {
+            if (!control.enabled)
+                return backgroundRect.color
+            if (control.pressed)
+                return ColorUtils.darken(LithPalette.regular.button, 1.1)
+            if (control.hovered || !control.flat)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            return backgroundRect.color
+        }
+        property color endColor: {
+            if (!control.enabled)
+                return backgroundRect.color
+            if (control.hovered && !control.pressed)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            return backgroundRect.color
+        }
+        Behavior on startColor { ColorAnimation { duration: 100 } }
+        Behavior on endColor { ColorAnimation { duration: 100 } }
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: backgroundRect.startColor }
+            GradientStop { position: 0.6; color: backgroundRect.endColor }
         }
 
         Item {
@@ -51,7 +69,7 @@ T.CheckBox {
                 height: 4.5
                 radius: 2
                 anchors.centerIn: parent
-                color: LithPalette.regular.windowText
+                color: ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.button, control.enabled ? 1.0 : 0.4)
                 visible: control.checked
             }
 
@@ -60,7 +78,7 @@ T.CheckBox {
                 height: 18
                 radius: 2
                 anchors.centerIn: parent
-                color: LithPalette.regular.windowText
+                color: ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.button, control.enabled ? 1.0 : 0.4)
                 visible: control.checked
             }
         }
@@ -72,8 +90,7 @@ T.CheckBox {
         visible: text.length > 0
         text: control.text
         font: control.font
-        opacity: enabled ? 1.0 : 0.3
-        color: LithPalette.regular.windowText
+        color: ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.window, enabled ? 1.0 : 0.3)
         verticalAlignment: Text.AlignVCenter
     }
 }

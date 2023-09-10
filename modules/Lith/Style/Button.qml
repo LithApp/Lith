@@ -23,7 +23,6 @@ T.Button {
     font.pointSize: Lith.settings.baseFontSize
 
     contentItem: Item {
-        opacity: control.enabled ? 1.0 : 0.5
 
         implicitHeight: {
             const iconHeight = control.icon.height + control.topPadding + control.bottomPadding
@@ -40,6 +39,7 @@ T.Button {
             height: parent.height - control.topPadding - control.bottomPadding
             width: height
             anchors.verticalCenter: parent.verticalCenter
+            opacity: control.enabled ? 1.0 : 0.5
         }
 
         Label {
@@ -53,40 +53,59 @@ T.Button {
 
             text: control.text
             font: control.font
-            color: control.checked || control.highlighted ? control.LithPalette.regular.brightText :
-                   control.flat && !control.down ? (control.visualFocus ? control.LithPalette.regular.highlight : control.LithPalette.regular.windowText) : control.LithPalette.regular.buttonText
+            color: {
+                if (!control.enabled)
+                    return LithPalette.disabled.buttonText
+                if (control.checked || control.highlighted)
+                    return control.LithPalette.regular.brightText
+                if (control.flat && !control.down) {
+                    if (control.visualFocus)
+                        return control.LithPalette.regular.highlight
+                    else
+                        return control.LithPalette.regular.windowText
+                }
+                return LithPalette.regular.buttonText
+            }
         }
     }
 
     background: Rectangle {
-        color: !control.flat || (control.hovered && control.enabled) || control.pressed ? LithPalette.regular.button : LithPalette.regular.window
-        Behavior on color { ColorAnimation { duration: 100 } }
+        id: backgroundRect
         radius: 3
-
-        Rectangle {
-            id: shadow
-            visible: control.enabled
-            anchors.fill: parent
-            radius: parent.radius
-            opacity: control.pressed ? 0.15 : control.hovered ? 0.15 : control.flat ? 0.0 : 0.06
-            Behavior on opacity { NumberAnimation { duration: 100 } }
-            property color startColor: control.pressed ? "black" : "white"
-            Behavior on startColor { ColorAnimation { duration: 100 } }
-            property color endColor: control.hovered && !control.pressed ? "white" : "transparent"
-            Behavior on endColor { ColorAnimation { duration: 100 } }
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: shadow.startColor }
-                GradientStop { position: 0.6; color: shadow.endColor }
+        color: {
+            if (control.flat)
+                return LithPalette.regular.window
+            if (!control.enabled) {
+                if (control.down) {
+                    return ColorUtils.darken(LithPalette.disabled.button, 1.1)
+                }
+                else {
+                    return LithPalette.disabled.button
+                }
             }
+            return LithPalette.regular.button
         }
-
-        Rectangle {
-            visible: false
-            anchors.fill: parent
-            color: LithPalette.regular.text
-            radius: parent.radius
-            opacity: control.pressed ? 0.3 : control.hovered ? 0.2 : 0.0
-            Behavior on opacity { NumberAnimation { duration: 100 } }
+        property color startColor: {
+            if (!control.enabled)
+                return backgroundRect.color
+            if (control.pressed)
+                return ColorUtils.darken(LithPalette.regular.button, 1.1)
+            if (control.hovered || !control.flat)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            return backgroundRect.color
+        }
+        property color endColor: {
+            if (!control.enabled)
+                return backgroundRect.color
+            if (control.hovered && !control.pressed)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            return backgroundRect.color
+        }
+        Behavior on startColor { ColorAnimation { duration: 100 } }
+        Behavior on endColor { ColorAnimation { duration: 100 } }
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: backgroundRect.startColor }
+            GradientStop { position: 0.6; color: backgroundRect.endColor }
         }
     }
 }
