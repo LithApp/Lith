@@ -29,6 +29,10 @@ const QStringList& Reflection::stringPropertiesGet() const {
             allowedPropertiesForClass[m_className] = QStringList();
         } else {
             auto mt = QMetaType::fromName(m_className.toLocal8Bit());
+            if (!mt.isValid()) {
+                auto pointerName = m_className + '*';
+                mt = QMetaType::fromName(pointerName.toLocal8Bit());
+            }
             if (mt.isValid()) {
                 const auto* mo = mt.metaObject();
                 if (mo) {
