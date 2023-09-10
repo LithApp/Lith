@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>qtquickcontrols2.conf</file>
-        <file>icon.png</file>
+        <file alias="icon.png">icons/linux/hicolor/256x256/apps/app.lith.Lith.png</file>
         <file>fonts/Inconsolata-Variable.ttf</file>
         <file>navigation/dark/album-folder.png</file>
         <file>navigation/dark/close.png</file>

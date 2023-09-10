@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setApplicationName("Lith");
 
     QApplication app(argc, argv);
+    app.setWindowIcon(QIcon(":/icon.png"));
 
     QQmlApplicationEngine engine;
     engine.addImportPath(QStringLiteral(":/"));
@@ -80,10 +81,5 @@ int main(int argc, char* argv[]) {
 
     // Start the engine
     engine.load(QUrl(QLatin1String("qrc:/qt/qml/App/main.qml")));
-
-    QPixmap iconPixmap(":/icon.png");
-    // Xorg didn't like the original 2k icon
-    QIcon icon(iconPixmap.scaled(QSize(256, 256)));
-    app.setWindowIcon(icon);
     return app.exec();
 }
