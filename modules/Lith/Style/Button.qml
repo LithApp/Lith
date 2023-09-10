@@ -34,6 +34,7 @@ T.Button {
         Image {
             id: buttonIcon
             source: control.icon.source
+            sourceSize: Qt.size(control.icon.width, control.icon.height)
 
             x: control.leftPadding
             height: parent.height - control.topPadding - control.bottomPadding
