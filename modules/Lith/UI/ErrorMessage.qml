@@ -52,12 +52,15 @@ Rectangle {
             Layout.fillWidth: true
             verticalAlignment: Label.AlignVCenter
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+            text: Lith.errorString
             maximumLineCount: 2
             elide: Text.ElideRight
             color: LithPalette.regular.text
         }
         Button {
             icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
+            icon.width: 12
+            icon.height: 12
             Layout.preferredWidth: 32
             Layout.preferredHeight: 32
             onClicked: Lith.errorString = ""

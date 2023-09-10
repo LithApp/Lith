@@ -60,17 +60,16 @@ Item {
     readonly property real contentAreaWidth: mainView.width - leftMargin - rightMargin
     readonly property real contentAreaHeight: mainView.height - topMargin - topMargin
 
-    Rectangle {
-        id: mainViewContents
-        color: LithPalette.regular.window
+    Item {
+        z: 1
+        id: errorMessageWrapper
         anchors {
-            fill: parent
-            leftMargin: mainView.leftMargin
-            rightMargin: mainView.rightMargin
-            topMargin: mainView.topMargin
-            bottomMargin: mainView.bottomMargin
+            left: mainViewContents.left
+            right: mainViewContents.right
+            top: parent.top
+            topMargin: mainView.topMargin + errorMessage.y
         }
-
+        readonly property real errorMessageOffset: errorMessage.height + errorMessage.y
         ErrorMessage {
             id: errorMessage
             anchors {
@@ -78,6 +77,19 @@ Item {
                 right: parent.right
             }
         }
+    }
+
+    Rectangle {
+        id: mainViewContents
+        color: LithPalette.regular.window
+        anchors {
+            fill: parent
+            leftMargin: mainView.leftMargin
+            rightMargin: mainView.rightMargin
+            bottomMargin: mainView.bottomMargin
+            topMargin: mainView.topMargin + errorMessageWrapper.errorMessageOffset
+        }
+
 
         ChannelView {
             id: channelView
@@ -91,7 +103,7 @@ Item {
             anchors {
                 left: WindowHelper.landscapeMode ? bufferDrawer.right : parent.left
                 right: parent.right
-                top: errorMessage.bottom
+                top: parent.top
                 bottom: parent.bottom
             }
         }
@@ -184,8 +196,8 @@ Item {
             top: parent.top
             bottom: parent.bottom
             left: parent.left
-            right: mainViewContents.left
         }
+        width: mainView.leftMargin
         color: LithPalette.regular.base
     }
 
@@ -195,9 +207,9 @@ Item {
         anchors {
             top: parent.top
             bottom: parent.bottom
-            left: mainViewContents.right
             right: parent.right
         }
+        width: mainView.rightMargin
         color: LithPalette.regular.base
     }
 
@@ -206,10 +218,10 @@ Item {
         z: 9999
         anchors {
             top: parent.top
-            bottom: mainViewContents.top
             left: parent.left
             right: parent.right
         }
+        height: mainView.topMargin
         color: LithPalette.regular.base
     }
 
@@ -217,11 +229,11 @@ Item {
         id: safeAreaCoverBottom
         z: 9999
         anchors {
-            top: mainViewContents.bottom
             bottom: parent.bottom
             left: parent.left
             right: parent.right
         }
+        height: mainView.bottomMargin
         color: LithPalette.regular.base
     }
 
