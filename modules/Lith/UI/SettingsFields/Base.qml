@@ -52,6 +52,7 @@ Rectangle {
                     Layout.topMargin: details.visible ? 6 : 0
                     Layout.fillWidth: true
                     elide: Label.ElideRight
+                    color: ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.window, enabled ? 1.0 : 0.5)
 
                     MouseArea {
                         id: baseMouse
@@ -70,7 +71,7 @@ Rectangle {
                     Layout.rightMargin: visible ? 6 : 0
                     elide: Label.ElideRight
                     font.pointSize: summary.font.pointSize * 0.7
-                    color: LithPalette.disabled.text
+                    color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, enabled ? 1.0 : 0.5)
                     visible: text.length > 0
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                     maximumLineCount: 4
