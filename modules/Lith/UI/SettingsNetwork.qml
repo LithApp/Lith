@@ -171,7 +171,7 @@ ScrollView {
             Fields.Boolean {
                 id: useWebsocketsCheckbox
                 visible: typeof Lith.settings.useWebsockets !== "undefined"
-                checked: Lith.settings.useWebsockets
+                checked: visible ? Lith.settings.useWebsockets : false
 
                 summary: qsTr("Use WebSockets to connect")
             }
@@ -179,7 +179,7 @@ ScrollView {
                 id: websocketsEndpointInput
                 visible: typeof Lith.settings.useWebsockets !== "undefined"
                 enabled: useWebsocketsCheckbox.checked
-                text: Lith.settings.websocketsEndpoint
+                text: visible ? Lith.settings.websocketsEndpoint : ""
 
                 summary: qsTr("Websockets endpoint")
             }
