@@ -133,7 +133,7 @@ Item {
 
     Rectangle {
         anchors.fill: terminalLineLayout
-        color: messageModel.highlight ? ColorUtils.setAlpha(LithPalette.regular.highlight, 0.5) : isHighlighted ? ColorUtils.setAlpha(LithPalette.regular.text, 0.1) : "transparent"
+        color: messageModel.highlight ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.5) : isHighlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window,  0.1) : "transparent"
         border {
             color: LithPalette.regular.highlight
             width: root.isHighlighted ? 1.5 : 0

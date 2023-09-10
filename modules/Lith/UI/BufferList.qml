@@ -191,7 +191,7 @@ Item {
                     width: height
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 1
-                    color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
+                    color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? ColorUtils.mixColors(LithPalette.regular.text, bufferDelegate.background.color, 0.05) : bufferDelegate.background.color
                     radius: 2
                     Label {
                         text: buffer && buffer.number > 0 ? buffer.number : ""

@@ -15,7 +15,7 @@ T.TextField {
     padding: 9
     color: LithPalette.regular.text
     selectionColor: LithPalette.regular.highlight
-    placeholderTextColor: ColorUtils.setAlpha(LithPalette.disabled.text, 0.5)
+    placeholderTextColor: LithPalette.disabled.text
     verticalAlignment: Text.AlignVCenter
 
     font.pointSize: Lith.settings.baseFontSize

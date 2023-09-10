@@ -133,7 +133,7 @@ ListView {
         width: parent.width
         height: Math.pow(Math.max(0, Math.abs(listView.verticalOvershoot)), 0.3)
         gradient: Gradient {
-            GradientStop { position: 1.0; color: ColorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
+            GradientStop { position: 1.0; color: ColorUtils.mixColors(listView.overshootMarkerColor, LithPalette.regular.window, 0.5) }
             GradientStop { position: 0.0; color: listView.overshootMarkerColor }
         }
         visible: listView.dragging && listView.verticalOvershoot < 0
@@ -146,7 +146,7 @@ ListView {
         width: parent.width
         height: Math.pow(Math.max(0, listView.verticalOvershoot), 0.3)
         gradient: Gradient {
-            GradientStop { position: 0.0; color: ColorUtils.setAlpha(listView.overshootMarkerColor, 0.5) }
+            GradientStop { position: 0.0; color: ColorUtils.mixColors(listView.overshootMarkerColor, LithPalette.regular.window, 0.5) }
             GradientStop { position: 1.0; color: listView.overshootMarkerColor }
         }
         visible: listView.dragging && listView.verticalOvershoot > 0

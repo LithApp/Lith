@@ -86,7 +86,7 @@ Dialog {
                             visible: modelData && autocomplete.parent && "%1".arg(modelData).startsWith(autocomplete.parent.text)
                             width: suggestionLabel.width + 27
                             height: suggestionLabel.height + 18
-                            color: ColorUtils.setAlpha(LithPalette.regular.buttonText, autocompleteDelegateMouse.pressed ? 0.25 : autocompleteDelegateMouse.containsMouse ? 0.15 : 0.1)
+                            color: ColorUtils.mixColors(LithPalette.regular.buttonText, LithPalette.regular.window, autocompleteDelegateMouse.pressed ? 0.25 : autocompleteDelegateMouse.containsMouse ? 0.15 : 0.1)
                             Label {
                                 id: suggestionLabel
                                 anchors.centerIn: parent
