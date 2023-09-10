@@ -25,6 +25,7 @@ import Lith.Style
 Item {
     id: root
     z: index
+    property int index
     property var messageModel: null
     //property var previousMessageModel: ListView.view.contentItem.children[index-1].messageModel
     //property var nextMessageModel: ListView.view.contentItem.children[index+1].messageModel

@@ -93,7 +93,7 @@ QVariant QmlObjectList::at(const int& i) {
         );
         return QVariant();
     }
-    return QVariant::fromValue(mData.at(i));
+    return QVariant::fromValue(mData.at(i).data());
 }
 
 QVariant QmlObjectList::data(const QModelIndex& index, int role) const {
