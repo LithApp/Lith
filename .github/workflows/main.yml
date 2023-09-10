@@ -229,6 +229,7 @@ jobs:
         mkdir installed
         cp build_wasm/app/*.js build_wasm/app/*.html build_wasm/app/*.wasm build_wasm/app/*.svg installed
         cp installed/Lith.html installed/index.html
+        cp assets/icons/icon.ico installed/favicon.ico
 
     - name: Setup Pages
       if: github.event_name == 'create'
