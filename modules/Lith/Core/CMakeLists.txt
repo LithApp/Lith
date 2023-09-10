@@ -71,6 +71,7 @@ generate_export_header(LithCore)
 target_link_libraries(LithCore PRIVATE
     LithAssets
     QCoro6::Coro
+    QCoro6::Core
     Qt::Gui
     Qt::GuiPrivate
     Qt::Multimedia

@@ -22,9 +22,12 @@
 #include "common.h"
 #include "defs/cmakedefs.h"
 #include "lithcore_export.h"
-#include <QSettings>
 #include <QDebug>
 #include <QKeySequence>
+#include <QSettings>
+
+#include <QCoro/QCoroCore>
+#include <optional>
 
 #define SETTING(type, name, ...)                     \
     PROPERTY_NOSETTER(type, name, __VA_ARGS__)       \
@@ -40,7 +43,15 @@ public:                                              \
         return false;                                \
     }
 
+#define SETTING_NOSETTER(type, name, ...) PROPERTY_NOSETTER(type, name, __VA_ARGS__)
+
 #define DEPRECATED_SETTING(type, name, ...) PROPERTY(type, name, __VA_ARGS__)
+
+#if LITH_FEATURE_KEYCHAIN
+namespace QKeychain {
+    class Job;
+}
+#endif
 
 /*
  * USAGE:
@@ -93,17 +104,30 @@ class LITHCORE_EXPORT Settings : public QObject {
     SETTING(bool, openLinksDirectly, false)
     SETTING(bool, openLinksDirectlyInBrowser, false)
 
-    SETTING(QString, host)
-    SETTING(int, port, 9001)
+    SETTING(bool, encryptedCredentials, true)
+    Q_PROPERTY(bool credentialEncryptionAvailable READ credentialEncryptionAvailable CONSTANT)
+    static bool credentialEncryptionAvailable();
+
+    SETTING_NOSETTER(QString, host)
+    bool hostSet(QString newHost, bool force = false);
+    SETTING_NOSETTER(int, port, 9001)
+    bool portSet(int newPort, bool force = false);
+    // passphrase is intentionally not stored in memory
+    QCoro::Task<std::optional<QString>> passphraseGet();
+    void passphraseUnset();
+    void passphraseSet(QString passphrase);
+    PROPERTY_READONLY_PRIVATESETTER(bool, hasPassphrase, false)
+    SETTING_NOSETTER(bool, useEmptyPassphrase, false)
+    void useEmptyPassphraseSet(bool useEmptyPassphrase);
     SETTING(bool, encrypted, true)
     SETTING(bool, allowSelfSignedCertificates, false)
-    SETTING(QString, passphrase)
     SETTING(bool, handshakeAuth, true)
     SETTING(bool, connectionCompression, true)
 #ifndef __EMSCRIPTEN__
     SETTING(bool, useWebsockets, false)
 #endif  // __EMSCRIPTEN__
-    SETTING(QString, websocketsEndpoint, "weechat")
+    SETTING_NOSETTER(QString, websocketsEndpoint, "weechat")
+    bool websocketsEndpointSet(QString newWebsocketsEndpoint, bool force = false);
 
     SETTING(bool, enableReadlineShortcuts, true)
     SETTING(QStringList, shortcutSearchBuffer, {"Alt+G"})
@@ -143,7 +167,8 @@ class LITHCORE_EXPORT Settings : public QObject {
 
     // UNUSED SETTINGS
     // determine what to do about these later
-    DEPRECATED_SETTING(bool, hotlistShowUnreadCount, true)  // Obsoleted by hotlistFormat
+    // Obsoleted by hotlistFormat
+    DEPRECATED_SETTING(bool, hotlistShowUnreadCount, true)
     // END OF UNUSED SETTINGS
 
 public:
@@ -151,8 +176,8 @@ public:
 
 public slots:
     void saveNetworkSettings(
-        const QString& host, int port, bool encrypted, bool allowSelfSignedCertificates, const QString& passphrase, bool handshakeAuth,
-        bool connectionCompression, bool useWebsockets, const QString& websocketsEndpoint
+        QString host, int port, bool encrypted, bool allowSelfSignedCertificates, QString passphrase, bool useEmptyPassphrase,
+        bool handshakeAuth, bool connectionCompression, bool useWebsockets, QString websocketsEndpoint
     );
 
 signals:
@@ -163,9 +188,31 @@ public:
     static Settings* instance();
     bool isReady() const;
 
+private slots:
+    ///
+    /// \brief migrateCredentialEncryption
+    /// This method will look at the encryptedCredentials variable and see if the
+    /// data is stored in the appropriate place. If not, it will move it to where
+    /// it belongs. It's used when switching between these states and to migrate
+    /// users from the previous versions.
+    ///
+    QCoro::Task<> migrateCredentialEncryption();
+    QCoro::Task<> migrate();
+
 private:
     explicit Settings(QObject* parent = nullptr);
-    void migrate();
+    QCoro::Task<std::optional<QString>> getSensitiveValue(const QString& key);
+    std::optional<QString> getPlainValue(QString key);
+    QCoro::Task<std::optional<QString>> getSecureValue(QString key, bool fallback);
+
+    QCoro::Task<bool> setSensitiveValue(QString key, QString value);
+    bool setPlainValue(QString key, QString value);
+    QCoro::Task<bool> setSecureValue(QString key, QString value, bool fallback);
+
+    QCoro::Task<bool> deleteSensitiveValue(QString key);
+    bool deletePlainValue(QString key);
+    QCoro::Task<bool> deleteSecureValue(QString key, bool fallback);
+
     QSettings m_settings;
     bool m_ready = false;
 };

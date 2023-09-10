@@ -160,10 +160,13 @@ void Weechat::restart() {
 }
 
 void Weechat::onConnectionSettingsChanged() {
-    auto host = Lith::settingsGet()->hostGet();
-    auto pass = Lith::settingsGet()->passphraseGet();
+    bool hasPassphrase = Lith::settingsGet()->hasPassphraseGet();
+    bool usesWebsockets = Lith::settingsGet()->useWebsocketsGet();
+    bool hasHost = !Lith::settingsGet()->hostGet().isEmpty();
+    bool hasWSEndpoint = !Lith::settingsGet()->websocketsEndpointGet().isEmpty();
+
     lith()->log(Logger::Network, "Connection settings have changed, will reset the socket");
-    if (!host.isEmpty() && !pass.isEmpty()) {
+    if (hasHost && hasPassphrase && (!usesWebsockets || hasWSEndpoint)) {
         m_connection->reset();
         if (!m_restarting) {
             QTimer::singleShot(50, this, &Weechat::start);
@@ -175,9 +178,9 @@ void Weechat::onConnectionSettingsChanged() {
     }
 }
 
-void Weechat::onHandshakeAccepted(const StringMap& data) {
+QCoro::Task<void> Weechat::onHandshakeAccepted(StringMap data) {
     if (!m_connection->isConnected()) {
-        return;
+        co_return;
     }
 
     lith()->log(Logger::Protocol, "WeeChat handshake was accepted, authenticating");
@@ -186,7 +189,17 @@ void Weechat::onHandshakeAccepted(const StringMap& data) {
     auto iterations = data["password_hash_iterations"].toInt();
     auto serverNonce = QByteArray::fromHex(data["nonce"].toLocal8Bit());
     auto clientNonce = QByteArray::fromHex(randomString(16));
-    auto pass = Lith::settingsGet()->passphraseGet();
+    QString pass;
+    auto maybePass = co_await Lith::settingsGet()->passphraseGet();
+    if (maybePass.has_value()) {
+        pass = maybePass.value();
+    } else {
+        Lith::instance()->log(Logger::Protocol, "Can't authenticate without a valid password");
+    }
+
+    if (pass.isNull()) {
+        co_return;
+    }
 
     auto salt = serverNonce + clientNonce;
     auto hash = hashPassword(pass, algo, salt, iterations);

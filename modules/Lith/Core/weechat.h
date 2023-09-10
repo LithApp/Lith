@@ -77,8 +77,7 @@ private slots:
     void onPingTimeout();
 
     void onConnectionSettingsChanged();
-
-    void onHandshakeAccepted(const StringMap& data);
+    QCoro::Task<void> onHandshakeAccepted(StringMap data);
 
     void onConnected();
     void onDisconnected();

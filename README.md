@@ -29,6 +29,7 @@ There is also a browser version of Lith you can try right now thanks to WebAssem
 - Fast buffer list filtering
 - Dark and light mode support
 - Native local notifications on desktop platforms
+- Secure storage of login credentials
 
 ### Limitations
 

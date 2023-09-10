@@ -57,13 +57,14 @@ ScrollView {
         // Network-resetting settings need to be changed at once to not reset the connection for each changed property
         Lith.settings.saveNetworkSettings(
             hostField.text, portField.text, encryptedCheckbox.checked, selfSignedCertificateCheckbox.checked,
-            passphraseField.text, handshakeAuthCheckbox.checked, connectionCompressionCheckbox.checked,
+            passphraseField.text, useEmptyPassphraseCheckbox.checked, handshakeAuthCheckbox.checked, connectionCompressionCheckbox.checked,
             (typeof Lith.settings.useWebsockets !== "undefined" ? useWebsocketsCheckbox.checked : false),
             (typeof Lith.settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
         )
         Lith.settings.showInternalData = showInternalDataCheckbox.checked
         Lith.settings.enableLogging = enableLoggingCheckbox.checked
         Lith.settings.enableReplayRecording = enableReplayRecordingCheckbox.checked
+        Lith.settings.encryptedCredentials = encryptedCredentialsCheckbox.checked
         passphraseField.text = ""
     }
     function restore() {
@@ -83,6 +84,7 @@ ScrollView {
         showInternalDataCheckbox.checked = Lith.settings.showInternalData
         enableLoggingCheckbox.checked = Lith.settings.enableLogging
         enableReplayRecordingCheckbox.checked = Lith.settings.enableReplayRecording
+        encryptedCredentialsCheckbox.checked = Lith.settings.encryptedCredentials
     }
 
     Item {
@@ -98,23 +100,12 @@ ScrollView {
             Fields.Header {
                 text: "Weechat connection"
             }
-            Fields.Base {
+            Fields.Button {
                 summary: qsTr("Current status: %1").arg(Lith.statusString)
-                details: Lith.status == Lith.ERROR ? Lith.errorString : ""
-                enabled: Lith.status == Lith.CONNECTED || Lith.status == Lith.CONNECTING || Lith.status == Lith.ERROR
-                rowComponent: ColumnLayout {
-                    spacing: 1
-                    Button {
-                        Layout.alignment: Qt.AlignRight
-                        text: "Reconnect"
-                        onClicked: Lith.reconnect()
-                    }
-                    Label {
-                        Layout.alignment: Qt.AlignRight
-                        visible: text.length > 0
-                        text: root.networkSettingsChanged ? qsTr("Recent changes were not saved yet") : ""
-                    }
-                }
+                details: Lith.status == Lith.ERROR ? Lith.errorString : root.networkSettingsChanged ? qsTr("Recent changes were not saved yet") : ""
+                rowComponent.enabled: Lith.status == Lith.CONNECTED || Lith.status == Lith.CONNECTING || Lith.status == Lith.ERROR || Lith.status == Lith.DISCONNECTED
+                text: "Reconnect"
+                onClicked: Lith.reconnect()
             }
             Fields.String {
                 id: hostField
@@ -148,8 +139,52 @@ ScrollView {
             Fields.String {
                 id: passphraseField
                 summary: qsTr("Password")
-                placeholderText: Lith.settings.passphrase.length > 0 ? "**********" : "No password was entered yet"
                 echoMode: TextInput.Password
+                placeholderText: Lith.settings.hasPassphrase && !Lith.settings.useEmptyPassphrase && !useEmptyPassphraseCheckbox.checked ? "********" : useEmptyPassphraseCheckbox.checked ? "You use no passphrase" : "No password was entered yet"
+                rowComponent.enabled: !useEmptyPassphraseCheckbox.checked
+                columnComponent: RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 3
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Label {
+                            id: summary
+                            Layout.topMargin: details.visible ? 6 : 0
+                            Layout.fillWidth: true
+                            elide: Label.ElideRight
+                            color: ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.window, enabled ? 1.0 : 0.5)
+                            text: "Use an empty password"
+
+                            MouseArea {
+                                id: baseMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+
+                                ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
+                                ToolTip.visible: LithPlatform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
+                                ToolTip.delay: LithPlatform.mobile ? 0 : 800
+                            }
+                        }
+                        Label {
+                            id: details
+                            Layout.fillWidth: true
+                            Layout.bottomMargin: visible ? 6 : 0
+                            Layout.rightMargin: visible ? 6 : 0
+                            elide: Label.ElideRight
+                            font.pointSize: summary.font.pointSize * 0.7
+                            color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, enabled ? 1.0 : 0.5)
+                            visible: text.length > 0
+                            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                            maximumLineCount: 4
+                            text: "Not recommended, low security.\nRequires to be enabled in WeeChat."
+                        }
+                    }
+                    CheckBox {
+                        padding: 0
+                        id: useEmptyPassphraseCheckbox
+                        checked: Lith.settings.useEmptyPassphrase
+                    }
+                }
             }
             Fields.Boolean {
                 id: handshakeAuthCheckbox
@@ -182,6 +217,20 @@ ScrollView {
 
                 summary: qsTr("Websockets endpoint")
             }
+
+            ////////////////////////// STORAGE
+            Fields.Header {
+                text: "Storage"
+            }
+            Fields.Boolean {
+                id: encryptedCredentialsCheckbox
+                enabled: Lith.settings.credentialEncryptionAvailable
+                checked: Lith.settings.encryptedCredentials && Lith.settings.credentialEncryptionAvailable
+                summary: qsTr("Store connection credentials securely")
+                details: Lith.settings.credentialEncryptionAvailable ? qsTr("Your host, port and passphrase settings will be stored in your %1").arg(LithPlatform.android ? "Keystore" : LithPlatform.ios || LithPlatform.macos ? "Keychain" : LithPlatform.windows ? "Credential store" : "Keyring/Wallet") : qsTr("Secure credential storage is not available on your system")
+            }
+
+            ////////////////////////// LOGGING AND DEBUGGING
             Fields.Header {
                 text: "Logging and debugging"
             }
