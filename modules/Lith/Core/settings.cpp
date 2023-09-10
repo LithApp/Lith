@@ -22,6 +22,11 @@
 #include <QMetaProperty>
 #include <QTimer>
 #include <QCoro/QCoroThread>
+#include <QCoro/QCoroSignal>
+
+#ifndef Q_OS_WASM
+  #include <QThread>
+#endif  // Q_OS_WASM
 
 #if LITH_FEATURE_KEYCHAIN
   // The path is broken with qtkeychain installed through CPM, try both variants to deal with that
