@@ -22,9 +22,10 @@ import QtQml
 import Lith.Core
 import Lith.Style
 
-Item {
+Rectangle {
     id: root
     implicitHeight: inputBarLayout.implicitHeight + 1
+    color: LithPalette.regular.window
 
     // TODO
     property alias textInput: channelTextInput

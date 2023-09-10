@@ -38,13 +38,13 @@ ColumnLayout {
     ChannelHeader {
         id: channelHeader
         Layout.fillWidth: true
+        z: 1
     }
 
     Item {
         id: messageArea
         Layout.fillHeight: true
         Layout.fillWidth: true
-        clip: true
 
         ColumnLayout {
             visible: !Lith.selectedBuffer
@@ -104,6 +104,7 @@ ColumnLayout {
 
     HotList {
         id: hotlist
+        z: 1
         visible: Lith.settings.hotlistEnabled
         Layout.fillWidth: true
         Layout.preferredHeight: visible ? implicitHeight : 0

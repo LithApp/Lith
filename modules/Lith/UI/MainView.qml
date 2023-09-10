@@ -8,10 +8,8 @@ import Lith.Style
 Item {
     id: mainView
 
-    x: leftMargin
-    y: topMargin
-    width: parent.width - leftMargin - rightMargin
-    height: parent.height - topMargin - bottomMargin
+    width: parent.width
+    height: parent.height
 
     implicitWidth: LithPlatform.mobile ? 480 : 1024
     implicitHeight: 800
@@ -20,7 +18,7 @@ Item {
         WindowHelper.updateSafeAreaMargins(window)
     }
     onWidthChanged: {
-        WindowHelper.updateSafeAreaMargins(window)
+        WindowHelper.updateSafeAreaMargins(window);
     }
     onHeightChanged: {
         WindowHelper.updateSafeAreaMargins(window)
@@ -59,153 +57,182 @@ Item {
     Behavior on leftMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
     Behavior on rightMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
-    Rectangle {
-        id: windowBackground
-        anchors.fill: parent
-        color: palette.base
-    }
+    readonly property real contentAreaWidth: mainView.width - leftMargin - rightMargin
+    readonly property real contentAreaHeight: mainView.height - topMargin - topMargin
 
     Rectangle {
+        id: mainViewContents
+        color: LithPalette.regular.window
+        anchors {
+            fill: parent
+            leftMargin: mainView.leftMargin
+            rightMargin: mainView.rightMargin
+            topMargin: mainView.topMargin
+            bottomMargin: mainView.bottomMargin
+        }
+
+        ErrorMessage {
+            id: errorMessage
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+        }
+
+        ChannelView {
+            id: channelView
+            enabled: {
+                if (!nickDrawer.isClosed)
+                    return false
+                if (!window.WindowHelper.landscapeMode && !bufferDrawer.isClosed)
+                    return false
+                return true
+            }
+            anchors {
+                left: WindowHelper.landscapeMode ? bufferDrawer.right : parent.left
+                right: parent.right
+                top: errorMessage.bottom
+                bottom: parent.bottom
+            }
+        }
+
+        DynamicDrawer {
+            id: bufferDrawer
+            height: parent.height
+            dragOutHandleTopMargin: channelView.messageArea.y
+            dragOutHandleBottomMargin: height - channelView.messageArea.y - channelView.messageArea.height
+            Component.onCompleted: {
+                if (Lith.settings.showBufferListOnStartup)
+                    lastState = DynamicDrawer.State.Open
+                else
+                    lastState = DynamicDrawer.State.Closed
+            }
+
+            onIsClosedChanged: {
+                bufferList.currentIndex = Lith.selectedBufferIndex
+
+                if (!isClosed) {
+                    bufferList.clear()
+                }
+            }
+
+            BufferList {
+                id: bufferList
+                anchors.fill: parent
+                onClose: {
+                    if (!WindowHelper.landscapeMode)
+                        bufferDrawer.hide()
+                    if (channelView.textInput.visible)
+                        channelView.textInput.forceActiveFocus()
+                    else if (channelView.searchTextInput.visible)
+                        channelView.searchTextInput.forceActiveFocus()
+                }
+            }
+        }
+
+        NickList {
+            id: nickDrawer
+            edge: Qt.RightEdge
+            property bool isClosed: position === 0.0
+            dragMargin: rightPadding + 64
+            //y: isClosed ? mainView.y + channelView.messageArea.y : mainView.y
+            //height: isClosed ? channelView.scrollToBottomButtonPosition : parent.height
+            width: Math.min(0.66 * parent.width, 400)
+            topPadding: mainView.topMargin
+            bottomPadding: mainView.bottomMargin
+            rightPadding: mainView.rightMargin
+            height: parent.height
+            onRequestSearchBar: {
+                channelView.showSearchBar()
+            }
+        }
+
+        NickListActionMenu {
+            id: nickListActionMenu
+        }
+
+        SettingsDialog {
+            id: settingsDialog
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: parent
+        }
+
+        PreviewPopup {
+            id: previewPopup
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: parent
+
+            onVisibleChanged: {
+                if (visible) {
+                    Qt.inputMethod.hide()
+                }
+                else {
+                    channelView.textInput.forceActiveFocus()
+                    Qt.inputMethod.hide()
+                }
+            }
+        }
+    }
+
+    // These rectangles are painted over the safe areas to hide stuff that's not clipped
+    Rectangle {
+        id: safeAreaCoverLeft
         z: 9999
-        y: -topMargin
-        width: parent.width
-        height: topMargin
-        color: LithPalette.regular.base
-    }
-
-    Rectangle {
-        z: 9999
-        y: parent.height
-        width: parent.width
-        height: topMargin
-        color: LithPalette.regular.base
-    }
-
-    Rectangle {
-        z: 9999
-        x: -leftMargin
-        width: leftMargin
-        height: parent.height
-        color: LithPalette.regular.base
-    }
-
-    Rectangle {
-        z: 9999
-        x: parent.width
-        width: leftMargin
-        height: parent.height
-        color: LithPalette.regular.base
-    }
-
-    ErrorMessage {
-        id: errorMessage
         anchors {
             top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+            right: mainViewContents.left
+        }
+        color: LithPalette.regular.base
+    }
+
+    Rectangle {
+        id: safeAreaCoverRight
+        z: 9999
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: mainViewContents.right
+            right: parent.right
+        }
+        color: LithPalette.regular.base
+    }
+
+    Rectangle {
+        id: safeAreaCoverTop
+        z: 9999
+        anchors {
+            top: parent.top
+            bottom: mainViewContents.top
             left: parent.left
             right: parent.right
         }
+        color: LithPalette.regular.base
     }
 
-    ChannelView {
-        id: channelView
-        enabled: {
-            if (!nickDrawer.isClosed)
-                return false
-            if (!window.WindowHelper.landscapeMode && !bufferDrawer.isClosed)
-                return false
-            return true
-        }
+    Rectangle {
+        id: safeAreaCoverBottom
+        z: 9999
         anchors {
-            left: WindowHelper.landscapeMode ? bufferDrawer.right : parent.left
-            right: parent.right
-            top: errorMessage.bottom
+            top: mainViewContents.bottom
             bottom: parent.bottom
+            left: parent.left
+            right: parent.right
         }
+        color: LithPalette.regular.base
     }
 
-    DynamicDrawer {
-        id: bufferDrawer
-        y: errorMessage.height
-        height: mainView.height - y
-        dragOutHandleTopMargin: channelView.messageArea.y
-        dragOutHandleBottomMargin: height - channelView.messageArea.y - channelView.messageArea.height
-        Component.onCompleted: {
-            if (Lith.settings.showBufferListOnStartup)
-                lastState = DynamicDrawer.State.Open
-            else
-                lastState = DynamicDrawer.State.Closed
-        }
-
-        onIsClosedChanged: {
-            bufferList.currentIndex = Lith.selectedBufferIndex
-
-            if (!isClosed) {
-                bufferList.clear()
-            }
-        }
-
-        BufferList {
-            id: bufferList
-            anchors.fill: parent
-            onClose: {
-                if (!WindowHelper.landscapeMode)
-                    bufferDrawer.hide()
-                if (channelView.textInput.visible)
-                    channelView.textInput.forceActiveFocus()
-                else if (channelView.searchTextInput.visible)
-                    channelView.searchTextInput.forceActiveFocus()
-            }
-        }
-    }
-
-    NickList {
-        id: nickDrawer
-        edge: Qt.RightEdge
-        rightPadding: mainView.rightMargin
-        property bool isClosed: position === 0.0
-        dragMargin: 64
-        y: isClosed ? mainView.y + channelView.messageArea.y : mainView.y
-        height: isClosed ? channelView.scrollToBottomButtonPosition : mainView.height
-        width: Math.min(0.66 * mainView.width, 400) + mainView.rightMargin
-        onRequestSearchBar: {
-            channelView.showSearchBar()
-        }
-    }
-
-    NickListActionMenu {
-        id: nickListActionMenu
-    }
-
-    SettingsDialog {
-        id: settingsDialog
-        width: parent.width
-        height: parent.height
-    }
-
-    PreviewPopup {
-        id: previewPopup
-        topMargin: mainView.topMargin
-        bottomMargin: mainView.bottomMargin
-
-        onVisibleChanged: {
-            if (visible) {
-                Qt.inputMethod.hide()
-            }
-            else {
-                channelView.textInput.forceActiveFocus()
-                Qt.inputMethod.hide()
-            }
-        }
-    }
-
-
+    // TODO make this a component and fix this
     Dialog {
         id: linkHandler
         z: 99999999
-        width: mainView.width
+        width: channelView.width
         height: linkHandlerLayout.height + 12
         // Dialog doesn't allow anchors.verticalCenter, so we need to position it manually
-        x: -parent.mapToItem(mainView, 0, 0).x
+        x: leftMargin - parent.mapToItem(channelView, 0, 0).x
         y: parent.height / 2 - height / 2
         visible: false
         padding: 0
@@ -258,7 +285,7 @@ Item {
             id: linkHandlerLayout
             y: 6
             x: 6
-            width: parent.width - 12
+            width: contentAreaWidth - 12
             spacing: 9
             Label {
                 id: linkText

@@ -67,7 +67,6 @@ Dialog {
             border.color: Qt.rgba(LithPalette.regular.buttonText.r, LithPalette.regular.buttonText.g, LithPalette.regular.buttonText.b, 0.2)
             border.width: 1
             color: LithPalette.regular.window
-            clip: true
             ScrollView {
                 id: autocompleteScrollView
                 anchors.fill: parent
@@ -135,7 +134,6 @@ Dialog {
                     id: formatScrollView
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    clip: true
                     ColumnLayout {
                         id: formatLayout
                         width: formatScrollView.width

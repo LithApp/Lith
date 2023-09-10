@@ -22,9 +22,8 @@ import QtQuick.Layouts
 import Lith.Core
 import Lith.Style
 
-Rectangle {
+Item {
     id: root
-    color: LithPalette.regular.window
 
     readonly property real delegateWidth: root.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
@@ -39,6 +38,21 @@ Rectangle {
     }
     signal close
 
+    Rectangle {
+        anchors.fill: parent
+        z: -3
+        color: LithPalette.regular.window
+    }
+
+    Rectangle {
+        width: controlRow.width + controlRow.anchors.margins * 2
+        height: controlRow.height + controlRow.anchors.margins * (root.controlRowOnBottom ? 3 : 2)
+        y: controlRow.y - controlRow.anchors.margins
+        anchors.margins: -controlRow.margins
+        color: LithPalette.regular.window
+        z: 1
+    }
+
     RowLayout {
         id: controlRow
         anchors {
@@ -46,6 +60,7 @@ Rectangle {
             right: parent.right
             margins: 6
         }
+        z: 2
         y: root.controlRowOnBottom ? parent.height - height - anchors.margins : anchors.margins
 
         spacing: 6
@@ -94,104 +109,9 @@ Rectangle {
         }
     }
 
-    ListView {
-        id: bufferList
-        clip: true
-
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: root.controlRowOnBottom ? parent.top : controlRow.bottom
-            topMargin: root.controlRowOnBottom ? 0 : 9
-        }
-        height: parent.height - controlRow.height - 15
-
-        model: Lith.buffers
-        currentIndex: Lith.selectedBufferIndex
-        highlightMoveDuration: root.position > 0.0 ? 120 : 0
-
-        Connections {
-            target: Lith
-            function onSelectedBufferIndexChanged() {
-                bufferList.currentIndex = Lith.selectedBufferIndex
-            }
-        }
-
-        ScrollBar.vertical: ScrollBar {
-            id: scrollBar
-            hoverEnabled: true
-            active: hovered || pressed
-            orientation: Qt.Vertical
-        }
-
-        delegate: ItemDelegate {
-            id: bufferDelegate
-            width: root.delegateWidth
-
-            checked: Lith.selectedBuffer == buffer
-            highlighted: bufferList.currentIndex === index
-
-            required property var modelData
-            required property int index
-            property var buffer: modelData
-            text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name : ""
-
-            onClicked: {
-                Lith.selectedBuffer = buffer
-                root.close()
-            }
-            onPressAndHold: {
-                if (Lith.selectedBuffer === buffer) {
-                    Lith.selectedBuffer = null
-                    root.close()
-                }
-            }
-
-            leftPadding: horizontalPadding + numberIndicator.width + spacing
-            rightPadding: horizontalPadding + (hotMessageIndicator.visible ? hotMessageIndicator.width + spacing : 0)
-
-            Rectangle {
-                id: numberIndicator
-                x: bufferDelegate.spacing
-                height: parent.height - 12
-                width: height
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: 1
-                color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
-                radius: 2
-                Label {
-                    text: buffer && buffer.number > 0 ? buffer.number : ""
-                    font.pointSize: FontSizes.small
-                    anchors.centerIn: parent
-                    color: LithPalette.disabled.text
-                    opacity: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
-                }
-                Behavior on opacity { NumberAnimation { duration: 100 } }
-            }
-            Rectangle {
-                id: hotMessageIndicator
-                visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
-                color: modelData.hotMessages ? ColorUtils.darken(LithPalette.regular.highlight, 1.3) : LithPalette.regular.alternateBase
-                border.color: LithPalette.regular.text
-                border.width: 1
-                height: parent.height - 12
-                width: Math.max(height, hotListItemCount.width + 6)
-                anchors.verticalCenter: bufferDelegate.verticalCenter
-                anchors.right: bufferDelegate.right
-                anchors.rightMargin: bufferDelegate.spacing
-                radius: 2
-                Label {
-                    id: hotListItemCount
-                    text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
-                    anchors.centerIn: parent
-                    color: modelData.hotMessages > 0 ? LithPalette.regular.highlightedText : LithPalette.regular.windowText
-                }
-            }
-        }
-    }
-
     Rectangle {
         id: separator
+        z: 3
         anchors {
             left: parent.left
             right: parent.right
@@ -202,5 +122,106 @@ Rectangle {
         height: 1
         color: LithPalette.regular.text
         opacity: 0.5
+    }
+
+    Item {
+        id: bufferListStackingOrderWrapper
+        z: -1
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: root.controlRowOnBottom ? parent.top : controlRow.bottom
+            topMargin: root.controlRowOnBottom ? 0 : 9
+        }
+        height: parent.height - controlRow.height - 15
+
+        ListView {
+            id: bufferList
+            anchors.fill: parent
+
+            model: Lith.buffers
+            currentIndex: Lith.selectedBufferIndex
+            highlightMoveDuration: root.position > 0.0 ? 120 : 0
+
+            Connections {
+                target: Lith
+                function onSelectedBufferIndexChanged() {
+                    bufferList.currentIndex = Lith.selectedBufferIndex
+                }
+            }
+
+            ScrollBar.vertical: ScrollBar {
+                id: scrollBar
+                hoverEnabled: true
+                active: hovered || pressed
+                orientation: Qt.Vertical
+            }
+
+            delegate: ItemDelegate {
+                id: bufferDelegate
+                width: root.delegateWidth
+
+                checked: Lith.selectedBuffer == buffer
+                highlighted: bufferList.currentIndex === index
+
+                required property var modelData
+                required property int index
+                property var buffer: modelData
+                text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name : ""
+
+                onClicked: {
+                    Lith.selectedBuffer = buffer
+                    root.close()
+                }
+                onPressAndHold: {
+                    if (Lith.selectedBuffer === buffer) {
+                        Lith.selectedBuffer = null
+                        root.close()
+                    }
+                }
+
+                leftPadding: horizontalPadding + numberIndicator.width + spacing
+                rightPadding: horizontalPadding + (hotMessageIndicator.visible ? hotMessageIndicator.width + spacing : 0)
+
+                Rectangle {
+                    id: numberIndicator
+                    x: bufferDelegate.spacing
+                    height: parent.height - 12
+                    width: height
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: 1
+                    color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? "#22000000" : "transparent"
+                    radius: 2
+                    Label {
+                        text: buffer && buffer.number > 0 ? buffer.number : ""
+                        font.pointSize: FontSizes.small
+                        anchors.centerIn: parent
+                        color: LithPalette.disabled.text
+                        opacity: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? 1.0 : 0.4
+                    }
+                    Behavior on opacity { NumberAnimation { duration: 100 } }
+                }
+                Rectangle {
+                    id: hotMessageIndicator
+                    visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
+                    color: modelData.hotMessages ? ColorUtils.darken(LithPalette.regular.highlight, 1.3) : LithPalette.regular.alternateBase
+                    border.color: LithPalette.regular.text
+                    border.width: 1
+                    height: parent.height - 12
+                    width: Math.max(height, hotListItemCount.width + 6)
+                    anchors.verticalCenter: bufferDelegate.verticalCenter
+                    anchors.right: bufferDelegate.right
+                    anchors.rightMargin: bufferDelegate.spacing
+                    radius: 2
+                    Label {
+                        id: hotListItemCount
+                        text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
+                        anchors.centerIn: parent
+                        color: modelData.hotMessages > 0 ? LithPalette.regular.highlightedText : LithPalette.regular.windowText
+                    }
+                }
+            }
+        }
     }
 }

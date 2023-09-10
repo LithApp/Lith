@@ -138,7 +138,6 @@ Rectangle {
                 Layout.fillHeight: true
                 color: LithPalette.regular.text
                 visible: !Lith.selectedBuffer || Lith.selectedBuffer.title.length > 0
-                clip: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 text: Lith.selectedBuffer ? Lith.selectedBuffer.title.toPlain() :
                       Lith.status === Lith.UNCONFIGURED ? "Not configured" :

@@ -59,7 +59,6 @@ T.Button {
     }
 
     background: Rectangle {
-        clip: true
         color: !control.flat || (control.hovered && control.enabled) || control.pressed ? LithPalette.regular.button : LithPalette.regular.window
         Behavior on color { ColorAnimation { duration: 100 } }
         radius: 3

@@ -219,7 +219,6 @@ Dialog {
         color: "transparent"
         anchors.fill: parent
         visible: false
-        clip: true
         Image {
             id: delegateImage
             x: 1

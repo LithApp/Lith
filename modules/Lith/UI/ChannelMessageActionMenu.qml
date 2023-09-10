@@ -121,7 +121,6 @@ Dialog {
                 }
             }
             Button {
-                clip: true
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 1.5 * implicitHeight

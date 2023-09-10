@@ -53,6 +53,8 @@ Drawer {
         nickListActionMenu.nickModel = nick
     }
 
+    background: Item {}
+
     Rectangle {
         anchors.fill: parent
         color: LithPalette.regular.window
@@ -175,8 +177,9 @@ Drawer {
 
         ListView {
             id: nickListView
+            // stack undeer the filter field so it doesn't render over it, better than clipping
+            z: -1
             visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
-            clip: true
             Layout.fillHeight: true
             Layout.fillWidth: true
             model: Lith.selectedBufferNicks

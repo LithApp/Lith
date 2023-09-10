@@ -50,4 +50,9 @@ ListView {
             formatSplitter.fromStringList(Lith.settings.hotlistFormat)
         }
     }
+    Rectangle {
+        id: background
+        z: -1
+        color: LithPalette.regular.window
+    }
 }

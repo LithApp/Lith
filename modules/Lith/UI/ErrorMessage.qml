@@ -22,21 +22,22 @@ import Lith.Core
 import Lith.Style
 
 Rectangle {
-    clip: true
-    height: errorText.text.length > 0 ? 46 : 0
+    y: errorText.text.length > 0 ? 0 : -height
+    height: layout.height + 9
     width: parent.width
     //visible: height != 0
     gradient: Gradient {
         GradientStop { position: 0.0; color: WindowHelper.darkTheme ? "#881111" : "#bb2222" }
         GradientStop { position: 0.22; color: WindowHelper.darkTheme ? "#aa1111" : "#dd3333" }
     }
-    Behavior on height {
+    Behavior on y {
         NumberAnimation {
             duration: 120
             easing.type: Easing.InOutQuart
         }
     }
     RowLayout {
+        id: layout
         anchors {
             left: parent.left
             leftMargin: 12
@@ -50,7 +51,6 @@ Rectangle {
             Layout.fillHeight: true
             Layout.fillWidth: true
             verticalAlignment: Label.AlignVCenter
-            text: Lith.errorString
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             maximumLineCount: 2
             elide: Text.ElideRight

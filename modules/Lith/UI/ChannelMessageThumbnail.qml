@@ -15,7 +15,6 @@ Rectangle {
     width: aspectRatio > 1.0 ? height / aspectRatio : Math.min(height / aspectRatio, maximumWidth)
     height: aspectRatio <= 1.0 ? maximumHeightHorizontal : maximumHeightVertical
     radius: 6
-    clip: true
     color: "transparent"
     border.width: 1
     border.color: LithPalette.regular.text
@@ -23,6 +22,7 @@ Rectangle {
 
     Image {
         id: thumbnailImage
+        z: -1
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
         source: root.thumbnailUrl.endsWith(".jpg") || root.thumbnailUrl.endsWith(".png") ? root.thumbnailUrl : ""

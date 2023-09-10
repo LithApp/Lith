@@ -25,7 +25,6 @@ import Lith.Style
 
 ScrollView {
     id: root
-    clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
     function save() {
