@@ -21,7 +21,7 @@ On desktop systems, you can run WeeChat on the same device as Lith but the main 
 remote connections, especially on mobile platforms and iOS in particular. The remote WeeChat server needs to be
 directly over the internet either through a TCP socket or WebSockets.
 
-There is also a browser version of Lith you can try right now thanks to WebAssembly: https://lith.app/Lith/Lith.html .
+There is also a browser version of Lith you can try right now thanks to WebAssembly: [https://lith.app/Lith/](https://lith.app/Lith/).
 
 ### Features
 
@@ -34,9 +34,10 @@ There is also a browser version of Lith you can try right now thanks to WebAssem
 
 - Message text is not selectable
 - Keyboard shortcuts can only be tweaked by editing the config file
-- Android: Builds are not signed
+- Android: Builds are not tested at all at this moment, not signed, currently not installable without signing
 - macOS: Builds are not signed + Some keyboard shortcuts are broken
 - Windows: Builds are not signed + There is no installer
+- WebAssembly: Builds are pretty large (around 12MB at this moment), there are keyboard focus issues and video preview support is not supported.
 - More: https://github.com/LithApp/Lith/issues
 
 ### Future plans
@@ -47,14 +48,14 @@ There is also a browser version of Lith you can try right now thanks to WebAssem
 ## Binary Packages
 
 Lith currently supports the following platforms:
- - (Beta) **iOS** and **iPadOS**:
+ - (Usable) **iOS** and **iPadOS**:
     - RECOMMENDED: https://testflight.apple.com/join/QfcVgNHD - "Stable" track - releases ending with .0
     - https://testflight.apple.com/join/xS3hWrmj - "Unstable" track - more or less everything I tag, may be messy
- - (Alpha) Android: https://github.com/LithApp/Lith/releases
- - (Beta) **Linux**: https://flathub.org/apps/details/app.lith.Lith
- - (Alpha) Windows: https://github.com/LithApp/Lith/releases
- - (Alpha) macOS: https://github.com/LithApp/Lith/releases
- - (Alpha) WebAssembly: https://lith.app/Lith/Lith.html
+ - (build-only) Android: https://github.com/LithApp/Lith/releases
+ - (Usable) **Linux**: https://flathub.org/apps/details/app.lith.Lith
+ - (Usable, not tested) Windows: https://github.com/LithApp/Lith/releases
+ - (Usable, not tested) macOS: https://github.com/LithApp/Lith/releases
+ - (Not tested, feature gaps) WebAssembly: https://lith.app/Lith/
 
 
 ## Build instructions
