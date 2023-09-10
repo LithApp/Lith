@@ -84,7 +84,6 @@ Item {
                 text: messageModel.colorlessNickname.substring(0, 2)
                 color: LithPalette.regular.window
                 textFormat: Text.RichText
-                renderType: Text.NativeRendering
             }
         }
 
@@ -111,7 +110,6 @@ Item {
                 text: messageModel.message
                 color: LithPalette.regular.text
                 textFormat: Text.RichText
-                renderType: Text.NativeRendering
             }
         }
     }
@@ -155,7 +153,6 @@ Item {
                 text: messageModel.date.toLocaleString(Qt.locale(), Lith.settings.timestampFormat) + "\u00A0"
                 color: LithPalette.disabled.text
                 textFormat: Text.RichText
-                renderType: Text.NativeRendering
                 lineHeight: messageText.lineHeight
                 lineHeightMode: messageText.lineHeightMode
             }
@@ -167,7 +164,6 @@ Item {
                 text: messageModel.prefix.toTrimmedHtml(Lith.settings.nickCutoffThreshold) + "\u00A0"
                 color: LithPalette.regular.text
                 textFormat: Text.RichText
-                renderType: Text.NativeRendering
                 lineHeight: messageText.lineHeight
                 lineHeightMode: messageText.lineHeightMode
                 verticalAlignment: Label.AlignVCenter
@@ -182,7 +178,6 @@ Item {
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     color: LithPalette.regular.text
                     textFormat: Text.RichText
-                    renderType: Text.NativeRendering
                     lineHeight: font.pixelSize + 1
                     lineHeightMode: Label.FixedHeight
                     onLinkActivated: (link) => {

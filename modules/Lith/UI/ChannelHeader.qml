@@ -84,7 +84,6 @@ Rectangle {
                         color: LithPalette.regular.text
                         font.bold: true
                         text: Lith.selectedBuffer ? Lith.selectedBuffer.name : "Lith"
-                        renderType: Text.NativeRendering
                         anchors.verticalCenter: parent.verticalCenter
                         width: Math.min(implicitWidth, parent.width)
                         elide: Label.ElideRight
@@ -151,7 +150,6 @@ Rectangle {
                 font.pointSize: FontSizes.tiny
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                renderType: Text.NativeRendering
                 onLinkActivated: {
                     linkHandler.show(link, root)
                 }

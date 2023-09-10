@@ -25,7 +25,6 @@ TextField {
     id: inputField
     verticalAlignment: TextField.AlignVCenter
     inputMethodHints: Qt.ImhMultiLine
-    renderType: TextInput.NativeRendering
 
     borderColor: backgroundColor
     color: LithPalette.regular.text
