@@ -12,6 +12,7 @@ Base {
     property alias echoMode: textField.echoMode
     property alias passwordCharacter: textField.passwordCharacter
     property alias readOnly: textField.readOnly
+    signal textEdited
 
     rowComponent: TextField {
         id: textField
@@ -20,5 +21,6 @@ Base {
         Layout.maximumWidth: root.halfWidth
         Layout.preferredWidth: root.halfWidth
         passwordCharacter: "*"
+        onTextEdited: root.textEdited()
     }
 }
