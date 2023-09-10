@@ -146,6 +146,9 @@ void Lith::errorStringSet(const QString& o) {
     if (m_error != o) {
         m_error = o;
         emit errorStringChanged();
+        if (m_error.isEmpty()) {
+            statusSet(DISCONNECTED);
+        }
     }
 }
 

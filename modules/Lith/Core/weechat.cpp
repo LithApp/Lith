@@ -121,7 +121,7 @@ void Weechat::init() {
     connect(Lith::settingsGet(), &Settings::readyChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
     connect(Lith::settingsGet(), &Settings::networkSettingsChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
 
-    onConnectionSettingsChanged();
+    QTimer::singleShot(0, this, &Weechat::onConnectionSettingsChanged);
 }
 
 void Weechat::start() {
@@ -148,9 +148,9 @@ void Weechat::restart() {
     auto ssl = Lith::settingsGet()->encryptedGet();
     auto websocketEndpoint = Lith::settingsGet()->websocketsEndpointGet();
 #ifndef __EMSCRIPTEN__
-    if (!Lith::settingsGet()->useWebsocketsGet()) {
+    if (!Lith::settingsGet()->useWebsocketsGet() && !host.isEmpty()) {
         m_connection->connectToTcpSocket(host, port, ssl);
-    } else {
+    } else if (!host.isEmpty() && !websocketEndpoint.isEmpty()) {
 #endif  // __EMSCRIPTEN__
         m_connection->connectToWebsocket(host, websocketEndpoint, port, ssl);
 #ifndef __EMSCRIPTEN__
@@ -169,6 +169,9 @@ void Weechat::onConnectionSettingsChanged() {
             QTimer::singleShot(50, this, &Weechat::start);
         }
         m_restarting = true;
+    } else {
+        m_connection->reset();
+        m_reconnectTimer->stop();
     }
 }
 
@@ -252,13 +255,25 @@ void Weechat::onConnected() {
 }
 
 void Weechat::onDisconnected() {
-    lith()->statusSet(Lith::DISCONNECTED);
-
-    lith()->log(Logger::Protocol, QString("WeeChat connection lost, will reconnect in %1ms").arg(m_reconnectTimer->interval() * 2));
+    if (Lith::settingsGet()->hasPassphraseGet()) {
+        lith()->statusSet(Lith::DISCONNECTED);
+    } else {
+        lith()->statusSet(Lith::UNCONFIGURED);
+    }
 
     m_fetchBuffer.clear();
     m_bytesRemaining = 0;
     m_hotlistTimer->stop();
+
+    if (m_initializationStatus != COMPLETE && m_initializationStatus | HANDSHAKE) {
+        lith()->log(Logger::Protocol, QString("Authentication failed."));
+        lith()->statusSet(Lith::ERROR);
+        lith()->errorStringSet(tr("Authentication failed with remote host. Please check your login credentials"));
+        m_reconnectTimer->stop();
+        return;
+    }
+
+    lith()->log(Logger::Protocol, QString("WeeChat connection lost, will reconnect in %1ms").arg(m_reconnectTimer->interval() * 2));
 
     if (m_reconnectTimer->interval() < 15000) {
         m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
