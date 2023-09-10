@@ -41,10 +41,11 @@ ColumnLayout {
         z: 1
     }
 
-    Item {
+    Rectangle {
         id: messageArea
         Layout.fillHeight: true
         Layout.fillWidth: true
+        color: ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.window, 0.5)
 
         ColumnLayout {
             visible: !Lith.selectedBuffer

@@ -24,12 +24,15 @@ T.CheckBox {
         anchors.verticalCenter: parent.verticalCenter
 
         radius: 3
+        border.color: ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
+        border.width:  control.flat ? 0 : 0.5
+        readonly property real themeQuotient: WindowHelper.lightTheme ? 0.0 : WindowHelper.useBlack ? 0.5 : 0.5
         color: {
             if (control.flat)
                 return LithPalette.regular.window
             if (!control.enabled) {
                 if (control.down) {
-                    return ColorUtils.darken(LithPalette.disabled.button, 1.1)
+                    return ColorUtils.darken(LithPalette.disabled.button, 1.1 + backgroundRect.themeQuotient)
                 }
                 else {
                     return LithPalette.disabled.button
@@ -41,18 +44,22 @@ T.CheckBox {
             if (!control.enabled)
                 return backgroundRect.color
             if (control.pressed)
-                return ColorUtils.darken(LithPalette.regular.button, 1.1)
+                return ColorUtils.darken(LithPalette.regular.button, 1.4 + backgroundRect.themeQuotient)
             if (control.hovered || !control.flat)
-                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.15 + 0.2 * backgroundRect.themeQuotient)
             return backgroundRect.color
         }
         property color endColor: {
             if (!control.enabled)
                 return backgroundRect.color
-            if (control.hovered && !control.pressed)
-                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            if (control.pressed)
+                return ColorUtils.darken(LithPalette.regular.button, 1.2 + backgroundRect.themeQuotient)
+            if (control.hovered)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.2 + 0.2 * backgroundRect.themeQuotient)
             return backgroundRect.color
         }
+        Behavior on startColor { ColorAnimation { duration: 100 } }
+        Behavior on endColor { ColorAnimation { duration: 100 } }
         Behavior on startColor { ColorAnimation { duration: 100 } }
         Behavior on endColor { ColorAnimation { duration: 100 } }
         gradient: Gradient {

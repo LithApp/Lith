@@ -42,11 +42,12 @@ Rectangle {
         height: parent.height - 2 * root.verticalPadding
         RowLayout {
             id: row
-            Layout.minimumHeight: summary.font.pixelSize + 32
+            Layout.minimumHeight: summary.font.pixelSize + 36
             Layout.fillWidth: true
             spacing: 3
             ColumnLayout {
                 Layout.fillWidth: true
+                spacing: 0
                 Label {
                     id: summary
                     Layout.topMargin: details.visible ? 6 : 0

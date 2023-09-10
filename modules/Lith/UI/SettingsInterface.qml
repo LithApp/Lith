@@ -112,7 +112,7 @@ ScrollView {
         ColumnLayout {
             id: settingsPaneLayout
             anchors.horizontalCenter: parent.horizontalCenter
-            width: window.WindowHelper.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
+            width: WindowHelper.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
             spacing: -1
 
             Fields.Header {

@@ -3,6 +3,7 @@ import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import Lith.Core
+import Lith.Style
 
 T.Button {
     id: control
@@ -36,9 +37,9 @@ T.Button {
             source: control.icon.source
             sourceSize: Qt.size(control.icon.width, control.icon.height)
 
-            x: control.leftPadding
-            height: parent.height - control.topPadding - control.bottomPadding
-            width: height
+            x: control.text.length > 0 ? control.leftPadding : (parent.width - width) / 2
+            height: control.icon.height
+            width: control.icon.width
             anchors.verticalCenter: parent.verticalCenter
             opacity: control.enabled ? 1.0 : 0.5
         }
@@ -56,7 +57,7 @@ T.Button {
             font: control.font
             color: {
                 if (!control.enabled)
-                    return LithPalette.disabled.buttonText
+                    return LithPalette.disabled.text
                 if (control.checked || control.highlighted)
                     return control.LithPalette.regular.brightText
                 if (control.flat && !control.down) {
@@ -73,12 +74,15 @@ T.Button {
     background: Rectangle {
         id: backgroundRect
         radius: 3
+        border.color: ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
+        border.width:  control.flat ? 0 : 0.5
+        readonly property real themeQuotient: WindowHelper.lightTheme ? 0.0 : WindowHelper.useBlack ? 0.5 : 0.5
         color: {
             if (control.flat)
                 return LithPalette.regular.window
             if (!control.enabled) {
                 if (control.down) {
-                    return ColorUtils.darken(LithPalette.disabled.button, 1.1)
+                    return ColorUtils.darken(LithPalette.disabled.button, 1.1 + backgroundRect.themeQuotient)
                 }
                 else {
                     return LithPalette.disabled.button
@@ -90,23 +94,25 @@ T.Button {
             if (!control.enabled)
                 return backgroundRect.color
             if (control.pressed)
-                return ColorUtils.darken(LithPalette.regular.button, 1.1)
+                return ColorUtils.darken(LithPalette.regular.button, 1.4 + backgroundRect.themeQuotient)
             if (control.hovered || !control.flat)
-                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.15 + 0.2 * backgroundRect.themeQuotient)
             return backgroundRect.color
         }
         property color endColor: {
             if (!control.enabled)
                 return backgroundRect.color
-            if (control.hovered && !control.pressed)
-                return ColorUtils.lighten(LithPalette.regular.button, 1.5)
+            if (control.pressed)
+                return ColorUtils.darken(LithPalette.regular.button, 1.2 + backgroundRect.themeQuotient)
+            if (control.hovered)
+                return ColorUtils.lighten(LithPalette.regular.button, 1.2 + 0.2 * backgroundRect.themeQuotient)
             return backgroundRect.color
         }
         Behavior on startColor { ColorAnimation { duration: 100 } }
         Behavior on endColor { ColorAnimation { duration: 100 } }
         gradient: Gradient {
             GradientStop { position: 0.0; color: backgroundRect.startColor }
-            GradientStop { position: 0.6; color: backgroundRect.endColor }
+            GradientStop { position: 0.2; color: backgroundRect.endColor }
         }
     }
 }

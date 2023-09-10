@@ -37,6 +37,6 @@ T.ItemDelegate {
                control.highlighted ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.4) :
                control.pressed     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.1) :
                control.hovered     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.2) :
-                                     LithPalette.regular.base
+                                      ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.window, 0.5)
     }
 }

@@ -13,7 +13,7 @@ T.TextField {
                              contentHeight + topPadding + bottomPadding)
 
     padding: 9
-    color: LithPalette.regular.text
+    color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, control.enabled ? 1.0 : 0.3)
     selectionColor: LithPalette.regular.highlight
     placeholderTextColor: LithPalette.disabled.text
     verticalAlignment: Text.AlignVCenter
@@ -21,7 +21,7 @@ T.TextField {
     font.pointSize: Lith.settings.baseFontSize
 
     property color borderColor: "transparent"
-    property color backgroundColor: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.05)
+    property color backgroundColor: ColorUtils.mixColors(LithPalette.regular.window, LithPalette.regular.base, control.enabled ? 0.5 : 0.95)
     property real animationSpeed: 300
 
     background: Rectangle {
@@ -30,7 +30,7 @@ T.TextField {
                 return control.borderColor
             if (control.activeFocus)
                 return LithPalette.regular.midlight
-            return LithPalette.regular.button
+            return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
         }
 
         border {
