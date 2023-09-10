@@ -75,6 +75,10 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+if(CMAKE_BUILD_TYPE STREQUAL Debug OR CMAKE_BUILD_TYPE STREQUAL Profile)
+    set(LITH_IS_DEBUG_BUILD ÓN CACHE STRING "")
+endif()
+
 find_package(Qt6 COMPONENTS Widgets Gui Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
 if (LITH_DEPENDENCY_ENABLE_DBUS)
     find_package(Qt6 COMPONENTS DBus REQUIRED)

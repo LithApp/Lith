@@ -74,6 +74,22 @@ void Logger::log(Event event) {
         endInsertRows();
         emit eventAdded(m_events.last().first, m_events.last().second);
     }
+#if LITH_IS_DEBUG_BUILD
+    switch (event.type) {
+        case Unexpected:
+            qCritical().noquote() << event.type << event.context << event.summary << event.details;
+            break;
+        case Network:  // fallthrough
+        case Platform:
+            qWarning().noquote() << event.type << event.context << event.summary << event.details;
+            break;
+        case LineAdded:  // don't log
+            break;
+        default:
+            qDebug().noquote() << event.type << event.context << event.summary << event.details;
+            break;
+    }
+#endif  // LITH_IS_DEBUG_BUILD
 }
 
 const QList<QPair<QDateTime, Logger::Event> >& Logger::events() const {
