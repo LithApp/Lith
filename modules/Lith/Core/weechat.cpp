@@ -161,7 +161,11 @@ void Weechat::restart() {
 
 void Weechat::onConnectionSettingsChanged() {
     bool hasPassphrase = Lith::settingsGet()->hasPassphraseGet();
+#ifndef __EMSCRIPTEN__
     bool usesWebsockets = Lith::settingsGet()->useWebsocketsGet();
+#else
+    bool usesWebsockets = true;
+#endif
     bool hasHost = !Lith::settingsGet()->hostGet().isEmpty();
     bool hasWSEndpoint = !Lith::settingsGet()->websocketsEndpointGet().isEmpty();
 

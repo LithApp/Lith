@@ -146,6 +146,9 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
     if (!isReady()) {
         co_return;
     }
+    if (!credentialEncryptionAvailable()) {
+        encryptedCredentialsSet(false);
+    }
 
 #if LITH_FEATURE_KEYCHAIN
     connect(this, &Settings::encryptedCredentialsChanged, this, &Settings::migrateCredentialEncryption);
@@ -234,15 +237,16 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
             }
         }
         emit networkSettingsChanged();
-    } else {
+    }
+    m_settings.sync();
+#endif  // LITH_FEATURE_KEYCHAIN
+    if (!credentialEncryptionAvailable()) {
         auto plainPassphrase = getPlainValue("passphrase");
         if (plainPassphrase.has_value() && !plainPassphrase->isNull()) {
             hasPassphraseSet(true);
             useEmptyPassphraseSet(plainPassphrase.value().isEmpty());
         }
     }
-    m_settings.sync();
-#endif  // LITH_FEATURE_KEYCHAIN
     co_return;
 }
 
@@ -439,13 +443,17 @@ bool Settings::deletePlainValue(QString key) {
 QCoro::Task<bool> Settings::setSensitiveValue(QString key, QString value) {
     if (m_encryptedCredentials) {
         if (m_encryptedCredentials) {
+#ifndef Q_OS_WASM
             QThread* callerThread = QThread::currentThread();
             QThread* settingsThread = Settings::instance()->thread();
             if (callerThread != settingsThread) {
                 co_await QCoro::moveToThread(settingsThread);
             }
+#endif  // Q_OS_WASM
             auto result = co_await setSecureValue(key, value, false);
+#ifndef Q_OS_WASM
             co_await QCoro::moveToThread(callerThread);
+#endif  // Q_OS_WASM
             co_return result;
         }
     }
@@ -454,13 +462,17 @@ QCoro::Task<bool> Settings::setSensitiveValue(QString key, QString value) {
 
 QCoro::Task<std::optional<QString>> Settings::getSensitiveValue(const QString& key) {
     if (m_encryptedCredentials) {
+#ifndef Q_OS_WASM
         QThread* callerThread = QThread::currentThread();
         QThread* settingsThread = Settings::instance()->thread();
         if (callerThread != settingsThread) {
             co_await QCoro::moveToThread(settingsThread);
         }
+#endif  // Q_OS_WASM
         auto result = co_await getSecureValue(key, false);
+#ifndef Q_OS_WASM
         co_await QCoro::moveToThread(callerThread);
+#endif  // Q_OS_WASM
         co_return result;
     }
     co_return getPlainValue(key);
@@ -468,13 +480,17 @@ QCoro::Task<std::optional<QString>> Settings::getSensitiveValue(const QString& k
 
 QCoro::Task<bool> Settings::deleteSensitiveValue(QString key) {
     if (m_encryptedCredentials) {
+#ifndef Q_OS_WASM
         QThread* callerThread = QThread::currentThread();
         QThread* settingsThread = Settings::instance()->thread();
         if (callerThread != settingsThread) {
             co_await QCoro::moveToThread(settingsThread);
         }
+#endif  // Q_OS_WASM
         auto result = co_await deleteSecureValue(key, false);
+#ifndef Q_OS_WASM
         co_await QCoro::moveToThread(callerThread);
+#endif  // Q_OS_WASM
         co_return result;
     }
     co_return deletePlainValue(key);

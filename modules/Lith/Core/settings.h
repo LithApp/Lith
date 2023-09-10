@@ -26,7 +26,7 @@
 #include <QKeySequence>
 #include <QSettings>
 
-#include <QCoro/QCoroCore>
+#include <QCoro/QCoroTask>
 #include <optional>
 
 #define SETTING(type, name, ...)                     \
