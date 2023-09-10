@@ -113,6 +113,9 @@ SafeAreaMargins::SafeAreaMargins(QObject* parent)
 }
 
 void SafeAreaMargins::setMargins(QMarginsF margins) {
+    if (LITH_IS_DEBUG_BUILD && margins.isNull()) {
+        return;
+    }
     leftSet(margins.left());
     rightSet(margins.right());
     topSet(margins.top());

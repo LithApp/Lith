@@ -22,6 +22,7 @@
 
 #include <cstdint>
 
+#include "defs/cmakedefs.h"
 #include "qmlobjectlist.h"
 #include "formattedstring.h"
 #include "lithcore_export.h"
@@ -90,21 +91,26 @@ public:                                                                       \
         }                             \
     }
 
-#define PROPERTY_READONLY_PRIVATESETTER(type, name, ...)      \
-private:                                                      \
-    Q_PROPERTY(type name READ name##Get NOTIFY name##Changed) \
-    type m_##name {__VA_ARGS__};                              \
-    SETTER_DEFINITION(type, name)                             \
-public:                                                       \
-    const type& name##Get() const {                           \
-        return m_##name;                                      \
-    }                                                         \
-    Q_SIGNAL void name##Changed();
-
 #define PROPERTY(type, name, ...)              \
     PROPERTY_NOSETTER(type, name, __VA_ARGS__) \
 public:                                        \
     SETTER_DEFINITION(type, name)
+
+#ifdef LITH_IS_DEBUG_BUILD
+  #define PROPERTY_READONLY_PRIVATESETTER(type, name, ...) PROPERTY(type, name, __VA_ARGS__)
+#else  // LITH_IS_DEBUG_BUILD
+  #define PROPERTY_READONLY_PRIVATESETTER(type, name, ...)      \
+  private:                                                      \
+      Q_PROPERTY(type name READ name##Get NOTIFY name##Changed) \
+      type m_##name {__VA_ARGS__};                              \
+      SETTER_DEFINITION(type, name)                             \
+  public:                                                       \
+      const type& name##Get() const {                           \
+          return m_##name;                                      \
+      }                                                         \
+      Q_SIGNAL void name##Changed();
+#endif  // LITH_IS_DEBUG_BUILD
+
 
 #define PROPERTY_PTR(type, name, ...)                                          \
 private:                                                                       \

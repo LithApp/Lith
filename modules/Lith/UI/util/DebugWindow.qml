@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Lith.Style
+import Lith.Core
 
 import ".."
 
@@ -11,7 +12,7 @@ Window {
     title: "Lith Debug"
 
     visible: true
-    width: 600
+    width: 800
     height: 800
 
     color: palette.window
@@ -24,7 +25,45 @@ Window {
             PaletteSwitch {
                 text: "Switch theme"
             }
+            TextField {
+                placeholderText: "Set all margins to"
+                implicitWidth: 192
+                validator: IntValidator {
+
+                }
+                onAccepted: {
+                    WindowHelper.safeAreaMargins.left = text
+                    WindowHelper.safeAreaMargins.right = text
+                    WindowHelper.safeAreaMargins.top = text
+                    WindowHelper.safeAreaMargins.bottom = text
+                    text = ""
+                }
+            }
         }
+        RowLayout {
+            Layout.fillWidth: true
+            Label {
+                text: "Safe Area:"
+            }
+            GridLayout {
+                Layout.fillWidth: true
+                columns: 4
+                Repeater {
+                    model: ["left", "right", "top", "bottom"]
+                    Label {
+                        text: modelData
+                    }
+                }
+                Repeater {
+                    model: ["left", "right", "top", "bottom"]
+                    SpinBox {
+                        value: WindowHelper.safeAreaMargins[modelData]
+                        onValueChanged: WindowHelper.safeAreaMargins[modelData] = value
+                    }
+                }
+            }
+        }
+
     }
     SettingsDialogContents {
         id: settings
