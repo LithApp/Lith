@@ -437,6 +437,9 @@ bool Settings::deletePlainValue(QString key) {
 }
 
 QCoro::Task<bool> Settings::setSensitiveValue(QString key, QString value) {
+    if (!isReady()) {
+        co_return false;
+    }
     if (m_encryptedCredentials) {
         if (m_encryptedCredentials) {
             QThread* callerThread = QThread::currentThread();
