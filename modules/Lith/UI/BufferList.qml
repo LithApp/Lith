@@ -25,8 +25,12 @@ import Lith.Style
 Item {
     id: root
 
+    // This will be used when the control row is at the top to make it same height as the channel header
+    required property real channelHeaderRowHeight
+
     readonly property real delegateWidth: root.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
+    readonly property real controlRowHeight: controlRow.height
     readonly property bool controlRowOnBottom: (LithPlatform.mobile && Lith.settings.platformBufferControlPosition) || (!LithPlatform.mobile && !Lith.settings.platformBufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
     function clear() {
@@ -46,8 +50,8 @@ Item {
 
     Rectangle {
         width: controlRow.width + controlRow.anchors.margins * 2
-        height: controlRow.height + controlRow.anchors.margins * (root.controlRowOnBottom ? 3 : 2)
-        y: controlRow.y - controlRow.anchors.margins
+        height: controlRow.height
+        y: controlRow.y
         anchors.margins: -controlRow.margins
         color: LithPalette.regular.window
         z: 1
@@ -61,9 +65,9 @@ Item {
             margins: 6
         }
         z: 2
-        y: root.controlRowOnBottom ? parent.height - height - anchors.margins : anchors.margins
-
-        spacing: 6
+        y: root.controlRowOnBottom ? parent.height - height : 0
+        height: root.controlRowOnBottom ? implicitHeight : Math.max(channelHeaderRowHeight, implicitHeight)
+        //y: root.controlRowOnBottom ? implicitHeight :
 
         Button {
             id: settingsButton
@@ -116,7 +120,6 @@ Item {
             left: parent.left
             right: parent.right
             bottom: root.controlRowOnBottom ? controlRow.top : controlRow.bottom
-            bottomMargin: root.controlRowOnBottom ? 6 : -6
         }
 
         height: 1
@@ -131,9 +134,8 @@ Item {
             left: parent.left
             right: parent.right
             top: root.controlRowOnBottom ? parent.top : controlRow.bottom
-            topMargin: root.controlRowOnBottom ? 0 : 9
         }
-        height: parent.height - controlRow.height - 15
+        height: parent.height - controlRow.height - 2
 
         ListView {
             id: bufferList

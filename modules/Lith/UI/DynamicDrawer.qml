@@ -5,8 +5,9 @@ import Lith.Style
 
 Rectangle {
     id: drawer
-    property bool isClosed: position === 0.0
-    width: visible ? WindowHelper.landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainView.width + mainView.leftMargin : 0
+    default property alias contents: contentArea.children
+    readonly property bool isClosed: position === 0.0
+    width: visible ? WindowHelper.landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainViewContents.width : 0
     property real dragOutHandleTopMargin: 0
     property real dragOutHandleBottomMargin: 0
 
@@ -173,5 +174,11 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Item {
+        id: contentArea
+        anchors.fill: parent
+        clip: true
     }
 }

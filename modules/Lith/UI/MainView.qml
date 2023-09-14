@@ -131,6 +131,7 @@ Item {
             BufferList {
                 id: bufferList
                 anchors.fill: parent
+                channelHeaderRowHeight: channelView.headerImplicitHeight
                 onClose: {
                     if (!WindowHelper.landscapeMode)
                         bufferDrawer.hide()

@@ -25,7 +25,8 @@ Rectangle {
     id: root
     color: LithPalette.regular.window
 
-    height: headerLayout.height + 12
+    implicitHeight: headerLayout.implicitHeight + 12
+    height: implicitHeight
 
     DragHandler {
         onActiveChanged: if (active) window.startSystemMove();
@@ -48,6 +49,7 @@ Rectangle {
         x: 6
         y: 6
         width: parent.width - 12
+        height: parent.height - 12
         Button {
             id: bufferListButton
             focusPolicy: Qt.NoFocus
@@ -132,8 +134,9 @@ Rectangle {
                 }
             }
             Label {
+                id: titleLabel
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.preferredHeight: titleMetrics.height
                 color: LithPalette.regular.text
                 visible: !Lith.selectedBuffer || Lith.selectedBuffer.title.length > 0
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -157,6 +160,12 @@ Rectangle {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton
                     cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                }
+                TextMetrics {
+                    id: titleMetrics
+                    font: titleLabel.font
+                    // Just for the height so it doesn't change when there are 2 lines in the topic
+                    text: "A\nA"
                 }
             }
         }

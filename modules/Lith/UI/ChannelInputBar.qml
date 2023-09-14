@@ -24,7 +24,7 @@ import Lith.Style
 
 Rectangle {
     id: root
-    implicitHeight: inputBarLayout.implicitHeight + 1
+    implicitHeight: inputBarLayout.implicitHeight + 3
     color: LithPalette.regular.window
 
     // TODO
@@ -41,10 +41,10 @@ Rectangle {
 
     RowLayout {
         id: inputBarLayout
-        y: 1
+        y: 3
         x: 5
         width: parent.width - 2 * x
-        height: parent.height
+        height: parent.height - 6
 
         spacing: 3
         Button {
@@ -149,6 +149,6 @@ Rectangle {
             right: parent.right
         }
         height: 1
-        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.3)
+        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
     }
 }

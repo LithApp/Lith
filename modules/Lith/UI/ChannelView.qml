@@ -31,6 +31,8 @@ ColumnLayout {
     property alias messageArea: messageArea
     property alias scrollToBottomButtonPosition: channelMessageList.scrollToBottomButtonPosition
 
+    readonly property real headerImplicitHeight: channelHeader.implicitHeight
+
     function showSearchBar() {
         searchBar.visible = true
     }
