@@ -25,7 +25,7 @@ Rectangle {
     id: root
     color: LithPalette.regular.window
 
-    implicitHeight: headerLayout.implicitHeight + 12
+    implicitHeight: headerLayout.implicitHeight + (headerLayout.y * 2)
     height: implicitHeight
 
     DragHandler {
@@ -47,7 +47,7 @@ Rectangle {
     RowLayout {
         id: headerLayout
         x: 6
-        y: 6
+        y: 4
         width: parent.width - 12
         height: parent.height - 12
         Button {

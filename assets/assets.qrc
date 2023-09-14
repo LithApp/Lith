@@ -3,73 +3,277 @@
         <file>qtquickcontrols2.conf</file>
         <file alias="icon.png">icons/linux/hicolor/256x256/apps/app.lith.Lith.png</file>
         <file>fonts/Inconsolata-Variable.ttf</file>
+        <file>navigation/dark/album-folder@2x.png</file>
+        <file>navigation/dark/album-folder@3x.png</file>
+        <file>navigation/dark/album-folder@4x.png</file>
         <file>navigation/dark/album-folder.png</file>
+        <file>navigation/dark/close@2x.png</file>
+        <file>navigation/dark/close@3x.png</file>
+        <file>navigation/dark/close@4x.png</file>
         <file>navigation/dark/close.png</file>
+        <file>navigation/dark/cogwheel@2x.png</file>
+        <file>navigation/dark/cogwheel@3x.png</file>
+        <file>navigation/dark/cogwheel@4x.png</file>
         <file>navigation/dark/cogwheel.png</file>
+        <file>navigation/dark/copy@2x.png</file>
+        <file>navigation/dark/copy@3x.png</file>
+        <file>navigation/dark/copy@4x.png</file>
         <file>navigation/dark/copy.png</file>
+        <file>navigation/dark/dizzy@2x.png</file>
+        <file>navigation/dark/dizzy@3x.png</file>
+        <file>navigation/dark/dizzy@4x.png</file>
         <file>navigation/dark/dizzy.png</file>
+        <file>navigation/dark/down-arrow@2x.png</file>
+        <file>navigation/dark/down-arrow@3x.png</file>
+        <file>navigation/dark/down-arrow@4x.png</file>
         <file>navigation/dark/down-arrow.png</file>
+        <file>navigation/dark/download@2x.png</file>
+        <file>navigation/dark/download@3x.png</file>
+        <file>navigation/dark/download@4x.png</file>
         <file>navigation/dark/download.png</file>
+        <file>navigation/dark/download-rotated@2x.png</file>
+        <file>navigation/dark/download-rotated@3x.png</file>
+        <file>navigation/dark/download-rotated@4x.png</file>
         <file>navigation/dark/download-rotated.png</file>
+        <file>navigation/dark/ellipsis@2x.png</file>
+        <file>navigation/dark/ellipsis@3x.png</file>
+        <file>navigation/dark/ellipsis@4x.png</file>
         <file>navigation/dark/ellipsis.png</file>
+        <file>navigation/dark/filter@2x.png</file>
+        <file>navigation/dark/filter@3x.png</file>
+        <file>navigation/dark/filter@4x.png</file>
         <file>navigation/dark/filter.png</file>
+        <file>navigation/dark/forward@2x.png</file>
+        <file>navigation/dark/forward@3x.png</file>
+        <file>navigation/dark/forward@4x.png</file>
         <file>navigation/dark/forward.png</file>
-        <file>navigation/dark/image.png</file>
+        <file>navigation/dark/image@2x.png</file>
+        <file>navigation/dark/image@3x.png</file>
+        <file>navigation/dark/image@4x.png</file>
+        <file>navigation/dark/image-gallery@2x.png</file>
+        <file>navigation/dark/image-gallery@3x.png</file>
+        <file>navigation/dark/image-gallery@4x.png</file>
         <file>navigation/dark/image-gallery.png</file>
+        <file>navigation/dark/image.png</file>
+        <file>navigation/dark/loupe@2x.png</file>
+        <file>navigation/dark/loupe@3x.png</file>
+        <file>navigation/dark/loupe@4x.png</file>
         <file>navigation/dark/loupe.png</file>
+        <file>navigation/dark/menu@2x.png</file>
+        <file>navigation/dark/menu@3x.png</file>
+        <file>navigation/dark/menu@4x.png</file>
         <file>navigation/dark/menu.png</file>
+        <file>navigation/dark/mute@2x.png</file>
+        <file>navigation/dark/mute@3x.png</file>
+        <file>navigation/dark/mute@4x.png</file>
         <file>navigation/dark/mute.png</file>
+        <file>navigation/dark/no-wifi@2x.png</file>
+        <file>navigation/dark/no-wifi@3x.png</file>
+        <file>navigation/dark/no-wifi@4x.png</file>
         <file>navigation/dark/no-wifi.png</file>
+        <file>navigation/dark/paper-plane@2x.png</file>
+        <file>navigation/dark/paper-plane@3x.png</file>
+        <file>navigation/dark/paper-plane@4x.png</file>
         <file>navigation/dark/paper-plane.png</file>
+        <file>navigation/dark/paste@2x.png</file>
+        <file>navigation/dark/paste@3x.png</file>
+        <file>navigation/dark/paste@4x.png</file>
         <file>navigation/dark/paste.png</file>
-        <file>navigation/dark/pause.png</file>
+        <file>navigation/dark/pause@2x.png</file>
+        <file>navigation/dark/pause@3x.png</file>
+        <file>navigation/dark/pause@4x.png</file>
+        <file>navigation/dark/pause-color@2x.png</file>
+        <file>navigation/dark/pause-color@3x.png</file>
+        <file>navigation/dark/pause-color@4x.png</file>
         <file>navigation/dark/pause-color.png</file>
-        <file>navigation/dark/play.png</file>
-        <file>navigation/dark/play-color.png</file>
+        <file>navigation/dark/pause.png</file>
+        <file>navigation/dark/photo@2x.png</file>
+        <file>navigation/dark/photo@3x.png</file>
+        <file>navigation/dark/photo@4x.png</file>
         <file>navigation/dark/photo.png</file>
-        <file>navigation/dark/reload.png</file>
+        <file>navigation/dark/play@2x.png</file>
+        <file>navigation/dark/play@3x.png</file>
+        <file>navigation/dark/play@4x.png</file>
+        <file>navigation/dark/play-color@2x.png</file>
+        <file>navigation/dark/play-color@3x.png</file>
+        <file>navigation/dark/play-color@4x.png</file>
+        <file>navigation/dark/play-color.png</file>
+        <file>navigation/dark/play.png</file>
+        <file>navigation/dark/reload@2x.png</file>
+        <file>navigation/dark/reload@3x.png</file>
+        <file>navigation/dark/reload@4x.png</file>
+        <file>navigation/dark/reload-disabled@2x.png</file>
+        <file>navigation/dark/reload-disabled@3x.png</file>
+        <file>navigation/dark/reload-disabled@4x.png</file>
         <file>navigation/dark/reload-disabled.png</file>
+        <file>navigation/dark/reload.png</file>
+        <file>navigation/dark/resize@2x.png</file>
+        <file>navigation/dark/resize@3x.png</file>
+        <file>navigation/dark/resize@4x.png</file>
         <file>navigation/dark/resize.png</file>
+        <file>navigation/dark/scissors@2x.png</file>
+        <file>navigation/dark/scissors@3x.png</file>
+        <file>navigation/dark/scissors@4x.png</file>
         <file>navigation/dark/scissors.png</file>
+        <file>navigation/dark/screwdriver@2x.png</file>
+        <file>navigation/dark/screwdriver@3x.png</file>
+        <file>navigation/dark/screwdriver@4x.png</file>
         <file>navigation/dark/screwdriver.png</file>
+        <file>navigation/dark/sleeping@2x.png</file>
+        <file>navigation/dark/sleeping@3x.png</file>
+        <file>navigation/dark/sleeping@4x.png</file>
         <file>navigation/dark/sleeping.png</file>
+        <file>navigation/dark/smile@2x.png</file>
+        <file>navigation/dark/smile@3x.png</file>
+        <file>navigation/dark/smile@4x.png</file>
         <file>navigation/dark/smile.png</file>
+        <file>navigation/dark/transfer@2x.png</file>
+        <file>navigation/dark/transfer@3x.png</file>
+        <file>navigation/dark/transfer@4x.png</file>
         <file>navigation/dark/transfer.png</file>
+        <file>navigation/dark/up-arrow@2x.png</file>
+        <file>navigation/dark/up-arrow@3x.png</file>
+        <file>navigation/dark/up-arrow@4x.png</file>
         <file>navigation/dark/up-arrow.png</file>
+        <file>navigation/dark/volume@2x.png</file>
+        <file>navigation/dark/volume@3x.png</file>
+        <file>navigation/dark/volume@4x.png</file>
         <file>navigation/dark/volume.png</file>
+        <file>navigation/light/album-folder@2x.png</file>
+        <file>navigation/light/album-folder@3x.png</file>
+        <file>navigation/light/album-folder@4x.png</file>
         <file>navigation/light/album-folder.png</file>
+        <file>navigation/light/close@2x.png</file>
+        <file>navigation/light/close@3x.png</file>
+        <file>navigation/light/close@4x.png</file>
         <file>navigation/light/close.png</file>
+        <file>navigation/light/cogwheel@2x.png</file>
+        <file>navigation/light/cogwheel@3x.png</file>
+        <file>navigation/light/cogwheel@4x.png</file>
         <file>navigation/light/cogwheel.png</file>
+        <file>navigation/light/copy@2x.png</file>
+        <file>navigation/light/copy@3x.png</file>
+        <file>navigation/light/copy@4x.png</file>
         <file>navigation/light/copy.png</file>
+        <file>navigation/light/dizzy@2x.png</file>
+        <file>navigation/light/dizzy@3x.png</file>
+        <file>navigation/light/dizzy@4x.png</file>
         <file>navigation/light/dizzy.png</file>
+        <file>navigation/light/down-arrow@2x.png</file>
+        <file>navigation/light/down-arrow@3x.png</file>
+        <file>navigation/light/down-arrow@4x.png</file>
         <file>navigation/light/down-arrow.png</file>
+        <file>navigation/light/download@2x.png</file>
+        <file>navigation/light/download@3x.png</file>
+        <file>navigation/light/download@4x.png</file>
         <file>navigation/light/download.png</file>
+        <file>navigation/light/download-rotated@2x.png</file>
+        <file>navigation/light/download-rotated@3x.png</file>
+        <file>navigation/light/download-rotated@4x.png</file>
         <file>navigation/light/download-rotated.png</file>
+        <file>navigation/light/ellipsis@2x.png</file>
+        <file>navigation/light/ellipsis@3x.png</file>
+        <file>navigation/light/ellipsis@4x.png</file>
         <file>navigation/light/ellipsis.png</file>
+        <file>navigation/light/filter@2x.png</file>
+        <file>navigation/light/filter@3x.png</file>
+        <file>navigation/light/filter@4x.png</file>
         <file>navigation/light/filter.png</file>
+        <file>navigation/light/forward@2x.png</file>
+        <file>navigation/light/forward@3x.png</file>
+        <file>navigation/light/forward@4x.png</file>
         <file>navigation/light/forward.png</file>
-        <file>navigation/light/image.png</file>
+        <file>navigation/light/image@2x.png</file>
+        <file>navigation/light/image@3x.png</file>
+        <file>navigation/light/image@4x.png</file>
+        <file>navigation/light/image-gallery@2x.png</file>
+        <file>navigation/light/image-gallery@3x.png</file>
+        <file>navigation/light/image-gallery@4x.png</file>
         <file>navigation/light/image-gallery.png</file>
+        <file>navigation/light/image.png</file>
+        <file>navigation/light/loupe@2x.png</file>
+        <file>navigation/light/loupe@3x.png</file>
+        <file>navigation/light/loupe@4x.png</file>
         <file>navigation/light/loupe.png</file>
+        <file>navigation/light/menu@2x.png</file>
+        <file>navigation/light/menu@3x.png</file>
+        <file>navigation/light/menu@4x.png</file>
         <file>navigation/light/menu.png</file>
+        <file>navigation/light/mute@2x.png</file>
+        <file>navigation/light/mute@3x.png</file>
+        <file>navigation/light/mute@4x.png</file>
         <file>navigation/light/mute.png</file>
+        <file>navigation/light/no-wifi@2x.png</file>
+        <file>navigation/light/no-wifi@3x.png</file>
+        <file>navigation/light/no-wifi@4x.png</file>
         <file>navigation/light/no-wifi.png</file>
+        <file>navigation/light/paper-plane@2x.png</file>
+        <file>navigation/light/paper-plane@3x.png</file>
+        <file>navigation/light/paper-plane@4x.png</file>
         <file>navigation/light/paper-plane.png</file>
+        <file>navigation/light/paste@2x.png</file>
+        <file>navigation/light/paste@3x.png</file>
+        <file>navigation/light/paste@4x.png</file>
         <file>navigation/light/paste.png</file>
-        <file>navigation/light/pause.png</file>
+        <file>navigation/light/pause@2x.png</file>
+        <file>navigation/light/pause@3x.png</file>
+        <file>navigation/light/pause@4x.png</file>
+        <file>navigation/light/pause-color@2x.png</file>
+        <file>navigation/light/pause-color@3x.png</file>
+        <file>navigation/light/pause-color@4x.png</file>
         <file>navigation/light/pause-color.png</file>
-        <file>navigation/light/play.png</file>
-        <file>navigation/light/play-color.png</file>
+        <file>navigation/light/pause.png</file>
+        <file>navigation/light/photo@2x.png</file>
+        <file>navigation/light/photo@3x.png</file>
+        <file>navigation/light/photo@4x.png</file>
         <file>navigation/light/photo.png</file>
-        <file>navigation/light/reload.png</file>
+        <file>navigation/light/play@2x.png</file>
+        <file>navigation/light/play@3x.png</file>
+        <file>navigation/light/play@4x.png</file>
+        <file>navigation/light/play-color@2x.png</file>
+        <file>navigation/light/play-color@3x.png</file>
+        <file>navigation/light/play-color@4x.png</file>
+        <file>navigation/light/play-color.png</file>
+        <file>navigation/light/play.png</file>
+        <file>navigation/light/reload@2x.png</file>
+        <file>navigation/light/reload@3x.png</file>
+        <file>navigation/light/reload@4x.png</file>
+        <file>navigation/light/reload-disabled@2x.png</file>
+        <file>navigation/light/reload-disabled@3x.png</file>
+        <file>navigation/light/reload-disabled@4x.png</file>
         <file>navigation/light/reload-disabled.png</file>
+        <file>navigation/light/reload.png</file>
+        <file>navigation/light/resize@2x.png</file>
+        <file>navigation/light/resize@3x.png</file>
+        <file>navigation/light/resize@4x.png</file>
         <file>navigation/light/resize.png</file>
+        <file>navigation/light/scissors@2x.png</file>
+        <file>navigation/light/scissors@3x.png</file>
+        <file>navigation/light/scissors@4x.png</file>
         <file>navigation/light/scissors.png</file>
+        <file>navigation/light/screwdriver@2x.png</file>
+        <file>navigation/light/screwdriver@3x.png</file>
+        <file>navigation/light/screwdriver@4x.png</file>
         <file>navigation/light/screwdriver.png</file>
+        <file>navigation/light/sleeping@2x.png</file>
+        <file>navigation/light/sleeping@3x.png</file>
+        <file>navigation/light/sleeping@4x.png</file>
         <file>navigation/light/sleeping.png</file>
+        <file>navigation/light/smile@2x.png</file>
+        <file>navigation/light/smile@3x.png</file>
+        <file>navigation/light/smile@4x.png</file>
         <file>navigation/light/smile.png</file>
+        <file>navigation/light/transfer@2x.png</file>
+        <file>navigation/light/transfer@3x.png</file>
+        <file>navigation/light/transfer@4x.png</file>
         <file>navigation/light/transfer.png</file>
+        <file>navigation/light/up-arrow@2x.png</file>
+        <file>navigation/light/up-arrow@3x.png</file>
+        <file>navigation/light/up-arrow@4x.png</file>
         <file>navigation/light/up-arrow.png</file>
+        <file>navigation/light/volume@2x.png</file>
+        <file>navigation/light/volume@3x.png</file>
+        <file>navigation/light/volume@4x.png</file>
         <file>navigation/light/volume.png</file>
     </qresource>
 </RCC>

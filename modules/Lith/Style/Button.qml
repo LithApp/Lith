@@ -18,8 +18,8 @@ T.Button {
     padding: 3
     spacing: 6
 
-    icon.width: 28
-    icon.height: 28
+    icon.width: 32
+    icon.height: 32
 
     font.pointSize: Lith.settings.baseFontSize
 
@@ -32,10 +32,9 @@ T.Button {
         }
         implicitWidth: (control.icon.source.length > 0 ? control.icon.width + control.spacing + control.leftPadding + control.rightPadding : 0) + buttonLabel.implicitWidth
 
-        Image {
+        IconImage {
             id: buttonIcon
             source: control.icon.source
-            sourceSize: Qt.size(control.icon.width, control.icon.height)
 
             x: control.text.length > 0 ? control.leftPadding : (parent.width - width) / 2
             height: control.icon.height
