@@ -346,6 +346,6 @@ Item {
 
     Loader {
         id: debugWindowLoader
-        source: Lith.showDebugWindow ? "qrc:/qt/qml/Lith/UI/util/DebugWindow.qml" : ""
+        source: Lith.showDebugWindow ? "util/DebugWindow.qml" : ""
     }
 }
