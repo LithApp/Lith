@@ -55,7 +55,7 @@ Rectangle {
             focusPolicy: Qt.NoFocus
             Layout.preferredWidth: implicitHeight
             flat: true
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/menu.png"
+            icon.source: "qrc:/navigation/menu.png"
             onClicked: {
                 bufferDrawer.toggle()
             }
@@ -179,13 +179,13 @@ Rectangle {
                 nickDrawer.visible = !nickDrawer.visible
                 if(!LithPlatform.mobile) nickDrawer.open()
             }
-            icon.source: Lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/sleeping.png" :
-                         Lith.status === Lith.CONNECTING   ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/transfer.png" :
-                         Lith.status === Lith.CONNECTED    ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/smile.png" :
-                         Lith.status === Lith.DISCONNECTED ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/no-wifi.png" :
-                         Lith.status === Lith.ERROR        ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/sleeping.png" :
-                         Lith.status === Lith.REPLAY       ? (Lith.networkProxy.replaying ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/play-color.png" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/pause-color.png") :
-                                                             "qrc:/navigation/"+WindowHelper.currentThemeName+"/dizzy.png"
+            icon.source: Lith.status === Lith.UNCONFIGURED ? "qrc:/navigation/sleeping-color.png" :
+                         Lith.status === Lith.CONNECTING   ? "qrc:/navigation/transfer.png" :
+                         Lith.status === Lith.CONNECTED    ? "qrc:/navigation/smile-color.png" :
+                         Lith.status === Lith.DISCONNECTED ? "qrc:/navigation/no-wifi.png" :
+                         Lith.status === Lith.ERROR        ? "qrc:/navigation/sleeping-color.png" :
+                         Lith.status === Lith.REPLAY       ? (Lith.networkProxy.replaying ? "qrc:/navigation/play-color.png" : "qrc:/navigation/pause-color.png") :
+                                                             "qrc:/navigation/dizzy-color.png"
             ToolTip.text: "Open channel information"
             ToolTip.visible: nickListButton.hovered
             ToolTip.delay: 800

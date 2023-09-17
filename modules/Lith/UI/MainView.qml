@@ -312,7 +312,7 @@ Item {
                 focusPolicy: Qt.NoFocus
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
-                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/copy.png"
+                icon.source: "qrc:/navigation/copy.png"
                 onClicked: {
                     ClipboardProxy.setText(linkHandler.currentLink)
                     linkHandler.visible = false
@@ -326,12 +326,12 @@ Item {
                     linkHandler.openCurrentLink(false)
                     linkHandler.visible = false
                 }
-                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/resize.png"
+                icon.source: "qrc:/navigation/resize.png"
             }
             Button {
                 visible: linkHandler.containsImage || linkHandler.containsVideo
                 focusPolicy: Qt.NoFocus
-                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/image.png"
+                icon.source: "qrc:/navigation/image.png"
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
                 onClicked: {

@@ -18,10 +18,30 @@ T.Button {
     padding: 3
     spacing: 6
 
+    // Not sure if there's a smarter way to go about this...
+    readonly property string iconUrlString: icon.source.toString()
+    readonly property bool iconIsResource: iconUrlString.startsWith("qrc:")
+    readonly property bool iconIsColorResource: iconIsResource && iconUrlString.endsWith("-color.png")
     icon.width: 32
     icon.height: 32
+    // Only recolor monochrome icons
+    icon.color: iconIsColorResource ? "transparent" : textColor
 
     font.pointSize: Lith.settings.baseFontSize
+
+    property color textColor: {
+        if (!control.enabled)
+            return LithPalette.disabled.text
+        if (control.checked || control.highlighted)
+            return control.LithPalette.regular.brightText
+        if (control.flat && !control.down) {
+            if (control.visualFocus)
+                return control.LithPalette.regular.highlight
+            else
+                return control.LithPalette.regular.windowText
+        }
+        return LithPalette.regular.buttonText
+    }
 
     contentItem: Item {
 
@@ -35,6 +55,8 @@ T.Button {
         IconImage {
             id: buttonIcon
             source: control.icon.source
+            color: control.icon.color
+
 
             x: control.text.length > 0 ? control.leftPadding : (parent.width - width) / 2
             height: control.icon.height
@@ -54,19 +76,7 @@ T.Button {
 
             text: control.text
             font: control.font
-            color: {
-                if (!control.enabled)
-                    return LithPalette.disabled.text
-                if (control.checked || control.highlighted)
-                    return control.LithPalette.regular.brightText
-                if (control.flat && !control.down) {
-                    if (control.visualFocus)
-                        return control.LithPalette.regular.highlight
-                    else
-                        return control.LithPalette.regular.windowText
-                }
-                return LithPalette.regular.buttonText
-            }
+            color: control.textColor
         }
     }
 

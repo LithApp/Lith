@@ -58,7 +58,7 @@ Rectangle {
             color: LithPalette.regular.text
         }
         Button {
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
+            icon.source: "qrc:/navigation/close.png"
             icon.width: 12
             icon.height: 12
             Layout.preferredWidth: 32

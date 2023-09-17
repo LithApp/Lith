@@ -120,7 +120,7 @@ ListView {
         }
         width: height
         flat: false
-        icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
+        icon.source: "qrc:/navigation/down-arrow.png"
         opacity: listView.atYEnd ? 0.0 : 0.5
         visible: opacity > 0.0
         Behavior on opacity { NumberAnimation { duration: 100 } }

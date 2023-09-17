@@ -73,7 +73,7 @@ Item {
             id: settingsButton
             Layout.preferredWidth: height
             flat: true
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/cogwheel.png"
+            icon.source: "qrc:/navigation/cogwheel.png"
             onClicked: settingsDialog.visible = true
             ToolTip.text: "Open settings"
             ToolTip.visible: settingsButton.hovered

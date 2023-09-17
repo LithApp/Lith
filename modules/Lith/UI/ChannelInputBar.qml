@@ -52,7 +52,7 @@ Rectangle {
             Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/loupe.png"
+            icon.source: "qrc:/navigation/loupe.png"
             focusPolicy: Qt.NoFocus
             flat: true
             visible: Lith.settings.showSearchButton
@@ -69,7 +69,7 @@ Rectangle {
             Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/download-rotated.png"
+            icon.source: "qrc:/navigation/download-rotated.png"
             focusPolicy: Qt.NoFocus
             flat: true
             visible: Lith.settings.showAutocompleteButton
@@ -103,7 +103,7 @@ Rectangle {
             Layout.fillHeight: true
             Layout.preferredWidth: height
             property bool isBusy: Uploader.working
-            icon.source: isBusy ? "" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/image-gallery.png"
+            icon.source: isBusy ? "" : "qrc:/navigation/image-gallery.png"
             enabled: !isBusy
             focusPolicy: Qt.NoFocus
             flat: true
@@ -126,7 +126,7 @@ Rectangle {
             Layout.preferredHeight: implicitHeight - 2
             Layout.fillHeight: true
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/paper-plane.png"
+            icon.source: "qrc:/navigation/paper-plane.png"
             visible: Lith.settings.showSendButton
             focusPolicy: Qt.NoFocus
             flat: true

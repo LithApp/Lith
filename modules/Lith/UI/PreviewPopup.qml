@@ -138,8 +138,8 @@ Dialog {
 
                 opacity: 0.6
 
-                source: delegateVideo.infinite ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/reload.png" :
-                                                 "qrc:/navigation/"+WindowHelper.currentThemeName+"/reload-disabled.png"
+                source: delegateVideo.infinite ? "qrc:/navigation/reload.png" :
+                                                 "qrc:/navigation/reload-disabled.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -161,8 +161,8 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: 0.6
-                source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/pause.png" :
-                                                                                              "qrc:/navigation/"+WindowHelper.currentThemeName+"/play.png"
+                source: delegateVideo.playbackState === Multimedia.MediaPlayer.PlayingState ? "qrc:/navigation/pause.png" :
+                                                                                              "qrc:/navigation/play.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -192,7 +192,7 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: delegateVideo.hasAudio ? 0.6 : 0.0
-                source: audio.volume > 0.0 ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/volume.png" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/mute.png"
+                source: audio.volume > 0.0 ? "qrc:/navigation/volume.png" : "qrc:/navigation/mute.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -393,7 +393,7 @@ Dialog {
                     imageWrapper.visible = false
                     root.visible = false
                 }
-                icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
+                icon.source: "qrc:/navigation/close.png"
                 icon.width: 12
                 icon.height: 12
             }
@@ -436,7 +436,7 @@ Dialog {
                         focusPolicy: Qt.NoFocus
                         Layout.preferredHeight: 40
                         Layout.preferredWidth: height
-                        icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/copy.png"
+                        icon.source: "qrc:/navigation/copy.png"
                         onClicked: {
                             ClipboardProxy.setText(root.currentUrl)
                         }
@@ -448,7 +448,7 @@ Dialog {
                         onClicked: {
                             Qt.openUrlExternally(root.currentUrl)
                         }
-                        icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/resize.png"
+                        icon.source: "qrc:/navigation/resize.png"
                     }
                 }
             }

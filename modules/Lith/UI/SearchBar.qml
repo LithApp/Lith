@@ -50,7 +50,7 @@ Rectangle {
             id: searchModeButton
             Layout.preferredHeight: implicitHeight - 2
             Layout.preferredWidth: height
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/loupe.png"
+            icon.source: "qrc:/navigation/loupe.png"
             focusPolicy: Qt.NoFocus
             flat: true
             onClicked: root.visible = false
@@ -62,7 +62,7 @@ Rectangle {
                 mipmap: true
                 width: parent.width / 3.5
                 height: width
-                source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
+                source: "qrc:/navigation/close.png"
                 anchors {
                     top: parent.top
                     right: parent.right
@@ -94,7 +94,7 @@ Rectangle {
             Layout.preferredHeight: implicitHeight - 16
             Layout.minimumWidth: height
             Layout.alignment: Qt.AlignVCenter
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
+            icon.source: "qrc:/navigation/close.png"
             flat: true
             focusPolicy: Qt.NoFocus
             onClicked: Lith.search.term = ""
@@ -145,7 +145,7 @@ Rectangle {
             }
         }
         Button {
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
+            icon.source: "qrc:/navigation/down-arrow.png"
             Layout.preferredHeight: implicitHeight - 2
             Layout.minimumWidth: height
             flat: true
@@ -154,7 +154,7 @@ Rectangle {
             enabled: search.previousEnabled
         }
         Button {
-            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/up-arrow.png"
+            icon.source: "qrc:/navigation/up-arrow.png"
             Layout.preferredHeight: implicitHeight - 2
             Layout.minimumWidth: height
             flat: true
