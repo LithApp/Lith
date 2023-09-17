@@ -5,6 +5,8 @@ import QtQuick.Layouts
 import Lith.Core
 import Lith.Style
 
+import "util"
+
 Item {
     id: mainView
 
@@ -340,5 +342,10 @@ Item {
                 }
             }
         }
+    }
+
+    Loader {
+        id: debugWindowLoader
+        source: Lith.showDebugWindow ? "qrc:/qt/qml/Lith/UI/util/DebugWindow.qml" : ""
     }
 }

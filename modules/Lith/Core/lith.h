@@ -75,6 +75,7 @@ private:
 
     Q_PROPERTY(QString gitVersion READ gitVersion CONSTANT)
     Q_PROPERTY(bool debugVersion READ debugVersion CONSTANT)
+    PROPERTY(bool, showDebugWindow, false)
 
 public:
     ~Lith();

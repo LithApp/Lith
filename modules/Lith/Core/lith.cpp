@@ -203,6 +203,10 @@ Lith::Lith(QObject* parent)
     , m_filteredLogger(new FilteredLogger(this))
     , m_search(new Search(this))
     , m_notificationHandler(new NotificationHandler(this)) {
+    auto showDebugWindowEnv = qgetenv("LITH_SHOW_DEBUG_WINDOW");
+    if (!showDebugWindowEnv.isEmpty() && showDebugWindowEnv != "0") {
+        showDebugWindowSet(true);
+    }
     connect(m_notificationHandler, &NotificationHandler::bufferSelected, this, [this](int bufferNumber) {
         selectBufferNumber(bufferNumber);
     });

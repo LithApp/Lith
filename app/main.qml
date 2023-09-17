@@ -33,35 +33,5 @@ ApplicationWindow {
 
     flags: LithPlatform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
 
-    onActiveChanged: {
-        if (active && Lith.debugVersion && LithPlatform.desktop && debugWindowLoader.item)
-            debugWindowLoader.item.raise()
-    }
-
-    Loader {
-        id: debugWindowLoader
-        active: Lith.debugVersion && LithPlatform.desktop
-        source: "qrc:/qt/qml/Lith/UI/util/DebugWindow.qml"
-        property bool firstLoadX: true
-        property bool firstLoadY: true
-        onLoaded: {
-            item.x = window.x + window.width
-            item.y = window.y
-            item.raise()
-        }
-        Connections {
-            target: window
-            enabled: debugWindowLoader.item && (debugWindowLoader.firstLoadX || debugWindowLoader.firstLoadY)
-            function onXChanged() {
-                debugWindowLoader.item.x = window.x + window.width
-                debugWindowLoader.firstLoadX = false
-            }
-            function onYChanged() {
-                debugWindowLoader.item.y = window.y
-                debugWindowLoader.firstLoadY = false
-            }
-        }
-    }
-
     MainView { }
 }
