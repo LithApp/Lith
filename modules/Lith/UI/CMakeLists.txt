@@ -35,6 +35,7 @@ set(LITH_QML
     SettingsInterface.qml
     SettingsNetwork.qml
     SettingsShortcuts.qml
+    StatusBar.qml
     util/DebugWindow.qml
     util/PaletteSwitch.qml
 )

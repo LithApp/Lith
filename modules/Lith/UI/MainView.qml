@@ -92,7 +92,6 @@ Item {
             topMargin: mainView.topMargin + errorMessageWrapper.errorMessageOffset
         }
 
-
         ChannelView {
             id: channelView
             enabled: {
@@ -105,8 +104,17 @@ Item {
             anchors {
                 left: WindowHelper.landscapeMode ? bufferDrawer.right : parent.left
                 right: parent.right
-                top: parent.top
+                top: statusBar.bottom
                 bottom: parent.bottom
+            }
+        }
+
+        StatusBar {
+            id: statusBar
+            anchors {
+                left: channelView.left
+                right: parent.right
+                top: parent.top
             }
         }
 
