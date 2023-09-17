@@ -39,6 +39,14 @@ Window {
                     text = ""
                 }
             }
+            TextField {
+                placeholderText: "Set error string"
+                implicitWidth: 192
+                onAccepted: {
+                    Lith.errorString = text
+                    text = ""
+                }
+            }
         }
         RowLayout {
             Layout.fillWidth: true
