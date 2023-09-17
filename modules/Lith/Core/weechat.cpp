@@ -240,6 +240,7 @@ void Weechat::requestHotlist() {
 
 void Weechat::onConnected() {
     m_reconnectTimer->stop();
+    m_initializationStatus = (Initialization) (m_initializationStatus | CONNECTION_OPENED);
 
     lith()->log(Logger::Protocol, "Connected to WeeChat, starting handshake");
 
@@ -286,6 +287,7 @@ void Weechat::onDisconnected() {
         lith()->log(Logger::Protocol, QString("Authentication failed."));
         lith()->statusSet(Lith::ERROR);
         lith()->errorStringSet(tr("Authentication failed with remote host. Please check your login credentials"));
+        m_initializationStatus = UNINITIALIZED;
         m_reconnectTimer->stop();
         return;
     }

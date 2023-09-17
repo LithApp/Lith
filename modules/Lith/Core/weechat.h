@@ -50,12 +50,13 @@ public:
     };
     enum Initialization {
         UNINITIALIZED = 0,
-        HANDSHAKE = 1 << 0,
-        REQUEST_BUFFERS = 1 << 1,
-        REQUEST_FIRST_LINE = 1 << 2,
-        REQUEST_HOTLIST = 1 << 3,
-        REQUEST_NICKLIST = 1 << 4,
-        COMPLETE = HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST
+        CONNECTION_OPENED = 1 << 0,
+        HANDSHAKE = 1 << 1,
+        REQUEST_BUFFERS = 1 << 2,
+        REQUEST_FIRST_LINE = 1 << 3,
+        REQUEST_HOTLIST = 1 << 4,
+        REQUEST_NICKLIST = 1 << 5,
+        COMPLETE = CONNECTION_OPENED | HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST
     };
 
 public slots:
