@@ -20,6 +20,8 @@ T.TabButton {
     icon.width: 28
     icon.height: 28
 
+    font.pointSize: Lith.settings.baseFontSize
+
     contentItem: IconLabel {
         spacing: control.spacing
         mirrored: control.mirrored
