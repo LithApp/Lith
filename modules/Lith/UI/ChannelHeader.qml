@@ -35,7 +35,9 @@ Rectangle {
     readonly property real maximumTitleHeight: titleFontMetrics.height * 2 + 1
     readonly property real maximumNameHeight: nameFontMetrics.height
     readonly property real totalSpacerHeight: topSpacer.implicitHeight + middleSpacer.implicitHeight + bottomSpacer.implicitHeight
-    readonly property real totalExpectedHeight: maximumTitleHeight + maximumNameHeight + totalSpacerHeight
+    readonly property real totalTextContentsHeight: maximumTitleHeight + maximumNameHeight + totalSpacerHeight
+    readonly property real buttonWithMarginsHeight: bufferListButton.implicitHeight + headerLayout.anchors.margins * 2
+    readonly property real totalExpectedHeight: Math.max(totalTextContentsHeight, buttonWithMarginsHeight)
 
     DragHandler {
         onActiveChanged: if (active) window.startSystemMove();
