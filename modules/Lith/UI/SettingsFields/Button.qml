@@ -5,6 +5,7 @@ import QtQuick.Layouts
 Base {
     id: root
     property alias text: button.text
+    property alias font: button.font
     signal clicked
 
     rowComponent: QQC.Button {

@@ -98,6 +98,7 @@ ScrollView {
     FontDialog {
         id: fontDialog
         currentFont.family: Lith.settings.baseFontFamily
+        currentFont.pointSize: Lith.settings.baseFontSize
         flags: FontDialog.MonospacedFonts
         onAccepted: {
             fontChangeButton.text = fontDialog.selectedFont.family

@@ -21,6 +21,8 @@ import Qt.labs.platform
 import QtQuick.Dialogs
 
 import Lith.Core
+import Lith.UI
+import Lith.Style
 
 ColumnLayout {
     spacing: 0

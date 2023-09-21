@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Lith.Core
+import Lith.Style
 
 ListView {
     id: root
