@@ -165,6 +165,7 @@ ListView {
                 fill: parent
                 margins: 32
             }
+            propagateComposedEvents: true
             drag.onActiveChanged: {
                 if (drag.active)
                     return;
