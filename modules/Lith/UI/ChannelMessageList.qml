@@ -151,4 +151,105 @@ ListView {
         }
         visible: listView.dragging && listView.verticalOvershoot > 0
     }
+
+    Item {
+        id: switchBufferDragProxy
+        width: parent.width
+        height: parent.height
+        property real threshold: 0.66
+        readonly property real leftPosition: Math.max(x, 0) / dragLimit
+        readonly property real rightPosition: -Math.min(x, 0) / dragLimit
+        readonly property real dragLimit: 128
+        MouseArea {
+            anchors {
+                fill: parent
+                margins: 32
+            }
+            drag.onActiveChanged: {
+                if (drag.active)
+                    return;
+                const shouldRunLeftAction = switchBufferDragProxy.leftPosition >= switchBufferDragProxy.threshold
+                const shouldRunRightAction = switchBufferDragProxy.rightPosition >= switchBufferDragProxy.threshold
+                switchBufferDragProxy.x = 0
+
+                if (shouldRunLeftAction) {
+                    Lith.selectedBufferIndex -= 1
+                }
+                if (shouldRunRightAction) {
+                    Lith.selectedBufferIndex += 1
+                }
+            }
+            drag.axis: Drag.XAxis
+            drag.target: switchBufferDragProxy
+            drag.maximumX: switchBufferDragProxy.dragLimit
+            drag.minimumX: -switchBufferDragProxy.dragLimit
+        }
+
+        IconImage {
+            anchors {
+                left: parent.left
+                leftMargin: 12
+                verticalCenter: parent.verticalCenter
+            }
+            height: 32
+            width: 32
+            visible: switchBufferDragProxy.leftPosition > 0.0
+            source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
+            rotation: 90
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: -3
+                color: "transparent"
+                visible: switchBufferDragProxy.leftPosition >= switchBufferDragProxy.threshold
+                border.color: LithPalette.regular.highlight
+                border.width: 3
+            }
+        }
+        IconImage {
+            anchors {
+                right: parent.right
+                rightMargin: 12
+                verticalCenter: parent.verticalCenter
+            }
+            height: 32
+            width: 32
+            visible: switchBufferDragProxy.rightPosition > 0.0
+            source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
+            rotation: -90
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: -3
+                color: "transparent"
+                visible: switchBufferDragProxy.rightPosition >= switchBufferDragProxy.threshold
+                border.color: LithPalette.regular.highlight
+                border.width: 3
+            }
+        }
+    }
+
+    Rectangle {
+        rotation: -90
+        y: width
+        width: parent.height
+        height: parent.width / 2
+        transformOrigin: Item.TopLeft
+        opacity: switchBufferDragProxy.leftPosition
+        gradient: Gradient {
+            GradientStop { position: 0.3; color: LithPalette.regular.window }
+            GradientStop { position: 0.8; color: "transparent" }
+        }
+    }
+    Rectangle {
+        id: hovno
+        x: parent.width
+        rotation: 90
+        width: parent.height
+        height: parent.width / 2
+        transformOrigin: Item.TopLeft
+        opacity: switchBufferDragProxy.rightPosition
+        gradient: Gradient {
+            GradientStop { position: 0.3; color: LithPalette.regular.window }
+            GradientStop { position: 0.8; color: "transparent" }
+        }
+    }
 }
