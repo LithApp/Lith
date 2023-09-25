@@ -41,6 +41,7 @@ ListView {
     boundsMovement: Flickable.StopAtBounds
     readonly property color overshootMarkerColor: LithPalette.regular.highlight
 
+    pixelAligned: true
     readonly property real delegateWidth: listView.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
     TextMetrics {
@@ -53,6 +54,7 @@ ListView {
         id: scrollBar
     }
 
+    onHorizontalOvershootChanged: console.warn(horizontalOvershoot)
     orientation: Qt.Vertical
     verticalLayoutDirection: ListView.BottomToTop
     spacing: Lith.settings.messageSpacing
@@ -68,6 +70,38 @@ ListView {
     section.criteria: ViewSection.FullString
     section.labelPositioning: ViewSection.InlineLabels
     section.property: "modelData.dateString"
+
+    synchronousDrag: false
+    flickableDirection: Flickable.HorizontalAndVerticalFlick
+    onMovementStarted: {
+        if (draggingVertically) {
+            flickableDirection = Flickable.VerticalFlick
+        } else {
+            flickableDirection = Flickable.HorizontalFlick
+        }
+    }
+    onDraggingChanged: {
+        if (dragging)
+            return
+
+        const shouldRunLeftAction = leftBufferSwitchPosition >= bufferSwitchPositionThreshold
+        const shouldRunRightAction = rightBufferSwitchPosition > bufferSwitchPositionThreshold
+
+        if (shouldRunLeftAction) {
+            Lith.selectedBufferIndex -= 1
+        }
+        if (shouldRunRightAction) {
+            Lith.selectedBufferIndex += 1
+        }
+    }
+
+    onMovementEnded: {
+        flickableDirection = Flickable.HorizontalAndVerticalFlick
+    }
+    readonly property real bufferSwitchOvershootBoundary: width / 5
+    readonly property real bufferSwitchPositionThreshold: 0.75
+    readonly property real leftBufferSwitchPosition: Math.max(0, (-horizontalOvershoot)/ bufferSwitchOvershootBoundary)
+    readonly property real rightBufferSwitchPosition: Math.max(0, (horizontalOvershoot) / bufferSwitchOvershootBoundary)
 
     Connections {
         target: Lith.search
@@ -152,105 +186,69 @@ ListView {
         visible: listView.dragging && listView.verticalOvershoot > 0
     }
 
-    Item {
-        id: switchBufferDragProxy
-        width: parent.width
-        height: parent.height
-        property real threshold: 0.66
-        readonly property real leftPosition: Math.max(x, 0) / dragLimit
-        readonly property real rightPosition: -Math.min(x, 0) / dragLimit
-        readonly property real dragLimit: 128
-        MouseArea {
-            anchors {
-                fill: parent
-                margins: 32
-            }
-            propagateComposedEvents: true
-            drag.onActiveChanged: {
-                if (drag.active)
-                    return;
-                const shouldRunLeftAction = switchBufferDragProxy.leftPosition >= switchBufferDragProxy.threshold
-                const shouldRunRightAction = switchBufferDragProxy.rightPosition >= switchBufferDragProxy.threshold
-                switchBufferDragProxy.x = 0
-
-                if (shouldRunLeftAction) {
-                    Lith.selectedBufferIndex -= 1
-                }
-                if (shouldRunRightAction) {
-                    Lith.selectedBufferIndex += 1
-                }
-            }
-            drag.axis: Drag.XAxis
-            drag.target: switchBufferDragProxy
-            drag.maximumX: switchBufferDragProxy.dragLimit
-            drag.minimumX: -switchBufferDragProxy.dragLimit
-        }
-
-        IconImage {
-            anchors {
-                left: parent.left
-                leftMargin: 12
-                verticalCenter: parent.verticalCenter
-            }
-            height: 32
-            width: 32
-            visible: switchBufferDragProxy.leftPosition > 0.0
-            source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
-            rotation: 90
-            Rectangle {
-                anchors.fill: parent
-                anchors.margins: -3
-                color: "transparent"
-                visible: switchBufferDragProxy.leftPosition >= switchBufferDragProxy.threshold
-                border.color: LithPalette.regular.highlight
-                border.width: 3
-            }
-        }
-        IconImage {
-            anchors {
-                right: parent.right
-                rightMargin: 12
-                verticalCenter: parent.verticalCenter
-            }
-            height: 32
-            width: 32
-            visible: switchBufferDragProxy.rightPosition > 0.0
-            source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
-            rotation: -90
-            Rectangle {
-                anchors.fill: parent
-                anchors.margins: -3
-                color: "transparent"
-                visible: switchBufferDragProxy.rightPosition >= switchBufferDragProxy.threshold
-                border.color: LithPalette.regular.highlight
-                border.width: 3
-            }
-        }
-    }
-
     Rectangle {
         rotation: -90
         y: width
         width: parent.height
         height: parent.width / 2
         transformOrigin: Item.TopLeft
-        opacity: switchBufferDragProxy.leftPosition
+        opacity: Math.min(1.0, listView.leftBufferSwitchPosition)
         gradient: Gradient {
             GradientStop { position: 0.3; color: LithPalette.regular.window }
             GradientStop { position: 0.8; color: "transparent" }
         }
     }
     Rectangle {
-        id: hovno
         x: parent.width
         rotation: 90
         width: parent.height
         height: parent.width / 2
         transformOrigin: Item.TopLeft
-        opacity: switchBufferDragProxy.rightPosition
+        opacity: Math.min(1.0, listView.rightBufferSwitchPosition)
         gradient: Gradient {
             GradientStop { position: 0.3; color: LithPalette.regular.window }
             GradientStop { position: 0.8; color: "transparent" }
+        }
+    }
+
+    IconImage {
+        anchors {
+            left: parent.left
+            leftMargin: 32
+            verticalCenter: parent.verticalCenter
+        }
+        height: 32
+        width: 32
+        visible: listView.dragging && listView.leftBufferSwitchPosition > 0.01
+        source: "qrc:/navigation/" + WindowHelper.currentThemeName+"/down-arrow.png"
+        rotation: 90
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: -3
+            color: "transparent"
+            visible: listView.leftBufferSwitchPosition >= listView.bufferSwitchPositionThreshold
+            border.color: LithPalette.regular.highlight
+            border.width: 3
+        }
+    }
+    IconImage {
+        anchors {
+            right: parent.right
+            rightMargin: 32
+            verticalCenter: parent.verticalCenter
+        }
+        height: 32
+        width: 32
+        visible: listView.dragging && listView.rightBufferSwitchPosition > 0.01
+        source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
+        rotation: -90
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: -3
+            color: "transparent"
+            visible: listView.rightBufferSwitchPosition  >= listView.bufferSwitchPositionThreshold
+            border.color: LithPalette.regular.highlight
+            border.width: 3
         }
     }
 }
