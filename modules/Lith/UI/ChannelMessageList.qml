@@ -54,7 +54,6 @@ ListView {
         id: scrollBar
     }
 
-    onHorizontalOvershootChanged: console.warn(horizontalOvershoot)
     orientation: Qt.Vertical
     verticalLayoutDirection: ListView.BottomToTop
     spacing: Lith.settings.messageSpacing
