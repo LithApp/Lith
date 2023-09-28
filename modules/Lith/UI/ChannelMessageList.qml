@@ -57,6 +57,7 @@ ListView {
     verticalLayoutDirection: ListView.BottomToTop
     spacing: Lith.settings.messageSpacing
     model: Lith.selectedBuffer ? Lith.selectedBuffer.lines_filtered : null
+    /*
     delegate: ChannelMessage {
         messageModel: modelData
         readonly property string sectionName: ListView.section
@@ -64,11 +65,181 @@ ListView {
         header: Lith.settings.showDateHeaders && sectionName !== nextSectionName ? sectionName : ""
         width: listView.delegateWidth
     }
+    */
+    delegate: TextArea {
+        id: delegateRoot
+        padding: 0
+        width: ListView.view.width
+        textFormat: TextEdit.RichText
+        renderType: TextEdit.NativeRendering
+        wrapMode: Text.Wrap
+        color: LithPalette.regular.text
+        activeFocusOnPress: false
+        activeFocusOnTab: false
+
+        required property var modelData
+        readonly property var messageModel: modelData
+        required property int index
+        text: "%1 %2 %3"
+                .arg(messageModel.date.toLocaleString(Qt.locale(), Lith.settings.timestampFormat))
+                .arg(messageModel.prefix.toTrimmedHtml(Lith.settings.nickCutoffThreshold))
+                .arg(messageModel.message)
+
+
+        /*
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            acceptedButtons: Qt.NoButton
+        }
+        */
+
+        onLinkActivated: (link) => {
+            linkHandler.show(link, delegateRoot)
+        }
+        onHoveredLinkChanged: {
+            if (hoveredLink) {
+                selectionArea.itemWithHoveredUrl = this
+            }
+            else {
+                if (selectionArea.itemWithHoveredUrl == this) {
+                    selectionArea.itemWithHoveredUrl = null
+                }
+            }
+        }
+
+        Connections {
+            target: selectionArea
+            function onSelectionChanged() {
+                updateSelection();
+            }
+        }
+
+        Component.onCompleted: updateSelection()
+
+        function updateSelection() {
+            if (index < selectionArea.selTopIndex || index > selectionArea.selBottomIndex)
+                delegateRoot.select(0, 0);
+            else if (index > selectionArea.selTopIndex && index < selectionArea.selBottomIndex)
+                delegateRoot.selectAll();
+            else if (index === selectionArea.selTopIndex && index === selectionArea.selBottomIndex)
+                delegateRoot.select(selectionArea.selTopPos, selectionArea.selBottomPos);
+            else if (index === selectionArea.selTopIndex)
+                //delegateRoot.select(selectionArea.selStartPos, delegateRoot.length);
+                delegateRoot.select(0, selectionArea.selTopPos);
+            else if (index === selectionArea.selBottomIndex)
+                //delegateRoot.select(0, selectionArea.selEndPos);
+                delegateRoot.select(selectionArea.selBottomPos, delegateRoot.length);
+        }
+    }
+
+    function indexAtRelative(x, y) {
+        return indexAt(x + contentX, y + contentY)
+    }
+
+    MouseArea {
+        id: selectionArea
+        z: 1000000
+        readonly property int selTopIndex: selStartIndex < selEndIndex ? selStartIndex : selEndIndex
+        readonly property int selBottomIndex: selStartIndex < selEndIndex ? selEndIndex : selStartIndex
+        readonly property int selTopPos: selStartIndex < selEndIndex ? selStartPos : selEndPos
+        readonly property int selBottomPos: selStartIndex < selEndIndex ? selEndPos : selStartPos
+        property int selStartIndex
+        property int selEndIndex
+        property int selStartPos
+        property int selEndPos
+
+        signal selectionChanged
+
+        property var itemWithHoveredUrl: null
+
+        anchors.fill: parent
+        enabled: !scrollBar.hovered
+        cursorShape: enabled ? itemWithHoveredUrl ? Qt.PointingHandCursor : Qt.IBeamCursor : Qt.ArrowCursor
+        propagateComposedEvents: false
+
+        function indexAndPos(x, y) {
+            const index = listView.indexAtRelative(x, y)
+            if (index === -1)
+                return
+            const item = listView.itemAtIndex(index)
+            const relItemY = item.y - listView.contentY
+            const itemLocalCoords = Qt.point(x, y - relItemY)
+            const pos = item.positionAt(itemLocalCoords.x, itemLocalCoords.y)
+
+            return [index, pos, item, itemLocalCoords]
+        }
+
+        onPressed: (mouse) => {
+            const result = indexAndPos(mouse.x, mouse.y)
+            selStartIndex = result[0]
+            selStartPos = result[1]
+            selEndIndex = result[0]
+            selEndPos = result[1]
+            selectionChanged()
+        }
+
+        onReleased: (mouse) => {
+            const result = indexAndPos(mouse.x, mouse.y)
+            selEndIndex = result[0]
+            selEndPos = result[1]
+            const item = result[2]
+            const localCoords = result[3]
+
+            selectionChanged()
+            if (selStartIndex == selEndIndex && selStartPos == selEndPos) {
+                mouse.accepted = false
+                const link = item.linkAt(localCoords.x, localCoords.y)
+                if (link.length > 0)
+                    linkHandler.show(link, item)
+
+            }
+            else {
+                mouse.accepted = true
+            }
+        }
+
+        onClicked: (mouse) => {
+            mouse.accepted = false
+        }
+
+        onPositionChanged: (mouse) => {
+            if (pressed) {
+                const result = indexAndPos(mouse.x, mouse.y)
+                selEndIndex = result[0]
+                selEndPos = result[1]
+                selectionChanged()
+            }
+        }
+    }
+
+    function getSelectedText() {
+        var result = ""
+        for (let i = selectionArea.selBottomIndex; i >= selectionArea.selTopIndex; i--) {
+            const item = listView.itemAtIndex(i)
+            console.warn(item.selectedText)
+            result += item.selectedText
+        }
+        return result
+    }
+
+    Keys.onShortcutOverride: (event) => {
+        console.warn("A")
+    }
+
+    Shortcut {
+        sequence: "Ctrl+M"
+        onActivated: {
+            console.warn("CCCCC")
+            listView.getSelectedText()
+        }
+    }
 
     section.criteria: ViewSection.FullString
     section.labelPositioning: ViewSection.InlineLabels
     section.property: "modelData.dateString"
 
+    interactive: false
     Connections {
         target: Lith.search
         function onHighlightedMatchIndexChanged() {

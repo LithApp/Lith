@@ -192,11 +192,11 @@ QString FormattedString::toPlain() const {
 }
 
 QString FormattedString::toHtml(const ColorTheme& theme) const {
-    QString ret {"<html><body><span style='white-space: pre-wrap;'>"};
+    QString ret;  // {"<html><body><span style='white-space: pre-wrap;'>"};
     for (const auto& i : m_parts) {
         ret.append(i.toHtml(theme));
     }
-    ret.append("</span></body></html>");
+    // ret.append("</span></body></html>");
     return ret;
 }
 
@@ -204,7 +204,7 @@ QString FormattedString::toTrimmedHtml(int n, const ColorTheme& theme) const {
     if (n < 0) {
         return toHtml(theme);
     }
-    QString ret = "<html><body><span style='white-space: pre-wrap;'>";
+    QString ret;  // = "<html><body><span style='white-space: pre-wrap;'>";
     for (const auto& i : m_parts) {
         QString word = i.text.left(n);
         Part tempPart = i;
@@ -219,7 +219,7 @@ QString FormattedString::toTrimmedHtml(int n, const ColorTheme& theme) const {
         ret.append("\u00A0");
         n--;
     }
-    ret += "</span></body></html>";
+    // ret += "</span></body></html>";
     return ret;
 }
 
