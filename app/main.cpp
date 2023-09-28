@@ -44,8 +44,29 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName("Lith");
     QCoreApplication::setOrganizationDomain("lith.app");
     QCoreApplication::setApplicationName("Lith");
+    if (QStringLiteral(PROJECT_VERSION) == QStringLiteral("0.0.0")) {
+        if (QStringLiteral(GIT_STATE).isEmpty()) {
+            QCoreApplication::setApplicationVersion(QStringLiteral(
+                "Unknown version, please report this to https://github.com/LithApp/Lith and mention your platform and where you got this package."
+            ));
+        } else {
+            QCoreApplication::setApplicationVersion(QStringLiteral(GIT_STATE));
+        }
+    } else {
+        QCoreApplication::setApplicationVersion(QStringLiteral(PROJECT_VERSION));
+    }
 
     QApplication app(argc, argv);
+    QCommandLineParser cmdLine;
+    cmdLine.setApplicationDescription(
+        QStringLiteral("                    ===== WeeChat relay client =====\n"
+                       "Homepage: https://github.com/LithApp/Lith\n"
+                       "There are no options now. Just run the app without any arguments to get the UI.")
+    );
+    cmdLine.addHelpOption();
+    cmdLine.addVersionOption();
+    cmdLine.process(app);
+
     app.setWindowIcon(QIcon(":/icon.png"));
 
     QQmlApplicationEngine engine;
