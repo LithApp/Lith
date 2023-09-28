@@ -22,7 +22,10 @@ T.ItemDelegate {
 
     font.pointSize: Lith.settings.baseFontSize
 
+    property alias textFormat: label.textFormat
+
     contentItem: Label {
+        id: label
         verticalAlignment: Label.AlignVCenter
         text: control.text
         font: control.font
