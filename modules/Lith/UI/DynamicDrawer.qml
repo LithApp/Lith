@@ -180,5 +180,6 @@ Rectangle {
         id: contentArea
         anchors.fill: parent
         clip: true
+        visible: drawer.position > 0
     }
 }

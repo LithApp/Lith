@@ -25,7 +25,7 @@ Rectangle {
     y: errorText.text.length > 0 ? 0 : -height
     height: layout.height + 9
     width: parent.width
-    //visible: height != 0
+    visible: y > -height
     gradient: Gradient {
         GradientStop { position: 0.0; color: WindowHelper.darkTheme ? "#881111" : "#bb2222" }
         GradientStop { position: 0.22; color: WindowHelper.darkTheme ? "#aa1111" : "#dd3333" }
