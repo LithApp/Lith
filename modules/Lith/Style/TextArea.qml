@@ -1,10 +1,16 @@
 import QtQuick
 import QtQuick.Templates as T
 
+import Lith.Core
+import Lith.Style
+
 T.TextArea {
     id: control
-    implicitWidth: 200
-    implicitHeight: 40
+
+    implicitWidth: implicitBackgroundWidth + leftInset + rightInset
+                   || contentWidth + leftPadding + rightPadding
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             contentHeight + topPadding + bottomPadding)
 
     padding: 6
     color: LithPalette.regular.text
@@ -14,12 +20,15 @@ T.TextArea {
 
     font.pointSize: Lith.settings.baseFontSize
 
+    property color borderColor: "transparent"
     property color backgroundColor: "transparent"
     property real animationSpeed: 300
 
     background: Rectangle {
         property color actualBorderColor: {
             if (control.borderColor != Qt.color("transparent"))
+                return control.borderColor
+            if (control.borderColor == control.backgroundColor)
                 return control.borderColor
             if (control.activeFocus)
                 return LithPalette.regular.midlight
