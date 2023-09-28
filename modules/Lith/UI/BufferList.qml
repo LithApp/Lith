@@ -93,10 +93,14 @@ Item {
             Keys.onPressed: (event) => {
                 if (event.key === Qt.Key_Up) {
                     bufferList.currentIndex--;
+                    if (bufferList.currentIndex < -1)
+                        bufferList.currentIndex = -1
                     event.accepted = true
                 }
                 if (event.key === Qt.Key_Down) {
-                    bufferList.currentIndex++;
+                    bufferList.currentIndex++
+                    if (bufferList.currentIndex >= bufferList.count)
+                        bufferList.currentIndex = bufferList.count - 1
                     event.accepted = true
                 }
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {

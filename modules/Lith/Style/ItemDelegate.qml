@@ -36,6 +36,7 @@ T.ItemDelegate {
     background: Rectangle {
         implicitWidth: 64
         implicitHeight: 32
+        border.color: control.highlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5) : "transparent"
         color: control.checked     ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.7) :
                control.highlighted ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.4) :
                control.pressed     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.1) :
