@@ -170,6 +170,7 @@ Item {
                 required property int index
                 property var buffer: modelData
                 text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name : buffer.short_name : ""
+                textFormat: Text.RichText
 
                 onClicked: {
                     Lith.selectedBuffer = buffer
