@@ -41,7 +41,6 @@ ListView {
     boundsMovement: Flickable.StopAtBounds
     readonly property color overshootMarkerColor: LithPalette.regular.highlight
 
-    pixelAligned: true
     readonly property real delegateWidth: listView.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
     TextMetrics {
@@ -69,38 +68,6 @@ ListView {
     section.criteria: ViewSection.FullString
     section.labelPositioning: ViewSection.InlineLabels
     section.property: "modelData.dateString"
-
-    synchronousDrag: false
-    flickableDirection: Flickable.HorizontalAndVerticalFlick
-    onMovementStarted: {
-        if (draggingVertically) {
-            flickableDirection = Flickable.VerticalFlick
-        } else {
-            flickableDirection = Flickable.HorizontalFlick
-        }
-    }
-    onDraggingChanged: {
-        if (dragging)
-            return
-
-        const shouldRunLeftAction = leftBufferSwitchPosition >= bufferSwitchPositionThreshold
-        const shouldRunRightAction = rightBufferSwitchPosition > bufferSwitchPositionThreshold
-
-        if (shouldRunLeftAction) {
-            Lith.selectedBufferIndex -= 1
-        }
-        if (shouldRunRightAction) {
-            Lith.selectedBufferIndex += 1
-        }
-    }
-
-    onMovementEnded: {
-        flickableDirection = Flickable.HorizontalAndVerticalFlick
-    }
-    readonly property real bufferSwitchOvershootBoundary: width / 5
-    readonly property real bufferSwitchPositionThreshold: 0.75
-    readonly property real leftBufferSwitchPosition: Math.max(0, (-horizontalOvershoot)/ bufferSwitchOvershootBoundary)
-    readonly property real rightBufferSwitchPosition: Math.max(0, (horizontalOvershoot) / bufferSwitchOvershootBoundary)
 
     Connections {
         target: Lith.search
@@ -183,71 +150,5 @@ ListView {
             GradientStop { position: 1.0; color: listView.overshootMarkerColor }
         }
         visible: listView.dragging && listView.verticalOvershoot > 0
-    }
-
-    Rectangle {
-        rotation: -90
-        y: width
-        width: parent.height
-        height: parent.width / 2
-        transformOrigin: Item.TopLeft
-        opacity: Math.min(1.0, listView.leftBufferSwitchPosition)
-        gradient: Gradient {
-            GradientStop { position: 0.3; color: LithPalette.regular.window }
-            GradientStop { position: 0.8; color: "transparent" }
-        }
-    }
-    Rectangle {
-        x: parent.width
-        rotation: 90
-        width: parent.height
-        height: parent.width / 2
-        transformOrigin: Item.TopLeft
-        opacity: Math.min(1.0, listView.rightBufferSwitchPosition)
-        gradient: Gradient {
-            GradientStop { position: 0.3; color: LithPalette.regular.window }
-            GradientStop { position: 0.8; color: "transparent" }
-        }
-    }
-
-    IconImage {
-        anchors {
-            left: parent.left
-            leftMargin: 32
-            verticalCenter: parent.verticalCenter
-        }
-        height: 32
-        width: 32
-        visible: listView.dragging && listView.leftBufferSwitchPosition > 0.01
-        source: "qrc:/navigation/" + WindowHelper.currentThemeName+"/down-arrow.png"
-        rotation: 90
-        Rectangle {
-            anchors.fill: parent
-            anchors.margins: -3
-            color: "transparent"
-            visible: listView.leftBufferSwitchPosition >= listView.bufferSwitchPositionThreshold
-            border.color: LithPalette.regular.highlight
-            border.width: 3
-        }
-    }
-    IconImage {
-        anchors {
-            right: parent.right
-            rightMargin: 32
-            verticalCenter: parent.verticalCenter
-        }
-        height: 32
-        width: 32
-        visible: listView.dragging && listView.rightBufferSwitchPosition > 0.01
-        source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
-        rotation: -90
-        Rectangle {
-            anchors.fill: parent
-            anchors.margins: -3
-            color: "transparent"
-            visible: listView.rightBufferSwitchPosition  >= listView.bufferSwitchPositionThreshold
-            border.color: LithPalette.regular.highlight
-            border.width: 3
-        }
     }
 }
