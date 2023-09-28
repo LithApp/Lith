@@ -62,6 +62,8 @@ Item {
     readonly property real contentAreaWidth: mainView.width - leftMargin - rightMargin
     readonly property real contentAreaHeight: mainView.height - topMargin - topMargin
 
+    property bool safeAreaBoundaryCovers: true
+
     Item {
         z: 1
         id: errorMessageWrapper
@@ -202,6 +204,7 @@ Item {
     // These rectangles are painted over the safe areas to hide stuff that's not clipped
     Rectangle {
         id: safeAreaCoverLeft
+        visible: mainView.safeAreaBoundaryCovers
         z: 9999
         anchors {
             top: parent.top
@@ -214,6 +217,7 @@ Item {
 
     Rectangle {
         id: safeAreaCoverRight
+        visible: mainView.safeAreaBoundaryCovers
         z: 9999
         anchors {
             top: parent.top
@@ -226,6 +230,7 @@ Item {
 
     Rectangle {
         id: safeAreaCoverTop
+        visible: mainView.safeAreaBoundaryCovers
         z: 9999
         anchors {
             top: parent.top
@@ -238,6 +243,7 @@ Item {
 
     Rectangle {
         id: safeAreaCoverBottom
+        visible: mainView.safeAreaBoundaryCovers
         z: 9999
         anchors {
             bottom: parent.bottom

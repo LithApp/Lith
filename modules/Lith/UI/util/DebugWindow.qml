@@ -47,6 +47,11 @@ Window {
                     text = ""
                 }
             }
+            CheckBox {
+                text: "Cover out of bounds areas"
+                checked: mainView.safeAreaBoundaryCovers
+                onCheckedChanged: mainView.safeAreaBoundaryCovers = checked
+            }
         }
         RowLayout {
             Layout.fillWidth: true
