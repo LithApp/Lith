@@ -70,6 +70,7 @@ Drawer {
             horizontalAlignment: Label.AlignHCenter
             Layout.fillWidth: true
             text: Lith.selectedBuffer ? Lith.selectedBuffer.full_name : ""
+            textFormat: Label.RichText
             font.pointSize: FontSizes.medium
             color: LithPalette.regular.windowText
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
@@ -82,6 +83,7 @@ Drawer {
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
             text: Lith.selectedBuffer ? Lith.selectedBuffer.title : ""
+            textFormat: Label.RichText
             color: LithPalette.regular.windowText
             onLinkActivated: {
                 linkHandler.show(link, this)
@@ -98,7 +100,12 @@ Drawer {
             Layout.alignment: Qt.AlignHCenter
             horizontalAlignment: Label.AlignHCenter
             visible: Lith.selectedBuffer && Lith.selectedBuffer.isChannel
-            text: Lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)").arg(Lith.selectedBuffer.normals).arg(Lith.selectedBuffer.voices).arg(Lith.selectedBuffer.ops).arg(Lith.selectedBuffer.normals + Lith.selectedBuffer.voices + Lith.selectedBuffer.ops) : ""
+            text: Lith.selectedBuffer ? qsTr("%1 users, %2 voice, %3 ops (%4 total)")
+                                        .arg(Lith.selectedBuffer.normals)
+                                        .arg(Lith.selectedBuffer.voices)
+                                        .arg(Lith.selectedBuffer.ops)
+                                        .arg(Lith.selectedBuffer.normals + Lith.selectedBuffer.voices + Lith.selectedBuffer.ops) : ""
+            textFormat: Label.RichText
             font.pointSize: FontSizes.tiny
             color: LithPalette.disabled.text
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
@@ -189,6 +196,7 @@ Drawer {
                 visible: modelData.visible && modelData.level === 0
                 height: visible ? implicitHeight : 0
                 text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
+                textFormat: Label.RichText
                 onClicked: {
                     nickListView.currentIndex = index
                     openNickActionMenu(modelData)

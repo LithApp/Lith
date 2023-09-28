@@ -91,6 +91,7 @@ Rectangle {
                 color: LithPalette.regular.text
                 font.bold: true
                 text: Lith.selectedBuffer ? Lith.selectedBuffer.name : "Lith"
+                textFormat: Label.RichText
                 elide: Label.ElideRight
                 FontMetrics {
                     id: nameFontMetrics
@@ -119,6 +120,7 @@ Rectangle {
                       Lith.status === Lith.ERROR ? "Error: " + Lith.errorString :
                       Lith.status === Lith.REPLAY ? "Replaying a recording" :
                                                    ""
+                textFormat: Label.RichText
                 elide: Text.ElideRight
                 maximumLineCount: 2
                 font.pointSize: FontSizes.tiny
