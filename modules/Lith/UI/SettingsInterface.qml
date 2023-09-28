@@ -55,6 +55,7 @@ ScrollView {
         Lith.settings.baseFontFamily = fontDialog.currentFont.family
         Lith.settings.showBufferListOnStartup = showBufferListOnStartupCheckbox.checked
         Lith.settings.platformBufferControlPosition = platformBufferControlPositionCheckbox.checked
+        Lith.settings.bufferListShowsOnlyBuffersWithNewMessages = bufferListShowsOnlyBuffersWithNewMessagesCheckbox.checked
         Lith.settings.enableNotifications = enableNotificationsCheckbox.checked
     }
     function restore() {
@@ -92,6 +93,7 @@ ScrollView {
         fontDialog.currentFont.family = Lith.settings.baseFontFamily
         showBufferListOnStartupCheckbox.checked = Lith.settings.showBufferListOnStartup
         platformBufferControlPositionCheckbox.checked = Lith.settings.platformBufferControlPosition
+        bufferListShowsOnlyBuffersWithNewMessagesCheckbox.checked = Lith.settings.bufferListShowsOnlyBuffersWithNewMessages
         enableNotificationsCheckbox.checked = Lith.settings.enableNotifications
     }
 
@@ -307,6 +309,13 @@ ScrollView {
                 id: platformBufferControlPositionCheckbox
                 summary: LithPlatform.mobile ? qsTr("Render buffer search on the bottom") : qsTr("Render buffer search on the top")
                 checked: Lith.settings.platformBufferControlPosition
+            }
+
+            Fields.Boolean {
+                id: bufferListShowsOnlyBuffersWithNewMessagesCheckbox
+                summary: qsTr("Show only buffers with new messages")
+                details: qsTr("When using the text filter, all buffers will be shown.")
+                checked: Lith.settings.bufferListShowsOnlyBuffersWithNewMessages
             }
 
             ////////////////////////// URL HANDLING

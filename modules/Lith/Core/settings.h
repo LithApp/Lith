@@ -153,6 +153,7 @@ class LITHCORE_EXPORT Settings : public QObject {
 
     SETTING(bool, showBufferListOnStartup, false)
     SETTING(bool, platformBufferControlPosition, true)
+    SETTING(bool, bufferListShowsOnlyBuffersWithNewMessages, false)
 
     SETTING(bool, showInternalData, false)
     SETTING(bool, enableLogging, false)

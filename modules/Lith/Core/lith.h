@@ -170,6 +170,7 @@ protected:
 signals:
     void selectedBufferChanged();
     void errorStringChanged();
+    void hotlistUpdated();
 
     void pongReceived(qint64 id);
 
@@ -203,8 +204,9 @@ private:
 class LITHCORE_EXPORT ProxyBufferList : public QSortFilterProxyModel {
     Q_OBJECT
     PROPERTY(QString, filterWord)
+    PROPERTY(bool, showOnlyBuffersWithNewMessages, false)
 public:
-    ProxyBufferList(QObject* parent = nullptr, QAbstractListModel* parentModel = nullptr);
+    ProxyBufferList(Lith* parent = nullptr, QAbstractListModel* parentModel = nullptr);
 
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const override;
 };

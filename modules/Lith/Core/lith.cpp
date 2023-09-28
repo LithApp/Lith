@@ -357,6 +357,7 @@ void Lith::handleHotlistInitialization(const WeeChatProtocol::HData& hda) {
         }
         addHotlist(ptr, item);
     }
+    emit hotlistUpdated();
 }
 
 void Lith::handleNicklistInitialization(const WeeChatProtocol::HData& hda) {
@@ -427,6 +428,7 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
             hl->setProperty(qPrintable(key), value);
         }
     }
+    emit hotlistUpdated();
 }
 
 void Lith::_buffer_opened(const WeeChatProtocol::HData& hda) {
@@ -770,18 +772,41 @@ QSharedPointer<const HotListItem> Lith::getHotlist(pointer_t ptr) const {
     return {};
 }
 
-ProxyBufferList::ProxyBufferList(QObject* parent, QAbstractListModel* parentModel)
+ProxyBufferList::ProxyBufferList(Lith* parent, QAbstractListModel* parentModel)
     : QSortFilterProxyModel(parent) {
     setSourceModel(parentModel);
     setFilterRole(Qt::UserRole);
     connect(this, &ProxyBufferList::filterWordChanged, [this] { setFilterFixedString(filterWordGet()); });
+    connect(Lith::settingsGet(), &Settings::bufferListShowsOnlyBuffersWithNewMessagesChanged, this, [this]() {
+        showOnlyBuffersWithNewMessagesSet(Lith::settingsGet()->bufferListShowsOnlyBuffersWithNewMessagesGet());
+        invalidateFilter();
+    });
+    connect(parent, &Lith::hotlistUpdated, this, [this] {
+        if (showOnlyBuffersWithNewMessagesGet()) {
+            invalidateFilter();
+        }
+    });
+    showOnlyBuffersWithNewMessagesSet(Lith::settingsGet()->bufferListShowsOnlyBuffersWithNewMessagesGet());
 }
+
 bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const {
+    // If there are no conditions, just bail early
+    if (filterWordGet().isEmpty() && !showOnlyBuffersWithNewMessagesGet()) {
+        return true;
+    }
+
     auto index = sourceModel()->index(source_row, 0, source_parent);
     auto v = sourceModel()->data(index);
     auto* b = qvariant_cast<Buffer*>(v);
     if (b) {
-        return b->nameGet().toLower().contains(filterWordGet().toLower());
+        if (filterWordGet().isEmpty()) {
+            if (showOnlyBuffersWithNewMessagesGet()) {
+                return b->totalUnreadMessagesGet() > 0;
+            }
+            return true;
+        } else {
+            return b->nameGet().toLower().contains(filterWordGet().toLower());
+        }
     }
     return false;
 }
