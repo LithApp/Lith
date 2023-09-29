@@ -28,6 +28,8 @@
 #include <QXmlStreamReader>
 #include <QDomDocument>
 
+#include <QStringBuilder>
+
 Buffer::Buffer(Lith* parent, pointer_t pointer)
     : QObject(parent)
     , m_lines(QmlObjectList::create<BufferLine>(this, false))
@@ -332,6 +334,22 @@ QString BufferLine::colorlessTextGet() {
 
 QObject* BufferLine::bufferGet() {
     return parent();
+}
+
+QString BufferLine::formatted() const {
+    // clang-format off
+#define $ QStringLiteral
+    QString result =
+    $("<table>"
+        "<tr>") %
+            $("<td>") % dateString() % $("</td>&nbsp;") %
+            $("<td>") % prefixGet().toHtml() % $("</td>&nbsp;") %
+            $("<td>") % messageGet().toHtml() % $("</td>") %
+        $("</tr>"
+     "</table>");
+#undef $
+    // clang-format om
+    return result;
 }
 
 bool BufferLine::searchCompare(const QString& term) {

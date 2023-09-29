@@ -80,11 +80,23 @@ ListView {
         required property var modelData
         readonly property var messageModel: modelData
         required property int index
-        text: "%1 %2 %3"
+
+        text: messageModel.formatted
+        /*
+        text: ("<table style='' border=0 cellspacing=0 cellpadding=0>"
+                +"<tr>"
+                    +"<td style='margins: 0px; padding: 0px'>%1 %2</td>"
+                    +"<td style='padding: 0px'>%3</td>"
+                +"</tr>"
+               //+"<tr><td colspan=2><span>"
+                    //+"<img width='100' height='100' src='https://cdn.discordapp.com/attachments/854369705943236609/1157400238814924820/eoo30koaf6rb1.png?ex=65187878&is=651726f8&hm=277d825c1634cbb742c63ab20b2945993155bc90048e224d0ca85609b9c51912&'/>"
+                    //+"<img width='100' src='https://shitpost.fun/euova5.png'/>"
+               //+"</span></td></tr>
+               +"</table>")
                 .arg(messageModel.date.toLocaleString(Qt.locale(), Lith.settings.timestampFormat))
                 .arg(messageModel.prefix.toTrimmedHtml(Lith.settings.nickCutoffThreshold))
                 .arg(messageModel.message)
-
+        */
 
         /*
         MouseArea {
@@ -172,6 +184,8 @@ ListView {
 
         onPressed: (mouse) => {
             const result = indexAndPos(mouse.x, mouse.y)
+            if (!result)
+                return
             selStartIndex = result[0]
             selStartPos = result[1]
             selEndIndex = result[0]
@@ -181,6 +195,8 @@ ListView {
 
         onReleased: (mouse) => {
             const result = indexAndPos(mouse.x, mouse.y)
+            if (!result)
+                return
             selEndIndex = result[0]
             selEndPos = result[1]
             const item = result[2]
@@ -206,6 +222,8 @@ ListView {
         onPositionChanged: (mouse) => {
             if (pressed) {
                 const result = indexAndPos(mouse.x, mouse.y)
+                if (!result)
+                    return
                 selEndIndex = result[0]
                 selEndPos = result[1]
                 selectionChanged()

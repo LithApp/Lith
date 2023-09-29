@@ -165,6 +165,8 @@ class LITHCORE_EXPORT BufferLine : public QObject {
     Q_PROPERTY(QString colorlessNickname READ colorlessNicknameGet NOTIFY messageChanged)
     Q_PROPERTY(QString colorlessText READ colorlessTextGet NOTIFY messageChanged)  // used here because segments is already chopped up
     Q_PROPERTY(QObject* buffer READ bufferGet CONSTANT)
+
+    Q_PROPERTY(QString formatted READ formatted NOTIFY formattedChanged)
 public:
     explicit BufferLine(Buffer* parent);
 
@@ -189,11 +191,14 @@ public:
 
     QObject* bufferGet();
 
+    QString formatted() const;
+
     Q_INVOKABLE bool searchCompare(const QString& term);
 
 signals:
     void messageChanged();
     void prefixChanged();
+    void formattedChanged();
 
 private slots:
 
