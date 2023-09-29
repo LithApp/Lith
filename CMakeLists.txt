@@ -157,7 +157,7 @@ add_subdirectory(modules/Lith/UI)
 add_subdirectory(modules/Lith/Core)
 add_subdirectory(app)
 
-add_dependencies(Lith LithStyleplugin LithUIplugin LithCoreplugin)
+add_dependencies(Lith LithStyle LithUIplugin LithCoreplugin)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     install(FILES ${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.appdata.xml DESTINATION share/metainfo)

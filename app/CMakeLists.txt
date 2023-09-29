@@ -39,7 +39,6 @@ target_link_libraries(Lith PRIVATE
     LithAssets
     LithCore
     LithUI
-    LithStyle
     QCoro6::Coro
     Qt::Gui
     Qt::GuiPrivate
@@ -68,7 +67,7 @@ if (PLUGIN_TARGET_TYPE STREQUAL STATIC_LIBRARY)
     target_link_libraries(Lith PRIVATE
         LithCoreplugin
         LithUIplugin
-        LithStyleplugin
+        LithStyle
     )
 endif()
 

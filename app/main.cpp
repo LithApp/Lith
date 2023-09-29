@@ -98,7 +98,6 @@ int main(int argc, char* argv[]) {
     font.setHintingPreference(QFont::PreferNoHinting);
     font.setStyleHint(QFont::Monospace);
     app.setFont(font);
-    app.setFont(font, "monospace");
 
     // Start the engine
     engine.load(QUrl(QLatin1String("qrc:/qt/qml/App/main.qml")));

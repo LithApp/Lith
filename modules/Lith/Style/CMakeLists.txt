@@ -22,14 +22,21 @@ set_source_files_properties(LithPalette.qml PROPERTIES
 
 set(LITHSTYLE_SOURCES
     constants.cpp constants.h
+    lithstyle.h lithstyle.cpp
+    liththeme.h liththeme.cpp
+    lith_styleplugin.cpp
 )
 
-qt_add_library(LithStyle
-    ${LITHSTYLE_SOURCES}
-)
 qt_add_qml_module(LithStyle
     URI Lith.Style
     VERSION 1.0
+    DEPENDENCIES
+        QtQuick/auto
+    CLASS_NAME Lith_StylePlugin
+    PLUGIN_TARGET LithStyle
+    NO_PLUGIN_OPTIONAL
+    NO_GENERATE_PLUGIN_SOURCE
+    SOURCES ${LITHSTYLE_SOURCES}
     QML_FILES ${LITHSTYLE_QML}
 )
 qt_import_qml_plugins(LithStyle)
@@ -39,10 +46,10 @@ target_link_libraries(LithStyle PRIVATE
     QCoro6::Coro
     Qt6::Gui
     Qt6::Quick
-    Qt::QuickControls2
+    Qt::QuickControls2 Qt::QuickControls2Private
     Qt::QuickLayouts
     Qt::QuickDialogs2
-    Qt::QuickTemplates2
+    Qt::QuickTemplates2 Qt::QuickTemplates2Private
 )
 
 target_include_directories(LithStyle PRIVATE
@@ -54,9 +61,6 @@ target_include_directories(LithStyle PRIVATE
 )
 
 install(TARGETS LithStyle
-    LIBRARY DESTINATION ${LITH_INSTALL_LIBDIR}
-)
-install(TARGETS LithStyleplugin
     LIBRARY DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/Style/
 )
 install(FILES
