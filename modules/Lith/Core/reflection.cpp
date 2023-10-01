@@ -47,11 +47,15 @@ const QStringList& Reflection::stringPropertiesGet() const {
                         }
                     }
                 } else {
-                    Lith::instance()->log(Logger::Unexpected, QString("MetaObject for class %1 could not be accessed").arg(m_className));
+                    Lith::instance()->log(
+                        Logger::Unexpected, QStringLiteral(QT_TR_NOOP("MetaObject for class %1 could not be accessed")).arg(m_className)
+                    );
                     allowedPropertiesForClass[m_className] = QStringList();
                 }
             } else {
-                Lith::instance()->log(Logger::Unexpected, QString("MetaType for class %1 could not be accessed").arg(m_className));
+                Lith::instance()->log(
+                    Logger::Unexpected, QStringLiteral(QT_TR_NOOP("MetaType for class %1 could not be accessed")).arg(m_className)
+                );
                 allowedPropertiesForClass[m_className] = QStringList();
             }
         }

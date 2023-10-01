@@ -577,8 +577,8 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
             line->setProperty(qPrintable(key), value);
         }
         m_logger->log(Logger::Event {
-            Logger::LineAdded, buffer->nameGet(), "Received a line",
-            QString("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
+            Logger::LineAdded, buffer->nameGet(), tr("Received a line"),
+            QStringLiteral("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
         buffer->prependLine(line);
         // Overwrite the duplicate map here in case it already exists, we've hit the
         // limit of WeeChat can return (usually 4096 lines per buffer)

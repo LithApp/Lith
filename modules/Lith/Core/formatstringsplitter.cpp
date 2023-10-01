@@ -53,24 +53,39 @@ QString FormatStringSplitter::formattedDataGet() {
         if (!validate(var->nameGet())) {
             Lith::instance()->log(
                 Logger::FormatSplitter,
-                QString("FormatStringSplitter::formattedData was called with invalid variable (%1), inserting N/A").arg(var->nameGet())
+                QStringLiteral(QT_TR_NOOP("FormatStringSplitter::formattedData was called with invalid variable (%1), inserting N/A."))
+                    .arg(var->nameGet())
             );
             result = result.arg(QStringLiteral("N/A"));
             continue;
         }
         auto propertyIndex = mo->indexOfProperty(qPrintable(var->nameGet()));
         if (propertyIndex <= 0) {
-            Lith::instance()->log(Logger::FormatSplitter, QString("Property %1 was not found in this object").arg(var->nameGet()));
+            Lith::instance()->log(
+                Logger::FormatSplitter, QStringLiteral(QT_TR_NOOP("Property %1 was not found in object of type %2."))
+                                            .arg(var->nameGet())
+                                            .arg(QString::fromLatin1(mo->className()))
+            );
             continue;
         }
         auto mp = mo->property(propertyIndex);
         auto propertyVariant = mp.read(m_dataSource);
         if (!propertyVariant.isValid()) {
+            Lith::instance()->log(
+                Logger::FormatSplitter, QStringLiteral(QT_TR_NOOP("Skipping property %1 because it's invalid")).arg(var->nameGet())
+            );
             continue;
         }
         if (!propertyVariant.canConvert<QString>()) {
             Lith::instance()->log(
-                Logger::FormatSplitter, QString("Not sure how but could not convert property %1 to QString").arg(var->nameGet())
+                Logger::FormatSplitter,
+                QStringLiteral(
+                    QT_TR_NOOP("Not sure how but could not convert property %1 to QString from object %2. We wanted type %3 but got %4")
+                )
+                    .arg(var->nameGet())
+                    .arg(QString::fromLatin1(mo->className()))
+                    .arg(QString::fromLatin1(mp.typeName()))
+                    .arg(QString::fromLatin1(propertyVariant.typeName()))
             );
             continue;
         }
@@ -91,7 +106,8 @@ void FormatStringSplitter::fromStringList(const QStringList& items) {
             auto* variable = m_variables->get<FormatStringVariable>(varIndex);
             if (!variable) {
                 Lith::instance()->log(
-                    Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i)
+                    Logger::FormatSplitter,
+                    QStringLiteral(QT_TR_NOOP("FormattedStringSplitter contains an invalid object at position %1")).arg(i)
                 );
                 varIndex++;
                 continue;
@@ -110,7 +126,8 @@ QStringList FormatStringSplitter::stringList() const {
         auto* variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
             Lith::instance()->log(
-                Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i)
+                Logger::FormatSplitter,
+                QStringLiteral(QT_TR_NOOP("FormattedStringSplitter contains an invalid object at position %1")).arg(i)
             );
             continue;
         }

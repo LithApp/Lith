@@ -179,7 +179,7 @@ void Weechat::onConnectionSettingsChanged() {
     bool hasHost = !Lith::settingsGet()->hostGet().isEmpty();
     bool hasWSEndpoint = !Lith::settingsGet()->websocketsEndpointGet().isEmpty();
 
-    lith()->log(Logger::Network, "Connection settings have changed, will reset the socket");
+    lith()->log(Logger::Network, QStringLiteral(QT_TR_NOOP("Connection settings have changed, will reset the socket")));
     if (hasHost && hasPassphrase && (!usesWebsockets || hasWSEndpoint)) {
         m_connection->reset();
         if (!m_restarting) {
@@ -197,7 +197,7 @@ QCoro::Task<void> Weechat::onHandshakeAccepted(StringMap data) {
         co_return;
     }
 
-    lith()->log(Logger::Protocol, "WeeChat handshake was accepted, authenticating");
+    lith()->log(Logger::Protocol, QStringLiteral(QT_TR_NOOP("WeeChat handshake was accepted, authenticating")));
 
     QByteArray algo = data[QStringLiteral("password_hash_algo")].toUtf8();
     auto iterations = data[QStringLiteral("password_hash_iterations")].toInt();
@@ -209,7 +209,7 @@ QCoro::Task<void> Weechat::onHandshakeAccepted(StringMap data) {
     if (maybePass.has_value()) {
         pass = maybePass.value().toUtf8();
     } else {
-        Lith::instance()->log(Logger::Protocol, "Can't authenticate without a valid password");
+        Lith::instance()->log(Logger::Protocol, QStringLiteral(QT_TR_NOOP("Can't authenticate without a valid password")));
     }
 
     if (pass.isNull()) {
@@ -259,7 +259,7 @@ void Weechat::onConnected() {
     m_reconnectTimer->stop();
     m_initializationStatus = (Initialization) (m_initializationStatus | CONNECTION_OPENED);
 
-    lith()->log(Logger::Protocol, "Connected to WeeChat, starting handshake");
+    lith()->log(Logger::Protocol, tr("Connected to WeeChat, starting handshake"));
 
     QTimer::singleShot(0, lith(), &Lith::resetData);
     lith()->networkErrorStringSet(QString());
@@ -335,9 +335,9 @@ void Weechat::fetchLines(pointer_t ptr, int count) {
     const auto* cLith = lith();
     const auto* buffer = cLith->getBuffer(ptr);
     if (buffer) {
-        lith()->log(Logger::Protocol, buffer->nameGet(), QString("Fetching %1 lines").arg(count));
+        lith()->log(Logger::Protocol, buffer->nameGet(), QStringLiteral(QT_TR_NOOP("Fetching %1 lines")).arg(count));
     } else {
-        lith()->log(Logger::Unexpected, "Attempted to fetch lines for buffer with invalid buffer");
+        lith()->log(Logger::Unexpected, QStringLiteral(QT_TR_NOOP("Attempted to fetch lines for buffer with invalid buffer")));
     }
     m_connection->write(
         QByteArrayLiteral("hdata"), QByteArrayLiteral("handleFetchLines;") + QByteArray::number(m_messageOrder++),
@@ -390,14 +390,14 @@ void Weechat::onMessageReceived(QByteArray& data) {
         if (!QMetaObject::invokeMethod(
                 Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const FormattedString&, str)
             )) {
-            lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
+            lith()->log(Logger::Unexpected, QStringLiteral(QT_TR_NOOP("Possible unhandled message: %1")).arg(id));
         }
     } else {
-        lith()->log(Logger::Unexpected, QString("Was not able to handle message type: %1").arg(type.data()));
+        lith()->log(Logger::Unexpected, QStringLiteral(QT_TR_NOOP("Was not able to handle message type: %1")).arg(QString::fromUtf8(type)));
     }
 
     if (!s.atEnd()) {
-        lith()->log(Logger::Unexpected, QString("CRITICAL! Data seemingly ended but buffer is not empty"));
+        lith()->log(Logger::Unexpected, QStringLiteral(QT_TR_NOOP("CRITICAL! Data seemingly ended but buffer is not empty")));
     }
 }
 
@@ -415,7 +415,9 @@ void Weechat::onPingTimeout() {
     static qint64 previousPing = 0;
     if (m_initializationStatus == COMPLETE) {
         if (previousPing < m_lastReceivedPong - 1) {
-            lith()->log(Logger::Unexpected, QString("Server didn't respond to ping in time, index: %1").arg(previousPing));
+            lith()->log(
+                Logger::Unexpected, QStringLiteral(QT_TR_NOOP("Server didn't respond to ping in time, index: %1")).arg(previousPing)
+            );
             restart();
         }
         previousPing = m_messageOrder++;
