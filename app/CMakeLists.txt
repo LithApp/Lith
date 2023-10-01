@@ -1,18 +1,21 @@
-set(LITH_SOURCES
+set(LITHAPP_SOURCES
     main.cpp
+)
+set(LITHAPP_QML
+    main.qml
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     enable_language("RC")
-    set(LITH_SOURCES
-        ${LITH_SOURCES}
+    set(LITHAPP_SOURCES
+        ${LITHAPP_SOURCES}
         ../dist/win/lith.rc
     )
 endif()
 
 qt_add_executable(Lith
     MACOSX_BUNDLE MANUAL_FINALIZATION
-    ${LITH_SOURCES}
+    ${LITHAPP_SOURCES}
 )
 set_target_properties(Lith PROPERTIES
     QT_QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/modules"
@@ -21,7 +24,7 @@ set_target_properties(Lith PROPERTIES
 )
 qt_add_qml_module(Lith
     URI App # Seems to have to to be like this in this case, otherwise there are build directory name clashes when linking the binary
-    QML_FILES main.qml
+    QML_FILES ${LITHAPP_QML}
 )
 qt_import_qml_plugins(Lith)
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
@@ -124,6 +127,11 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
 endif()
 
 qt_finalize_target(Lith)
+
+qt_add_lupdate(Lith
+    TS_FILES "${CMAKE_BINARY_DIR}/translations_tmp/Lith_partial_App_en.ts"
+    SOURCES ${LITHAPP_SOURCES} ${LITHAPP_QML}
+)
 
 install(TARGETS Lith
     BUNDLE DESTINATION .

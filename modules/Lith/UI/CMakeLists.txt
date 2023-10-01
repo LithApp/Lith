@@ -61,6 +61,11 @@ target_link_libraries(LithUI PRIVATE
     Qt::QuickTemplates2
 )
 
+qt_add_lupdate(LithUI
+    TS_FILES ${CMAKE_BINARY_DIR}/translations_tmp/Lith_partial_UI_en.ts
+    SOURCES ${LITH_QML}
+)
+
 install(TARGETS LithUI
     LIBRARY DESTINATION ${LITH_INSTALL_LIBDIR}
 )

@@ -80,7 +80,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug OR CMAKE_BUILD_TYPE STREQUAL Profile)
     set(LITH_IS_DEBUG_BUILD ÓN CACHE STRING "")
 endif()
 
-find_package(Qt6 COMPONENTS Widgets Gui Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
+find_package(Qt6 COMPONENTS Widgets Gui LinguistTools Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
 if (LITH_DEPENDENCY_ENABLE_DBUS)
     find_package(Qt6 COMPONENTS DBus REQUIRED)
 endif()
@@ -156,6 +156,7 @@ add_subdirectory(modules/Lith/Style)
 add_subdirectory(modules/Lith/UI)
 add_subdirectory(modules/Lith/Core)
 add_subdirectory(app)
+add_subdirectory(translations)
 
 add_dependencies(Lith LithStyleplugin LithUIplugin LithCoreplugin)
 

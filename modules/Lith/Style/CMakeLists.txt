@@ -53,6 +53,10 @@ target_include_directories(LithStyle PRIVATE
     ${qcoro_BINARY_DIR}/qcoro/core
 )
 
+qt_add_lupdate(LithStyle
+    TS_FILES ${CMAKE_BINARY_DIR}/translations_tmp/Lith_partial_Style_en.ts
+    SOURCES ${LITHSTYLE_SOURCES} ${LITHSTYLE_QML})
+
 install(TARGETS LithStyle
     LIBRARY DESTINATION ${LITH_INSTALL_LIBDIR}
 )

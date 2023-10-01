@@ -30,6 +30,8 @@
 #include <QMetaType>
 #include <QIcon>
 
+#include "translator.h"
+
 #include <QtQml/qqmlextensionplugin.h>
 // NOLINTSTART
 // Q_IMPORT_QML_PLUGIN(Lith_UIPlugin)

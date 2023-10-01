@@ -110,6 +110,10 @@ set_target_properties(LithCore PROPERTIES
     MACOSX_PACKAGE_LOCATION Contents
 )
 
+qt_add_lupdate(LithCore
+    TS_FILES ${CMAKE_BINARY_DIR}/translations_tmp/Lith_partial_Core_en.ts
+    SOURCES ${LITH_CORE_SOURCES} ${LITH_CORE_NETWORKING_SOURCES}
+)
 install(TARGETS LithCore
     LIBRARY DESTINATION ${LITH_INSTALL_LIBDIR}
 )
