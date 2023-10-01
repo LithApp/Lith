@@ -59,6 +59,18 @@ int main(int argc, char* argv[]) {
     }
 
     QApplication app(argc, argv);
+    QTranslator translator;
+    auto loadSuccess = translator.load(
+        QLocale(), QStringLiteral("Lith"), QStringLiteral("_"), QStringLiteral(":/i18n/translations"), QStringLiteral(".qm")
+    );
+    bool installSuccess = false;
+    if (loadSuccess) {
+        installSuccess = app.installTranslator(&translator);
+    }
+    qDebug() << QStringLiteral("Translations for current locale %1 loaded: %2, installed: %3")
+                    .arg(QLocale().name())
+                    .arg(loadSuccess)
+                    .arg(installSuccess);
     QCommandLineParser cmdLine;
     cmdLine.setApplicationDescription(
         QStringLiteral("                    ===== WeeChat relay client =====\n"
