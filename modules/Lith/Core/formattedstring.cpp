@@ -124,10 +124,6 @@ FormattedString::FormattedString()
     : m_parts({QString()}) {
 }
 
-FormattedString::FormattedString(const char* d)
-    : m_parts({QString(d)}) {
-}
-
 FormattedString::FormattedString(const QString& o)
     : m_parts({o}) {
 }
@@ -142,11 +138,6 @@ FormattedString::FormattedString(const FormattedString& o)
 
 FormattedString::FormattedString(FormattedString&& o) noexcept
     : m_parts(std::move(o.m_parts)) {
-}
-
-FormattedString& FormattedString::operator=(const char* o) {
-    m_parts = {QString(o)};
-    return *this;
 }
 
 bool FormattedString::operator==(const QString& o) const {
@@ -314,11 +305,6 @@ QStringList FormattedString::urls() const {
         }
     }
     return ret;
-}
-
-FormattedString& FormattedString::operator+=(const char* s) {
-    lastPart().text += s;
-    return *this;
 }
 
 bool FormattedString::operator!=(const FormattedString& o) const {

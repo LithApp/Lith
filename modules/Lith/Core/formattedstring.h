@@ -58,7 +58,6 @@ public:
     FormattedString(FormattedString&& o) noexcept;
     FormattedString(const QString& o);
     FormattedString(QString&& o);
-    FormattedString(const char* d);
     FormattedString();
     ~FormattedString() = default;
 
@@ -66,7 +65,6 @@ public:
     FormattedString& operator=(QString&& o);
     FormattedString& operator=(const FormattedString& o);
     FormattedString& operator=(FormattedString&& o) noexcept;
-    FormattedString& operator=(const char* o);
 
     bool operator==(const FormattedString& o) const;
     bool operator!=(const FormattedString& o) const;
@@ -74,7 +72,6 @@ public:
     bool operator!=(const QString& o) const;
 
     // these methods append to the last available segment
-    FormattedString& operator+=(const char* s);
     FormattedString& operator+=(const QString& s);
 
     operator QString() const;
