@@ -1,5 +1,6 @@
 set(LITHAPP_SOURCES
     main.cpp
+    translator.h translator.cpp
 )
 set(LITHAPP_QML
     main.qml
