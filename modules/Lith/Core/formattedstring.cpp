@@ -27,7 +27,9 @@
 namespace {
     Q_GLOBAL_STATIC(
         const QRegularExpression, urlRegExp,
-        R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
+        QStringLiteral(
+            R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))"
+        ),
         QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption |
             QRegularExpression::ExtendedPatternSyntaxOption
     );
@@ -36,32 +38,32 @@ namespace {
 QString FormattedString::Part::toHtml(const ColorTheme& theme) const {
     QString ret;
     if (bold) {
-        ret.append("<b>");
+        ret.append(QStringLiteral("<b>"));
     }
     if (underline) {
-        ret.append("<u>");
+        ret.append(QStringLiteral("<u>"));
     }
     if (foreground.index >= 0) {
-        ret.append("<font color=\"");
+        ret.append(QStringLiteral("<font color=\""));
         if (foreground.extended) {
             if (theme.extendedColors().count() > foreground.index) {
-                ret.append(theme.extendedColors()[foreground.index]);
+                ret.append(QString::fromUtf8(theme.extendedColors()[foreground.index]));
             } else {
-                ret.append("pink");
+                ret.append(QStringLiteral("pink"));
             }
         } else {
             if (theme.weechatColors().count() > foreground.index) {
-                ret.append(theme.weechatColors()[foreground.index]);
+                ret.append(QString::fromUtf8(theme.weechatColors()[foreground.index]));
             } else {
-                ret.append("pink");
+                ret.append(QStringLiteral("pink"));
             }
         }
-        ret.append("\">");
+        ret.append(QStringLiteral("\">"));
     }
     if (hyperlink) {
-        ret.append("<a href=\"");
+        ret.append(QStringLiteral("<a href=\""));
         ret.append(text);
-        ret.append("\">");
+        ret.append(QStringLiteral("\">"));
     }
 
     QString finalText;
@@ -76,12 +78,12 @@ QString FormattedString::Part::toHtml(const ColorTheme& theme) const {
         auto path = url.path();
 
         // If we only have a hostname, we'll use it as is.
-        if (path.isEmpty() || path == "/") {
+        if (path.isEmpty() || path == QStringLiteral("/")) {
             finalText = text;
         } else {
             // We'll show always show the host and the scheme.
-            const auto hostPrefix = scheme + "://" + host + "/";
-            const auto* const ellipsis = "\u2026";
+            const auto hostPrefix = scheme + QStringLiteral("://") + host + QStringLiteral("/");
+            const auto ellipsis = QStringLiteral("\u2026");
 
             // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
             // ellipsis...
@@ -90,7 +92,7 @@ QString FormattedString::Part::toHtml(const ColorTheme& theme) const {
             } else {
                 // This is a "nice" url with just a hostname and then one path fragment. We'll let these slide, because these tend
                 // to look nice even if they're long. Something like https://host.domain/file.extension
-                if (path == "/" + file && !url.hasQuery()) {
+                if (path == QStringLiteral("/") + file && !url.hasQuery()) {
                     finalText = text;
                 } else {
                     // Otherwise it's a weird link with multiple path fragments and queries and stuff. We'll just use the host and 10
@@ -106,16 +108,16 @@ QString FormattedString::Part::toHtml(const ColorTheme& theme) const {
     ret.append(finalText.toHtmlEscaped());
 
     if (hyperlink) {
-        ret.append("</a>");
+        ret.append(QStringLiteral("</a>"));
     }
     if (foreground.index >= 0) {
-        ret.append("</font>");
+        ret.append(QStringLiteral("</font>"));
     }
     if (underline) {
-        ret.append("</u>");
+        ret.append(QStringLiteral("</u>"));
     }
     if (bold) {
-        ret.append("</b>");
+        ret.append(QStringLiteral("</b>"));
     }
     return ret;
 }
@@ -183,11 +185,11 @@ QString FormattedString::toPlain() const {
 }
 
 QString FormattedString::toHtml(const ColorTheme& theme) const {
-    QString ret {"<html><body><span style='white-space: pre-wrap;'>"};
+    QString ret = QStringLiteral("<html><body><span style='white-space: pre-wrap;'>");
     for (const auto& i : m_parts) {
         ret.append(i.toHtml(theme));
     }
-    ret.append("</span></body></html>");
+    ret.append(QStringLiteral("</span></body></html>"));
     return ret;
 }
 
@@ -195,7 +197,7 @@ QString FormattedString::toTrimmedHtml(int n, const ColorTheme& theme) const {
     if (n < 0) {
         return toHtml(theme);
     }
-    QString ret = "<html><body><span style='white-space: pre-wrap;'>";
+    QString ret = QStringLiteral("<html><body><span style='white-space: pre-wrap;'>");
     for (const auto& i : m_parts) {
         QString word = i.text.left(n);
         Part tempPart = i;
@@ -207,10 +209,10 @@ QString FormattedString::toTrimmedHtml(int n, const ColorTheme& theme) const {
         }
     }
     while (n > 0) {
-        ret.append("\u00A0");
+        ret.append(QStringLiteral("\u00A0"));
         n--;
     }
-    ret += "</span></body></html>";
+    ret.append(QStringLiteral("</span></body></html>"));
     return ret;
 }
 
@@ -346,13 +348,13 @@ QColor FormattedString::Part::Color::toQColor(const ColorTheme& theme) const {
     if (index >= 0) {
         if (extended) {
             if (theme.extendedColors().count() > index) {
-                return QColor(theme.extendedColors()[index]);
+                return QColor(QString::fromLatin1(theme.extendedColors()[index]));
             } else {
                 return QColor("pink");
             }
         } else {
             if (theme.weechatColors().count() > index) {
-                return QColor(theme.weechatColors()[index]);
+                return QColor(QString::fromLatin1(theme.weechatColors()[index]));
             } else {
                 return QColor("pink");
             }

@@ -1,12 +1,13 @@
 #include "colortheme.h"
 
+
 QString ColorTheme::getIcon(const QString& name) {
     switch (m_group) {
         case DARK:
-            return "qrc:/navigation/dark/" + name + ".png";
+            return QStringLiteral("qrc:/navigation/dark/%1/.png").arg(name);
         case LIGHT:
         default:
-            return "qrc:/navigation/light/" + name + ".png";
+            return QStringLiteral("qrc:/navigation/light/%2.png").arg(name);
     }
 }
 
@@ -23,11 +24,14 @@ QPalette ColorTheme::palette() const {
     };
 
     // TODO very likely needs a bit of tweaking to differentiate button, window and base
-    QColor windowText {m_weechatColors[0]};
+    // Also toho this array has no business being QByteArray or StringList
+    // Also move it to the style
+    QColor windowText = QColor::fromString(m_weechatColors[0]);
     QColor base = (windowText == Qt::white) ? Qt::black : Qt::white;
-    QColor window = (base == Qt::white)                         ? QColor(0xc2, 0xbd, 0xb8)
-                    : (QColor(m_weechatColors[1]) == Qt::black) ? QColor(0x8, 0x7, 0x6)
-                                                                : m_weechatColors[1];
+    QColor window = (base == Qt::white)                                     ? QColor(0xc2, 0xbd, 0xb8)
+                    : (QColor::fromString(m_weechatColors[1]) == Qt::black) ? QColor(0x8, 0x7, 0x6)
+                                                                            : QColor::fromString(m_weechatColors[1]);
+    ;  // TODO
     QColor button = mix(windowText, window, 0.15);
     QColor light = mix(windowText, button, 0.4);
     QColor dark = mix(window, windowText, 0.4);

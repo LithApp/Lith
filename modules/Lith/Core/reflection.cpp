@@ -30,7 +30,7 @@ const QStringList& Reflection::stringPropertiesGet() const {
         } else {
             auto mt = QMetaType::fromName(m_className.toLocal8Bit());
             if (!mt.isValid()) {
-                auto pointerName = m_className + '*';
+                auto pointerName = m_className + QLatin1Char('*');
                 mt = QMetaType::fromName(pointerName.toLocal8Bit());
             }
             if (mt.isValid()) {
@@ -38,8 +38,8 @@ const QStringList& Reflection::stringPropertiesGet() const {
                 if (mo) {
                     for (int i = 0; i < mo->propertyCount(); i++) {
                         auto property = mo->property(i);
-                        QString name = property.name();
-                        if (name == "objectName") {
+                        QString name = QString::fromUtf8(property.name());
+                        if (name == QStringLiteral("objectName")) {
                             continue;
                         }
                         if (QMetaType::canConvert(property.metaType(), QMetaType(QMetaType::QString))) {

@@ -37,7 +37,9 @@ public:
     const Lith* lith() const;
     Lith* lith();
 
-    static QByteArray hashPassword(const QString& password, const QString& algo, const QByteArray& salt, int iterations);
+
+    static QByteArray hashPassword(const QByteArray& password, const QByteArray& algo, const QByteArray& salt, int iterations);
+
     static QByteArray randomString(int length);
 
     struct MessageNames {

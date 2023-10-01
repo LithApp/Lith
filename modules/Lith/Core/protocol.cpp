@@ -65,7 +65,7 @@ namespace WeeChatProtocol {
         if (len == static_cast<uint32_t>(-1)) {
             r = String();
         } else if (len == 0) {
-            r = "";
+            r = QStringLiteral("");
         } else if (len > 0) {
             QByteArray buf(len, 0);
             s.readRawData(buf.data(), static_cast<int>(len));
@@ -119,7 +119,7 @@ namespace WeeChatProtocol {
         s >> length;
         QByteArray buf(static_cast<int>(length), 0);
         s.readRawData(buf.data(), length);
-        r = buf;
+        r = QString::fromLocal8Bit(buf);
         if (ok) {
             *ok = true;
         }
@@ -599,7 +599,7 @@ namespace WeeChatProtocol {
         };
         auto getChar = [](QByteArray::const_iterator& it) -> QString {
             if (static_cast<unsigned char>(*it) < 0x80) {
-                return QString(*it);
+                return QString::fromLatin1(&*it, 1);
             } else {
                 QByteArray buf;
                 if ((*it & 0b11111000U) == 0b11110000U) {
@@ -615,9 +615,9 @@ namespace WeeChatProtocol {
                     buf += *it++;
                     buf += *it;
                 } else {
-                    return QString(*it);
+                    buf += *it;
                 }
-                return QString(buf);
+                return QString::fromUtf8(buf);
             }
         };
         for (const auto* it = data.begin(); it != data.end(); ++it) {

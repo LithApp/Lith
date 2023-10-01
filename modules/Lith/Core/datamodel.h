@@ -86,7 +86,7 @@ class LITHCORE_EXPORT Buffer : public QObject {
     Q_PROPERTY(bool isChannel READ isChannelGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isPrivate READ isPrivateGet NOTIFY local_variablesChanged)
 
-    PROPERTY(QString, lastUserInput, "")
+    PROPERTY(QString, lastUserInput)
 public:
     Buffer(Lith* parent, pointer_t pointer);
     ~Buffer() override;

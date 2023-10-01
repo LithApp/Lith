@@ -14,8 +14,8 @@ class LITHCORE_EXPORT ColorTheme {
     Q_GADGET
     QML_NAMED_ELEMENT(colorTheme)
     Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QStringList weechatColors READ weechatColors CONSTANT)
-    Q_PROPERTY(QStringList extendedColors READ extendedColors CONSTANT)
+    Q_PROPERTY(QByteArrayList weechatColors READ weechatColors CONSTANT)
+    Q_PROPERTY(QByteArrayList extendedColors READ extendedColors CONSTANT)
 
     Q_PROPERTY(QPalette palette READ palette CONSTANT)
 public:
@@ -47,7 +47,7 @@ public:
         _LAST_WEECHAT_COLOR
     };
 
-    explicit ColorTheme(Group group = LIGHT, QString name = {}, QStringList weechatColors = {}, QStringList extendedColors = {})
+    explicit ColorTheme(Group group = LIGHT, QString name = {}, QByteArrayList weechatColors = {}, QByteArrayList extendedColors = {})
         : m_group(group)
         , m_name(std::move(name))
         , m_weechatColors(std::move(weechatColors))
@@ -60,10 +60,10 @@ public:
     QString name() const {
         return m_name;
     }
-    const QStringList& weechatColors() const {
+    const QByteArrayList& weechatColors() const {
         return m_weechatColors;
     }
-    const QStringList& extendedColors() const {
+    const QByteArrayList& extendedColors() const {
         return m_extendedColors;
     }
 
@@ -72,10 +72,11 @@ public:
 private:
     Group m_group;
     QString m_name;
-    QStringList m_weechatColors;
-    QStringList m_extendedColors;
+    QByteArrayList m_weechatColors;
+    QByteArrayList m_extendedColors;
 };
 Q_DECLARE_METATYPE(ColorTheme)
+Q_DECLARE_METATYPE(QByteArrayList)
 
 Q_GLOBAL_STATIC(
     const ColorTheme, lightTheme, ColorTheme::LIGHT, QStringLiteral("light"),

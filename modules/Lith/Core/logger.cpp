@@ -20,7 +20,7 @@ QVariant Logger::data(const QModelIndex& index, int role) const {
                     return m_events[index.row()].second.summary;
                 case Type: {
                     QMetaEnum me = QMetaEnum::fromType<Logger::EventType>();
-                    return QString(me.valueToKey(m_events[index.row()].second.type)).toUpper();
+                    return QString::fromLatin1(me.valueToKey(m_events[index.row()].second.type)).toUpper();
                 }
             }
         } else {
@@ -35,7 +35,7 @@ QVariant Logger::data(const QModelIndex& index, int role) const {
                     return m_events[index.row()].second.summary;
                 case Type: {
                     QMetaEnum me = QMetaEnum::fromType<Logger::EventType>();
-                    return QString(me.valueToKey(m_events[index.row()].second.type)).toUpper();
+                    return QString::fromLatin1(me.valueToKey(m_events[index.row()].second.type)).toUpper();
                 }
             }
         }

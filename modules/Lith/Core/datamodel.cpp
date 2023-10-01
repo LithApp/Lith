@@ -138,9 +138,8 @@ int Buffer::normalsGet() const {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto* n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() ==
-                                                          "<html><body><span style='white-space: pre-wrap;'> "
-                                                          "</span></body></html>") {
+            if (n->prefixGet().trimmed().isEmpty() || n->prefixGet() == QStringLiteral("<html><body><span style='white-space: pre-wrap;'> "
+                                                                                       "</span></body></html>")) {
                 total++;
             }
         }
@@ -153,7 +152,7 @@ int Buffer::voicesGet() const {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto* n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>+</span></body></html>") {
+            if (n->prefixGet() == QStringLiteral("<html><body><span style='white-space: pre-wrap;'>+</span></body></html>")) {
                 total++;
             }
         }
@@ -166,7 +165,7 @@ int Buffer::opsGet() const {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto* n = m_nicks->get<Nick>(i);
         if (n && n->visibleGet() && n->levelGet() == 0) {
-            if (n->prefixGet() == "<html><body><span style='white-space: pre-wrap;'>@</span></body></html>") {
+            if (n->prefixGet() == QStringLiteral("<html><body><span style='white-space: pre-wrap;'>@</span></body></html>")) {
                 total++;
             }
         }
@@ -177,21 +176,21 @@ int Buffer::opsGet() const {
 QStringList Buffer::local_variables_stringListGet() const {
     QStringList ret;
     for (auto [key, value] : m_local_variables.asKeyValueRange()) {
-        ret.append(QString("%1: %2").arg(key).arg(value));
+        ret.append(QStringLiteral("%1: %2").arg(key).arg(value));
     }
     return ret;
 }
 
 bool Buffer::isServerGet() const {
-    return m_local_variables.contains("type") && m_local_variables["type"] == "server";
+    return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("server");
 }
 
 bool Buffer::isChannelGet() const {
-    return m_local_variables.contains("type") && m_local_variables["type"] == "channel";
+    return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("channel");
 }
 
 bool Buffer::isPrivateGet() const {
-    return m_local_variables.contains("type") && m_local_variables["type"] == "private";
+    return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("private");
 }
 
 int Buffer::totalUnreadMessagesGet() const {
@@ -207,7 +206,7 @@ bool Buffer::input(const QString& data) const {
         return false;
     }
 
-    static QRegularExpression inputRegularExpression("\n|\r\n|\r");
+    static QRegularExpression inputRegularExpression(QStringLiteral("\n|\r\n|\r"));
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
         bool success = false;
         QList<bool> success_list;
@@ -239,7 +238,7 @@ void Buffer::fetchMoreLines() {
 }
 
 void Buffer::clearHotlist() {
-    input("/buffer set hotlist -1");
+    input(QStringLiteral("/buffer set hotlist -1"));
     unreadMessagesSet(0);
     hotMessagesSet(0);
 }
@@ -277,7 +276,7 @@ void BufferLine::prefixSet(const FormattedString& o) {
     if (m_prefix != o) {
         m_prefix = o;
         // TODO this is probably wrong
-        if (m_prefix.toPlain().startsWith("@") || m_prefix.toPlain().startsWith("+")) {
+        if (m_prefix.toPlain().startsWith(QStringLiteral("@")) || m_prefix.toPlain().startsWith(QStringLiteral("+"))) {
             m_nick = m_prefix.toPlain().mid(1);
         } else {
             m_nick = m_prefix.toPlain();
@@ -302,7 +301,7 @@ void BufferLine::messageSet(const FormattedString& o) {
 }
 
 bool BufferLine::isSelfMsgGet() {
-    return m_tags_array.contains("self_msg");
+    return m_tags_array.contains(QStringLiteral("self_msg"));
 }
 
 QColor BufferLine::nickColorGet() const {
@@ -314,11 +313,11 @@ QColor BufferLine::nickColorGet() const {
 }
 
 bool BufferLine::isPrivMsgGet() {
-    return m_tags_array.contains("irc_privmsg");
+    return m_tags_array.contains(QStringLiteral("irc_privmsg"));
 }
 
 bool BufferLine::isJoinPartQuitMsgGet() {
-    return m_tags_array.contains("irc_quit") || m_tags_array.contains("irc_join") || m_tags_array.contains("irc_part");
+    return m_tags_array.contains(QStringLiteral("irc_quit")) || m_tags_array.contains(QStringLiteral("irc_join")) || m_tags_array.contains(QStringLiteral("irc_part"));
 }
 
 QString BufferLine::colorlessNicknameGet() {

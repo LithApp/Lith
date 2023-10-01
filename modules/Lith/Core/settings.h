@@ -65,19 +65,22 @@ class LITHCORE_EXPORT Settings : public QObject {
 
     Q_PROPERTY(bool isReady READ isReady NOTIFY readyChanged)
 
-    static inline const QStringList c_hotlistDefaultFormat {"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
+    static inline const QStringList c_hotlistDefaultFormat {
+        QStringLiteral("%1: %2/%3"), QStringLiteral("short_name"), QStringLiteral("hotMessages"), QStringLiteral("unreadMessages")};
+    Q_PROPERTY(QStringList hotlistDefaultFormat MEMBER c_hotlistDefaultFormat CONSTANT)
 
+    // clang-format off
     SETTING(int, lastOpenBuffer, -1)
 #if defined(Q_OS_MACOS)
     SETTING(QString, baseFontFamily, "Menlo")
 #else
-    SETTING(QString, baseFontFamily, "Inconsolata")
+    SETTING(QString, baseFontFamily, QStringLiteral("Inconsolata"))
 #endif
     SETTING(qreal, baseFontSize, 10)
     SETTING(bool, shortenLongUrls, true)
     SETTING(int, shortenLongUrlsThreshold, 50)
     SETTING(int, nickCutoffThreshold, -1)
-    SETTING(QString, timestampFormat, "hh:mm:ss")
+    SETTING(QString, timestampFormat, QStringLiteral("hh:mm:ss"))
     SETTING(bool, showDateHeaders, true)
     SETTING(int, messageSpacing, 0)
 
@@ -126,25 +129,28 @@ class LITHCORE_EXPORT Settings : public QObject {
 #ifndef __EMSCRIPTEN__
     SETTING(bool, useWebsockets, false)
 #endif  // __EMSCRIPTEN__
-    SETTING_NOSETTER(QString, websocketsEndpoint, "weechat")
+    SETTING_NOSETTER(QString, websocketsEndpoint, QStringLiteral("weechat"))
     bool websocketsEndpointSet(QString newWebsocketsEndpoint, bool force = false);
 
     SETTING(bool, enableReadlineShortcuts, true)
-    SETTING(QStringList, shortcutSearchBuffer, {"Alt+G"})
-    SETTING(QStringList, shortcutNicklist, {"Alt+N"})
-    SETTING(QStringList, shortcutAutocomplete, {"Tab"})
-    SETTING(QStringList, shortcutSwitchToNextBuffer, {"Alt+Right"})
-    SETTING(QStringList, shortcutSwitchToPreviousBuffer, {"Alt+Left"})
-    SETTING(QStringList, shortcutSwitchToBuffer1, {"Alt+1"})
-    SETTING(QStringList, shortcutSwitchToBuffer2, {"Alt+2"})
-    SETTING(QStringList, shortcutSwitchToBuffer3, {"Alt+3"})
-    SETTING(QStringList, shortcutSwitchToBuffer4, {"Alt+4"})
-    SETTING(QStringList, shortcutSwitchToBuffer5, {"Alt+5"})
-    SETTING(QStringList, shortcutSwitchToBuffer6, {"Alt+6"})
-    SETTING(QStringList, shortcutSwitchToBuffer7, {"Alt+7"})
-    SETTING(QStringList, shortcutSwitchToBuffer8, {"Alt+8"})
-    SETTING(QStringList, shortcutSwitchToBuffer9, {"Alt+9"})
-    SETTING(QStringList, shortcutSwitchToBuffer10, {"Alt+0"})
+    SETTING(QStringList, shortcutSearchBuffer, {QStringLiteral("Alt+G")})
+    SETTING(QStringList, shortcutNicklist, {QStringLiteral("Alt+N")})
+    SETTING(QStringList, shortcutAutocomplete, {QStringLiteral("Tab")})
+    SETTING(QStringList, shortcutSwitchToNextBuffer, {QStringLiteral("Alt+Right")})
+    SETTING(QStringList, shortcutSwitchToPreviousBuffer, {QStringLiteral("Alt+Left")})
+    SETTING(QStringList, shortcutSwitchToBuffer1, {QStringLiteral("Alt+1")})
+    SETTING(QStringList, shortcutSwitchToBuffer2, {QStringLiteral("Alt+2")})
+    SETTING(QStringList, shortcutSwitchToBuffer3, {QStringLiteral("Alt+3")})
+
+    SETTING(QStringList, shortcutSwitchToBuffer4, {QStringLiteral("Alt+4")})
+    SETTING(QStringList, shortcutSwitchToBuffer5, {QStringLiteral("Alt+5")})
+
+    SETTING(QStringList, shortcutSwitchToBuffer6, {QStringLiteral("Alt+6")})
+
+    SETTING(QStringList, shortcutSwitchToBuffer7, {QStringLiteral("Alt+7")})
+    SETTING(QStringList, shortcutSwitchToBuffer8, {QStringLiteral("Alt+8")})
+    SETTING(QStringList, shortcutSwitchToBuffer9, {QStringLiteral("Alt+9")})
+    SETTING(QStringList, shortcutSwitchToBuffer10, {QStringLiteral("Alt+0")})
 
     SETTING(bool, hotlistEnabled, true)
     SETTING(QStringList, hotlistFormat, c_hotlistDefaultFormat)
@@ -164,7 +170,7 @@ class LITHCORE_EXPORT Settings : public QObject {
     // This is hidden for now
     SETTING(bool, terminalLikeChat, true)
 
-    SETTING(QString, imgurApiKey, IMGUR_API_KEY)
+    SETTING(QString, imgurApiKey, QStringLiteral(IMGUR_API_KEY))
 
     // UNUSED SETTINGS
     // determine what to do about these later
@@ -172,9 +178,7 @@ class LITHCORE_EXPORT Settings : public QObject {
     DEPRECATED_SETTING(bool, hotlistShowUnreadCount, true)
     // END OF UNUSED SETTINGS
 
-public:
-    Q_PROPERTY(QStringList hotlistDefaultFormat MEMBER c_hotlistDefaultFormat CONSTANT)
-
+    // clang-format on
 public slots:
     void saveNetworkSettings(
         QString host, int port, bool encrypted, bool allowSelfSignedCertificates, QString passphrase, bool useEmptyPassphrase,

@@ -82,7 +82,7 @@ private:
 
 class LITHCORE_EXPORT FilteredLogger : public QSortFilterProxyModel {
     Q_OBJECT
-    PROPERTY(QString, contextFilter, "")
+    PROPERTY(QString, contextFilter)
     PROPERTY(bool, showLineAdded, false)
     PROPERTY(bool, showProtocol, true)
     PROPERTY(bool, showDetails, false)

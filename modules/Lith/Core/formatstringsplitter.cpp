@@ -10,7 +10,7 @@
 #include "lith.h"
 
 namespace {
-    Q_GLOBAL_STATIC(const QRegularExpression, formatPlaceholderRegexp, "[%]([0-9]+)");
+    Q_GLOBAL_STATIC(const QRegularExpression, formatPlaceholderRegexp, QStringLiteral("[%]([0-9]+)"));
 }
 
 FormatStringSplitter::FormatStringSplitter(QObject* parent)
@@ -55,7 +55,7 @@ QString FormatStringSplitter::formattedDataGet() {
                 Logger::FormatSplitter,
                 QString("FormatStringSplitter::formattedData was called with invalid variable (%1), inserting N/A").arg(var->nameGet())
             );
-            result = result.arg("N/A");
+            result = result.arg(QStringLiteral("N/A"));
             continue;
         }
         auto propertyIndex = mo->indexOfProperty(qPrintable(var->nameGet()));
@@ -143,7 +143,7 @@ void FormatStringSplitter::onFormatChanged() {
                 return;
             }
         } else {
-            errorStringSet(tr("Format string %1 is invalid").arg(match.capturedTexts().join(",")));
+            errorStringSet(tr("Format string %1 is invalid").arg(match.capturedTexts().join(QLatin1Char(','))));
             formatValidSet(false);
             return;
         }
@@ -152,18 +152,18 @@ void FormatStringSplitter::onFormatChanged() {
     QList<int> numberList(numberSet.begin(), numberSet.end());
     std::sort(numberList.begin(), numberList.end());
     if (numberList.isEmpty()) {
-        errorStringSet("You need to enter at least one format string");
+        errorStringSet(tr("You need to enter at least one format string"));
         formatValidSet(false);
         return;
     } else if (*numberList.begin() != 1) {
-        errorStringSet(QString("Format strings need to start at 1, currently it is: %1").arg(*numberList.begin()));
+        errorStringSet(tr("Format strings need to start at 1, currently it is: %1").arg(*numberList.begin()));
         formatValidSet(false);
         return;
     } else {
         int previous = 0;
         for (auto& number : numberList) {
             if (number != previous + 1) {
-                errorStringSet(QString("Format string numbers need to be consecutive (%1 came after %2)").arg(number).arg(previous));
+                errorStringSet(tr("Format string numbers need to be consecutive (%1 came after %2)").arg(number).arg(previous));
                 formatValidSet(false);
                 return;
             }

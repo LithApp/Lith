@@ -61,7 +61,7 @@ void SocketHelper::connectToWebsocket(const QString& hostname, const QString& en
     lith()->log(
         Logger::Network, QString("Connecting to: %1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint)
     );
-    m_webSocket = new QWebSocket("weechat", QWebSocketProtocol::VersionLatest, this);
+    m_webSocket = new QWebSocket(QStringLiteral("weechat"), QWebSocketProtocol::VersionLatest, this);
 
     connect(m_webSocket, &QWebSocket::connected, this, &SocketHelper::onConnected);
     connect(m_webSocket, &QWebSocket::disconnected, this, &SocketHelper::onDisconnected);
@@ -126,7 +126,7 @@ qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, cons
         }
     }
     if (m_webSocket) {
-        bytes = m_webSocket->sendTextMessage(fullCommand);
+        bytes = m_webSocket->sendTextMessage(QString::fromUtf8(fullCommand));
     }
 #ifndef __EMSCRIPTEN__
     if (m_tcpSocket) {
