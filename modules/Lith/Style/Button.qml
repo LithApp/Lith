@@ -8,7 +8,7 @@ import Lith.Style
 T.Button {
     id: control
 
-    property real minimumWidth: text.length > 0 ? 100 : 0
+    property real minimumWidth: text.length > 0 ? 80 : 0
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding,
                             minimumWidth)
@@ -51,6 +51,9 @@ T.Button {
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width - x
             horizontalAlignment: Label.AlignHCenter
+            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+            elide: Label.ElideRight
+            maximumLineCount: 2
 
             text: control.text
             font: control.font

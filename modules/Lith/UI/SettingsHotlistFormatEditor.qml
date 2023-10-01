@@ -10,7 +10,7 @@ Dialog {
     id: root
     modal: true
     anchors.centerIn: Overlay.overlay
-    width: 400
+    width: Math.min(400, parent.width)
     implicitHeight: Math.min(header.height + mainItem.implicitHeight + footer.height, (mainView ? mainView.height : 1000))
     closePolicy: autocomplete.visible ? Popup.CloseOnPressOutside : (Popup.CloseOnEscape | Popup.CloseOnPressOutside)
     onVisibleChanged: {
@@ -30,11 +30,18 @@ Dialog {
     }
 
     header: Fields.Header {
+        id: headerField
         width: parent.width
         standalone: true
         text: qsTr("Hotlist format editor")
 
+        labelItem.x: Math.max(((headerField.width - labelItem.width) / 2), (helpButton.x + helpButton.width))
+        labelItem.width: Math.min(labelItem.implicitWidth, headerField.width - helpButton.width)
+        labelItem.wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+        labelItem.maximumLineCount: 2
+
         Button {
+            id: helpButton
             text: help.visible ? qsTr("Back") : qsTr("Help")
             anchors.top: parent.top
             anchors.left: parent.left
@@ -261,20 +268,24 @@ Dialog {
             }
 
             Fields.Base {
+                id: presetFieldBase
                 summary: qsTr("Use a preset")
                 details: qsTr("Recommended")
                 rowComponent: ColumnLayout {
                     id: presetLayout
+                    Layout.preferredWidth: presetFieldBase.width / 2
 
                     Button {
                         text: qsTr("Default")
                         onClicked: formatSplitter.fromStringList(Lith.settings.hotlistDefaultFormat)
-                        Layout.preferredWidth: 180
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: presetFieldBase.width / 2
                     }
                     Button {
                         text: qsTr("Buffer Number")
                         onClicked: formatSplitter.fromStringList(["%1", "number"])
-                        Layout.preferredWidth: 180
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: presetFieldBase.width / 2
                     }
                 }
             }

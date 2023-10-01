@@ -8,21 +8,20 @@ Item {
     property bool standalone: false
     property alias text: label.text
     property alias font: label.font
+    property alias labelItem: label
 
     Layout.fillWidth: true
-    implicitWidth: row.implicitWidth
-    implicitHeight: row.implicitHeight
+    implicitWidth: label.implicitWidth
+    implicitHeight: label.implicitHeight
 
-    RowLayout {
-        id: row
-        width: parent.width
-        Label {
-            id: label
-            Layout.topMargin: font.pixelSize
-            Layout.bottomMargin: root.standalone ? font.pixelSize : 0.33 * font.pixelSize
-            Layout.alignment: Qt.AlignHCenter
-            font.bold: true
-            font.capitalization: Font.AllUppercase
-        }
+    Label {
+        id: label
+
+        x: (root.width - width) / 2
+
+        topPadding: font.pixelSize
+        bottomPadding: root.standalone ? font.pixelSize : 0.33 * font.pixelSize
+        font.bold: true
+        font.capitalization: Font.AllUppercase
     }
 }

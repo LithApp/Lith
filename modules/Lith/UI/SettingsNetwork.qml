@@ -312,75 +312,95 @@ ScrollView {
                         color: index % 2 ? LithPalette.regular.alternateBase : LithPalette.regular.base
                         border.color: LithPalette.regular.light
                         border.width: 1
-                        RowLayout {
+                        GridLayout {
                             id: recordingLayout
                             y: 6
                             x: 6
                             width: parent.width - x * 2
                             height: parent.height - y * 2
-                            spacing: 0
-                            Label {
-                                text: modelData.number
-                                font.weight: 99
-                                Layout.minimumWidth: font.pixelSize * 3
-                                Layout.maximumWidth: Layout.minimumWidth
-                                horizontalAlignment: Label.AlignHCenter
+                            columnSpacing: 0
+                            columns: {
+                                const totalWidth = infoLayout.implicitWidth + actionsLayout.implicitWidth
+                                if (totalWidth > recordingLayout.width)
+                                    return 1
+                                else
+                                    return 2
                             }
-                            Label {
-                                visible: beingRecorded
-                                text: qsTr("This slot is currently being overwritten.")
-                                color: LithPalette.disabled.text
-                                Layout.minimumWidth: font.pixelSize * 15
-                                Layout.maximumWidth: Layout.minimumWidth
-                                wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                            }
-                            Label {
-                                visible: !beingRecorded
-                                text: Qt.formatDateTime(modelData.createdAt)
-                                Layout.minimumWidth: font.pixelSize * 9
-                                Layout.maximumWidth: Layout.minimumWidth
-                                horizontalAlignment: Label.AlignHCenter
-                            }
-                            Label {
-                                visible: !beingRecorded
-                                text: "%1 KiB".arg(Number(modelData.size / 1024.0).toLocaleString(Qt.locale(), "f", 0))
-                                Layout.minimumWidth: font.pixelSize * 6
-                                Layout.maximumWidth: Layout.minimumWidth
-                                horizontalAlignment: Label.AlignHCenter
-                            }
-                            Label {
-                                text: beingRecorded ? Lith.networkProxy.currentReplayVersion : modelData.version
-                                Layout.minimumWidth: font.pixelSize * 3
-                                Layout.maximumWidth: Layout.minimumWidth
-                                horizontalAlignment: Label.AlignHCenter
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                            Button {
-                                id: saveToDocumentsButton
-                                visible: !beingRecorded
-                                font.pointSize: Lith.settings.baseFontSize * 0.875
-                                horizontalPadding: 8
-                                verticalPadding: 2
-                                text: "Save to\nDocuments"
-                                onClicked: {
-                                    var result = modelData.store()
-                                    recordingResultPopupLabel.text = result
+                            RowLayout {
+                                id: infoLayout
+                                Label {
+                                    id: numberLabel
+                                    text: modelData.number
+                                    font.weight: 99
+                                    Layout.minimumWidth: font.pixelSize * 3
+                                    Layout.maximumWidth: Layout.minimumWidth
+                                    horizontalAlignment: Label.AlignHCenter
+                                }
+                                Label {
+                                    id: overWrittenLabel
+                                    visible: beingRecorded
+                                    text: qsTr("This slot is currently being overwritten.")
+                                    color: LithPalette.disabled.text
+                                    Layout.minimumWidth: font.pixelSize * 15
+                                    Layout.maximumWidth: Layout.minimumWidth
+                                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                                }
+                                Label {
+                                    id: createdAtLabel
+                                    visible: !beingRecorded
+                                    text: Qt.formatDateTime(modelData.createdAt)
+                                    Layout.minimumWidth: font.pixelSize * 9
+                                    Layout.maximumWidth: Layout.minimumWidth
+                                    horizontalAlignment: Label.AlignHCenter
+                                }
+                                Label {
+                                    id: sizeLabel
+                                    visible: !beingRecorded
+                                    text: "%1 KiB".arg(Number(modelData.size / 1024.0).toLocaleString(Qt.locale(), "f", 0))
+                                    Layout.minimumWidth: font.pixelSize * 6
+                                    Layout.maximumWidth: Layout.minimumWidth
+                                    horizontalAlignment: Label.AlignHCenter
+                                }
+                                Label {
+                                    id: versionLabel
+                                    opacity: (x + width + infoLayout.spacing) < infoLayout.width ? 1.0 : 0
+                                    text: beingRecorded ? Lith.networkProxy.currentReplayVersion : modelData.version
+                                    Layout.minimumWidth: font.pixelSize * 3
+                                    Layout.maximumWidth: Layout.minimumWidth
+                                    horizontalAlignment: Label.AlignHCenter
+                                }
+                                Item {
+                                    Layout.fillWidth: true
                                 }
                             }
-                            Button {
-                                id: deleteRecordingButton
-                                visible: !beingRecorded
-                                Layout.leftMargin: 4
-                                Layout.preferredHeight: Math.max(deleteRecordingButton.implicitHeight, saveToDocumentsButton.implicitHeight)
-                                font.pointSize: Lith.settings.baseFontSize * 0.875
-                                horizontalPadding: 8
-                                verticalPadding: 2
-                                text: "Delete"
-                                onClicked: {
-                                    var result = modelData.erase()
-                                    recordingResultPopupLabel.text = result
+                            RowLayout {
+                                id: actionsLayout
+                                Layout.alignment: Qt.AlignHCenter
+                                Button {
+                                    id: saveToDocumentsButton
+                                    visible: !beingRecorded
+                                    font.pointSize: Lith.settings.baseFontSize * 0.875
+                                    horizontalPadding: 8
+                                    verticalPadding: 2
+                                    text: "Save to\nDocuments"
+                                    onClicked: {
+                                        var result = modelData.store()
+                                        recordingResultPopupLabel.text = result
+                                    }
+                                }
+                                Button {
+                                    id: deleteRecordingButton
+                                    visible: !beingRecorded
+                                    Layout.leftMargin: 4
+                                    Layout.preferredHeight: Math.max(deleteRecordingButton.implicitHeight, saveToDocumentsButton.implicitHeight)
+                                    font.pointSize: Lith.settings.baseFontSize * 0.875
+                                    horizontalPadding: 8
+                                    verticalPadding: 2
+                                    text: "Delete"
+                                    onClicked: {
+                                        var result = modelData.erase()
+                                        recordingResultPopupLabel.text = result
+                                    }
                                 }
                             }
                         }
