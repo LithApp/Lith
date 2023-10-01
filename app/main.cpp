@@ -108,11 +108,8 @@ int main(int argc, char* argv[]) {
         font = QFont(fontFamilyFromSettings
         );  // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
     }
-    font.setKerning(false);
-    font.setHintingPreference(QFont::PreferNoHinting);
-    font.setStyleHint(QFont::Monospace);
+    font.setStyleHint(QFont::TypeWriter);
     app.setFont(font);
-    app.setFont(font, "monospace");
 
     // Start the engine
     engine.load(QUrl(QLatin1String("qrc:/qt/qml/App/main.qml")));
