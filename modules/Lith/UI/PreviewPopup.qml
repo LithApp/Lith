@@ -15,12 +15,12 @@
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia as Multimedia
 //import QtWebView
 
 import Lith.Core
+import Lith.Style
 
 Dialog {
     id: root
@@ -35,7 +35,10 @@ Dialog {
     topMargin: 0
     bottomInset: 0
     padding: 0
-    background: Item {}
+    background: Rectangle {
+        color: palette.base
+        opacity: 0.5
+    }
 
     property string currentUrl
 
@@ -265,7 +268,6 @@ Dialog {
                     duration: 60
                 }
             }
-
         }
 
         BusyIndicator {
@@ -342,6 +344,35 @@ Dialog {
                     delegateImage.scale = 2.0
                 else
                     delegateImage.scale = 1.0
+            }
+        }
+
+        ColumnLayout {
+            visible: delegateImage.status === Image.Error
+            anchors.centerIn: delegateImage
+            width: parent.width / 3.0 * 2.0
+            spacing: 12
+            Image {
+                Layout.alignment: Qt.AlignHCenter
+                width: 32
+                height: 32
+                source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/dizzy.png"
+            }
+            Label {
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                wrapMode: Label.Wrap
+                color: "red"
+                horizontalAlignment: Label.AlignHCenter
+                text: delegateImage.status === Image.Error ? qsTr("The picture could not be displayed") : ""
+            }
+            Label {
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                wrapMode: Label.Wrap
+                horizontalAlignment: Label.AlignHCenter
+                text: qsTr("<span style='white-space: pre-wrap;'>URL: <a href='%1'>%1</a></span>").arg(delegateImage.source)
+                textFormat: Label.RichText
             }
         }
     }
@@ -424,10 +455,10 @@ Dialog {
                 spacing: 12
                 Label {
                     id: errorMsgText
-                    visible: delegateImage.status === Image.Error || delegateVideo.errorString.length > 0
+                    visible: delegateVideo.errorString.length > 0
                     Layout.alignment: Qt.AlignHCenter
                     color: "red"
-                    text: delegateImage.status === Image.Error ? qsTr("The picture could not be displayed") : delegateVideo.errorString
+                    text: delegateVideo.errorString
                 }
                 RowLayout {
                     spacing: 24
