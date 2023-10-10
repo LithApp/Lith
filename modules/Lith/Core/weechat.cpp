@@ -134,6 +134,12 @@ void Weechat::start() {
     restart();
 }
 
+void Weechat::userRequestedRestart() {
+    m_passwordAttempts = 0;
+    m_reconnectTimer->setInterval(100);
+    restart();
+}
+
 void Weechat::restart() {
     if (m_networkProxy->mode() == ReplayProxy::Replay) {
         return;
@@ -160,6 +166,8 @@ void Weechat::restart() {
 }
 
 void Weechat::onConnectionSettingsChanged() {
+    m_passwordAttempts = 0;
+
     bool hasPassphrase = Lith::settingsGet()->hasPassphraseGet();
 #ifndef __EMSCRIPTEN__
     bool usesWebsockets = Lith::settingsGet()->useWebsocketsGet();
@@ -218,6 +226,7 @@ QCoro::Task<void> Weechat::onHandshakeAccepted(StringMap data) {
     }
 
     m_initializationStatus = (Initialization) (m_initializationStatus | HANDSHAKE);
+    m_passwordAttempts++;
 
     m_connection->write(QString("init"), QString(), hashString);
     m_connection->write(
@@ -283,13 +292,16 @@ void Weechat::onDisconnected() {
     m_bytesRemaining = 0;
     m_hotlistTimer->stop();
 
-    if (m_initializationStatus != COMPLETE && m_initializationStatus | HANDSHAKE) {
-        lith()->log(Logger::Protocol, QString("Authentication failed."));
-        lith()->statusSet(Lith::ERROR);
-        lith()->errorStringSet(tr("Authentication failed with remote host. Please check your login credentials"));
-        m_initializationStatus = UNINITIALIZED;
-        m_reconnectTimer->stop();
-        return;
+    if (m_initializationStatus == UNTIL_HANDSHAKE) {
+        lith()->log(Logger::Protocol, QStringLiteral("Authentication failed, attempt number %1.").arg(m_passwordAttempts));
+        if (m_passwordAttempts == 3) {
+            lith()->statusSet(Lith::ERROR);
+            lith()->errorStringSet(tr("Authentication failed with remote host. Please check your login credentials"));
+            m_initializationStatus = UNINITIALIZED;
+            m_reconnectTimer->stop();
+            m_passwordAttempts = 0;
+            return;
+        }
     }
 
     lith()->log(Logger::Protocol, QString("WeeChat connection lost, will reconnect in %1ms").arg(m_reconnectTimer->interval() * 2));
@@ -351,6 +363,7 @@ void Weechat::onMessageReceived(QByteArray& data) {
                 lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
             }
             if (m_initializationStatus & COMPLETE) {
+                m_passwordAttempts = 0;
                 m_reconnectTimer->setInterval(100);
             }
         } else {

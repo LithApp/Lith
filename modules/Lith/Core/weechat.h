@@ -56,13 +56,15 @@ public:
         REQUEST_FIRST_LINE = 1 << 3,
         REQUEST_HOTLIST = 1 << 4,
         REQUEST_NICKLIST = 1 << 5,
-        COMPLETE = CONNECTION_OPENED | HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST
+        COMPLETE = CONNECTION_OPENED | HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST,
+        UNTIL_HANDSHAKE = CONNECTION_OPENED | HANDSHAKE,
     };
 
 public slots:
     void init();
 
     void start();
+    void userRequestedRestart();
     void restart();
 
     bool input(pointer_t ptr, const QString& data);
@@ -102,6 +104,7 @@ private:
 
     qint64 m_messageOrder {0};
     qint64 m_lastReceivedPong {0};
+    int m_passwordAttempts {0};
 
     Lith* m_lith;
 };
