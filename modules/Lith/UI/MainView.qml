@@ -143,6 +143,7 @@ Item {
             BufferList {
                 id: bufferList
                 anchors.fill: parent
+                anchors.margins: -0.5
                 channelHeaderRowHeight: channelView.headerImplicitHeight
                 onClose: {
                     if (!WindowHelper.landscapeMode)
