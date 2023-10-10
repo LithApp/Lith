@@ -168,6 +168,9 @@ jobs:
         export ANDROID_SDK=${ANDROID_SDK_ROOT}
         export CPM_SOURCE_CACHE=~/cpm-cache
         export ANDROID_OPENSSL_PATH="$PWD/android_openssl/ssl_3"
+        export ANDROID_NDK="${ANDROID_NDK_LATEST_HOME}"
+        export ANDROID_NDK_HOME="${ANDROID_NDK_LATEST_HOME}"
+        export ANDROID_NDK_ROOT="${ANDROID_NDK_LATEST_HOME}"
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/android/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'

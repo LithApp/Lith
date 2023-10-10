@@ -25,9 +25,6 @@ qt_add_qml_module(Lith
 )
 qt_import_qml_plugins(Lith)
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    qt_android_generate_deployment_settings(LithStyleplugin)
-    qt_android_generate_deployment_settings(Lith)
-    qt_android_add_apk_target(Lith)
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     target_link_libraries(Lith PRIVATE
