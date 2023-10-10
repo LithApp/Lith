@@ -435,7 +435,10 @@ jobs:
         # A workaround mentioned here https://github.com/actions/runner-images/issues/7522
         echo killing...; sudo pkill -9 XProtect >/dev/null || true;
         echo waiting...; while pgrep XProtect; do sleep 3; done;
-        "$Qt6_DIR"/bin/macdeployqt build_macos/app/Lith.app -qmldir=. -dmg -appstore-compliant #-codesign=Z52EFCPL6D
+        "$Qt6_DIR"/bin/macdeployqt build_macos/app/Lith.app -qmldir=modules -appstore-compliant #-codesign=Z52EFCPL6D
+        # No idea why but macdeployqt deploys debug libs too, just remove them, maybe fix this sometimes
+        for i in `find build_macos/app/Lith.app/ -name '*.dSYM'`; do rm -fr "$i"; done
+        "$Qt6_DIR"/bin/macdeployqt build_macos/app/Lith.app -no-plugins -dmg -always-overwrite -appstore-compliant
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v2
