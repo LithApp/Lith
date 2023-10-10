@@ -432,6 +432,9 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
     - name: Generate .dmg
       run: |
+        # A workaround mentioned here https://github.com/actions/runner-images/issues/7522
+        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
+        echo waiting...; while pgrep XProtect; do sleep 3; done;
         "$Qt6_DIR"/bin/macdeployqt build_macos/app/Lith.app -qmldir=. -dmg -appstore-compliant #-codesign=Z52EFCPL6D
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
