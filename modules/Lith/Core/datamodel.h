@@ -46,7 +46,7 @@ class LITHCORE_EXPORT Nick : public QObject {
     PROPERTY(int, level)
     PROPERTY(FormattedString, name)
     PROPERTY(FormattedString, color)
-    PROPERTY(QString, prefix)
+    PROPERTY(FormattedString, prefix)
     PROPERTY(FormattedString, prefix_color)
 
     PROPERTY(pointer_t, ptr)

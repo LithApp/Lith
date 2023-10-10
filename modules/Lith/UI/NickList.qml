@@ -195,7 +195,7 @@ Drawer {
                 width: ListView.view.width
                 visible: modelData.visible && modelData.level === 0
                 height: visible ? implicitHeight : 0
-                text: (modelData.prefix === " " ? "" : modelData.prefix) + modelData.name
+                text: (modelData.prefix.toPlain() === " " ? "" : modelData.prefix.toPlain()) + modelData.name.toPlain()
                 textFormat: Label.RichText
                 onClicked: {
                     nickListView.currentIndex = index
