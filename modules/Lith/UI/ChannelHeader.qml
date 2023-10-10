@@ -111,7 +111,6 @@ Rectangle {
                 Layout.alignment: Layout.Top
                 color: LithPalette.regular.text
                 visible: !Lith.selectedBuffer || Lith.selectedBuffer.title.length > 0
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 text: Lith.selectedBuffer ? Lith.selectedBuffer.title.toPlain() :
                       Lith.status === Lith.UNCONFIGURED ? "Not configured" :
                       Lith.status === Lith.CONNECTING ? "Connecting" :
@@ -120,8 +119,9 @@ Rectangle {
                       Lith.status === Lith.ERROR ? "Error: " + Lith.errorString :
                       Lith.status === Lith.REPLAY ? "Replaying a recording" :
                                                    ""
-                textFormat: Label.RichText
-                elide: Text.ElideRight
+                textFormat: Label.PlainText
+                elide: Label.ElideRight
+                wrapMode: Label.Wrap
                 maximumLineCount: 2
                 font.pointSize: FontSizes.tiny
                 horizontalAlignment: Text.AlignHCenter
