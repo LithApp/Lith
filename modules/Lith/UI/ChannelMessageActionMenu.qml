@@ -61,89 +61,53 @@ Dialog {
         x: 1
 
         ColumnLayout {
-            Layout.minimumWidth: 300
             Layout.fillWidth: true
             spacing: 16
 
             Button {
+                id: button1
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 1.5 * implicitHeight
                 Layout.topMargin: 16
                 flat: true
 
-                Label {
-                    id: label1
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        margins: 6
-                        verticalCenter: parent.verticalCenter
-                    }
-                    maximumLineCount: 2
-                    elide: Text.ElideRight
-                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), Lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
-                }
-
                 visible: !(nickname == "")
+                text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), Lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
-                    ClipboardProxy.setText(label1.text)
+                    ClipboardProxy.setText(button1.text)
                 }
             }
             Button {
+                id: button2
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 1.5 * implicitHeight
                 flat: true
 
                 visible: !(nickname == "")
-
-                Label {
-                    id: label2
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        margins: 6
-                        verticalCenter: parent.verticalCenter
-                    }
-                    maximumLineCount: 2
-                    elide: Text.ElideRight
-                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    text: "<" + nickname + "> " + message
-                }
+                text: "<" + nickname + "> " + message
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
-                    ClipboardProxy.setText(label2.text)
+                    ClipboardProxy.setText(button2.text)
                 }
             }
             Button {
+                id: button3
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 1.5 * implicitHeight
                 Layout.bottomMargin: 16
                 flat: true
+                text: message
 
-                Label {
-                    id: label3
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        margins: 6
-                        verticalCenter: parent.verticalCenter
-                    }
-                    maximumLineCount: 2
-                    elide: Text.ElideRight
-                    wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    text: message
-                }
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
-                    ClipboardProxy.setText(label3.text)
+                    ClipboardProxy.setText(button3.text)
                 }
             }
         }
