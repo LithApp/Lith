@@ -37,6 +37,7 @@ qt_import_qml_plugins(LithStyle)
 target_link_libraries(LithStyle PRIVATE
     LithCore
     QCoro6::Coro
+    QCoro6::Core
     Qt6::Gui
     Qt6::Quick
     Qt::QuickControls2
