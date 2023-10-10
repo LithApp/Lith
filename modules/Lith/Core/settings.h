@@ -68,12 +68,14 @@ class LITHCORE_EXPORT Settings : public QObject {
     static inline const QStringList c_hotlistDefaultFormat {"%1: %2/%3", "short_name", "hotMessages", "unreadMessages"};
 
     SETTING(int, lastOpenBuffer, -1)
+// TODO revisit this, it's really really awkward to have different defaults for both font size and face
 #if defined(Q_OS_MACOS)
     SETTING(QString, baseFontFamily, "Menlo")
+    SETTING(qreal, baseFontSize, 13)
 #else
     SETTING(QString, baseFontFamily, "Inconsolata")
+    SETTING(qreal, baseFontSize, 11)
 #endif
-    SETTING(qreal, baseFontSize, 10)
     SETTING(bool, shortenLongUrls, true)
     SETTING(int, shortenLongUrlsThreshold, 50)
     SETTING(int, nickCutoffThreshold, -1)
