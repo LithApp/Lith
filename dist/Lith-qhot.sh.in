@@ -2,4 +2,4 @@
 
 export QT_ASSUME_STDERR_HAS_CONSOLE=1
 
-"@qhot_FULL_BINARY_PATH@" --profile-path "@CMAKE_SOURCE_DIR@/dist/qhot-profile.json" "@CMAKE_SOURCE_DIR@//modules/Lith/UI/MainView.qml"
+"@qhot_FULL_BINARY_PATH@" --profile-path "@CMAKE_SOURCE_DIR@/dist/qhot-profile.json" "@CMAKE_SOURCE_DIR@/modules/Lith/UI/MainView.qml"

@@ -190,7 +190,11 @@ if (LITH_FEATURE_QHOT)
             FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
         )
     else()
-        set(qhot_FULL_BINARY_PATH "${qhot_BINARY_DIR}/${qhot_NAME}")
+        if (APPLE)
+            set(qhot_FULL_BINARY_PATH "${qhot_BINARY_DIR}/${qhot_NAME}.app/Contents/MacOS/${qhot_NAME}")
+        else()
+            set(qhot_FULL_BINARY_PATH "${qhot_BINARY_DIR}/${qhot_NAME}")
+        endif()
         set_target_properties(Lith-qhot PROPERTIES
             LINKER_LANGUAGE NONE
             OUTPUT_NAME Lith-qhot.sh
