@@ -60,8 +60,6 @@ T.Switch {
         }
         Behavior on startColor { ColorAnimation { duration: 100 } }
         Behavior on endColor { ColorAnimation { duration: 100 } }
-        Behavior on startColor { ColorAnimation { duration: 100 } }
-        Behavior on endColor { ColorAnimation { duration: 100 } }
         gradient: Gradient {
             GradientStop { position: 0.0; color: backgroundRect.startColor }
             GradientStop { position: 0.6; color: backgroundRect.endColor }
