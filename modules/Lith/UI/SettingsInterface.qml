@@ -180,8 +180,14 @@ ScrollView {
             Fields.IntSpinBox {
                 id: messageSpacingSpinbox
                 summary: qsTr("Message spacing")
+                details: value < -5 ? qsTr("But why?") : ""
                 value: Lith.settings.messageSpacing
-                from: -to
+                from: 1 - fontMetrics.ascent
+                FontMetrics {
+                    id: fontMetrics
+                    font.family: Lith.settings.baseFontFamily
+                    font.pointSize: Lith.settings.baseFontSize
+                }
             }
 
             ////////////////////////// GENERAL

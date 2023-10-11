@@ -132,6 +132,8 @@ Item {
 
     Rectangle {
         anchors.fill: terminalLineLayout
+        // Nobody's probably ever gonna use this but if you have large negative spacing for whatever reason, this prevents higlights from covering other messages
+        anchors.bottomMargin: Lith.settings.messageSpacing < 0 ? -Lith.settings.messageSpacing : 0
         color: messageModel.highlight ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.5) : isHighlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window,  0.1) : "transparent"
         border {
             color: LithPalette.regular.highlight
