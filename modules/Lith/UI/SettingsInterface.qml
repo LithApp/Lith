@@ -45,8 +45,8 @@ ScrollView {
         Lith.settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
         Lith.settings.openLinksDirectlyInBrowser = openLinksDirectlyInBrowserSwitch.checked
         Lith.settings.scrollbarsOverlayContents = scrollbarsOverlayContentsCheckbox.checked
-        Lith.settings.forceLightTheme = forceLightThemeCheckbox.checked
-        Lith.settings.forceDarkTheme = forceDarkThemeCheckbox.checked
+        Lith.settings.forceLightTheme = colorSchemeRadioList.currentIndex === 1
+        Lith.settings.forceDarkTheme = colorSchemeRadioList.currentIndex === 2
         Lith.settings.useTrueBlackWithDarkTheme = useTrueBlackWithDarkThemeCheckbox.checked
         Lith.settings.hotlistEnabled = hotlistEnabledCheckbox.checked
         Lith.settings.hotlistCompact = hotlistCompactCheckbox.checked
@@ -76,8 +76,7 @@ ScrollView {
         openLinksDirectlyCheckbox.checked = Lith.settings.openLinksDirectly
         openLinksDirectlyInBrowserSwitch.checked = Lith.settings.openLinksDirectlyInBrowser
         scrollbarsOverlayContentsCheckbox.checked = Lith.settings.scrollbarsOverlayContents
-        forceLightThemeCheckbox.checked = Lith.settings.forceLightTheme
-        forceDarkThemeCheckbox.checked = Lith.settings.forceDarkTheme
+        colorSchemeRadioList.currentIndex = Lith.settings.forceLightTheme ? 1 : Lith.settings.forceDarkTheme ? 2 : 0
         useTrueBlackWithDarkThemeCheckbox.checked = Lith.settings.useTrueBlackWithDarkTheme
         hotlistEnabledCheckbox.checked = Lith.settings.hotlistEnabled
         hotlistCompactCheckbox.checked = Lith.settings.hotlistCompact
@@ -202,24 +201,11 @@ ScrollView {
                 text: qsTr("Color theme")
             }
 
-            Fields.Boolean {
-                id: forceLightThemeCheckbox
-                summary: qsTr("Force light theme")
-                checked: Lith.settings.forceLightTheme
-                onCheckedChanged: {
-                    if (checked)
-                        forceDarkThemeCheckbox.checked = false
-                }
-            }
-
-            Fields.Boolean {
-                id: forceDarkThemeCheckbox
-                summary: qsTr("Force dark theme")
-                checked: Lith.settings.forceDarkTheme
-                onCheckedChanged: {
-                    if (checked)
-                        forceLightThemeCheckbox.checked = false
-                }
+            Fields.RadioList {
+                id: colorSchemeRadioList
+                summary: qsTr("Color scheme")
+                model: [qsTr("System default", "color scheme"), qsTr("Light", "color scheme"), qsTr("Dark", "color scheme")]
+                currentIndex: Lith.settings.forceLightTheme ? 1 : Lith.settings.forceDarkTheme ? 2 : 0
             }
 
             Fields.Boolean {

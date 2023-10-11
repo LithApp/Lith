@@ -30,6 +30,7 @@ set(LITH_QML
     SettingsFields/IntSpinBox.qml
     SettingsFields/Integer.qml
     SettingsFields/MultiLineString.qml
+    SettingsFields/RadioList.qml
     SettingsFields/String.qml
     SettingsHotlistFormatEditor.qml
     SettingsInterface.qml

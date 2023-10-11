@@ -8,6 +8,7 @@ set(LITHSTYLE_QML
     Label.qml
     LithPalette.qml
     Popup.qml
+    RadioButton.qml
     ScrollBar.qml
     SpinBox.qml
     Switch.qml

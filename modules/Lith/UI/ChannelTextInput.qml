@@ -41,7 +41,7 @@ TextField {
 
     onAccepted: {
         if (text.length > 0) {
-            if (Lith.selectedBuffer.input(text)) {
+            if (Lith.selectedBuffer.userInput(text)) {
                 text = ""
             }
         }

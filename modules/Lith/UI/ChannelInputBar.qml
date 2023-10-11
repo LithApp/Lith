@@ -135,7 +135,7 @@ Rectangle {
             ToolTip.delay: 800
             onClicked: {
                 if (channelTextInput.text.length > 0) {
-                    Lith.selectedBuffer.input(channelTextInput.text)
+                    Lith.selectedBuffer.userInput(channelTextInput.text)
                     channelTextInput.text = ""
                 }
             }
