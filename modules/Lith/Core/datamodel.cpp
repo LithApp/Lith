@@ -196,15 +196,7 @@ int Buffer::totalUnreadMessagesGet() const {
     return hotMessagesGet() + unreadMessagesGet();
 }
 
-MessageFilterList* Buffer::lines_filtered() {
-    return m_proxyLinesFiltered;
-}
-
-bool Buffer::input(const QString& data) const {
-    if (!m_ptr) {
-        return false;
-    }
-
+bool Buffer::userInput(const QString& data) {
     static QRegularExpression inputRegularExpression("\n|\r\n|\r");
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
         bool success = false;
@@ -213,15 +205,32 @@ bool Buffer::input(const QString& data) const {
         auto data_split = data.split(inputRegularExpression);
 
         for (auto& data_single_line : data_split) {
-            QMetaObject::invokeMethod(
-                Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr),
-                Q_ARG(QString, data_single_line)
-            );
-            success_list.append(success);
+            success_list << rawInput(data_single_line.toUtf8());
         }
+
+        clearHotlist();
+
         return !success_list.contains(false);
     }
     return false;
+}
+
+MessageFilterList* Buffer::lines_filtered() {
+    return m_proxyLinesFiltered;
+}
+
+bool Buffer::rawInput(const QByteArray& data) const {
+    if (!m_ptr) {
+        return false;
+    }
+
+    bool success = false;
+    QMetaObject::invokeMethod(
+        Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr),
+        Q_ARG(QByteArray, data)
+    );
+
+    return success;
 }
 
 void Buffer::fetchMoreLines() {
@@ -237,7 +246,7 @@ void Buffer::fetchMoreLines() {
 }
 
 void Buffer::clearHotlist() {
-    input("/buffer set hotlist -1");
+    rawInput(QByteArrayLiteral("/buffer set hotlist -1"));
     unreadMessagesSet(0);
     hotMessagesSet(0);
 }

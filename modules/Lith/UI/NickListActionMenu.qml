@@ -84,7 +84,7 @@ Dialog {
                     Layout.margins: 9
                     text: name
                     onClicked: {
-                        Lith.selectedBuffer.input("/" + operation + " " + nickname)
+                        Lith.selectedBuffer.userInput("/" + operation + " " + nickname)
                         nickListActionMenuDialog.close()
                         nickDrawer.close()
                     }

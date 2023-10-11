@@ -67,7 +67,7 @@ public slots:
     void userRequestedRestart();
     void restart();
 
-    bool input(pointer_t ptr, const QString& data);
+    bool input(pointer_t ptr, const QByteArray& data);
     void fetchLines(pointer_t ptr, int count);
 
 private slots:

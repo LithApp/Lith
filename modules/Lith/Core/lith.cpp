@@ -405,6 +405,8 @@ void Lith::handleFetchLines(const WeeChatProtocol::HData& hda) {
 }
 
 void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
+    // Server only sends entries for buffers that have a hotlist, others need to be cleared
+    QSet<QSharedPointer<HotListItem>> done;
     for (const auto& i : hda.data) {
         // hotlist
         auto hlPtr = i.pointers.first();
@@ -426,6 +428,12 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
                 continue;
             }
             hl->setProperty(qPrintable(key), value);
+        }
+        done.insert(hl);
+    }
+    for (auto& i : m_hotList) {
+        if (!done.contains(i)) {
+            i->countSet({});
         }
     }
     emit hotlistUpdated();

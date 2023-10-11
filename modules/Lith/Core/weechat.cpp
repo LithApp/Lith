@@ -115,7 +115,7 @@ void Weechat::init() {
     // connect(m_timeoutTimer, &QTimer::timeout, this, &Weechat::onTimeout, Qt::QueuedConnection);
 
     connect(m_hotlistTimer, &QTimer::timeout, this, &Weechat::requestHotlist, Qt::QueuedConnection);
-    m_hotlistTimer->setInterval(10000);
+    m_hotlistTimer->setInterval(2500);
     m_hotlistTimer->setSingleShot(false);
 
     connect(Lith::settingsGet(), &Settings::readyChanged, this, &Weechat::onConnectionSettingsChanged, Qt::QueuedConnection);
@@ -322,9 +322,12 @@ void Weechat::onError(const QString& message) {
     lith()->networkErrorStringSet("Connection failed: " + message);
 }
 
-bool Weechat::input(pointer_t ptr, const QString& data) {
+bool Weechat::input(pointer_t ptr, const QByteArray& data) {
     // server doesn't reply to input commands directly so no message order here
-    return m_connection->write(QString("input"), QString(), QString("0x%1 %2\n").arg(ptr, 0, 16).arg(data));
+    return m_connection->write(
+        QByteArrayLiteral("input"), QByteArray(),
+        QByteArrayLiteral("0x") + QByteArray::number(ptr, 16) + QByteArrayLiteral(" ") + data + QByteArrayLiteral("\n")
+    );
 }
 
 void Weechat::fetchLines(pointer_t ptr, int count) {

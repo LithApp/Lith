@@ -129,7 +129,8 @@ signals:
     void ptrChanged();
 
 public slots:
-    bool input(const QString& data) const;
+    bool userInput(const QString& data);
+    bool rawInput(const QByteArray& data) const;
     void fetchMoreLines();
     void clearHotlist();
 
