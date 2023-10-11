@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     engine.addImportPath(QStringLiteral("../modules"));
 
     // Initialize UI helpers and fonts
-    WindowHelper::instance()->init();
+    WindowHelper::instance();
     Settings::instance();
     Lith::instance();
     auto fontFamilyFromSettings = Lith::settingsGet()->baseFontFamilyGet();

@@ -91,20 +91,21 @@ void WindowHelper::updateSafeAreaMargins(QQuickWindow* window) {
     m_safeAreaMargins->setMargins(margins);
 }
 
-bool WindowHelper::detectSystemDarkStyle() {
+void WindowHelper::detectSystemDarkStyle() {
 #if WIN32
     QSettings registry("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
     auto value = registry.value("AppsUseLightTheme");
     if (value.isValid() && value.canConvert<int>()) {
-        return !value.toInt();
+        m_systemPrefersDarkStyle = !value.toInt();
+    } else {
+        m_systemPrefersDarkStyle = false;
     }
-    return false;
 #else
     const QColor textColor = QGuiApplication::palette().color(QPalette::Text);
-    return qSqrt(
-               ((textColor.red() * textColor.red()) * 0.299) + ((textColor.green() * textColor.green()) * 0.587) +
-               ((textColor.blue() * textColor.blue()) * 0.114)
-           ) > 128;
+    m_systemPrefersDarkStyle = qSqrt(
+                                   ((textColor.red() * textColor.red()) * 0.299) + ((textColor.green() * textColor.green()) * 0.587) +
+                                   ((textColor.blue() * textColor.blue()) * 0.114)
+                               ) > 128;
 #endif
 }
 

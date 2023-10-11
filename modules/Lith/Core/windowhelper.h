@@ -37,8 +37,6 @@ public:
         return instance();
     }
 
-    void init();
-
     bool lightThemeGet() const {
         return !darkThemeGet();
     }
@@ -51,14 +49,21 @@ public:
 public slots:
     void updateSafeAreaMargins(QQuickWindow* window);
 
+private slots:
+    void init();
+    void prepareToChangeScheme();
+    void changeScheme();
+
 signals:
     void themeChanged();
 
 private:
     explicit WindowHelper();
-    static bool detectSystemDarkStyle();
+    void detectSystemDarkStyle();
 
     SafeAreaMargins* m_safeAreaMargins = nullptr;
+    QTimer* m_changeSchemeTimer = nullptr;
+    bool m_systemPrefersDarkStyle = false;
 };
 
 #endif  // WINDOWHELPER_H
