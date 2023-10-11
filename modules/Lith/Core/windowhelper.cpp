@@ -12,9 +12,14 @@
 
 WindowHelper::WindowHelper()
     : QObject()
-    , m_safeAreaMargins(new SafeAreaMargins(this)) {
+    , m_safeAreaMargins(new SafeAreaMargins(this))
+    , m_changeSchemeTimer(new QTimer(this)) {
     connect(this, &WindowHelper::darkThemeChanged, this, &WindowHelper::themeChanged);
     connect(this, &WindowHelper::useBlackChanged, this, &WindowHelper::themeChanged);
+
+    m_changeSchemeTimer->setInterval(50);
+    m_changeSchemeTimer->setSingleShot(true);
+    connect(m_changeSchemeTimer, &QTimer::timeout, this, &WindowHelper::changeScheme);
 
     QTimer::singleShot(0, this, &WindowHelper::init);
 }
@@ -28,12 +33,25 @@ WindowHelper* WindowHelper::instance() {
 }
 
 void WindowHelper::init() {
+    detectSystemDarkStyle();
+    changeScheme();
+
+    connect(Settings::instance(), &Settings::forceDarkThemeChanged, this, &WindowHelper::prepareToChangeScheme);
+    connect(Settings::instance(), &Settings::forceLightThemeChanged, this, &WindowHelper::prepareToChangeScheme);
+    connect(Settings::instance(), &Settings::useTrueBlackWithDarkThemeChanged, this, &WindowHelper::prepareToChangeScheme);
+}
+
+void WindowHelper::prepareToChangeScheme() {
+    m_changeSchemeTimer->start();
+}
+
+void WindowHelper::changeScheme() {
     if (Lith::settingsGet()->forceDarkThemeGet()) {
         m_darkTheme = true;
     } else if (Lith::settingsGet()->forceLightThemeGet()) {
         m_darkTheme = false;
     } else {
-        m_darkTheme = detectSystemDarkStyle();
+        m_darkTheme = m_systemPrefersDarkStyle;
     }
     emit darkThemeChanged();
     if (m_darkTheme) {
@@ -41,10 +59,6 @@ void WindowHelper::init() {
     }
 
     qApp->setPalette(currentTheme().palette());
-
-    connect(Lith::settingsGet(), &Settings::forceDarkThemeChanged, this, &WindowHelper::init);
-    connect(Lith::settingsGet(), &Settings::forceLightThemeChanged, this, &WindowHelper::init);
-    connect(Lith::settingsGet(), &Settings::useTrueBlackWithDarkThemeChanged, this, &WindowHelper::init);
 }
 
 const ColorTheme& WindowHelper::currentTheme() const {
