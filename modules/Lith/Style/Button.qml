@@ -75,7 +75,7 @@ T.Button {
 
     background: Rectangle {
         id: backgroundRect
-        radius: 3
+        radius: 3  // TODO make this a constant
         border.color: ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
         border.width:  control.flat ? 0 : 0.5
         readonly property real themeQuotient: WindowHelper.lightTheme ? 0.0 : WindowHelper.useBlack ? 0.5 : 0.5

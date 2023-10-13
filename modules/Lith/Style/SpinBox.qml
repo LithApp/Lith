@@ -1,6 +1,10 @@
 import QtQuick
 import QtQuick.Templates as T
 
+import Lith.UI
+import Lith.Style
+import Lith.Core
+
 T.SpinBox {
     id: control
 
@@ -23,11 +27,11 @@ T.SpinBox {
     }
 
     contentItem: TextField {
-        z: 2
         text: control.displayText
         clip: width < implicitWidth
         padding: 6
 
+        borderColor: backgroundColor
         font: control.font
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
@@ -38,6 +42,7 @@ T.SpinBox {
     }
 
     up.indicator: Button {
+        z: 1
         x: control.mirrored ? 0 : control.width - width
         height: control.height
         implicitWidth: 40
@@ -47,6 +52,7 @@ T.SpinBox {
     }
 
     down.indicator: Button {
+        z: 1
         x: control.mirrored ? parent.width - width : 0
         height: control.height
         implicitWidth: 40
@@ -57,7 +63,15 @@ T.SpinBox {
 
     background: Rectangle {
         implicitWidth: 140
-        color: enabled ? control.LithPalette.regular.base : control.LithPalette.regular.button
-        border.color: control.LithPalette.regular.button
+        z: 2
+        color: "transparent"
+        radius: 3 // TODO make this a constant, should be same value as in Button
+        border.color: {
+            if (control.activeFocus)
+                return LithPalette.regular.midlight
+            return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
+        }
+        //color: enabled ? control.LithPalette.regular.base : control.LithPalette.regular.button
+        //border.color: control.LithPalette.regular.button
     }
 }
