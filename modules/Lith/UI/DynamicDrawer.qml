@@ -3,7 +3,7 @@ import QtQuick
 import Lith.Core
 import Lith.Style
 
-Rectangle {
+Item {
     id: drawer
     default property alias contents: contentArea.children
     readonly property bool isClosed: position === 0.0
