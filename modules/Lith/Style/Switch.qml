@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Templates as T
 
 import Lith.Core
+import Lith.Style
+import Lith.UI
 
 T.Switch {
     id: control
@@ -15,7 +17,7 @@ T.Switch {
     property color onColor: LithPalette.regular.highlight
     property color offColor: LithPalette.regular.window
 
-    font.pointSize: Lith.settings.baseFontSize
+    font.pixelSize: FontSizes.regular
 
     indicator: Rectangle {
         id: backgroundRect

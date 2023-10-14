@@ -5,29 +5,44 @@
 
 FontSizes::FontSizes(QObject* parent)
     : m_settings(Lith::settingsGet()) {
-    connect(m_settings, &Settings::baseFontSizeChanged, this, &FontSizes::fontSizesChanged);
+    connect(m_settings, &Settings::baseFontPixelSizeChanged, this, &FontSizes::fontSizesChanged);
+    connect(m_settings, &Settings::useBaseFontPixelSizeForMessagesChanged, this, &FontSizes::messageChanged);
+    connect(m_settings, &Settings::messageFontPixelSizeChanged, this, &FontSizes::messageChanged);
+    connect(this, &FontSizes::fontSizesChanged, this, [this]() {
+        if (m_settings->useBaseFontPixelSizeForMessagesGet()) {
+            emit messageChanged();
+        }
+    });
 }
 
-qreal FontSizes::tiny() const {
-    return 0.75 * m_settings->baseFontSizeGet();
+int FontSizes::tiny() const {
+    return 0.75 * m_settings->baseFontPixelSizeGet();
 }
 
-qreal FontSizes::small() const {
-    return 0.875 * m_settings->baseFontSizeGet();
+int FontSizes::small() const {
+    return 0.875 * m_settings->baseFontPixelSizeGet();
 }
 
-qreal FontSizes::regular() const {
-    return 1.0 * m_settings->baseFontSizeGet();
+int FontSizes::regular() const {
+    return m_settings->baseFontPixelSizeGet();
 }
 
-qreal FontSizes::medium() const {
-    return 1.125 * m_settings->baseFontSizeGet();
+int FontSizes::medium() const {
+    return 1.125 * m_settings->baseFontPixelSizeGet();
 }
 
-qreal FontSizes::large() const {
-    return 1.25 * m_settings->baseFontSizeGet();
+int FontSizes::large() const {
+    return 1.25 * m_settings->baseFontPixelSizeGet();
 }
 
-qreal FontSizes::header() const {
-    return 1.375 * m_settings->baseFontSizeGet();
+int FontSizes::header() const {
+    return 1.375 * m_settings->baseFontPixelSizeGet();
+}
+
+int FontSizes::message() const {
+    if (m_settings->useBaseFontPixelSizeForMessagesGet()) {
+        return regular();
+    } else {
+        return m_settings->messageFontPixelSizeGet();
+    }
 }

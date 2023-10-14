@@ -309,7 +309,7 @@ Dialog {
                         wrapMode: Label.WrapAtWordBoundaryOrAnywhere
                         text: qsTr("How to use this editor")
                         horizontalAlignment: Label.AlignHCenter
-                        font.pointSize: FontSizes.medium
+                        font.pixelSize: FontSizes.medium
                     }
                     Label {
                         Layout.fillWidth: true

@@ -12,8 +12,7 @@ Rectangle {
     property bool hot: false
 
     property real layoutSpacing
-    readonly property real textSize: theLabel.font.pointSize
-    readonly property int labelType: Lith.settings.hotlistCompact ? Label.Small : Label.Regular
+    readonly property real textSize: Lith.settings.hotlistCompact ? FontSizes.small : FontSizes.regular
     readonly property real padding: Lith.settings.hotlistCompact ? 8 : 16
 
     signal clicked
@@ -29,7 +28,6 @@ Rectangle {
         spacing: Lith.settings.hotlistCompact ? 1 : 3
         Label {
             id: theLabel
-            size: root.labelType
             font.bold: true
             color: hot ? LithPalette.regular.highlightedText : LithPalette.regular.window
         }

@@ -91,14 +91,12 @@ int main(int argc, char* argv[]) {
     QFont font("Inconsolata");
 #endif
     if (fontFamilyFromSettings.length() != 0) {  // fontFamilyFromSettings could be NULL (unlikely) or empty (not so unlikely)
-        font = QFont(fontFamilyFromSettings
-        );  // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
+        // if the font doesn't exist, it doesn't matter atm, Qt fallsback to a monospace font on our behalf
+        font = QFont(fontFamilyFromSettings);
     }
-    font.setKerning(false);
-    font.setHintingPreference(QFont::PreferNoHinting);
     font.setStyleHint(QFont::Monospace);
+    font.setPixelSize(Settings::instance()->baseFontPixelSizeGet());
     app.setFont(font);
-    app.setFont(font, "monospace");
 
     // Start the engine
     engine.load(QUrl(QLatin1String("qrc:/qt/qml/App/main.qml")));

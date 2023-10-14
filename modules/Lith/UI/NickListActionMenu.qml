@@ -41,7 +41,7 @@ Dialog {
         id: nickActionNicknameText
         text: nickname
         horizontalAlignment: Qt.AlignCenter
-        font.pointSize: FontSizes.medium
+        font.pixelSize: FontSizes.medium
         font.bold: true
     }
 

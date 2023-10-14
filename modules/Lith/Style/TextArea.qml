@@ -18,7 +18,7 @@ T.TextArea {
     placeholderTextColor: LithPalette.disabled.text
     verticalAlignment: Text.AlignVCenter
 
-    font.pointSize: Lith.settings.baseFontSize
+    font.pixelSize: FontSizes.regular
 
     property color borderColor: "transparent"
     property color backgroundColor: "transparent"
@@ -52,7 +52,7 @@ T.TextArea {
             horizontalAlignment: control.horizontalAlignment
             leftPadding: control.leftPadding
             rightPadding: control.rightPadding
-            font.pointSize: control.font.pointSize
+            font.pixelSize: control.font.pixelSize
             color: control.placeholderTextColor
             text: control.placeholderText
         }

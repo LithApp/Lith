@@ -71,7 +71,7 @@ Drawer {
             Layout.fillWidth: true
             text: Lith.selectedBuffer ? Lith.selectedBuffer.full_name : ""
             textFormat: Label.RichText
-            font.pointSize: FontSizes.medium
+            font.pixelSize: FontSizes.medium
             color: LithPalette.regular.windowText
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
@@ -106,7 +106,7 @@ Drawer {
                                         .arg(Lith.selectedBuffer.ops)
                                         .arg(Lith.selectedBuffer.normals + Lith.selectedBuffer.voices + Lith.selectedBuffer.ops) : ""
             textFormat: Label.RichText
-            font.pointSize: FontSizes.tiny
+            font.pixelSize: FontSizes.tiny
             color: LithPalette.disabled.text
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         }
@@ -121,13 +121,13 @@ Drawer {
             Label {
                 Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                font.pointSize: FontSizes.tiny
+                font.pixelSize: FontSizes.tiny
                 text: "Number: " + (Lith.selectedBuffer ? Lith.selectedBuffer.number : "N/A")
             }
             Label {
                 Layout.fillWidth: true
                 wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                font.pointSize: FontSizes.tiny
+                font.pixelSize: FontSizes.tiny
                 text: "Pointer: " + (Lith.selectedBuffer ? "0x" + Lith.selectedBuffer.ptr.toString(16) : "N/A")
             }
             Repeater {
@@ -135,7 +135,7 @@ Drawer {
                 Label {
                     Layout.fillWidth: true
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    font.pointSize: FontSizes.tiny
+                    font.pixelSize: FontSizes.tiny
                     text: modelData
                 }
             }

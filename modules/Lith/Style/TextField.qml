@@ -18,7 +18,7 @@ T.TextField {
     placeholderTextColor: LithPalette.disabled.text
     verticalAlignment: Text.AlignVCenter
 
-    font.pointSize: Lith.settings.baseFontSize
+    font.pixelSize: FontSizes.regular
 
     property color borderColor: "transparent"
     property color backgroundColor: ColorUtils.mixColors(LithPalette.regular.window, LithPalette.regular.base, control.enabled ? 0.5 : 0.95)
@@ -50,7 +50,7 @@ T.TextField {
             horizontalAlignment: control.horizontalAlignment
             leftPadding: control.leftPadding
             rightPadding: control.rightPadding
-            font.pointSize: control.font.pointSize
+            font.pixelSize: control.font.pixelSize
             color: control.placeholderTextColor
             text: control.placeholderText
         }

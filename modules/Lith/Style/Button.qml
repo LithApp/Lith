@@ -21,7 +21,7 @@ T.Button {
     icon.width: 32
     icon.height: 32
 
-    font.pointSize: Lith.settings.baseFontSize
+    font.pixelSize: FontSizes.regular
 
     contentItem: Item {
 

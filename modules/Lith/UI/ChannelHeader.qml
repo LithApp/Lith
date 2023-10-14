@@ -123,7 +123,7 @@ Rectangle {
                 elide: Label.ElideRight
                 wrapMode: Label.Wrap
                 maximumLineCount: 2
-                font.pointSize: FontSizes.tiny
+                font.pixelSize: FontSizes.tiny
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 onLinkActivated: {

@@ -120,6 +120,7 @@ Item {
         visible: text.length > 0
         width: parent.width
         horizontalAlignment: Label.AlignHCenter
+        font.pixelSize: FontSizes.message
         topPadding: 3
         bottomPadding: 3
         Rectangle {
@@ -152,6 +153,7 @@ Item {
             spacing: 0
             Label {
                 Layout.alignment: Qt.AlignTop
+                font.pixelSize: FontSizes.message
                 text: messageModel.date.toLocaleString(Qt.locale(), Lith.settings.timestampFormat) + "\u00A0"
                 color: LithPalette.disabled.text
                 textFormat: Text.RichText
@@ -161,6 +163,7 @@ Item {
             Label {
                 id: nickLabel
                 Layout.alignment: Qt.AlignTop
+                font.pixelSize: FontSizes.message
                 font.bold: true
                 visible: Lith.settings.nickCutoffThreshold !== 0
                 text: messageModel.prefix.toTrimmedHtml(Lith.settings.nickCutoffThreshold) + "\u00A0"
@@ -177,6 +180,7 @@ Item {
                     id: messageText
                     text: messageModel.message
                     Layout.fillWidth: true
+                    font.pixelSize: FontSizes.message
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     color: LithPalette.regular.text
                     textFormat: Text.RichText

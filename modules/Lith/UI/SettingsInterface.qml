@@ -35,7 +35,11 @@ ScrollView {
         Lith.settings.showGalleryButton = showGalleryButtonCheckbox.checked
         Lith.settings.showSendButton = showSendButtonCheckbox.checked
         Lith.settings.showSearchButton = showSearchButtonCheckbox.checked
-        Lith.settings.baseFontSize = baseFontSizeSpinBox.value
+        Lith.settings.baseFontPixelSize = baseFontPixelSizeSpinBox.value
+        Lith.settings.useBaseFontPixelSizeForMessages = useBaseFontPixelSizeForMessagesCheckBox.checked
+        if (!useBaseFontPixelSizeForMessagesCheckBox.checked) {
+            Lith.settings.messageFontPixelSize = messageFontPixelSizeSpinBox.value
+        }
         Lith.settings.nickCutoffThreshold = nickCutoffThresholdSpinBox.value
         Lith.settings.timestampFormat = timestampFormatInput.text
         Lith.settings.showDateHeaders = showDateHeadersCheckbox.checked
@@ -66,7 +70,11 @@ ScrollView {
         showGalleryButtonCheckbox.checked = Lith.settings.showGalleryButton
         showSendButtonCheckbox.checked = Lith.settings.showSendButton
         showSearchButtonCheckbox.checked = Lith.settings.showSearchButton
-        baseFontSizeSpinBox.value = Lith.settings.baseFontSize
+        baseFontPixelSizeSpinBox.value = Lith.settings.baseFontPixelSize
+        useBaseFontPixelSizeForMessagesCheckBox.checked = Lith.settings.useBaseFontPixelSizeForMessages
+        if (!useBaseFontPixelSizeForMessagesCheckBox.checked) {
+            messageFontPixelSizeSpinBox.value = Lith.settings.messageFontPixelSize
+        }
         nickCutoffThresholdSpinBox.value = Lith.settings.nickCutoffThreshold
         timestampFormatInput.text = Lith.settings.timestampFormat
         showDateHeadersCheckbox.checked = Lith.settings.showDateHeaders
@@ -99,7 +107,7 @@ ScrollView {
     FontDialog {
         id: fontDialog
         currentFont.family: Lith.settings.baseFontFamily
-        currentFont.pointSize: Lith.settings.baseFontSize
+        currentFont.pixelSize: Lith.settings.baseFontPixelSize
         flags: FontDialog.MonospacedFonts
         onAccepted: {
             fontChangeButton.text = fontDialog.selectedFont.family
@@ -117,8 +125,9 @@ ScrollView {
             width: WindowHelper.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
             spacing: -1
 
+            ////////////////////////// FONT SETTINGS
             Fields.Header {
-                text: qsTr("Message settings")
+                text: qsTr("Font settings")
             }
 
             Fields.Button {
@@ -131,12 +140,57 @@ ScrollView {
             }
 
             Fields.IntSpinBox {
-                id: baseFontSizeSpinBox
+                id: baseFontPixelSizeSpinBox
+                Layout.alignment: Qt.AlignLeft
+                summary: qsTr("UI font size")
+                value: Lith.settings.baseFontPixelSize
+                from: 8
+                to: 32
+            }
+
+            Fields.Base {
+                id: messageFontPixelSizeField
                 Layout.alignment: Qt.AlignLeft
                 summary: qsTr("Message font size")
-                value: Lith.settings.baseFontSize
-                from: 6
-                to: 32
+
+                rowComponent: ColumnLayout {
+                    Layout.topMargin: 6
+                    Layout.bottomMargin: 6
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: messageFontPixelSizeField.halfWidth
+                    spacing: 6
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Label {
+                            Layout.fillWidth: true
+                            text: qsTr("Use UI font size")
+                            horizontalAlignment: Label.AlignRight
+                            elide: Label.ElideRight
+                        }
+                        CheckBox {
+                            id: useBaseFontPixelSizeForMessagesCheckBox
+                            padding: 0
+                            checked: Lith.settings.useBaseFontPixelSizeForMessages
+                        }
+                    }
+                    SpinBox {
+                        id: messageFontPixelSizeSpinBox
+                        Layout.fillWidth: true
+                        enabled: !useBaseFontPixelSizeForMessagesCheckBox.checked
+                        value: Lith.settings.messageFontPixelSize
+                        Binding on value {
+                            value: baseFontPixelSizeSpinBox.value
+                            when: !messageFontPixelSizeSpinBox.enabled
+                        }
+                        from: baseFontPixelSizeSpinBox.from
+                        to: baseFontPixelSizeSpinBox.to
+                    }
+                }
+            }
+
+            ////////////////////////// MESSAGE SETTINGS
+            Fields.Header {
+                text: qsTr("Message settings")
             }
 
             Fields.String {
@@ -186,7 +240,7 @@ ScrollView {
                 FontMetrics {
                     id: fontMetrics
                     font.family: Lith.settings.baseFontFamily
-                    font.pointSize: Lith.settings.baseFontSize
+                    font.pixelSize: FontSizes.regular
                 }
             }
 

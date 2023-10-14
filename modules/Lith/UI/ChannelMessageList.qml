@@ -46,7 +46,7 @@ ListView {
     TextMetrics {
         id: timeMetrics
         text: Qt.formatTime(new Date(), Locale.LongFormat)
-        font.pointSize: Lith.settings.baseFontSize
+        font.pixelSize: FontSizes.regular
     }
 
     ScrollBar.vertical: ScrollBar {

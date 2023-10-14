@@ -21,12 +21,12 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter
             visible: Lith.networkProxy.recording
 
-            width: Lith.settings.baseFontSize
+            width: FontSizes.regular
             height: width
             radius: width / 2
         }
         Label {
-            font.pointSize: FontSizes.tiny
+            font.pixelSize: FontSizes.tiny
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
             elide: Label.ElideRight

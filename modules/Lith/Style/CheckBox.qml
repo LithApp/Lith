@@ -19,7 +19,7 @@ T.CheckBox {
 
     indicator: Rectangle {
         id: backgroundRect
-        implicitWidth: 26 * Math.max(1.0, Lith.settings.baseFontSize / 20)
+        implicitWidth: FontSizes.regular + 12
         implicitHeight: implicitWidth
         anchors.verticalCenter: parent.verticalCenter
 

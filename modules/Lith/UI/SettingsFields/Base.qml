@@ -71,7 +71,7 @@ Rectangle {
                     Layout.bottomMargin: visible ? 6 : 0
                     Layout.rightMargin: visible ? 6 : 0
                     elide: Label.ElideRight
-                    font.pointSize: summary.font.pointSize * 0.7
+                    font.pixelSize: summary.font.pixelSize * 0.7
                     color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, enabled ? 1.0 : 0.5)
                     visible: text.length > 0
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere

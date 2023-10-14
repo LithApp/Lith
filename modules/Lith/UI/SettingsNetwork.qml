@@ -169,7 +169,7 @@ ScrollView {
                             Layout.bottomMargin: visible ? 6 : 0
                             Layout.rightMargin: visible ? 6 : 0
                             elide: Label.ElideRight
-                            font.pointSize: summary.font.pointSize * 0.7
+                            font.pixelSize: summary.font.pixelSize * 0.7
                             color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, enabled ? 1.0 : 0.5)
                             visible: text.length > 0
                             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
@@ -379,7 +379,7 @@ ScrollView {
                                 Button {
                                     id: saveToDocumentsButton
                                     visible: !beingRecorded
-                                    font.pointSize: Lith.settings.baseFontSize * 0.875
+                                    font.pixelSize: FontSizes.regular * 0.875
                                     horizontalPadding: 8
                                     verticalPadding: 2
                                     text: "Save to\nDocuments"
@@ -393,7 +393,7 @@ ScrollView {
                                     visible: !beingRecorded
                                     Layout.leftMargin: 4
                                     Layout.preferredHeight: Math.max(deleteRecordingButton.implicitHeight, saveToDocumentsButton.implicitHeight)
-                                    font.pointSize: Lith.settings.baseFontSize * 0.875
+                                    font.pixelSize: FontSizes.regular * 0.875
                                     horizontalPadding: 8
                                     verticalPadding: 2
                                     text: "Delete"

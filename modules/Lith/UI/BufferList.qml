@@ -201,7 +201,7 @@ Item {
                     radius: 2
                     Label {
                         text: buffer && buffer.number > 0 ? buffer.number : ""
-                        font.pointSize: FontSizes.small
+                        font.pixelSize: FontSizes.small
                         anchors.centerIn: parent
                         color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? LithPalette.regular.text : LithPalette.disabled.text
                     }

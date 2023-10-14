@@ -20,7 +20,7 @@ T.ItemDelegate {
     icon.height: 24
     icon.color: control.LithPalette.regular.text
 
-    font.pointSize: Lith.settings.baseFontSize
+    font.pixelSize: FontSizes.regular
 
     property alias textFormat: label.textFormat
 
@@ -30,7 +30,6 @@ T.ItemDelegate {
         text: control.text
         font: control.font
         color: control.checked ? LithPalette.regular.highlightedText : LithPalette.regular.text
-        size: Label.Large
     }
 
     background: Rectangle {

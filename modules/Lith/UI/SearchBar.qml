@@ -114,12 +114,12 @@ Rectangle {
             Label {
                 id: totalCountLabel
                 visible: resultsMetrics.width * 3.5 < rootLayout.width
-                font.pointSize: FontSizes.small
+                font.pixelSize: FontSizes.small
                 text: qsTr("Total: %1 lines").arg(Lith.selectedBuffer ? Lith.selectedBuffer.lines.count : "N/A")
                 color: LithPalette.disabled.text
             }
             Label {
-                font.pointSize: FontSizes.small
+                font.pixelSize: FontSizes.small
                 visible: resultsMetrics.width * 3.5 < rootLayout.width
                 text: search.term.length === 0 ? qsTr("Start typing to search")
                                                : search.highlightedMatchIndex >= 0 ? qsTr("Showing match %1 of %2").arg(search.highlightedMatchIndex + 1).arg(search.matches.length)
