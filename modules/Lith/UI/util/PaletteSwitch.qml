@@ -3,7 +3,7 @@ import QtQuick.Controls
 // To conveniently switch colors from whatever screen I'm working on
 Button {
     text: "[]"
-    width: height
+    implicitWidth: implicitHeight
     onClicked: {
         if (Lith.settings.forceLightTheme) {
             Lith.settings.forceLightTheme = false

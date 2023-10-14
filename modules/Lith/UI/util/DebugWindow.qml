@@ -76,7 +76,6 @@ Window {
                 }
             }
         }
-
     }
     SettingsDialogContents {
         id: settings
