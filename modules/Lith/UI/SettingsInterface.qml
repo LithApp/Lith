@@ -324,6 +324,7 @@ ScrollView {
             Fields.Button {
                 id: hotlistEditorButton
                 summary: qsTr("Hotlist format")
+                enabled: hotlistEnabledCheckbox.checked
                 text: qsTr("Edit")
                 onClicked: hotlistEditor.open()
 
