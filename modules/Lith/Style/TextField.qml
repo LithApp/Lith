@@ -4,6 +4,8 @@ import QtQuick.Templates as T
 import Lith.Core
 import Lith.Style
 
+import "util"
+
 T.TextField {
     id: control
 
@@ -22,24 +24,9 @@ T.TextField {
 
     property color borderColor: "transparent"
     property color backgroundColor: ColorUtils.mixColors(LithPalette.regular.window, LithPalette.regular.base, control.enabled ? 0.5 : 0.95)
-    property real animationSpeed: 300
 
-    background: Rectangle {
-        property color actualBorderColor: {
-            if (control.borderColor != Qt.color("transparent"))
-                return control.borderColor
-            if (control.activeFocus)
-                return LithPalette.regular.midlight
-            return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
-        }
-
-        border {
-            color: actualBorderColor
-            width: 1
-        }
-
-        color: control.backgroundColor
-        anchors.fill: parent
+    background: InputBackground {
+        control: control
 
         Label {
             visible: control.text.length === 0 && !control.activeFocus

@@ -39,8 +39,6 @@ Item {
                 text: modelData
             }
         }
-
-        currentIndex: 1
     }
 
     StackLayout {

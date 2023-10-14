@@ -5,6 +5,8 @@ import Lith.UI
 import Lith.Style
 import Lith.Core
 
+import "util"
+
 T.SpinBox {
     id: control
 
@@ -63,17 +65,11 @@ T.SpinBox {
         onClicked: control.decrease()
     }
 
-    background: Rectangle {
+    background: InputBackground {
+        control: control
         implicitWidth: 140
         z: 2
         color: "transparent"
-        radius: 3 // TODO make this a constant, should be same value as in Button
-        border.color: {
-            if (control.activeFocus)
-                return LithPalette.regular.midlight
-            return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
-        }
-        //color: enabled ? control.LithPalette.regular.base : control.LithPalette.regular.button
-        //border.color: control.LithPalette.regular.button
+        radius: ControlProperties.buttonRadius
     }
 }

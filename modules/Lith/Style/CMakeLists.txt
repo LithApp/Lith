@@ -1,4 +1,7 @@
 set(LITHSTYLE_QML
+    util/ButtonBackground.qml
+    util/InputBackground.qml
+
     ApplicationWindow.qml
     BusyIndicator.qml
     Button.qml

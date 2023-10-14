@@ -37,3 +37,22 @@ signals:
 private:
     Settings* m_settings = nullptr;
 };
+
+class ControlProperties : public QObject {
+    Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+
+    Q_PROPERTY(qreal buttonRadius READ buttonRadius CONSTANT)
+public:
+    static ControlProperties* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        return new ControlProperties(qmlEngine);
+    }
+
+    qreal buttonRadius() const {
+        return 3.0;
+    }
+
+private:
+    explicit ControlProperties(QObject* parent = nullptr);
+};

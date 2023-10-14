@@ -46,3 +46,8 @@ int FontSizes::message() const {
         return m_settings->messageFontPixelSizeGet();
     }
 }
+
+ControlProperties::ControlProperties(QObject *parent)
+{
+
+}
