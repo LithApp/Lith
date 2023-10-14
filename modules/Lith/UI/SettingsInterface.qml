@@ -287,6 +287,12 @@ ScrollView {
             }
 
             Fields.Boolean {
+                id: showSearchButtonCheckbox
+                summary: qsTr("Show search button")
+                checked: Lith.settings.showSearchButton
+            }
+
+            Fields.Boolean {
                 id: showAutocompleteButtonCheckbox
                 summary: qsTr("Show autocomplete button")
                 checked: Lith.settings.showAutocompleteButton
@@ -302,12 +308,6 @@ ScrollView {
                 id: showSendButtonCheckbox
                 summary: qsTr("Show send button")
                 checked: Lith.settings.showSendButton
-            }
-
-            Fields.Boolean {
-                id: showSearchButtonCheckbox
-                summary: qsTr("Show search button")
-                checked: Lith.settings.showSearchButton
             }
 
             ////////////////////////// HOTLIST
