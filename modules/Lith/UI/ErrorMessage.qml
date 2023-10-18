@@ -45,7 +45,7 @@ Rectangle {
             rightMargin: 12
             verticalCenter: parent.verticalCenter
         }
-        spacing: 18
+        spacing: 12
         Label {
             id: errorText
             Layout.fillHeight: true
@@ -56,6 +56,18 @@ Rectangle {
             maximumLineCount: 2
             elide: Text.ElideRight
             color: LithPalette.regular.text
+        }
+        Button {
+            icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/reload.png"
+            icon.width: 14
+            icon.height: 14
+            Layout.preferredWidth: 32
+            Layout.preferredHeight: 32
+            visible: Lith.status === Lith.DISCONNECTED
+            onClicked: {
+                Lith.reconnect()
+                Lith.errorString = ""
+            }
         }
         Button {
             icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/close.png"
