@@ -24,6 +24,8 @@ T.Button {
     icon.height: 32
 
     font.pixelSize: FontSizes.regular
+    property alias textHorizontalAlignment: buttonLabel.horizontalAlignment
+    property alias textVerticalAlignment: buttonLabel.verticalAlignment
 
     contentItem: Item {
 

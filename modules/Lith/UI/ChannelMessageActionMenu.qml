@@ -74,6 +74,7 @@ Dialog {
 
                 visible: !(nickname == "")
                 text: timestamp ? timestamp.toLocaleTimeString(Qt.locale(), Lith.settings.timestampFormat) + " <" + nickname + "> " + message : ""
+                textHorizontalAlignment: Text.AlignLeft
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
@@ -89,6 +90,7 @@ Dialog {
 
                 visible: !(nickname == "")
                 text: "<" + nickname + "> " + message
+                textHorizontalAlignment: Text.AlignLeft
 
                 onClicked: {
                     channelMessageActionMenuDialog.close()
@@ -102,7 +104,9 @@ Dialog {
                 Layout.preferredHeight: 1.5 * implicitHeight
                 Layout.bottomMargin: 16
                 flat: true
+
                 text: message
+                textHorizontalAlignment: Text.AlignLeft
 
 
                 onClicked: {
