@@ -50,8 +50,8 @@ There is also a browser version of Lith you can try right now thanks to WebAssem
 
 Lith currently supports the following platforms:
  - (Usable) **iOS** and **iPadOS**:
-    - RECOMMENDED: https://testflight.apple.com/join/QfcVgNHD - "Stable" track - releases ending with .0
-    - https://testflight.apple.com/join/xS3hWrmj - "Unstable" track - more or less everything I tag, may be messy
+    - RECOMMENDED: https://testflight.apple.com/join/QfcVgNHD - "Stable" track - even minor releases
+    - https://testflight.apple.com/join/xS3hWrmj - "Unstable" track - more or less everything I tag with an odd minor version, may be messy
  - (build-only) Android: https://github.com/LithApp/Lith/releases
  - (Usable) **Linux**: https://flathub.org/apps/details/app.lith.Lith
  - (Usable, not tested) Windows: https://github.com/LithApp/Lith/releases

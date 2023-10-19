@@ -44,7 +44,11 @@ AUTH="Authorization: token $github_api_token"
 WGET_ARGS="--content-disposition --auth-no-challenge --no-cookie"
 CURL_ARGS="-LJO#"
 
-if [[ $tag == *.0 ]]; then
+if [[ $tag == *.*0.* || \
+      $tag == *.*2.* || \
+      $tag == *.*4.* || \
+      $tag == *.*6.* || \
+      $tag == *.*8.* ]]; then
     IS_PRERELEASE="false"
 else
     IS_PRERELEASE="true"
