@@ -108,7 +108,11 @@ class LITHCORE_EXPORT Settings : public QObject {
     SETTING(bool, openLinksDirectly, false)
     SETTING(bool, openLinksDirectlyInBrowser, false)
 
+#ifdef Q_OS_MACOS
+    SETTING(bool, encryptedCredentials, false)
+#else
     SETTING(bool, encryptedCredentials, true)
+#endif
     Q_PROPERTY(bool credentialEncryptionAvailable READ credentialEncryptionAvailable CONSTANT)
     static bool credentialEncryptionAvailable();
 
