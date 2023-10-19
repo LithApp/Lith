@@ -314,7 +314,7 @@ Item {
             id: linkHandlerLayout
             y: 6
             x: 6
-            width: contentAreaWidth - 12
+            width: channelView.width - 12
             spacing: 9
             Label {
                 id: linkText
