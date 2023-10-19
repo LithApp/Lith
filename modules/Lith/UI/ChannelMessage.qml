@@ -190,7 +190,7 @@ Item {
                         linkHandler.show(link, root)
                     }
                 }
-
+                /*
                 Flow {
                     id: thumbnailLayout
                     Layout.fillWidth: true
@@ -204,6 +204,7 @@ Item {
                         }
                     }
                 }
+                */
             }
         }
     }
