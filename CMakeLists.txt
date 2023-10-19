@@ -77,7 +77,7 @@ execute_process(
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug OR CMAKE_BUILD_TYPE STREQUAL Profile)
-    set(LITH_IS_DEBUG_BUILD ÓN CACHE STRING "")
+    set(LITH_IS_DEBUG_BUILD ON CACHE STRING "")
 endif()
 
 find_package(Qt6 COMPONENTS Widgets Gui Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
