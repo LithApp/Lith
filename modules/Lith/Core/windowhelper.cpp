@@ -47,15 +47,17 @@ void WindowHelper::prepareToChangeScheme() {
 
 void WindowHelper::changeScheme() {
     if (Lith::settingsGet()->forceDarkThemeGet()) {
-        m_darkTheme = true;
+        darkThemeSet(true);
     } else if (Lith::settingsGet()->forceLightThemeGet()) {
-        m_darkTheme = false;
+        darkThemeSet(false);
     } else {
-        m_darkTheme = m_systemPrefersDarkStyle;
+        darkThemeSet(m_systemPrefersDarkStyle);
     }
     emit darkThemeChanged();
     if (m_darkTheme) {
-        m_useBlack = Lith::settingsGet()->useTrueBlackWithDarkThemeGet();
+        useBlackSet(Lith::settingsGet()->useTrueBlackWithDarkThemeGet());
+    } else {
+        useBlackSet(false);
     }
 
     qApp->setPalette(currentTheme().palette());

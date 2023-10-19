@@ -49,7 +49,8 @@ ColumnLayout {
         id: messageArea
         Layout.fillHeight: true
         Layout.fillWidth: true
-        color: ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.window, 0.5)
+        // This is a bit of a hack, it would be nice to use the same color from selected palette
+        color: WindowHelper.useBlack ? "black" : ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.window, 0.5)
 
         ColumnLayout {
             visible: !Lith.selectedBuffer

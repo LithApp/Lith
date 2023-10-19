@@ -24,8 +24,8 @@ class LITHCORE_EXPORT WindowHelper : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON
-    PROPERTY_READONLY(bool, darkTheme, false)
-    PROPERTY_READONLY(bool, useBlack, false)
+    PROPERTY_READONLY_PRIVATESETTER(bool, darkTheme, false)
+    PROPERTY_READONLY_PRIVATESETTER(bool, useBlack, false)
     Q_PROPERTY(bool lightTheme READ lightThemeGet NOTIFY darkThemeChanged)
     Q_PROPERTY(ColorTheme currentTheme READ currentTheme NOTIFY darkThemeChanged)
     Q_PROPERTY(QString currentThemeName READ currentThemeName NOTIFY darkThemeChanged)
