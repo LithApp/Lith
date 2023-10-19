@@ -40,9 +40,17 @@ TextField {
     }
 
     onAccepted: {
-        if (text.length > 0) {
-            if (Lith.selectedBuffer.userInput(text)) {
-                text = ""
+        inputField.input()
+    }
+
+    function input() {
+        // Save a copy first so the field gets cleared before sending because the call can block (Reported as #169)
+        const message = inputField.text
+        if (message.length > 0) {
+            inputField.text = ""
+            if (!Lith.selectedBuffer.userInput(message)) {
+                // Here we could return the message that could not be sent
+                // but some people (AHOJ POLIVKO) type so fast it's less annoying to not do that without asking
             }
         }
     }

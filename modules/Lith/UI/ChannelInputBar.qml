@@ -134,10 +134,7 @@ Rectangle {
             ToolTip.visible: sendButton.hovered
             ToolTip.delay: 800
             onClicked: {
-                if (channelTextInput.text.length > 0) {
-                    Lith.selectedBuffer.userInput(channelTextInput.text)
-                    channelTextInput.text = ""
-                }
+                channelTextInput.input()
             }
         }
     }
