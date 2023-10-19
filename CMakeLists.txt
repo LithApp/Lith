@@ -43,18 +43,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android")
 endif()
 
 set(VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
-
-if (VERSION)
-    set(PROJECT_VERSION ${VERSION})
-else()
-    message(WARNING "Version passed to CMake was empty, this may have been done on accident")
-    set(PROJECT_VERSION "0.0.0")
-endif()
-
-string(REPLACE "." ";" VERSION_LIST ${PROJECT_VERSION})
-list(GET VERSION_LIST 0 PROJECT_VERSION_MAJOR)
-list(GET VERSION_LIST 1 PROJECT_VERSION_MINOR)
-list(GET VERSION_LIST 2 PROJECT_VERSION_PATCH)
+set(VERSION_RELEASEDATE "1970-01-01" CACHE STRING "Release date to be used in metadata, used in Linux appdata only for now.")
 
 find_package(Git REQUIRED)
 # rerun git metadata retrieval on each commit message change
@@ -75,6 +64,42 @@ execute_process(
     OUTPUT_VARIABLE GIT_STATE
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+execute_process(
+    COMMAND "${GIT_EXECUTABLE}" describe --tags --abbrev=0
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE GIT_LAST_TAG
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+    COMMAND "${GIT_EXECUTABLE}" tag -l "${GIT_LAST_TAG}" "--format=%(creatordate:short)"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE GIT_LAST_TAG_DATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if (VERSION AND NOT "${VERSION}" STREQUAL "0.0.0")
+    set(PROJECT_VERSION ${VERSION} CACHE STRING "" FORCE)
+    if (NOT "${VERSION_RELEASEDATE}" STREQUAL "1970-01-01")
+        set(PROJECT_VERSION_RELEASEDATE "${VERSION_RELEASEDATE}" CACHE STRING "" FORCE)
+    else()
+        message("Release date was not supplied but version was, metadata will show today")
+        string(TIMESTAMP PROJECT_VERSION_RELEASEDATE "%Y-%m-%d")
+    endif()
+    message("Building Lith version ${PROJECT_VERSION}, release date: ${PROJECT_VERSION_RELEASEDATE}")
+elseif(GIT_LAST_TAG)
+    set(PROJECT_VERSION "${GIT_LAST_TAG}" CACHE STRING "" FORCE)
+    set(PROJECT_VERSION_RELEASEDATE "${GIT_LAST_TAG_DATE}" CACHE STRING "" FORCE)
+    message("Version passed to CMake was empty, using last one retrieved from git: ${PROJECT_VERSION}, tagged on ${PROJECT_VERSION_RELEASEDATE}")
+else()
+    set(PROJECT_VERSION "0.0.0" CACHE STRING "" FORCE)
+    set(PROJECT_VERSION_RELEASEDATE "1970-01-01" CACHE STRING "" FORCE)
+    message(WARNING "Version passed to CMake was empty, this may have been done on accident, using ${PROJECT_VERSION}")
+endif()
+
+string(REPLACE "." ";" VERSION_LIST ${PROJECT_VERSION})
+list(GET VERSION_LIST 0 PROJECT_VERSION_MAJOR)
+list(GET VERSION_LIST 1 PROJECT_VERSION_MINOR)
+list(GET VERSION_LIST 2 PROJECT_VERSION_PATCH)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug OR CMAKE_BUILD_TYPE STREQUAL Profile)
     set(LITH_IS_DEBUG_BUILD ON CACHE STRING "")
@@ -160,7 +185,8 @@ add_subdirectory(app)
 add_dependencies(Lith LithStyleplugin LithUIplugin LithCoreplugin)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    install(FILES ${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.appdata.xml DESTINATION share/metainfo)
+    configure_file(${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.appdata.xml.in ${CMAKE_BINARY_DIR}/dist/linux/app.lith.Lith.appdata.xml)
+    install(FILES ${CMAKE_BINARY_DIR}/dist/linux/app.lith.Lith.appdata.xml DESTINATION share/metainfo)
     install(FILES ${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.desktop DESTINATION share/applications)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/icons/linux/hicolor DESTINATION share/icons)
 endif()
