@@ -20,14 +20,13 @@ WindowHelper::WindowHelper()
     m_changeSchemeTimer->setInterval(50);
     m_changeSchemeTimer->setSingleShot(true);
     connect(m_changeSchemeTimer, &QTimer::timeout, this, &WindowHelper::changeScheme);
-
-    QTimer::singleShot(0, this, &WindowHelper::init);
 }
 
 WindowHelper* WindowHelper::instance() {
     static WindowHelper* self = nullptr;
     if (!self) {
         self = new WindowHelper();
+        self->init();
     }
     return self;
 }
