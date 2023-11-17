@@ -207,6 +207,7 @@ Lith::Lith(QObject* parent)
     if (!showDebugWindowEnv.isEmpty() && showDebugWindowEnv != "0") {
         showDebugWindowSet(true);
     }
+    delete m_weechat;
     connect(m_notificationHandler, &NotificationHandler::bufferSelected, this, [this](int bufferNumber) {
         selectBufferNumber(bufferNumber);
     });
