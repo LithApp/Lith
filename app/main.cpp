@@ -80,8 +80,8 @@ int main(int argc, char* argv[]) {
     engine.addImportPath(QStringLiteral("../modules"));
 
     // Initialize UI helpers and fonts
-    WindowHelper::instance();
     Settings::instance();
+    WindowHelper::instance();  // Needs to happen after Settings
     Lith::instance();
     auto fontFamilyFromSettings = Lith::settingsGet()->baseFontFamilyGet();
 #if defined(Q_OS_IOS) || defined(Q_OS_MACOS)
