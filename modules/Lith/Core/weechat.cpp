@@ -156,7 +156,7 @@ void Weechat::restart() {
 #ifndef __EMSCRIPTEN__
     if (!Lith::settingsGet()->useWebsocketsGet() && !host.isEmpty()) {
         m_connection->connectToTcpSocket(host, port, ssl);
-    } else if (!host.isEmpty() && !websocketEndpoint.isEmpty()) {
+    } else if (!host.isEmpty()) {
 #endif  // __EMSCRIPTEN__
         m_connection->connectToWebsocket(host, websocketEndpoint, port, ssl);
 #ifndef __EMSCRIPTEN__
