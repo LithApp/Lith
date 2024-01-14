@@ -229,9 +229,9 @@ void SocketHelper::onReadyRead() {
         return;
     }
 
-    // In the protocol parser, there's the call to processEvents that could lead to
+    // In the protocol parser, there's a call to processEvents that could lead to
     // this slot being called while a message is already being processed
-    // This is guard that prevents processing of more messages at the same moment
+    // This is guard that prevents processing more messages at the same time
     static bool guard = false;
     if (guard) {
         return;
