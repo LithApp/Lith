@@ -167,6 +167,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
             m_host = (co_await getSecureValue("host", false)).value_or(QString());
             emit hostChanged();
         }
+
         if (m_settings.contains("port")) {
             m_settings.remove("port");
             portSet(m_port, true);
@@ -181,6 +182,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
                 }
             }
         }
+
         if (m_settings.contains("websocketsEndpoint")) {
             m_settings.remove("websocketsEndpoint");
             websocketsEndpointSet(m_websocketsEndpoint, true);
@@ -191,6 +193,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
                 emit websocketsEndpointChanged();
             }
         }
+
         if (m_settings.contains("passphrase")) {
             auto passphrase = m_settings.value("passphrase").toString();
             m_settings.remove("passphrase");
@@ -202,6 +205,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
                 useEmptyPassphraseSet(storedPassphrase->isEmpty());
             }
         }
+
         emit networkSettingsChanged();
     } else if (credentialEncryptionAvailable()) {
         auto encryptedHost = co_await getSecureValue("host", false);
@@ -211,6 +215,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
             emit hostChanged();
             co_await deleteSecureValue("host", false);
         }
+
         auto encryptedPort = co_await getSecureValue("port", false);
         if (encryptedPort.has_value()) {
             bool ok = false;
@@ -222,6 +227,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
             }
             co_await deleteSecureValue("port", false);
         }
+
         auto encryptedEndpoint = co_await getSecureValue("websocketsEndpoint", false);
         if (encryptedEndpoint.has_value()) {
             m_websocketsEndpoint = encryptedEndpoint.value();
@@ -229,6 +235,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
             emit websocketsEndpointChanged();
             co_await deleteSecureValue("websocketsEndpoint", false);
         }
+
         auto encryptedPassphrase = co_await getSecureValue("passphrase", false);
         if (encryptedPassphrase.has_value()) {
             m_settings.setValue("passphrase", encryptedPassphrase.value());
@@ -241,6 +248,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
                 useEmptyPassphraseSet(plainPassphrase.value().isEmpty());
             }
         }
+
         emit networkSettingsChanged();
     }
     m_settings.sync();
@@ -251,6 +259,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
             hasPassphraseSet(true);
             useEmptyPassphraseSet(plainPassphrase.value().isEmpty());
         }
+        emit networkSettingsChanged();
     }
     co_return;
 }
@@ -312,6 +321,10 @@ void Settings::useEmptyPassphraseSet(bool useEmptyPassphrase) {
 }
 
 bool Settings::websocketsEndpointSet(QString newWebsocketsEndpoint, bool force) {
+    if (newWebsocketsEndpoint.isEmpty()) {
+        Lith::instance()->log(Logger::Unexpected, "Attempted to set an empty websocket endpoint, replacing with \"/\"");
+        newWebsocketsEndpoint = QStringLiteral("/");
+    }
     if (!force && m_websocketsEndpoint == newWebsocketsEndpoint) {
         return false;
     }
@@ -450,20 +463,18 @@ QCoro::Task<bool> Settings::setSensitiveValue(QString key, QString value) {
         co_return false;
     }
     if (m_encryptedCredentials) {
-        if (m_encryptedCredentials) {
 #ifndef Q_OS_WASM
-            QThread* callerThread = QThread::currentThread();
-            QThread* settingsThread = Settings::instance()->thread();
-            if (callerThread != settingsThread) {
-                co_await QCoro::moveToThread(settingsThread);
-            }
-#endif  // Q_OS_WASM
-            auto result = co_await setSecureValue(key, value, false);
-#ifndef Q_OS_WASM
-            co_await QCoro::moveToThread(callerThread);
-#endif  // Q_OS_WASM
-            co_return result;
+        QThread* callerThread = QThread::currentThread();
+        QThread* settingsThread = Settings::instance()->thread();
+        if (callerThread != settingsThread) {
+            co_await QCoro::moveToThread(settingsThread);
         }
+#endif  // Q_OS_WASM
+        auto result = co_await setSecureValue(key, value, false);
+#ifndef Q_OS_WASM
+        co_await QCoro::moveToThread(callerThread);
+#endif  // Q_OS_WASM
+        co_return result;
     }
     co_return setPlainValue(key, value);
 }

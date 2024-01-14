@@ -58,9 +58,16 @@ void SocketHelper::onConnected() {
 
 void SocketHelper::connectToWebsocket(const QString& hostname, const QString& endpoint, int port, bool encrypted) {
     reset();
-    lith()->log(
-        Logger::Network, QString("Connecting to: %1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint)
-    );
+
+    bool endpointHasSlash = endpoint.startsWith('/');
+    QString url(QString("%1://%2:%3%4%5")
+                    .arg(encrypted ? "wss" : "ws")
+                    .arg(hostname)
+                    .arg(port)
+                    .arg(endpointHasSlash ? QStringLiteral("") : QStringLiteral("/"))
+                    .arg(endpoint));
+
+    lith()->log(Logger::Network, QString("Connecting to: %1").arg(url));
     m_webSocket = new QWebSocket("weechat", QWebSocketProtocol::VersionLatest, this);
 
     connect(m_webSocket, &QWebSocket::connected, this, &SocketHelper::onConnected);
@@ -73,7 +80,7 @@ void SocketHelper::connectToWebsocket(const QString& hostname, const QString& en
     connect(m_webSocket, &QWebSocket::sslErrors, this, &SocketHelper::onSslErrors, Qt::DirectConnection);
 #endif  // __EMSCRIPTEN__
 
-    m_webSocket->open(QString("%1://%2:%3/%4").arg(encrypted ? "wss" : "ws").arg(hostname).arg(port).arg(endpoint));
+    m_webSocket->open(url);
 }
 
 #ifndef __EMSCRIPTEN__

@@ -78,7 +78,9 @@ ScrollView {
         if (typeof Lith.settings.useWebsockets !== "undefined") {
             useWebsocketsCheckbox.checked = Lith.settings.useWebsockets
         }
-        websocketsEndpointInput.text = Lith.settings.websocketsEndpoint
+        if (typeof Lith.settings.websocketsEndpoint !== "undefined") {
+            websocketsEndpointInput.text = Lith.settings.websocketsEndpoint
+        }
         showInternalDataCheckbox.checked = Lith.settings.showInternalData
         enableLoggingCheckbox.checked = Lith.settings.enableLogging
         enableReplayRecordingCheckbox.checked = Lith.settings.enableReplayRecording
@@ -203,14 +205,14 @@ ScrollView {
             Fields.Boolean {
                 id: useWebsocketsCheckbox
                 visible: typeof Lith.settings.useWebsockets !== "undefined"
-                checked: visible ? Lith.settings.useWebsockets : false
+                checked: typeof Lith.settings.useWebsockets !== "undefined" ? Lith.settings.useWebsockets : false
 
                 summary: qsTr("Use WebSockets to connect")
             }
             Fields.String {
                 id: websocketsEndpointInput
                 enabled: typeof Lith.settings.useWebsockets === "undefined" || useWebsocketsCheckbox.checked
-                text: Lith.settings.websocketsEndpoint
+                text: Lith.settings.websocketsEndpoint === "undefined" ? "" : Lith.settings.websocketsEndpoint
 
                 summary: qsTr("Websockets endpoint")
             }
