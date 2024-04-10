@@ -64,8 +64,8 @@ jobs:
     - name: Import provisioning profile
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/14411667-7e77-4d1c-b474-1a9fd128370d.mobileprovision
-        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE_2 }}" > ~/Library/MobileDevice/Provisioning\ Profiles/bbd3930b-b267-4686-8677-ddb133e89079.mobileprovision
+        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/bef9c567-13ea-4469-9736-188e7e8a908c.mobileprovision
+        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE_2 }}" > ~/Library/MobileDevice/Provisioning\ Profiles/f23947e8-9226-449b-be93-9e132d64fdbc.mobileprovision
 
     - name: Set up CPM cache
       id: cache-cpm
