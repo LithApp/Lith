@@ -64,10 +64,8 @@ jobs:
     - name: Import provisioning profile
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        base64 -D <<< "${{ secrets.IOS_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Testflight.mobileprovision
-        base64 -D <<< "${{ secrets.DEVELOPMENT_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Development.mobileprovision
-        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/e6d72c8d-aae4-4f09-b600-4f09239c2d1d.mobileprovision
-        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE_2 }}" > ~/Library/MobileDevice/Provisioning\ Profiles/924f12c6-0542-4827-8c84-cfd0f137e270.mobileprovision
+        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/14411667-7e77-4d1c-b474-1a9fd128370d.mobileprovision
+        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE_2 }}" > ~/Library/MobileDevice/Provisioning\ Profiles/bbd3930b-b267-4686-8677-ddb133e89079.mobileprovision
 
     - name: Set up CPM cache
       id: cache-cpm
