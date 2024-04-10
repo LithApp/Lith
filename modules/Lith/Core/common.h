@@ -46,8 +46,8 @@ public:
 using StringMap = QMap<QString, QString>;
 Q_DECLARE_METATYPE(StringMap);
 
-using pointer_t = uint64_t;
-Q_DECLARE_METATYPE(pointer_t);
+using weechat_pointer_t = uint64_t;
+Q_DECLARE_METATYPE(weechat_pointer_t);
 
 #define STRINGIFY(x) #x
 

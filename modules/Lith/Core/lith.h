@@ -154,18 +154,18 @@ public slots:
     void _pong(const FormattedString& str);
 
 public:
-    const Buffer* getBuffer(pointer_t ptr) const;
-    const BufferLine* getLine(pointer_t bufPtr, pointer_t linePtr) const;
-    QSharedPointer<const HotListItem> getHotlist(pointer_t ptr) const;
+    const Buffer* getBuffer(weechat_pointer_t ptr) const;
+    const BufferLine* getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr) const;
+    QSharedPointer<const HotListItem> getHotlist(weechat_pointer_t ptr) const;
 
 protected:
-    void addBuffer(pointer_t ptr, Buffer* b);
-    void removeBuffer(pointer_t ptr);
-    Buffer* getBuffer(pointer_t ptr);
-    void addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine* line, bool overwrite = false);
-    BufferLine* getLine(pointer_t bufPtr, pointer_t linePtr);
-    void addHotlist(pointer_t ptr, QSharedPointer<HotListItem> hotlist);
-    QSharedPointer<HotListItem> getHotlist(pointer_t ptr);
+    void addBuffer(weechat_pointer_t ptr, Buffer* b);
+    void removeBuffer(weechat_pointer_t ptr);
+    Buffer* getBuffer(weechat_pointer_t ptr);
+    void addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLine* line, bool overwrite = false);
+    BufferLine* getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr);
+    void addHotlist(weechat_pointer_t ptr, QSharedPointer<HotListItem> hotlist);
+    QSharedPointer<HotListItem> getHotlist(weechat_pointer_t ptr);
 
 signals:
     void selectedBufferChanged();
@@ -195,9 +195,9 @@ private:
     QString m_lastNetworkError {};
     QString m_error {};
 
-    QMap<pointer_t, QPointer<Buffer>> m_bufferMap {};
-    QMap<pointer_t, QMap<pointer_t, QPointer<BufferLine>>> m_lineMap;
-    QMap<pointer_t, QSharedPointer<HotListItem>> m_hotList;
+    QMap<weechat_pointer_t, QPointer<Buffer>> m_bufferMap {};
+    QMap<weechat_pointer_t, QMap<weechat_pointer_t, QPointer<BufferLine>>> m_lineMap;
+    QMap<weechat_pointer_t, QSharedPointer<HotListItem>> m_hotList;
     Buffer* m_logBuffer = nullptr;
 };
 

@@ -28,7 +28,7 @@
 #include <QXmlStreamReader>
 #include <QDomDocument>
 
-Buffer::Buffer(Lith* parent, pointer_t pointer)
+Buffer::Buffer(Lith* parent, weechat_pointer_t pointer)
     : QObject(parent)
     , m_lines(QmlObjectList::create<BufferLine>(this, false))
     , m_nicks(QmlObjectList::create<Nick>(this, false))
@@ -70,7 +70,7 @@ bool Buffer::isAfterInitialFetch() const {
     return m_afterInitialFetch;
 }
 
-pointer_t Buffer::ptr() const {
+weechat_pointer_t Buffer::ptr() const {
     return m_ptr;
 }
 
@@ -82,7 +82,7 @@ QmlObjectList* Buffer::nicks() {
     return m_nicks;
 }
 
-Nick* Buffer::getNick(pointer_t ptr) {
+Nick* Buffer::getNick(weechat_pointer_t ptr) {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto* n = m_nicks->get<Nick>(i);
         if (n && n->ptrGet() == ptr) {
@@ -100,13 +100,13 @@ Nick* Buffer::getNick(pointer_t ptr) {
     */
 }
 
-void Buffer::addNick(pointer_t ptr, Nick* nick) {
+void Buffer::addNick(weechat_pointer_t ptr, Nick* nick) {
     nick->ptrSet(ptr);
     m_nicks->append(nick);
     emit nicksChanged();
 }
 
-void Buffer::removeNick(pointer_t ptr) {
+void Buffer::removeNick(weechat_pointer_t ptr) {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto* n = m_nicks->get<Nick>(i);
         if (n && n->ptrGet() == ptr) {
@@ -226,7 +226,7 @@ bool Buffer::rawInput(const QByteArray& data) const {
 
     bool success = false;
     QMetaObject::invokeMethod(
-        Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(pointer_t, m_ptr),
+        Lith::instance()->weechat(), "input", Qt::BlockingQueuedConnection, Q_RETURN_ARG(bool, success), Q_ARG(weechat_pointer_t, m_ptr),
         Q_ARG(QByteArray, data)
     );
 
@@ -239,7 +239,7 @@ void Buffer::fetchMoreLines() {
         return;
     }
     if (m_lines->count() >= m_lastRequestedCount) {
-        QMetaObject::invokeMethod(Lith::instance()->weechat(), "fetchLines", Q_ARG(pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25));
+        QMetaObject::invokeMethod(Lith::instance()->weechat(), "fetchLines", Q_ARG(weechat_pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25));
         // Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
         m_lastRequestedCount = m_lines->count() + 25;
     }

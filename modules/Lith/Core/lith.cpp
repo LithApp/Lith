@@ -343,7 +343,7 @@ void Lith::handleHotlistInitialization(const WeeChatProtocol::HData& hda) {
     for (const auto& i : hda.data) {
         // hotlist
         auto ptr = i.pointers.first();
-        auto bufPtr = i.objects["buffer"].value<pointer_t>();
+        auto bufPtr = i.objects["buffer"].value<weechat_pointer_t>();
         auto item = QSharedPointer<HotListItem>::create();
         auto* buffer = getBuffer(bufPtr);
         if (buffer) {
@@ -410,7 +410,7 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
     for (const auto& i : hda.data) {
         // hotlist
         auto hlPtr = i.pointers.first();
-        auto bufPtr = qvariant_cast<pointer_t>(i.objects["buffer"]);
+        auto bufPtr = qvariant_cast<weechat_pointer_t>(i.objects["buffer"]);
         auto hl = getHotlist(hlPtr);
         auto* buf = getBuffer(bufPtr);
         if (!buf) {
@@ -562,7 +562,7 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
         // line_data
         auto linePtr = i.pointers.last();
         // path doesn't contain the buffer, we need to retrieve it like this
-        auto bufPtr = qvariant_cast<pointer_t>(i.objects["buffer"]);
+        auto bufPtr = qvariant_cast<weechat_pointer_t>(i.objects["buffer"]);
         auto* buffer = getBuffer(bufPtr);
         if (!buffer) {
             qWarning() << "Line missing a parent:";
@@ -697,7 +697,7 @@ void Lith::_pong(const FormattedString& str) {
     emit pongReceived(str.toLongLong());
 }
 
-void Lith::addBuffer(pointer_t ptr, Buffer* b) {
+void Lith::addBuffer(weechat_pointer_t ptr, Buffer* b) {
     m_bufferMap[ptr] = b;
     m_buffers->append(b);
     auto lastOpenBuffer = settingsGet()->lastOpenBufferGet();
@@ -708,7 +708,7 @@ void Lith::addBuffer(pointer_t ptr, Buffer* b) {
     }
 }
 
-void Lith::removeBuffer(pointer_t ptr) {
+void Lith::removeBuffer(weechat_pointer_t ptr) {
     if (m_bufferMap.contains(ptr)) {
         auto buf = m_bufferMap[ptr];
         if (selectedBuffer() == buf) {
@@ -719,14 +719,14 @@ void Lith::removeBuffer(pointer_t ptr) {
     }
 }
 
-Buffer* Lith::getBuffer(pointer_t ptr) {
+Buffer* Lith::getBuffer(weechat_pointer_t ptr) {
     if (m_bufferMap.contains(ptr)) {
         return m_bufferMap[ptr];
     }
     return nullptr;
 }
 
-void Lith::addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine* line, bool overwrite) {
+void Lith::addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLine* line, bool overwrite) {
     if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr) && !overwrite) {
         qCritical() << "Line with bufPtr" << QString("%1").arg(bufPtr, 16, 16, QChar('0')) << "and linePtr"
                     << QString("%1").arg(linePtr, 16, 16, QChar('0')) << "already exists";
@@ -737,21 +737,21 @@ void Lith::addLine(pointer_t bufPtr, pointer_t linePtr, BufferLine* line, bool o
     m_lineMap[bufPtr][linePtr] = line;
 }
 
-BufferLine* Lith::getLine(pointer_t bufPtr, pointer_t linePtr) {
+BufferLine* Lith::getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr) {
     if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr)) {
         return m_lineMap[bufPtr][linePtr];
     }
     return nullptr;
 }
 
-const BufferLine* Lith::getLine(pointer_t bufPtr, pointer_t linePtr) const {
+const BufferLine* Lith::getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr) const {
     if (m_lineMap.contains(bufPtr) && m_lineMap.value(bufPtr).contains(linePtr)) {
         return m_lineMap.value(bufPtr).value(linePtr);
     }
     return nullptr;
 }
 
-void Lith::addHotlist(pointer_t ptr, QSharedPointer<HotListItem> hotlist) {
+void Lith::addHotlist(weechat_pointer_t ptr, QSharedPointer<HotListItem> hotlist) {
     if (m_hotList.contains(ptr)) {
         // TODO
         qCritical() << "Hotlist with ptr" << QString("%1").arg(ptr, 8, 16, QChar('0')) << "already exists";
@@ -759,21 +759,21 @@ void Lith::addHotlist(pointer_t ptr, QSharedPointer<HotListItem> hotlist) {
     m_hotList[ptr] = hotlist;
 }
 
-QSharedPointer<HotListItem> Lith::getHotlist(pointer_t ptr) {
+QSharedPointer<HotListItem> Lith::getHotlist(weechat_pointer_t ptr) {
     if (m_hotList.contains(ptr)) {
         return m_hotList[ptr];
     }
     return {};
 }
 
-const Buffer* Lith::getBuffer(pointer_t ptr) const {
+const Buffer* Lith::getBuffer(weechat_pointer_t ptr) const {
     if (m_bufferMap.contains(ptr)) {
         return m_bufferMap[ptr];
     }
     return nullptr;
 }
 
-QSharedPointer<const HotListItem> Lith::getHotlist(pointer_t ptr) const {
+QSharedPointer<const HotListItem> Lith::getHotlist(weechat_pointer_t ptr) const {
     if (m_hotList.contains(ptr)) {
         return m_hotList[ptr];
     }
