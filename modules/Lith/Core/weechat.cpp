@@ -322,7 +322,7 @@ void Weechat::onError(const QString& message) {
     lith()->networkErrorStringSet("Connection failed: " + message);
 }
 
-bool Weechat::input(pointer_t ptr, const QByteArray& data) {
+bool Weechat::input(weechat_pointer_t ptr, const QByteArray& data) {
     // server doesn't reply to input commands directly so no message order here
     return m_connection->write(
         QByteArrayLiteral("input"), QByteArray(),
@@ -330,7 +330,7 @@ bool Weechat::input(pointer_t ptr, const QByteArray& data) {
     );
 }
 
-void Weechat::fetchLines(pointer_t ptr, int count) {
+void Weechat::fetchLines(weechat_pointer_t ptr, int count) {
     const auto* cLith = lith();
     const auto* buffer = cLith->getBuffer(ptr);
     if (buffer) {

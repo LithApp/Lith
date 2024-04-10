@@ -49,7 +49,7 @@ class LITHCORE_EXPORT Nick : public QObject {
     PROPERTY(FormattedString, prefix)
     PROPERTY(FormattedString, prefix_color)
 
-    PROPERTY(pointer_t, ptr)
+    PROPERTY(weechat_pointer_t, ptr)
 
     Q_PROPERTY(QString colorlessName READ colorlessName NOTIFY nameChanged)
 public:
@@ -63,7 +63,7 @@ class LITHCORE_EXPORT Buffer : public QObject {
     QML_ELEMENT
     QML_UNCREATABLE("")
     Q_DISABLE_COPY_MOVE(Buffer)
-    Q_PROPERTY(pointer_t ptr READ ptr NOTIFY ptrChanged)
+    Q_PROPERTY(weechat_pointer_t ptr READ ptr NOTIFY ptrChanged)
     PROPERTY(int, number, 0)
     PROPERTY(FormattedString, name)
     PROPERTY(FormattedString, short_name)
@@ -88,12 +88,12 @@ class LITHCORE_EXPORT Buffer : public QObject {
 
     PROPERTY(QString, lastUserInput, "")
 public:
-    Buffer(Lith* parent, pointer_t pointer);
+    Buffer(Lith* parent, weechat_pointer_t pointer);
     ~Buffer() override;
 
     Lith* lith();
 
-    // BufferLine *getLine(pointer_t ptr);
+    // BufferLine *getLine(weechat_pointer_t ptr);
     void prependLine(BufferLine* line);
     void appendLine(BufferLine* line);
 
@@ -102,13 +102,13 @@ public:
 
     bool isAfterInitialFetch() const;
 
-    pointer_t ptr() const;
+    weechat_pointer_t ptr() const;
     QmlObjectList* lines();
     QmlObjectList* nicks();
     MessageFilterList* lines_filtered();
-    Q_INVOKABLE Nick* getNick(pointer_t ptr);
-    void addNick(pointer_t ptr, Nick* nick);
-    void removeNick(pointer_t ptr);
+    Q_INVOKABLE Nick* getNick(weechat_pointer_t ptr);
+    void addNick(weechat_pointer_t ptr, Nick* nick);
+    void removeNick(weechat_pointer_t ptr);
     void clearNicks();
     Q_INVOKABLE QStringList getVisibleNicks();
     int normalsGet() const;
@@ -138,7 +138,7 @@ private:
     QmlObjectList* m_lines {nullptr};
     QmlObjectList* m_nicks {nullptr};
     MessageFilterList* m_proxyLinesFiltered {nullptr};
-    pointer_t m_ptr = 0;
+    weechat_pointer_t m_ptr = 0;
     bool m_afterInitialFetch {false};
     int m_lastRequestedCount {0};
     FormattedString m_title {};
@@ -148,7 +148,7 @@ class LITHCORE_EXPORT BufferLine : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_UNCREATABLE("")
-    PROPERTY(pointer_t, ptr)
+    PROPERTY(weechat_pointer_t, ptr)
     PROPERTY(QDateTime, date)
     PROPERTY(bool, displayed)
     PROPERTY(bool, highlight)

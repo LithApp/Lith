@@ -26,7 +26,7 @@ namespace WeeChatProtocol {
     using LongInteger = qint64;
     using String = FormattedString;
     using Buffer = QByteArray;
-    using Pointer = pointer_t;
+    using Pointer = weechat_pointer_t;
     using Time = QString;
     using HashTable = StringMap;
     struct LITHCORE_EXPORT HData {
