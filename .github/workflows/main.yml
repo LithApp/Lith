@@ -64,6 +64,8 @@ jobs:
     - name: Import provisioning profile
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        base64 -D <<< "${{ secrets.DEVELOPMENT_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Development.mobileprovision
+        base64 -D <<< "${{ secrets.IOS_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Testflight.mobileprovision
         base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/bef9c567-13ea-4469-9736-188e7e8a908c.mobileprovision
         base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE_2 }}" > ~/Library/MobileDevice/Provisioning\ Profiles/f23947e8-9226-449b-be93-9e132d64fdbc.mobileprovision
 
