@@ -18,9 +18,9 @@ on:
     branches: [ "master" ]
 
 env:
-    QT_VERSION: '6.6.0'
+    QT_VERSION: '6.6.3'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
-    EM_VERSION: '3.1.25'
+    EM_VERSION: '3.1.37'
 
 jobs:
   analyze:
