@@ -276,19 +276,19 @@ Dialog {
                 details: qsTr("Recommended")
                 rowComponent: ColumnLayout {
                     id: presetLayout
-                    Layout.preferredWidth: presetFieldBase.width / 2
+                    Layout.fillWidth: true
 
                     Button {
                         text: qsTr("Default")
                         onClicked: formatSplitter.fromStringList(Lith.settings.hotlistDefaultFormat)
                         Layout.fillWidth: true
-                        Layout.maximumWidth: presetFieldBase.width / 2
+                        Layout.maximumWidth: 120
                     }
                     Button {
                         text: qsTr("Buffer Number")
                         onClicked: formatSplitter.fromStringList(["%1", "number"])
                         Layout.fillWidth: true
-                        Layout.maximumWidth: presetFieldBase.width / 2
+                        Layout.maximumWidth: 120
                     }
                 }
             }
