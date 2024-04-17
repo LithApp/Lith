@@ -145,6 +145,7 @@ Dialog {
 
             Fields.Base {
                 id: formatField
+                z: 1
                 visible: !root.helpVisible
                 summary: qsTr("Format definition")
 
@@ -183,8 +184,17 @@ Dialog {
                         model: formatSplitter.variables
                         delegate: Item {
                             id: variableDelegate
+                            z: variableDelegateInput.activeFocus ? 1 : 0
                             Layout.fillWidth: true
                             implicitHeight: variableDelegateLayout.implicitHeight
+                            Rectangle {
+                                visible: variableDelegateInput.activeFocus && autocomplete.visible
+                                y: -50000
+                                x: -50000
+                                color: ColorUtils.setAlpha(LithPalette.regular.window, 0.7)
+                                width: 100000
+                                height: 100000
+                            }
                             RowLayout {
                                 id: variableDelegateLayout
                                 width: parent.width
