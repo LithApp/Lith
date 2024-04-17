@@ -127,6 +127,17 @@ Dialog {
         height: parent.height
         contentHeight: mainLayout.height
 
+        NumberAnimation {
+            id: scrollToSelectedPropertyAnimation
+            target: mainItem.ScrollBar.vertical
+            property: "position"
+            duration: 120
+            function run(newPosition) {
+                to = newPosition
+                running = true
+            }
+        }
+
         ColumnLayout {
             id: mainLayout
             width: mainItem.width - (mainItem.ScrollBar.vertical.visible ? mainItem.ScrollBar.vertical.width : 0)
@@ -217,10 +228,13 @@ Dialog {
                                     }
 
                                     onFocusChanged: {
-                                        if (focus && !valid) {
-                                            autocompleteDismissed = false
-                                            autocomplete.parent = this
-                                            autocomplete.visible = true
+                                        if (focus) {
+                                            scrollToSelectedPropertyAnimation.run(variableDelegate.y / mainLayout.height)
+                                            if (!valid) {
+                                                autocompleteDismissed = false
+                                                autocomplete.parent = this
+                                                autocomplete.visible = true
+                                            }
                                         }
                                     }
                                 }
