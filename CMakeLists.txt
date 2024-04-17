@@ -135,7 +135,8 @@ if(LITH_DEPENDENCY_ENABLE_KEYCHAIN)
     CPMAddPackage(
         NAME Qt6Keychain
         GIT_REPOSITORY https://github.com/frankosterfeld/qtkeychain.git
-        GIT_TAG 0.14.1
+        GIT_TAG 38ff50766c7e4ec490fecb2d9939b7cdc4b74b8e
+        VERSION 0.14.3
         EXCLUDE_FROM_ALL ON
         OPTIONS "BUILD_WITH_QT6 ON" "USE_CREDENTIAL_STORE ON" "BUILD_SHARED_LIBS OFF" "BUILD_TRANSLATIONS OFF"
     )
@@ -154,9 +155,8 @@ endif()
 CPMAddPackage(
     NAME QCoro6
     GIT_REPOSITORY https://github.com/danvratil/qcoro
-    # Using a newer hash because there's a build issue with one override
-    GIT_TAG b1bde3bdb36e3efdd13e62bae2eed8224734f15f
-    VERSION 0.9.0
+    GIT_TAG fa5bc4296a252ad71c85209b60675bb025024a1e
+    VERSION 0.10.0
     EXCLUDE_FROM_ALL ON
     OPTIONS "QCORO_BUILD_EXAMPLES OFF" "BUILD_TESTING OFF" "QCORO_WITH_QTDBUS ${LITH_DEPENDENCY_ENABLE_DBUS}"
     FIND_PACKAGE_ARGUMENTS "COMPONENTS ${LITH_QCORO_DEPENDENCY_MODULES} REQUIRED"

@@ -18,9 +18,8 @@ on:
     branches: [ "master" ]
 
 env:
-    QT_VERSION: '6.6.3'
+    QT_VERSION: '6.7.2'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
-    EM_VERSION: '3.1.37'
 
 jobs:
   analyze:
@@ -48,7 +47,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Install Make
       run: |
@@ -57,7 +56,7 @@ jobs:
 
     - name: Set up CPM cache
       id: cache-cpm
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/cpm-cache
         key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
@@ -65,7 +64,7 @@ jobs:
           ${{ runner.os }}-cpm-
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
@@ -74,7 +73,7 @@ jobs:
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
@@ -94,7 +93,7 @@ jobs:
         mkdir build
         cd build
         export CPM_SOURCE_CACHE=~/cpm-cache
-        export CMAKE_PREFIX_PATH="$Qt6_DIR"/lib/cmake
+        export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
         cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
         make -j5
 
@@ -109,6 +108,6 @@ jobs:
     #     ./location_of_script_within_repo/buildscript.sh
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
