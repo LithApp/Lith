@@ -35,8 +35,7 @@ Dialog {
         standalone: true
         text: qsTr("Hotlist format editor")
 
-        labelItem.x: Math.max(((headerField.width - labelItem.width) / 2), (helpButton.x + helpButton.width))
-        labelItem.width: Math.min(labelItem.implicitWidth, headerField.width - helpButton.width)
+        leftPadding: helpButton.x + helpButton.width + 6
         labelItem.wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         labelItem.maximumLineCount: 2
 
