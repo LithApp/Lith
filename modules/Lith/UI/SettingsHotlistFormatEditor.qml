@@ -13,8 +13,7 @@ Dialog {
 
     modal: true
     anchors.centerIn: Overlay.overlay
-    width: Math.min(400, parent.width)
-    implicitHeight: Math.min(header.height + mainItem.implicitHeight + footer.height, (mainView ? mainView.height : 1000))
+    implicitWidth: 400
     closePolicy: autocomplete.visible ? Popup.CloseOnPressOutside : (Popup.CloseOnEscape | Popup.CloseOnPressOutside)
     onVisibleChanged: {
         helpVisible = false
@@ -69,26 +68,25 @@ Dialog {
     Popup {
         id: autocomplete
         y: parent ? parent.height + 3 : 0
-        width: parent ? parent.width : width
-        height: mainLayout.height - formatField.height - 6
+        width: parent ? parent.width : 400
+        height: mainItem.height - dialogButtons.height - headerField.height
+
         Rectangle {
             width: parent.width
             height: parent.height
             border.color: Qt.rgba(LithPalette.regular.buttonText.r, LithPalette.regular.buttonText.g, LithPalette.regular.buttonText.b, 0.2)
             border.width: 1
             color: LithPalette.regular.window
+
             ScrollView {
                 id: autocompleteScrollView
                 anchors.fill: parent
                 Flow {
                     id: autocompleteFlow
                     x: 6
-                    width: autocompleteScrollView.width - 12
+                    y: 6
+                    width: autocompleteScrollView.width - autocompleteScrollView.ScrollBar.vertical.width - 6
                     spacing: 12
-                    Item {
-                        width: autocompleteFlow.width
-                        height: 6
-                    }
                     Repeater {
                         model: reflection.stringProperties
                         Rectangle {
@@ -116,90 +114,76 @@ Dialog {
                     }
                     Item {
                         width: autocompleteFlow.width
-                        height: 6
+                        height: 3
                     }
                 }
             }
         }
     }
 
-    Item {
+    ScrollView {
         id: mainItem
         width: parent.width
-        implicitHeight: mainLayout.implicitHeight
         height: parent.height
+        contentHeight: mainLayout.height
+
         ColumnLayout {
             id: mainLayout
-            width: parent.width
-            height: parent.height
-            spacing: -1
+            width: mainItem.width - (mainItem.ScrollBar.vertical.visible ? mainItem.ScrollBar.vertical.width : 0)
+            spacing: 0
 
             Fields.Base {
                 id: formatField
+                visible: !root.helpVisible
                 summary: qsTr("Format definition")
-                Layout.fillHeight: true
-                Layout.maximumHeight: formatLayout.height + formatField.firstRowHeight + formatField.verticalPadding * 2
 
-                columnComponent: ScrollView {
-                    id: formatScrollView
+                columnComponent: ColumnLayout {
+                    id: formatLayout
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    ColumnLayout {
-                        id: formatLayout
-                        width: formatScrollView.width
-                        spacing: 6
-                        // Setting focus directly from Repeater.itemAdded didn't work probably because all signals haven't been processed at that moment yet
-                        // Delay by 1ms, it's a little bit of a hack but it works seamlessly
-                        Timer {
-                            id: delayedFocus
-                            interval: 1
-                            property int index
-                            function execute(index) {
-                                delayedFocus.index = index
-                                start()
-                            }
-                            onTriggered: formatRepeater.itemAt(index).forceActiveFocus()
+                    Layout.bottomMargin: 6
+                    spacing: 6
+
+                    TextField {
+                        id: formatInput
+                        Layout.fillWidth: true
+                        text: formatSplitter.format
+                        onTextChanged: formatSplitter.format = text
+                        borderColor: formatSplitter.formatValid ? "transparent" : "red"
+
+                        FormatStringSplitter {
+                            id: formatSplitter
+                            allowedPropertyNames: reflection.stringProperties
+                            dataSource: Lith.selectedBuffer
+                            onErrorStringChanged: console.warn(errorString)
                         }
+                    }
 
-                        TextField {
-                            id: formatInput
+                    Label {
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: fontInfo.pixelSize + 16
+                        Layout.leftMargin: 6
+                        verticalAlignment: Label.AlignVCenter
+                        elide: Label.ElideRight
+                        text: qsTr("Properties")
+                    }
+
+                    Repeater {
+                        id: variableRepeater
+                        model: formatSplitter.variables
+                        delegate: Item {
+                            id: variableDelegate
                             Layout.fillWidth: true
-                            text: formatSplitter.format
-                            onTextChanged: formatSplitter.format = text
-                            borderColor: formatSplitter.formatValid ? "transparent" : "red"
-
-                            FormatStringSplitter {
-                                id: formatSplitter
-                                allowedPropertyNames: reflection.stringProperties
-                                dataSource: Lith.selectedBuffer
-                                onErrorStringChanged: console.warn(errorString)
-                            }
-                        }
-
-                        Label {
-                            Layout.fillWidth: true
-                            Layout.minimumHeight: fontInfo.pixelSize + 16
-                            Layout.leftMargin: 6
-                            verticalAlignment: Label.AlignVCenter
-                            elide: Label.ElideRight
-                            text: qsTr("Properties")
-                        }
-
-                        ListView {
-                            id: variableListView
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            Layout.bottomMargin: 9
-                            implicitHeight: contentHeight
-                            spacing: 6
-                            model: formatSplitter.variables
-                            delegate: RowLayout {
-                                width: variableListView.width
+                            implicitHeight: variableDelegateLayout.implicitHeight
+                            RowLayout {
+                                id: variableDelegateLayout
+                                width: parent.width
+                                height: parent.height
                                 Label {
                                     Layout.alignment: Qt.AlignVCenter
                                     text: "%%1".arg(modelData.index + 1)
                                 }
                                 TextField {
+                                    id: variableDelegateInput
                                     Layout.fillWidth: true
                                     text: modelData.name
                                     Binding on text {
@@ -247,6 +231,7 @@ Dialog {
             }
 
             Fields.Base {
+                visible: !root.helpVisible
                 summary: qsTr("Preview")
                 details: qsTr("Data from %1").arg(Lith.selectedBuffer ? Lith.selectedBuffer.name : "N/A")
 
@@ -263,6 +248,7 @@ Dialog {
             }
 
             Fields.Button {
+                visible: !root.helpVisible
                 summary: qsTr("Undo current changes")
                 enabled: formatSplitter.stringList.toString() !== Lith.settings.hotlistFormat.toString()
 
@@ -272,6 +258,7 @@ Dialog {
 
             Fields.Base {
                 id: presetFieldBase
+                visible: !root.helpVisible
                 summary: qsTr("Use a preset")
                 details: qsTr("Recommended")
                 rowComponent: ColumnLayout {
@@ -292,21 +279,18 @@ Dialog {
                     }
                 }
             }
-        }
-        Rectangle {
-            id: help
-            anchors.fill: parent
-            anchors.margins: 1
-            visible: root.helpVisible
-            color: LithPalette.regular.window
-            ScrollView {
-                id: helpScrollView
-                anchors.fill: parent
-                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+            Item {
+                id: help
+                visible: root.helpVisible
+                implicitHeight: helpLayout.implicitHeight
+                Layout.fillWidth: true
+                Layout.preferredHeight: helpLayout.implicitHeight
                 ColumnLayout {
+                    id: helpLayout
                     x: 6
-                    y: 6
-                    width: helpScrollView.width - 12
+                    y: 3
+                    width: parent.width - x * 2
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Label.WrapAtWordBoundaryOrAnywhere
