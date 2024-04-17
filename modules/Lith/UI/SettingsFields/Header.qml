@@ -9,6 +9,8 @@ Item {
     property alias text: label.text
     property alias font: label.font
     property alias labelItem: label
+    property real leftPadding: 0
+    property real rightPadding: 0
 
     Layout.fillWidth: true
     implicitWidth: label.implicitWidth
@@ -17,7 +19,8 @@ Item {
     Label {
         id: label
 
-        x: (root.width - width) / 2
+        x: Math.max(root.leftPadding, (root.width - width) / 2)
+        width: Math.min(implicitWidth, root.width - root.leftPadding - root.rightPadding)
 
         topPadding: font.pixelSize
         bottomPadding: root.standalone ? font.pixelSize : 0.33 * font.pixelSize
