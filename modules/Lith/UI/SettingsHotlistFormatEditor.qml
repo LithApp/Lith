@@ -8,12 +8,16 @@ import Lith.Style
 
 Dialog {
     id: root
+
+    property bool helpVisible: false
+
     modal: true
     anchors.centerIn: Overlay.overlay
     width: Math.min(400, parent.width)
     implicitHeight: Math.min(header.height + mainItem.implicitHeight + footer.height, (mainView ? mainView.height : 1000))
     closePolicy: autocomplete.visible ? Popup.CloseOnPressOutside : (Popup.CloseOnEscape | Popup.CloseOnPressOutside)
     onVisibleChanged: {
+        helpVisible = false
         if (visible) {
             formatSplitter.fromStringList(Lith.settings.hotlistFormat)
         }
@@ -41,18 +45,18 @@ Dialog {
 
         Button {
             id: helpButton
-            text: help.visible ? qsTr("Back") : qsTr("Help")
+            text: root.helpVisible ? qsTr("Back") : qsTr("Help")
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.bottom: parent.bottom
             anchors.margins: 6
-            onClicked: help.visible = !help.visible
+            onClicked: root.helpVisible = !root.helpVisible
         }
     }
 
     footer: DialogButtons {
         id: dialogButtons
-        enabled: !help.visible // disable the buttons so the user doesn't get confused
+        enabled: !root.helpVisible // disable the buttons so the user doesn't get confused
         acceptable: formatSplitter.variablesValid && formatSplitter.formatValid
         dialog: root
     }
@@ -293,7 +297,7 @@ Dialog {
             id: help
             anchors.fill: parent
             anchors.margins: 1
-            visible: false
+            visible: root.helpVisible
             color: LithPalette.regular.window
             ScrollView {
                 id: helpScrollView
@@ -356,16 +360,16 @@ Dialog {
                     }
                     RowLayout {
                         Layout.fillWidth: true
-                        Item { Layout.fillWidth: true}
+                        Item { Layout.fillWidth: true }
                         HotListItem {
                             text: "3 ABC #lith 3"
                         }
-                        Item { Layout.fillWidth: true}
+                        Item { Layout.fillWidth: true }
                         HotListItem {
                             hot: true
                             text: "3 ABC #lith 3"
                         }
-                        Item { Layout.fillWidth: true}
+                        Item { Layout.fillWidth: true }
                     }
                     Rectangle {
                         Layout.fillWidth: true
