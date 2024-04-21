@@ -19,7 +19,6 @@ set(LITH_QML
     NickList.qml
     NickListActionMenu.qml
     PreviewPopup.qml
-    ScrollHelper.qml
     SearchBar.qml
     SettingsDialog.qml
     SettingsDialogContents.qml
