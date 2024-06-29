@@ -52,13 +52,21 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
         ret.append(QStringLiteral("<font color=\""));
         if (foreground.extended) {
             if (theme.extendedColors().count() > foreground.index) {
-                ret.append(theme.extendedColors()[foreground.index]);
+                auto rgb = theme.extendedColors()[foreground.index];
+                ret.append(QStringLiteral("#%1%2%3")
+                               .arg(qRed(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qGreen(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qBlue(rgb), 2, 16, QLatin1Char('0')));
             } else {
                 ret.append(QStringLiteral("pink"));
             }
         } else {
             if (theme.weechatColors().count() > foreground.index) {
-                ret.append(theme.weechatColors()[foreground.index]);
+                auto rgb = theme.weechatColors()[foreground.index];
+                ret.append(QStringLiteral("#%1%2%3")
+                               .arg(qRed(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qGreen(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qBlue(rgb), 2, 16, QLatin1Char('0')));
             } else {
                 ret.append(QStringLiteral("pink"));
             }
