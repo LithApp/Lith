@@ -158,6 +158,7 @@ class LITHCORE_EXPORT BufferLine : public QObject {
     Q_PROPERTY(QString nick READ nickGet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString prefix READ prefixGet WRITE prefixSet NOTIFY prefixChanged)
     Q_PROPERTY(FormattedString message READ messageGet WRITE messageSet NOTIFY messageChanged)
+    Q_PROPERTY(QString dateAndPrefix READ dateAndPrefixGet NOTIFY dateAndPrefixChanged)
 
     Q_PROPERTY(bool isJoinPartQuitMsg READ isJoinPartQuitMsgGet NOTIFY tags_arrayChanged)
     Q_PROPERTY(bool isPrivMsg READ isPrivMsgGet NOTIFY tags_arrayChanged)
@@ -180,6 +181,7 @@ public:
     QString nickGet() const;
     const FormattedString& messageGet() const;
     void messageSet(const FormattedString& o);
+    QString dateAndPrefixGet() const;
 
     bool isJoinPartQuitMsgGet();
     bool isPrivMsgGet();
@@ -195,6 +197,7 @@ public:
 signals:
     void messageChanged();
     void prefixChanged();
+    void dateAndPrefixChanged();
 
 private slots:
 

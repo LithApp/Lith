@@ -254,6 +254,10 @@ BufferLine::BufferLine(Buffer* parent)
     // having it here results in fewer connections and that means lower cpu load when the signals are fired
     connect(Lith::settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
     connect(Lith::settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
+    connect(Lith::settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::dateAndPrefixChanged);
+    connect(Lith::settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::dateAndPrefixChanged);
+    connect(this, &BufferLine::dateChanged, this, &BufferLine::dateAndPrefixChanged);
+    connect(this, &BufferLine::prefixChanged, this, &BufferLine::dateAndPrefixChanged);
     connect(WindowHelper::instance(), &WindowHelper::themeChanged, this, &BufferLine::messageChanged);
     connect(WindowHelper::instance(), &WindowHelper::themeChanged, this, &BufferLine::prefixChanged);
 }
@@ -303,6 +307,12 @@ void BufferLine::messageSet(const FormattedString& o) {
         m_message = o;
         emit messageChanged();
     }
+}
+
+QString BufferLine::dateAndPrefixGet() const {
+    return m_date.toString(Settings::instance()->timestampFormatGet()) + QStringLiteral("\u00A0<b>") +
+           m_prefix.toTrimmedHtml(Settings::instance()->nickCutoffThresholdGet(), WindowHelper::instance()->currentTheme()) +
+           QStringLiteral("</b>\u00A0");
 }
 
 bool BufferLine::isSelfMsgGet() {
