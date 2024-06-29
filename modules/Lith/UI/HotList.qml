@@ -53,6 +53,7 @@ ListView {
     }
     Rectangle {
         id: background
+        anchors.fill: parent
         z: -1
         color: LithPalette.regular.window
     }
