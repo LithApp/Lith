@@ -158,7 +158,7 @@ public slots:
 public:
     const Buffer* getBuffer(weechat_pointer_t ptr) const;
     const BufferLine* getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr) const;
-    QSharedPointer<const HotListItem> getHotlist(weechat_pointer_t ptr) const;
+    const HotListItem* getHotlist(weechat_pointer_t ptr) const;
 
 protected:
     void addBuffer(weechat_pointer_t ptr, Buffer* b);
@@ -166,8 +166,8 @@ protected:
     Buffer* getBuffer(weechat_pointer_t ptr);
     void addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLine* line, bool overwrite = false);
     BufferLine* getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr);
-    void addHotlist(weechat_pointer_t ptr, QSharedPointer<HotListItem> hotlist);
-    QSharedPointer<HotListItem> getHotlist(weechat_pointer_t ptr);
+    void addHotlist(weechat_pointer_t ptr, HotListItem* hotlist);
+    HotListItem* getHotlist(weechat_pointer_t ptr);
 
 signals:
     void selectedBufferChanged();
@@ -199,7 +199,8 @@ private:
 
     QMap<weechat_pointer_t, QPointer<Buffer>> m_bufferMap {};
     QMap<weechat_pointer_t, QMap<weechat_pointer_t, QPointer<BufferLine>>> m_lineMap;
-    QMap<weechat_pointer_t, QSharedPointer<HotListItem>> m_hotList;
+    QMap<weechat_pointer_t, QPointer<HotListItem>> m_hotList;
+
     Buffer* m_logBuffer = nullptr;
 };
 

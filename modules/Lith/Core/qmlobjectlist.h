@@ -4,6 +4,7 @@
 #include <QMetaObject>
 #include <QAbstractListModel>
 #include <QSharedPointer>
+#include <list>
 
 #include "lithcore_export.h"
 
@@ -43,17 +44,29 @@ public:
     void append(const QVariantMap& properties);
 
     Q_INVOKABLE bool removeRow(int row, const QModelIndex& parent = QModelIndex());
+    bool removeRow(std::list<QObjectPointer>::iterator position, int index, const QModelIndex& parent = QModelIndex());
+
+    template <typename InternalType> bool removeRow(std::function<bool(InternalType*)> predicate) {
+        int index = 0;
+        for (auto it = mData.begin(); it != mData.end(); ++it) {
+            if (predicate(it->objectCast<InternalType>().get())) {
+                return removeRow(it, index);
+            }
+            index++;
+        }
+        return false;
+    }
 
     Q_INVOKABLE bool removeItem(QObject* item);
 
     Q_INVOKABLE inline void removeFirst() {
-        if (!mData.isEmpty()) {
+        if (!mData.empty()) {
             removeRow(0);
         }
     }
 
     Q_INVOKABLE inline void removeLast() {
-        if (!mData.isEmpty()) {
+        if (!mData.empty()) {
             removeRow(rowCount() - 1);
         }
     }
@@ -67,13 +80,13 @@ public:
     }
 
     template <typename T> inline T* get(int i) {
-        return qobject_cast<T*>(mData.at(i).data());
+        return qobject_cast<T*>(std::next(mData.begin(), i)->data());
     }
     template <typename T> inline T* getLast() {
-        return qobject_cast<T*>(last().data());
+        return qobject_cast<T*>(mData.rbegin()->data());
     }
     template <typename T> inline T* getFirst() {
-        return qobject_cast<T*>(first().data());
+        return qobject_cast<T*>(mData.begin()->data());
     }
 
 protected:
@@ -88,7 +101,7 @@ private:
     explicit QmlObjectList(const QMetaObject* m, QObject* parent = Q_NULLPTR, bool deleteChildren = true);
 
     const QMetaObject* mMetaObject;
-    QList<QObjectPointer> mData;
+    std::list<QObjectPointer> mData;
     bool mDeleteChildren = true;
 };
 

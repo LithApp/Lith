@@ -107,13 +107,8 @@ void Buffer::addNick(weechat_pointer_t ptr, Nick* nick) {
 }
 
 void Buffer::removeNick(weechat_pointer_t ptr) {
-    for (int i = 0; i < m_nicks->count(); i++) {
-        auto* n = m_nicks->get<Nick>(i);
-        if (n && n->ptrGet() == ptr) {
-            m_nicks->removeRow(i);
-            emit nicksChanged();
-            break;
-        }
+    if (m_nicks->removeRow<Nick>([ptr](Nick* n) { return n && n->ptrGet() == ptr; })) {
+        emit nicksChanged();
     }
 }
 

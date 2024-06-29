@@ -41,7 +41,7 @@ void QmlObjectList::append(const QVariantMap& properties) {
 void QmlObjectList::prepend(QObject* object) {
     Q_ASSERT(object->metaObject() == mMetaObject);
     beginInsertRows(QModelIndex(), 0, 0);
-    mData.prepend(makeShared(object, mDeleteChildren));
+    mData.push_front(makeShared(object, mDeleteChildren));
     endInsertRows();
     emit countChanged();
 }
@@ -56,7 +56,7 @@ bool QmlObjectList::insert(const int& i, QObject* object) {
         return false;
     }
     beginInsertRows(QModelIndex(), i, i);
-    mData.insert(i, makeShared(object, mDeleteChildren));
+    mData.insert(std::next(mData.begin(), i), makeShared(object, mDeleteChildren));
     endInsertRows();
     emit countChanged();
     return true;
@@ -66,24 +66,30 @@ int QmlObjectList::count() {
     return rowCount();
 }
 
+bool QmlObjectList::removeRow(std::list<QObjectPointer>::iterator position, int index, const QModelIndex& parent) {
+    beginRemoveRows(parent, index, index);
+    mData.erase(position);
+    endRemoveRows();
+    emit countChanged();
+    return true;
+}
+
 bool QmlObjectList::removeRow(int row, const QModelIndex& parent) {
     const int first = row;
     const int last = row;
     if (ValidateIndex(first) || ValidateIndex(last)) {
         return false;
     }
-    beginRemoveRows(parent, first, last);
-    mData.removeAt(row);
-    endRemoveRows();
-    emit countChanged();
-    return true;
+    return removeRow(std::next(mData.begin(), row), row, parent);
 }
 
 bool QmlObjectList::removeItem(QObject* item) {
-    for (int i = 0; i < mData.count(); i++) {
-        if (mData[i] == item) {
-            return removeRow(i);
+    int index = 0;
+    for (auto it = mData.begin(); it != mData.end(); ++it) {
+        if (*it == item) {
+            return removeRow(it, index);
         }
+        index++;
     }
     return false;
 }
@@ -95,7 +101,7 @@ QVariant QmlObjectList::at(const int& i) {
         );
         return QVariant();
     }
-    return QVariant::fromValue(mData.at(i).data());
+    return QVariant::fromValue(std::next(mData.begin(), i)->data());
 }
 
 QVariant QmlObjectList::data(const QModelIndex& index, int role) const {
@@ -103,7 +109,7 @@ QVariant QmlObjectList::data(const QModelIndex& index, int role) const {
     if (ValidateIndex(index.row())) {
         return QVariant();
     }
-    const auto& data = mData[index.row()];
+    const auto& data = *std::next(mData.begin(), index.row());
     if (data.isNull()) {
         Lith::instance()->log(
             Logger::Unexpected, QStringLiteral("Object model data accessor for type %1 at row %2 contains null data")
@@ -123,7 +129,7 @@ QHash<int, QByteArray> QmlObjectList::roleNames() const {
 
 int QmlObjectList::rowCount(const QModelIndex& parent) const {
     Q_UNUSED(parent);
-    return static_cast<int>(mData.count());
+    return static_cast<int>(mData.size());
 }
 
 QmlObjectList::QmlObjectList(const QMetaObject* m, QObject* parent, bool deleteChildren)
