@@ -83,9 +83,9 @@ QCoro::Task<void> Settings::migrate() {
     // that's not present in the metaobject should be enough
     if (!hotlistShowUnreadCountGet()) {
         if (hotlistFormatGet() == c_hotlistDefaultFormat) {
-            m_settings.remove("hotlistShowUnreadCount");
+            m_settings.remove(QStringLiteral("hotlistShowUnreadCount"));
             m_settings.sync();
-            hotlistFormatSet({"%1", "number"});
+            hotlistFormatSet({QStringLiteral("%1"), QStringLiteral("number")});
         }
     }
     co_return;
@@ -111,7 +111,7 @@ void Settings::saveNetworkSettings(
     }
     if (useEmptyPassphrase) {
         // Empty strings coming from QML are actually null, we differentiate between null and empty for empty passwords
-        passphrase = QString("");
+        passphrase = QStringLiteral("");
         passphraseSet(passphrase);
     } else if (useEmptyPassphraseGet() && passphrase.isEmpty()) {
         passphraseUnset();
@@ -160,19 +160,19 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
 
     // TODO rewrite this mess
     if (encryptedCredentialsGet()) {
-        if (m_settings.contains("host")) {
-            m_settings.remove("host");
+        if (m_settings.contains(QStringLiteral("host"))) {
+            m_settings.remove(QStringLiteral("host"));
             hostSet(m_host, true);
         } else {
-            m_host = (co_await getSecureValue("host", false)).value_or(QString());
+            m_host = (co_await getSecureValue(QStringLiteral("host"), false)).value_or(QString());
             emit hostChanged();
         }
 
-        if (m_settings.contains("port")) {
-            m_settings.remove("port");
+        if (m_settings.contains(QStringLiteral("port"))) {
+            m_settings.remove(QStringLiteral("port"));
             portSet(m_port, true);
         } else {
-            auto portString = co_await getSecureValue("port", false);
+            auto portString = co_await getSecureValue(QStringLiteral("port"), false);
             if (portString.has_value()) {
                 bool ok = false;
                 int storedPort = portString->toInt(&ok);
@@ -183,23 +183,23 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
             }
         }
 
-        if (m_settings.contains("websocketsEndpoint")) {
-            m_settings.remove("websocketsEndpoint");
+        if (m_settings.contains(QStringLiteral("websocketsEndpoint"))) {
+            m_settings.remove(QStringLiteral("websocketsEndpoint"));
             websocketsEndpointSet(m_websocketsEndpoint, true);
         } else {
-            auto storedEndpoint = co_await getSecureValue("websocketsEndpoint", false);
+            auto storedEndpoint = co_await getSecureValue(QStringLiteral("websocketsEndpoint"), false);
             if (storedEndpoint.has_value() && !storedEndpoint->isEmpty()) {
                 m_websocketsEndpoint = storedEndpoint.value();
                 emit websocketsEndpointChanged();
             }
         }
 
-        if (m_settings.contains("passphrase")) {
-            auto passphrase = m_settings.value("passphrase").toString();
-            m_settings.remove("passphrase");
+        if (m_settings.contains(QStringLiteral("passphrase"))) {
+            auto passphrase = m_settings.value(QStringLiteral("passphrase")).toString();
+            m_settings.remove(QStringLiteral("passphrase"));
             passphraseSet(passphrase);
         } else {
-            auto storedPassphrase = co_await getSecureValue("passphrase", false);
+            auto storedPassphrase = co_await getSecureValue(QStringLiteral("passphrase"), false);
             if (storedPassphrase.has_value() && !storedPassphrase->isNull()) {
                 hasPassphraseSet(true);
                 useEmptyPassphraseSet(storedPassphrase->isEmpty());
@@ -208,41 +208,41 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
 
         emit networkSettingsChanged();
     } else if (credentialEncryptionAvailable()) {
-        auto encryptedHost = co_await getSecureValue("host", false);
+        auto encryptedHost = co_await getSecureValue(QStringLiteral("host"), false);
         if (encryptedHost.has_value()) {
             m_host = encryptedHost.value();
-            m_settings.setValue("host", m_host);
+            m_settings.setValue(QStringLiteral("host"), m_host);
             emit hostChanged();
-            co_await deleteSecureValue("host", false);
+            co_await deleteSecureValue(QStringLiteral("host"), false);
         }
 
-        auto encryptedPort = co_await getSecureValue("port", false);
+        auto encryptedPort = co_await getSecureValue(QStringLiteral("port"), false);
         if (encryptedPort.has_value()) {
             bool ok = false;
             int storedPort = encryptedPort->toInt(&ok);
             if (ok) {
                 m_port = storedPort;
-                m_settings.setValue("port", m_port);
+                m_settings.setValue(QStringLiteral("port"), m_port);
                 emit portChanged();
             }
-            co_await deleteSecureValue("port", false);
+            co_await deleteSecureValue(QStringLiteral("port"), false);
         }
 
-        auto encryptedEndpoint = co_await getSecureValue("websocketsEndpoint", false);
+        auto encryptedEndpoint = co_await getSecureValue(QStringLiteral("websocketsEndpoint"), false);
         if (encryptedEndpoint.has_value()) {
             m_websocketsEndpoint = encryptedEndpoint.value();
-            m_settings.setValue("websocketsEndpoint", m_websocketsEndpoint);
+            m_settings.setValue(QStringLiteral("websocketsEndpoint"), m_websocketsEndpoint);
             emit websocketsEndpointChanged();
-            co_await deleteSecureValue("websocketsEndpoint", false);
+            co_await deleteSecureValue(QStringLiteral("websocketsEndpoint"), false);
         }
 
-        auto encryptedPassphrase = co_await getSecureValue("passphrase", false);
+        auto encryptedPassphrase = co_await getSecureValue(QStringLiteral("passphrase"), false);
         if (encryptedPassphrase.has_value()) {
-            m_settings.setValue("passphrase", encryptedPassphrase.value());
+            m_settings.setValue(QStringLiteral("passphrase"), encryptedPassphrase.value());
             hasPassphraseSet(true);
-            co_await deleteSecureValue("passphrase", false);
+            co_await deleteSecureValue(QStringLiteral("passphrase"), false);
         } else {
-            auto plainPassphrase = getPlainValue("passphrase");
+            auto plainPassphrase = getPlainValue(QStringLiteral("passphrase"));
             if (plainPassphrase.has_value() && !plainPassphrase.value().isNull()) {
                 hasPassphraseSet(true);
                 useEmptyPassphraseSet(plainPassphrase.value().isEmpty());
@@ -254,7 +254,7 @@ QCoro::Task<> Settings::migrateCredentialEncryption() {
     m_settings.sync();
 #endif  // LITH_FEATURE_KEYCHAIN
     if (!credentialEncryptionAvailable()) {
-        auto plainPassphrase = getPlainValue("passphrase");
+        auto plainPassphrase = getPlainValue(QStringLiteral("passphrase"));
         if (plainPassphrase.has_value() && !plainPassphrase->isNull()) {
             hasPassphraseSet(true);
             useEmptyPassphraseSet(plainPassphrase.value().isEmpty());
@@ -279,7 +279,7 @@ bool Settings::hostSet(QString newHost, bool force) {
 
     m_host = newHost;
     emit hostChanged();
-    setSensitiveValue("host", newHost).then([]() {});
+    setSensitiveValue(QStringLiteral("host"), newHost).then([]() {});
 
     return true;
 }
@@ -292,14 +292,14 @@ bool Settings::portSet(int newPort, bool force) {
     m_port = newPort;
     emit portChanged();
     auto portData = QString::number(newPort);
-    setSensitiveValue("port", portData).then([]() {});
+    setSensitiveValue(QStringLiteral("port"), portData).then([]() {});
     return true;
 }
 
 void Settings::passphraseSet(QString passphrase) {
     // intentionally not stored
-    getSensitiveValue("passphrase").then([this, passphrase](std::optional<QString> current) {
-        setSensitiveValue("passphrase", passphrase).then([this, passphrase, current](bool success) {
+    getSensitiveValue(QStringLiteral("passphrase")).then([this, passphrase](std::optional<QString> current) {
+        setSensitiveValue(QStringLiteral("passphrase"), passphrase).then([this, passphrase, current](bool success) {
             if (!success) {
                 return;
             }
@@ -322,7 +322,7 @@ void Settings::useEmptyPassphraseSet(bool useEmptyPassphrase) {
 
 bool Settings::websocketsEndpointSet(QString newWebsocketsEndpoint, bool force) {
     if (newWebsocketsEndpoint.isEmpty()) {
-        Lith::instance()->log(Logger::Unexpected, "Attempted to set an empty websocket endpoint, replacing with \"/\"");
+        Lith::instance()->log(Logger::Unexpected, QStringLiteral("Attempted to set an empty websocket endpoint, replacing with \"/\""));
         newWebsocketsEndpoint = QStringLiteral("/");
     }
     if (!force && m_websocketsEndpoint == newWebsocketsEndpoint) {
@@ -331,18 +331,17 @@ bool Settings::websocketsEndpointSet(QString newWebsocketsEndpoint, bool force) 
 
     m_websocketsEndpoint = newWebsocketsEndpoint;
     emit websocketsEndpointChanged();
-    setSensitiveValue("websocketsEndpoint", newWebsocketsEndpoint).then([]() {});
+    setSensitiveValue(QStringLiteral("websocketsEndpoint"), newWebsocketsEndpoint).then([]() {});
     return true;
 }
 
 QCoro::Task<std::optional<QString>> Settings::passphraseGet() {
     // intentionally not stored
-    co_return co_await getSensitiveValue("passphrase");
+    co_return co_await getSensitiveValue(QStringLiteral("passphrase"));
 }
 
 void Settings::passphraseUnset() {
-    deleteSensitiveValue("passphrase").then([this]() {
-        qDebug() << "Done";
+    deleteSensitiveValue(QStringLiteral("passphrase")).then([this]() {
         hasPassphraseSet(false);
         useEmptyPassphraseSet(false);
         emit networkSettingsChanged();
@@ -352,7 +351,7 @@ void Settings::passphraseUnset() {
 // TODO rewrite this mess too
 QCoro::Task<std::optional<QString>> Settings::getSecureValue(QString key, bool fallback) {
 #if LITH_FEATURE_KEYCHAIN
-    auto* job = new QKeychain::ReadPasswordJob(CREDENTIAL_SERVICE_NAME, this);
+    auto* job = new QKeychain::ReadPasswordJob(QStringLiteral(CREDENTIAL_SERVICE_NAME), this);
     job->setKey(key);
     job->setAutoDelete(false);
     auto task = qCoro(job, &QKeychain::Job::finished);
@@ -379,7 +378,7 @@ QCoro::Task<std::optional<QString>> Settings::getSecureValue(QString key, bool f
 
 QCoro::Task<bool> Settings::setSecureValue(QString key, QString value, bool fallback) {
 #if LITH_FEATURE_KEYCHAIN
-    auto* job = new QKeychain::WritePasswordJob(CREDENTIAL_SERVICE_NAME, this);
+    auto* job = new QKeychain::WritePasswordJob(QStringLiteral(CREDENTIAL_SERVICE_NAME), this);
     job->setKey(key);
     job->setAutoDelete(false);
     job->setTextData(value);
@@ -405,7 +404,7 @@ QCoro::Task<bool> Settings::setSecureValue(QString key, QString value, bool fall
 #endif
 }
 
-std::optional<QString> Settings::getPlainValue(QString key) {
+std::optional<QString> Settings::getPlainValue(const QString& key) {
     if (m_settings.contains(key)) {
         auto value = m_settings.value(key).toString();
         return value;
@@ -413,7 +412,7 @@ std::optional<QString> Settings::getPlainValue(QString key) {
     return std::nullopt;
 }
 
-bool Settings::setPlainValue(QString key, QString value) {
+bool Settings::setPlainValue(const QString& key, const QString& value) {
     if (getPlainValue(key) != value) {
         m_settings.setValue(key, value);
         m_settings.sync();
@@ -424,7 +423,7 @@ bool Settings::setPlainValue(QString key, QString value) {
 
 QCoro::Task<bool> Settings::deleteSecureValue(QString key, bool fallback) {
 #if LITH_FEATURE_KEYCHAIN
-    auto* job = new QKeychain::DeletePasswordJob(CREDENTIAL_SERVICE_NAME, this);
+    auto* job = new QKeychain::DeletePasswordJob(QStringLiteral(CREDENTIAL_SERVICE_NAME), this);
     job->setKey(key);
     job->setAutoDelete(false);
     auto task = qCoro(job, &QKeychain::Job::finished);
@@ -449,7 +448,7 @@ QCoro::Task<bool> Settings::deleteSecureValue(QString key, bool fallback) {
     co_return false;
 #endif
 }
-bool Settings::deletePlainValue(QString key) {
+bool Settings::deletePlainValue(const QString& key) {
     if (m_settings.contains(key)) {
         m_settings.remove(key);
         m_settings.sync();
@@ -479,7 +478,7 @@ QCoro::Task<bool> Settings::setSensitiveValue(QString key, QString value) {
     co_return setPlainValue(key, value);
 }
 
-QCoro::Task<std::optional<QString>> Settings::getSensitiveValue(const QString& key) {
+QCoro::Task<std::optional<QString>> Settings::getSensitiveValue(QString key) {
     if (m_encryptedCredentials) {
 #ifndef Q_OS_WASM
         QThread* callerThread = QThread::currentThread();

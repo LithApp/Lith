@@ -123,7 +123,7 @@ void Lith::switchToBufferNumber(int number) {
 
 QString Lith::getLinkFileExtension(const QString& url) {
     QUrl u(url);
-    auto extension = u.fileName().split(".").last().toLower();
+    auto extension = u.fileName().split(QLatin1Char('.')).last().toLower();
     return extension;
 }
 
@@ -132,7 +132,7 @@ Weechat* Lith::weechat() {
 }
 
 QString Lith::statusString() const {
-    auto key = QString(QMetaEnum::fromType<Status>().valueToKey(statusGet()));
+    auto key = QString::fromLatin1(QMetaEnum::fromType<Status>().valueToKey(statusGet()));
     key = key.toLower();
     key.front() = key.front().toUpper();
     return key;
@@ -182,11 +182,11 @@ NotificationHandler* Lith::notificationHandler() {
 }
 
 QString Lith::gitVersion() {
-    return GIT_STATE;
+    return QStringLiteral(GIT_STATE);
 }
 
 bool Lith::debugVersion() {
-    return QStringLiteral("Debug") == CMAKE_BUILD_TYPE;
+    return QStringLiteral("Debug") == QStringLiteral(CMAKE_BUILD_TYPE);
 }
 
 Lith::Lith(QObject* parent)
@@ -330,7 +330,7 @@ void Lith::handleFirstReceivedLine(const WeeChatProtocol::HData& hda) {
         line = new BufferLine(buffer);
         line->ptrSet(linePtr);
         for (auto [key, value] : i.objects.asKeyValueRange()) {
-            if (key != "buffer") {
+            if (key != QStringLiteral("buffer")) {
                 line->setProperty(qPrintable(key), value);
             }
         }
@@ -343,14 +343,14 @@ void Lith::handleHotlistInitialization(const WeeChatProtocol::HData& hda) {
     for (const auto& i : hda.data) {
         // hotlist
         auto ptr = i.pointers.first();
-        auto bufPtr = i.objects["buffer"].value<weechat_pointer_t>();
+        auto bufPtr = i.objects[QStringLiteral("buffer")].value<weechat_pointer_t>();
         auto item = QSharedPointer<HotListItem>::create();
         auto* buffer = getBuffer(bufPtr);
         if (buffer) {
             item->bufferSet(buffer);
         }
         for (auto [key, value] : i.objects.asKeyValueRange()) {
-            if (key == "buffer") {
+            if (key == QStringLiteral("buffer")) {
                 continue;
             }
             item->setProperty(qPrintable(key), value);
@@ -395,7 +395,7 @@ void Lith::handleFetchLines(const WeeChatProtocol::HData& hda) {
         line = new BufferLine(buffer);
         line->ptrSet(linePtr);
         for (auto [key, value] : i.objects.asKeyValueRange()) {
-            if (key != "buffer") {
+            if (key != QStringLiteral("buffer")) {
                 line->setProperty(qPrintable(key), value);
             }
         }
@@ -410,7 +410,7 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
     for (const auto& i : hda.data) {
         // hotlist
         auto hlPtr = i.pointers.first();
-        auto bufPtr = qvariant_cast<weechat_pointer_t>(i.objects["buffer"]);
+        auto bufPtr = qvariant_cast<weechat_pointer_t>(i.objects.value(QStringLiteral("buffer")));
         auto hl = getHotlist(hlPtr);
         auto* buf = getBuffer(bufPtr);
         if (!buf) {
@@ -501,7 +501,7 @@ void Lith::_buffer_renamed(const WeeChatProtocol::HData& hda) {
             continue;
         }
         for (auto [key, value] : i.objects.asKeyValueRange()) {
-            if (key.endsWith("name")) {
+            if (key.endsWith(QStringLiteral("name"))) {
                 buf->setProperty(qPrintable(key), value);
             }
         }
@@ -598,18 +598,19 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
             }
 
 #if defined(__linux) && !defined(__ANDROID_API__)
-            QString serviceName = "org.freedesktop.Notifications";
+            QString serviceName = QStringLiteral("org.freedesktop.Notifications");
             QDBusConnection dbus = QDBusConnection::sessionBus();
             QDBusConnectionInterface* connectionInterface = dbus.interface();
             bool isRegistered = connectionInterface->isServiceRegistered(serviceName);
 
             if (isRegistered) {
-                QDBusInterface notifications(serviceName, "/org/freedesktop/Notifications", serviceName, dbus);
+                QDBusInterface notifications(serviceName, QStringLiteral("/org/freedesktop/Notifications"), serviceName, dbus);
                 auto reply = notifications.call(
-                    "Notify", "Lith", 0U, "org.LithApp.Lith", title, line->colorlessTextGet(), QStringList {}, QVariantMap {}, -1
+                    QStringLiteral("Notify"), QStringLiteral("Lith"), 0U, QStringLiteral("org.LithApp.Lith"), title,
+                    line->colorlessTextGet(), QStringList {}, QVariantMap {}, -1
                 );
             } else {
-                static QIcon appIcon(":/icon.png");
+                static QIcon appIcon(QStringLiteral(":/icon.png"));
                 static auto* icon = new QSystemTrayIcon(appIcon);
                 icon->show();
 
@@ -755,7 +756,8 @@ const BufferLine* Lith::getLine(weechat_pointer_t bufPtr, weechat_pointer_t line
 void Lith::addHotlist(weechat_pointer_t ptr, QSharedPointer<HotListItem> hotlist) {
     if (m_hotList.contains(ptr)) {
         // TODO
-        qCritical() << "Hotlist with ptr" << QString("%1").arg(ptr, 8, 16, QChar('0')) << "already exists";
+        qCritical() << QStringLiteral("Hotlist with ptr") << QStringLiteral("%1").arg(ptr, 8, 16, QLatin1Char('0'))
+                    << QStringLiteral("already exists");
     }
     m_hotList[ptr] = hotlist;
 }

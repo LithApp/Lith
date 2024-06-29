@@ -31,7 +31,7 @@
 #include <QIcon>
 
 #include <QtQml/qqmlextensionplugin.h>
-// NOLINTSTART
+// NOLINTBEGIN
 // Q_IMPORT_QML_PLUGIN(Lith_UIPlugin)
 // Q_IMPORT_QML_PLUGIN(Lith_StylePlugin)
 // Q_IMPORT_QML_PLUGIN(Lith_CorePlugin)

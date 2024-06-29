@@ -3,10 +3,10 @@
 QString ColorTheme::getIcon(const QString& name) {
     switch (m_group) {
         case DARK:
-            return "qrc:/navigation/dark/" + name + ".png";
+            return QStringLiteral("qrc:/navigation/dark/%1.png").arg(name);
         case LIGHT:
         default:
-            return "qrc:/navigation/light/" + name + ".png";
+            return QStringLiteral("qrc:/navigation/light/%1.png").arg(name);
     }
 }
 

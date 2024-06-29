@@ -10,7 +10,7 @@
 #include "lith.h"
 
 namespace {
-    Q_GLOBAL_STATIC(const QRegularExpression, formatPlaceholderRegexp, "[%]([0-9]+)");
+    Q_GLOBAL_STATIC(const QRegularExpression, formatPlaceholderRegexp, QStringLiteral("[%]([0-9]+)"));
 }
 
 FormatStringSplitter::FormatStringSplitter(QObject* parent)
@@ -53,14 +53,15 @@ QString FormatStringSplitter::formattedDataGet() {
         if (!validate(var->nameGet())) {
             Lith::instance()->log(
                 Logger::FormatSplitter,
-                QString("FormatStringSplitter::formattedData was called with invalid variable (%1), inserting N/A").arg(var->nameGet())
+                QStringLiteral("FormatStringSplitter::formattedData was called with invalid variable (%1), inserting N/A")
+                    .arg(var->nameGet())
             );
-            result = result.arg("N/A");
+            result = result.arg(QStringLiteral("N/A"));
             continue;
         }
         auto propertyIndex = mo->indexOfProperty(qPrintable(var->nameGet()));
         if (propertyIndex <= 0) {
-            Lith::instance()->log(Logger::FormatSplitter, QString("Property %1 was not found in this object").arg(var->nameGet()));
+            Lith::instance()->log(Logger::FormatSplitter, QStringLiteral("Property %1 was not found in this object").arg(var->nameGet()));
             continue;
         }
         auto mp = mo->property(propertyIndex);
@@ -70,7 +71,7 @@ QString FormatStringSplitter::formattedDataGet() {
         }
         if (!propertyVariant.canConvert<QString>()) {
             Lith::instance()->log(
-                Logger::FormatSplitter, QString("Not sure how but could not convert property %1 to QString").arg(var->nameGet())
+                Logger::FormatSplitter, QStringLiteral("Not sure how but could not convert property %1 to QString").arg(var->nameGet())
             );
             continue;
         }
@@ -91,7 +92,7 @@ void FormatStringSplitter::fromStringList(const QStringList& items) {
             auto* variable = m_variables->get<FormatStringVariable>(varIndex);
             if (!variable) {
                 Lith::instance()->log(
-                    Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i)
+                    Logger::FormatSplitter, QStringLiteral("FormattedStringSplitter contains an invalid object at position %1").arg(i)
                 );
                 varIndex++;
                 continue;
@@ -110,7 +111,7 @@ QStringList FormatStringSplitter::stringList() const {
         auto* variable = m_variables->get<FormatStringVariable>(i);
         if (!variable) {
             Lith::instance()->log(
-                Logger::FormatSplitter, QString("FormattedStringSplitter contains an invalid object at position %1").arg(i)
+                Logger::FormatSplitter, QStringLiteral("FormattedStringSplitter contains an invalid object at position %1").arg(i)
             );
             continue;
         }
@@ -143,7 +144,7 @@ void FormatStringSplitter::onFormatChanged() {
                 return;
             }
         } else {
-            errorStringSet(tr("Format string %1 is invalid").arg(match.capturedTexts().join(",")));
+            errorStringSet(tr("Format string %1 is invalid").arg(match.capturedTexts().join(QStringLiteral(","))));
             formatValidSet(false);
             return;
         }
@@ -152,18 +153,18 @@ void FormatStringSplitter::onFormatChanged() {
     QList<int> numberList(numberSet.begin(), numberSet.end());
     std::sort(numberList.begin(), numberList.end());
     if (numberList.isEmpty()) {
-        errorStringSet("You need to enter at least one format string");
+        errorStringSet(QStringLiteral("You need to enter at least one format string"));
         formatValidSet(false);
         return;
     } else if (*numberList.begin() != 1) {
-        errorStringSet(QString("Format strings need to start at 1, currently it is: %1").arg(*numberList.begin()));
+        errorStringSet(QStringLiteral("Format strings need to start at 1, currently it is: %1").arg(*numberList.begin()));
         formatValidSet(false);
         return;
     } else {
         int previous = 0;
         for (auto& number : numberList) {
             if (number != previous + 1) {
-                errorStringSet(QString("Format string numbers need to be consecutive (%1 came after %2)").arg(number).arg(previous));
+                errorStringSet(QStringLiteral("Format string numbers need to be consecutive (%1 came after %2)").arg(number).arg(previous));
                 formatValidSet(false);
                 return;
             }

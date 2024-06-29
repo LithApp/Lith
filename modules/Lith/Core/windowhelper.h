@@ -15,7 +15,7 @@ class LITHCORE_EXPORT SafeAreaMargins : public QObject {
     PROPERTY_READONLY_PRIVATESETTER(qreal, top, 0.0)
     PROPERTY_READONLY_PRIVATESETTER(qreal, bottom, 0.0)
 public:
-    SafeAreaMargins(QObject* parent = nullptr);
+    explicit SafeAreaMargins(QObject* parent = nullptr);
 
     void setMargins(QMarginsF margins);
 };

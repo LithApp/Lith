@@ -27,7 +27,9 @@
 namespace {
     Q_GLOBAL_STATIC(
         const QRegularExpression, urlRegExp,
-        R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))",
+        QStringLiteral(
+            R"(((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.;])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.;]*\)|[A-Z0-9+&@#\/%=~_|$;])))"
+        ),
         QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption |
             QRegularExpression::ExtendedPatternSyntaxOption
     );

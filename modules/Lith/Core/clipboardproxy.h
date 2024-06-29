@@ -32,6 +32,7 @@ class LITHCORE_EXPORT ClipboardProxy : public QObject {
 public:
     explicit ClipboardProxy(QObject* parent = nullptr);
     static ClipboardProxy* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        Q_UNUSED(jsEngine)
         return new ClipboardProxy(qmlEngine);
     }
 

@@ -32,6 +32,7 @@ class LITHCORE_EXPORT Uploader : public QObject {
 public:
     explicit Uploader(QObject* parent = nullptr);
     static Uploader* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        Q_UNUSED(jsEngine)
         return new Uploader(qmlEngine);
     }
 

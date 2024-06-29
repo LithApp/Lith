@@ -21,15 +21,17 @@ void QmlObjectList::append(const QVariantMap& properties) {
     auto* newObj = mMetaObject->newInstance();
     if (newObj == Q_NULLPTR) {
         Lith::instance()->log(
-            Logger::Unexpected, QString("Object model cannot instantiate %1, missing constructor").arg(mMetaObject->className())
+            Logger::Unexpected,
+            QStringLiteral("Object model cannot instantiate %1, missing constructor").arg(QString::fromLatin1(mMetaObject->className()))
         );
         return;
     }
     for (auto [key, value] : properties.asKeyValueRange()) {
         if (!newObj->setProperty(key.toUtf8().data(), value)) {
             Lith::instance()->log(
-                Logger::Unexpected,
-                QString("Object model cannot append object of type %1 with property %2").arg(mMetaObject->className()).arg(key)
+                Logger::Unexpected, QStringLiteral("Object model cannot append object of type %1 with property %2")
+                                        .arg(QString::fromLatin1(mMetaObject->className()))
+                                        .arg(key)
             );
         }
     }
@@ -89,7 +91,7 @@ bool QmlObjectList::removeItem(QObject* item) {
 QVariant QmlObjectList::at(const int& i) {
     if (i < 0 || i >= mData.size()) {
         Lith::instance()->log(
-            Logger::Unexpected, QString("Attempted to access index %1 in object model of size %1").arg(i).arg(mData.size())
+            Logger::Unexpected, QStringLiteral("Attempted to access index %1 in object model of size %1").arg(i).arg(mData.size())
         );
         return QVariant();
     }
@@ -104,8 +106,9 @@ QVariant QmlObjectList::data(const QModelIndex& index, int role) const {
     const auto& data = mData[index.row()];
     if (data.isNull()) {
         Lith::instance()->log(
-            Logger::Unexpected,
-            QString("Object model data accessor for type %1 at row %2 contains null data").arg(mMetaObject->className()).arg(index.row())
+            Logger::Unexpected, QStringLiteral("Object model data accessor for type %1 at row %2 contains null data")
+                                    .arg(QString::fromLatin1(mMetaObject->className()))
+                                    .arg(index.row())
         );
         return QVariant();
     }

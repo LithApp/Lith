@@ -92,12 +92,14 @@ void Search::onMessagesAdded(const QModelIndex& parent, int first, int last) {
         return;
     }
     if (!lith()->selectedBuffer()) {
-        Lith::instance()->log(Logger::Unexpected, "Search::onMessagesAdded was called with no buffer selected");
+        Lith::instance()->log(Logger::Unexpected, QStringLiteral("Search::onMessagesAdded was called with no buffer selected"));
         matchesSet({});
         return;
     }
     if (first != last) {
-        Lith::instance()->log(Logger::Unexpected, "Search::onMessagesAdded was called with multiple lines, this shouldn't happen");
+        Lith::instance()->log(
+            Logger::Unexpected, QStringLiteral("Search::onMessagesAdded was called with multiple lines, this shouldn't happen")
+        );
     }
 
     auto* buf = lith()->selectedBuffer();

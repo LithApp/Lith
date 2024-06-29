@@ -78,9 +78,11 @@ private:
     PROPERTY(bool, showDebugWindow, false)
 
 public:
-    ~Lith();
+    ~Lith() override;
     static Lith* instance();
     static Lith* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        Q_UNUSED(qmlEngine)
+        Q_UNUSED(jsEngine)
         return instance();
     }
 

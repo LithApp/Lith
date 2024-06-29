@@ -55,7 +55,7 @@ void Buffer::appendLine(BufferLine* line) {
     m_lines->append(line);
 }
 
-FormattedString Buffer::titleGet() const {
+const FormattedString& Buffer::titleGet() const {
     return m_title;
 }
 
@@ -175,21 +175,21 @@ int Buffer::opsGet() const {
 QStringList Buffer::local_variables_stringListGet() const {
     QStringList ret;
     for (auto [key, value] : m_local_variables.asKeyValueRange()) {
-        ret.append(QString("%1: %2").arg(key).arg(value));
+        ret.append(QStringLiteral("%1: %2").arg(key).arg(value));
     }
     return ret;
 }
 
 bool Buffer::isServerGet() const {
-    return m_local_variables.contains("type") && m_local_variables["type"] == "server";
+    return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("server");
 }
 
 bool Buffer::isChannelGet() const {
-    return m_local_variables.contains("type") && m_local_variables["type"] == "channel";
+    return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("channel");
 }
 
 bool Buffer::isPrivateGet() const {
-    return m_local_variables.contains("type") && m_local_variables["type"] == "private";
+    return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("private");
 }
 
 int Buffer::totalUnreadMessagesGet() const {
@@ -197,7 +197,7 @@ int Buffer::totalUnreadMessagesGet() const {
 }
 
 bool Buffer::userInput(const QString& data) {
-    static QRegularExpression inputRegularExpression("\n|\r\n|\r");
+    static QRegularExpression inputRegularExpression(QStringLiteral("\n|\r\n|\r"));
     if (Lith::instance()->statusGet() == Lith::CONNECTED) {
         bool success = false;
         QList<bool> success_list;
@@ -278,7 +278,7 @@ QString BufferLine::dateString() const {
     return dateGet().date().toString();
 }
 
-FormattedString BufferLine::prefixGet() const {
+const FormattedString& BufferLine::prefixGet() const {
     return m_prefix;
 }
 
@@ -286,7 +286,7 @@ void BufferLine::prefixSet(const FormattedString& o) {
     if (m_prefix != o) {
         m_prefix = o;
         // TODO this is probably wrong
-        if (m_prefix.toPlain().startsWith("@") || m_prefix.toPlain().startsWith("+")) {
+        if (m_prefix.toPlain().startsWith(QStringLiteral("@")) || m_prefix.toPlain().startsWith(QStringLiteral("+"))) {
             m_nick = m_prefix.toPlain().mid(1);
         } else {
             m_nick = m_prefix.toPlain();
@@ -299,7 +299,7 @@ QString BufferLine::nickGet() const {
     return m_nick;
 }
 
-FormattedString BufferLine::messageGet() const {
+const FormattedString& BufferLine::messageGet() const {
     return m_message;
 }
 
@@ -311,7 +311,7 @@ void BufferLine::messageSet(const FormattedString& o) {
 }
 
 bool BufferLine::isSelfMsgGet() {
-    return m_tags_array.contains("self_msg");
+    return m_tags_array.contains(QStringLiteral("self_msg"));
 }
 
 QColor BufferLine::nickColorGet() const {
@@ -323,11 +323,12 @@ QColor BufferLine::nickColorGet() const {
 }
 
 bool BufferLine::isPrivMsgGet() {
-    return m_tags_array.contains("irc_privmsg");
+    return m_tags_array.contains(QStringLiteral("irc_privmsg"));
 }
 
 bool BufferLine::isJoinPartQuitMsgGet() {
-    return m_tags_array.contains("irc_quit") || m_tags_array.contains("irc_join") || m_tags_array.contains("irc_part");
+    return m_tags_array.contains(QStringLiteral("irc_quit")) || m_tags_array.contains(QStringLiteral("irc_join")) ||
+           m_tags_array.contains(QStringLiteral("irc_part"));
 }
 
 QString BufferLine::colorlessNicknameGet() {

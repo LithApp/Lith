@@ -86,7 +86,7 @@ class LITHCORE_EXPORT Buffer : public QObject {
     Q_PROPERTY(bool isChannel READ isChannelGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isPrivate READ isPrivateGet NOTIFY local_variablesChanged)
 
-    PROPERTY(QString, lastUserInput, "")
+    PROPERTY(QString, lastUserInput, QStringLiteral(""))
 public:
     Buffer(Lith* parent, weechat_pointer_t pointer);
     ~Buffer() override;
@@ -97,7 +97,7 @@ public:
     void prependLine(BufferLine* line);
     void appendLine(BufferLine* line);
 
-    FormattedString titleGet() const;
+    const FormattedString& titleGet() const;
     void titleSet(const FormattedString& o);
 
     bool isAfterInitialFetch() const;
@@ -175,10 +175,10 @@ public:
     void setParent(Buffer* parent);
 
     QString dateString() const;
-    FormattedString prefixGet() const;
+    const FormattedString& prefixGet() const;
     void prefixSet(const FormattedString& o);
     QString nickGet() const;
-    FormattedString messageGet() const;
+    const FormattedString& messageGet() const;
     void messageSet(const FormattedString& o);
 
     bool isJoinPartQuitMsgGet();

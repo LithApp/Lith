@@ -22,6 +22,8 @@ class LithPlatform : public QObject {
 public:
     static LithPlatform* instance();
     static LithPlatform* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        Q_UNUSED(qmlEngine)
+        Q_UNUSED(jsEngine)
         return instance();
     }
 

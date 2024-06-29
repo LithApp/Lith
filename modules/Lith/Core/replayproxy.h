@@ -42,7 +42,7 @@ class LITHCORE_EXPORT BaseNetworkProxy : public QObject {
 public:
     inline static const int currentReplayVersion = 1;
     inline static const int maxLogFiles = 10;
-    inline static const QString logFileNameTemplate = "LithReplay%1.dat";
+    inline static const QString logFileNameTemplate = QStringLiteral("LithReplay%1.dat");
     static QString getLogDirPath();
 
     enum Mode {

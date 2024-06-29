@@ -34,15 +34,15 @@ Uploader::Uploader(QObject* parent)
 }
 
 void Uploader::upload(const QString& path) {
-    auto url = QUrl("https://api.imgur.com/3/image");
+    auto url = QUrl(QStringLiteral("https://api.imgur.com/3/image"));
     qApp->eventDispatcher()->processEvents(QEventLoop::AllEvents);
 
     auto* mgr = new QNetworkAccessManager(this);
 
     QFile* file = nullptr;
-    if (path.startsWith("file://")) {
+    if (path.startsWith(QStringLiteral("file://"))) {
         file = new QFile(QUrl(path).toLocalFile());
-    } else if (path.startsWith("file:assets-library")) {
+    } else if (path.startsWith(QStringLiteral("file:assets-library"))) {
         QImageIOHandler::Transformations transformation;
         {
             // this needs to be in its own scope
@@ -73,13 +73,13 @@ void Uploader::upload(const QString& path) {
         file = new QFile(path);
     }
     if (!file->open(QIODevice::ReadOnly)) {
-        emit error("Could not open file " + path);
+        emit error(QStringLiteral("Could not open file %1").arg(path));
         return;
     }
 
     workingSet(true);
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QByteArrayLiteral("application/application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Client-ID " + Lith::settingsGet()->imgurApiKeyGet().toUtf8());
 
     auto* reply = mgr->post(request, file->readAll());
@@ -89,13 +89,15 @@ void Uploader::upload(const QString& path) {
 }
 
 void Uploader::uploadBinary(QImage data) {
-    auto url = QUrl("https://api.imgur.com/3/image");
+    auto url = QUrl(QStringLiteral("https://api.imgur.com/3/image"));
 
     auto* mgr = new QNetworkAccessManager(this);
 
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/application/x-www-form-urlencoded");
-    request.setRawHeader("Authorization", "Client-ID " + Lith::settingsGet()->imgurApiKeyGet().toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QByteArrayLiteral("application/application/x-www-form-urlencoded"));
+    request.setRawHeader(
+        QByteArrayLiteral("Authorization"), QByteArrayLiteral("Client-ID ") + Lith::settingsGet()->imgurApiKeyGet().toUtf8()
+    );
 
     workingSet(true);
 
@@ -116,11 +118,10 @@ void Uploader::onFinished(QNetworkReply* reply) {
     workingSet(false);
     if (reply->isReadable()) {
         auto doc = QJsonDocument::fromJson(reply->readAll());
-        qCritical() << QString(doc.toJson());
-        if (doc["success"].toBool()) {
-            emit success(doc["data"]["link"].toString());
+        if (doc[QStringLiteral("success")].toBool()) {
+            emit success(doc[QStringLiteral("data")][QStringLiteral("link")].toString());
         } else {
-            emit error(doc["data"]["error"].toString());
+            emit error(doc[QStringLiteral("data")][QStringLiteral("error")].toString());
         }
     } else {
         emit error(reply->errorString());

@@ -30,7 +30,7 @@ const QStringList& Reflection::stringPropertiesGet() const {
         } else {
             auto mt = QMetaType::fromName(m_className.toLocal8Bit());
             if (!mt.isValid()) {
-                auto pointerName = m_className + '*';
+                auto pointerName = m_className + QChar::fromLatin1('*');
                 mt = QMetaType::fromName(pointerName.toLocal8Bit());
             }
             if (mt.isValid()) {
@@ -38,8 +38,8 @@ const QStringList& Reflection::stringPropertiesGet() const {
                 if (mo) {
                     for (int i = 0; i < mo->propertyCount(); i++) {
                         auto property = mo->property(i);
-                        QString name = property.name();
-                        if (name == "objectName") {
+                        QString name = QString::fromLatin1(property.name());
+                        if (name == QStringLiteral("objectName")) {
                             continue;
                         }
                         if (QMetaType::canConvert(property.metaType(), QMetaType(QMetaType::QString))) {
@@ -47,11 +47,13 @@ const QStringList& Reflection::stringPropertiesGet() const {
                         }
                     }
                 } else {
-                    Lith::instance()->log(Logger::Unexpected, QString("MetaObject for class %1 could not be accessed").arg(m_className));
+                    Lith::instance()->log(
+                        Logger::Unexpected, QStringLiteral("MetaObject for class %1 could not be accessed").arg(m_className)
+                    );
                     allowedPropertiesForClass[m_className] = QStringList();
                 }
             } else {
-                Lith::instance()->log(Logger::Unexpected, QString("MetaType for class %1 could not be accessed").arg(m_className));
+                Lith::instance()->log(Logger::Unexpected, QStringLiteral("MetaType for class %1 could not be accessed").arg(m_className));
                 allowedPropertiesForClass[m_className] = QStringList();
             }
         }

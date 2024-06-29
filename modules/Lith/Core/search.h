@@ -11,7 +11,7 @@ class Buffer;
 class BufferLine;
 class LITHCORE_EXPORT Search : public QObject {
     Q_OBJECT
-    PROPERTY(QString, term, "")
+    PROPERTY(QString, term, QStringLiteral(""))
     PROPERTY(QList<BufferLine*>, matches)
     PROPERTY_READONLY_PRIVATESETTER(int, highlightedMatchIndex, -1)
     Q_PROPERTY(BufferLine* highlightedLine READ highlightedLine NOTIFY highlightedMatchIndexChanged)

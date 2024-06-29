@@ -49,13 +49,13 @@ public:
         inline static constexpr ConstLatin1String c_requestNicklist {"handleNicklistInitialization"};
     };
     enum Initialization {
-        UNINITIALIZED = 0,
-        CONNECTION_OPENED = 1 << 0,
-        HANDSHAKE = 1 << 1,
-        REQUEST_BUFFERS = 1 << 2,
-        REQUEST_FIRST_LINE = 1 << 3,
-        REQUEST_HOTLIST = 1 << 4,
-        REQUEST_NICKLIST = 1 << 5,
+        UNINITIALIZED = 0U,
+        CONNECTION_OPENED = 1U << 0U,
+        HANDSHAKE = 1U << 1U,
+        REQUEST_BUFFERS = 1U << 2U,
+        REQUEST_FIRST_LINE = 1U << 3U,
+        REQUEST_HOTLIST = 1U << 4U,
+        REQUEST_NICKLIST = 1U << 5U,
         COMPLETE = CONNECTION_OPENED | HANDSHAKE | REQUEST_BUFFERS | REQUEST_FIRST_LINE | REQUEST_HOTLIST | REQUEST_NICKLIST,
         UNTIL_HANDSHAKE = CONNECTION_OPENED | HANDSHAKE,
     };

@@ -20,7 +20,7 @@ QVariant Logger::data(const QModelIndex& index, int role) const {
                     return m_events[index.row()].second.summary;
                 case Type: {
                     QMetaEnum me = QMetaEnum::fromType<Logger::EventType>();
-                    return QString(me.valueToKey(m_events[index.row()].second.type)).toUpper();
+                    return QString::fromUtf8(me.valueToKey(m_events[index.row()].second.type)).toUpper();
                 }
             }
         } else {
@@ -35,7 +35,7 @@ QVariant Logger::data(const QModelIndex& index, int role) const {
                     return m_events[index.row()].second.summary;
                 case Type: {
                     QMetaEnum me = QMetaEnum::fromType<Logger::EventType>();
-                    return QString(me.valueToKey(m_events[index.row()].second.type)).toUpper();
+                    return QString::fromUtf8(me.valueToKey(m_events[index.row()].second.type)).toUpper();
                 }
             }
         }
@@ -55,12 +55,12 @@ int Logger::columnCount(const QModelIndex& parent) const {
 
 QHash<int, QByteArray> Logger::roleNames() const {
     return {
-        {        Qt::DisplayRole,  "display"},
-        {Qt::UserRole + DateTime, "dateTime"},
-        {    Qt::UserRole + Type,     "type"},
-        { Qt::UserRole + Context,  "context"},
-        { Qt::UserRole + Summary,  "summary"},
-        { Qt::UserRole + Details,  "details"}
+        {        Qt::DisplayRole,  QByteArrayLiteral("display")},
+        {Qt::UserRole + DateTime, QByteArrayLiteral("dateTime")},
+        {    Qt::UserRole + Type,     QByteArrayLiteral("type")},
+        { Qt::UserRole + Context,  QByteArrayLiteral("context")},
+        { Qt::UserRole + Summary,  QByteArrayLiteral("summary")},
+        { Qt::UserRole + Details,  QByteArrayLiteral("details")}
     };
 }
 

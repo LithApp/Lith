@@ -35,7 +35,7 @@ Lith* SocketHelper::lith() {
 
 void SocketHelper::onError(QAbstractSocket::SocketError e) {
     QMetaEnum me = QMetaEnum::fromType<QAbstractSocket::SocketError>();
-    lith()->log(Logger::Network, QString("Socket error: %1").arg(me.valueToKey(e)));
+    lith()->log(Logger::Network, QStringLiteral("Socket error: %1").arg(QLatin1String(me.valueToKey(e))));
 #ifndef __EMSCRIPTEN__
     if (m_tcpSocket) {
         emit errorOccurred(m_tcpSocket->errorString());
@@ -47,28 +47,28 @@ void SocketHelper::onError(QAbstractSocket::SocketError e) {
 }
 
 void SocketHelper::onDisconnected() {
-    lith()->log(Logger::Network, "Socket disconnected");
+    lith()->log(Logger::Network, QStringLiteral("Socket disconnected"));
     emit disconnected();
 }
 
 void SocketHelper::onConnected() {
-    lith()->log(Logger::Network, "Socket connected");
+    lith()->log(Logger::Network, QStringLiteral("Socket connected"));
     emit connected();
 }
 
 void SocketHelper::connectToWebsocket(const QString& hostname, const QString& endpoint, int port, bool encrypted) {
     reset();
 
-    bool endpointHasSlash = endpoint.startsWith('/');
-    QString url(QString("%1://%2:%3%4%5")
-                    .arg(encrypted ? "wss" : "ws")
+    bool endpointHasSlash = endpoint.startsWith(QLatin1Char('/'));
+    QString url(QStringLiteral("%1://%2:%3%4%5")
+                    .arg(encrypted ? QStringLiteral("wss") : QStringLiteral("ws"))
                     .arg(hostname)
                     .arg(port)
                     .arg(endpointHasSlash ? QStringLiteral("") : QStringLiteral("/"))
                     .arg(endpoint));
 
-    lith()->log(Logger::Network, QString("Connecting to: %1").arg(url));
-    m_webSocket = new QWebSocket("weechat", QWebSocketProtocol::VersionLatest, this);
+    lith()->log(Logger::Network, QStringLiteral("Connecting to: %1").arg(url));
+    m_webSocket = new QWebSocket(QStringLiteral("weechat"), QWebSocketProtocol::VersionLatest, this);
 
     connect(m_webSocket, &QWebSocket::connected, this, &SocketHelper::onConnected);
     connect(m_webSocket, &QWebSocket::disconnected, this, &SocketHelper::onDisconnected);
@@ -86,7 +86,10 @@ void SocketHelper::connectToWebsocket(const QString& hostname, const QString& en
 #ifndef __EMSCRIPTEN__
 void SocketHelper::connectToTcpSocket(const QString& hostname, int port, bool encrypted) {
     reset();
-    lith()->log(Logger::Network, QString("Connecting to: %1:%2 (%3)").arg(hostname).arg(port).arg(encrypted ? "ssl" : "plain"));
+    lith()->log(
+        Logger::Network,
+        QStringLiteral("Connecting to: %1:%2 (%3)").arg(hostname).arg(port).arg(encrypted ? QStringLiteral("ssl") : QStringLiteral("plain"))
+    );
     m_tcpSocket = new QSslSocket(this);
     m_tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
@@ -125,15 +128,19 @@ qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, cons
         fullCommand.append(data);
     }
     fullCommand.append("\n");
-    if (command != "ping") {
-        if (command == "init") {
-            lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString("[obscured]"));
+    if (command != QByteArrayLiteral("ping")) {
+        if (command == QByteArrayLiteral("init")) {
+            lith()->log(
+                Logger::Protocol, QString::fromUtf8(command), QStringLiteral("Sending WeeChat command"), QStringLiteral("[obscured]")
+            );
         } else {
-            lith()->log(Logger::Protocol, command, QString("Sending WeeChat command"), QString(fullCommand));
+            lith()->log(
+                Logger::Protocol, QString::fromUtf8(command), QStringLiteral("Sending WeeChat command"), QString::fromUtf8(fullCommand)
+            );
         }
     }
     if (m_webSocket) {
-        bytes = m_webSocket->sendTextMessage(fullCommand);
+        bytes = m_webSocket->sendTextMessage(QString::fromUtf8(fullCommand));
     }
 #ifndef __EMSCRIPTEN__
     if (m_tcpSocket) {
@@ -143,7 +150,7 @@ qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, cons
     if (bytes != fullCommand.size()) {
         lith()->log(
             Logger::Network,
-            QString("SocketHelper::write: Attempted to write %1 but managed to write %2 bytes").arg(fullCommand.size()).arg(bytes)
+            QStringLiteral("SocketHelper::write: Attempted to write %1 but managed to write %2 bytes").arg(fullCommand.size()).arg(bytes)
         );
     }
     return bytes;
@@ -208,7 +215,7 @@ void SocketHelper::onSslErrors(const QList<QSslError>& errors) {
                 ignoredSslErrors.append(error);
             }
         }
-        lith()->log(Logger::Network, "SSL error: " + error.errorString());
+        lith()->log(Logger::Network, QStringLiteral("SSL error: %1").arg(error.errorString()));
     }
 
     if (!ignoredSslErrors.isEmpty()) {
