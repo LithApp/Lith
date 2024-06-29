@@ -3,6 +3,7 @@ project(Lith)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,6 +21,7 @@ if(NOT CMAKE_CROSSCOMPILING)
 endif()
 option(LITH_FORCE_DOWNLOAD_DEPENDENCIES "Force downloading 3rd party dependencies even if they are installed." OFF)
 option(LITH_FORCE_LOCAL_PACKAGES_ONLY "Completely disable downloading 3rd party dependencies, only the ones from find_package will be used." OFF)
+option(LITH_BUILD_TESTS "While building the application, build tests, too" OFF)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Emscripten)
     # There's no WebAssembly backend
@@ -108,6 +110,11 @@ endif()
 find_package(Qt6 COMPONENTS Widgets Gui Quick Multimedia Qml QuickControls2 QuickLayouts QuickDialogs2 QuickTemplates2 WebSockets Xml REQUIRED)
 if (LITH_DEPENDENCY_ENABLE_DBUS)
     find_package(Qt6 COMPONENTS DBus REQUIRED)
+endif()
+
+if(LITH_BUILD_TESTS)
+    find_package(Qt6 COMPONENTS Test REQUIRED)
+    enable_testing()
 endif()
 
 if (LITH_FORCE_DOWNLOAD_DEPENDENCIES)

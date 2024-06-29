@@ -122,4 +122,6 @@ install(FILES
     DESTINATION ${LITH_INSTALL_MODULEDIR}/Lith/Core/
 )
 
-
+if(LITH_BUILD_TESTS)
+    add_subdirectory(test)
+endif()

@@ -47,18 +47,18 @@ namespace WeeChatProtocol {
     template <typename T> T parse(QDataStream& s, bool canContainHtml, bool* ok = nullptr);
     template <typename T> T parse(QDataStream& s, bool* ok = nullptr);
 
-    template <> Char parse(QDataStream& s, bool* ok);
-    template <> Integer parse(QDataStream& s, bool* ok);
-    template <> LongInteger parse(QDataStream& s, bool* ok);
-    template <> String parse(QDataStream& s, bool canContainHTML, bool* ok);
-    template <> String parse(QDataStream& s, bool* ok);
-    template <> Buffer parse(QDataStream& s, bool* ok);
-    template <> Pointer parse(QDataStream& s, bool* ok);
-    template <> Time parse(QDataStream& s, bool* ok);
-    template <> HashTable parse(QDataStream& s, bool* ok);
-    template <> HData parse(QDataStream& s, bool* ok);
-    template <> ArrayInt parse(QDataStream& s, bool* ok);
-    template <> ArrayStr parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT Char parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT Integer parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT LongInteger parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT String parse(QDataStream& s, bool canContainHTML, bool* ok);
+    template <> LITHCORE_EXPORT String parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT Buffer parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT Pointer parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT Time parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT HashTable parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT HData parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT ArrayInt parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT ArrayStr parse(QDataStream& s, bool* ok);
 
     LITHCORE_EXPORT FormattedString convertColorsToHtml(const QByteArray& data, bool canContainHTML);
 };  // namespace WeeChatProtocol
