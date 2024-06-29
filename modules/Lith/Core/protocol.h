@@ -44,13 +44,11 @@ namespace WeeChatProtocol {
     using ArrayInt = QList<int>;
     using ArrayStr = QStringList;
 
-    template <typename T> T parse(QDataStream& s, bool canContainHtml, bool* ok = nullptr);
     template <typename T> T parse(QDataStream& s, bool* ok = nullptr);
 
     template <> LITHCORE_EXPORT Char parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Integer parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT LongInteger parse(QDataStream& s, bool* ok);
-    template <> LITHCORE_EXPORT String parse(QDataStream& s, bool canContainHTML, bool* ok);
     template <> LITHCORE_EXPORT String parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Buffer parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Pointer parse(QDataStream& s, bool* ok);
@@ -60,7 +58,7 @@ namespace WeeChatProtocol {
     template <> LITHCORE_EXPORT ArrayInt parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT ArrayStr parse(QDataStream& s, bool* ok);
 
-    LITHCORE_EXPORT FormattedString convertColorsToHtml(const QByteArray& data, bool canContainHTML);
+    LITHCORE_EXPORT FormattedString convertColorsToHtml(const QByteArray& data);
 };  // namespace WeeChatProtocol
 
 Q_DECLARE_METATYPE(WeeChatProtocol::HData);

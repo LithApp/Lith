@@ -404,7 +404,7 @@ private slots:
         QFETCH(QByteArray, input);
         QFETCH(QString, htmlOutput);
 
-        auto result = WeeChatProtocol::convertColorsToHtml(input, true);
+        auto result = WeeChatProtocol::convertColorsToHtml(input);
         QCOMPARE(result.toHtml(*lightTheme), htmlOutput);
     }
 };

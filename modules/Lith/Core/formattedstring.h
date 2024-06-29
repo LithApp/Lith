@@ -37,15 +37,25 @@ public:
             QColor toQColor(const ColorTheme& theme = getCurrentTheme()) const;
         };
 
-        Part(QString text)
-            : text(std::move(text)) {
+        explicit Part(qsizetype pos, qsizetype n)
+            : pos(pos)
+            , n(n) {
         }
+        Part() {
+        }
+        Part(Part&& o) = default;
+        Part(const Part& o) = default;
+        ~Part() = default;
+        Part& operator=(const Part& o) = default;
+        Part& operator=(Part&& o) = default;
         inline bool containsHtml() const {
             return foreground.index >= 0 || background.index >= 0 || hyperlink || bold || underline || italic;
         }
-        QString toHtml(const ColorTheme& theme) const;
+        QString toHtml(QStringView fullText, const ColorTheme& theme, qsizetype trim = -1) const;
+        QStringView text(QStringView fullText, qsizetype trim) const;
 
-        QString text {};
+        qsizetype pos {-1};
+        qsizetype n {-1};
         Color foreground {-1, false};
         Color background {-1, false};
         bool hyperlink {false};
@@ -54,19 +64,13 @@ public:
         bool italic {false};
     };
 
-    FormattedString(const FormattedString& o);
-    FormattedString(FormattedString&& o) noexcept;
-    FormattedString(const QString& o);
-    FormattedString(QString&& o);
-    FormattedString(const char* d);
+    FormattedString(const FormattedString& o) = default;
+    FormattedString(FormattedString&& o) noexcept = default;
+    FormattedString& operator=(const FormattedString& o) = default;
+    FormattedString& operator=(FormattedString&& o) = default;
+    explicit FormattedString(QString&& o);
     FormattedString();
     ~FormattedString() = default;
-
-    FormattedString& operator=(const QString& o);
-    FormattedString& operator=(QString&& o);
-    FormattedString& operator=(const FormattedString& o);
-    FormattedString& operator=(FormattedString&& o) noexcept;
-    FormattedString& operator=(const char* o);
 
     bool operator==(const FormattedString& o) const;
     bool operator!=(const FormattedString& o) const;
@@ -74,10 +78,7 @@ public:
     bool operator!=(const QString& o) const;
 
     // these methods append to the last available segment
-    FormattedString& operator+=(const char* s);
-    FormattedString& operator+=(const QString& s);
-
-    operator QString() const;
+    FormattedString& addChar(const QByteArray& s);
 
     static const ColorTheme& getCurrentTheme();
 
@@ -90,7 +91,8 @@ public:
     int count() const;
     void clear();
 
-    Part& addPart(const Part& p = {{}});
+    Part& addPart();
+    Part& addPart(QStringView s);
     Part& firstPart();
     const Part& firstPart() const;
     Part& lastPart();
@@ -110,6 +112,7 @@ public:
 
 private:
     QList<Part> m_parts {};
+    QString m_fullText;
 };
 
 Q_DECLARE_METATYPE(FormattedString)

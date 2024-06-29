@@ -231,24 +231,24 @@ void Lith::resetData() {
     m_buffers->clear();
     if (!m_logBuffer) {
         m_logBuffer = new Buffer(this, 0);
-        m_logBuffer->nameSet(FormattedString("Lith Log"));
+        m_logBuffer->nameSet(FormattedString(QStringLiteral("Lith Log")));
         auto eventToLine = [](Buffer* parent, const QDateTime& dateTime, const Logger::Event& event) -> BufferLine* {
             auto* logLine = new BufferLine(parent);
             logLine->dateSet(dateTime);
             QMetaEnum me = QMetaEnum::fromType<Logger::EventType>();
-            auto type = QString(me.valueToKey(event.type)).toUpper();
-            logLine->prefixSet(FormattedString(type));
+            auto type = QString::fromLatin1(me.valueToKey(event.type)).toUpper();
+            logLine->prefixSet(FormattedString(std::move(type)));
             FormattedString msg;
             if (!event.context.isEmpty()) {
-                msg.addPart(FormattedString::Part(event.context));
+                msg.addPart(event.context);
                 msg.lastPart().bold = true;
-                msg.addPart(FormattedString::Part(" " + event.summary));
+                msg.addPart(QStringLiteral(" ") + event.summary);
             } else {
-                msg.addPart(FormattedString::Part(event.summary));
+                msg.addPart(event.summary);
             }
             if (!event.details.isEmpty()) {
-                msg.lastPart().text.append("\n");
-                msg.addPart(FormattedString::Part(event.details));
+                msg.addChar(QByteArrayLiteral("\n"));
+                msg.addPart(event.details);
                 msg.lastPart().foreground.index = 15;
             }
             logLine->messageSet(msg);
@@ -414,8 +414,8 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
         auto hl = getHotlist(hlPtr);
         auto* buf = getBuffer(bufPtr);
         if (!buf) {
-            qWarning() << "Got a hotlist item" << QString("%1").arg(hlPtr, 16, 16, QChar('0')) << "for nonexistent buffer"
-                       << QString("%1").arg(bufPtr, 16, 16, QChar('0'));
+            qWarning() << QStringLiteral("Got a hotlist item") << QStringLiteral("%1").arg(hlPtr, 16, 16, QLatin1Char('0'))
+                       << QStringLiteral("for nonexistent buffer") << QStringLiteral("%1").arg(bufPtr, 16, 16, QLatin1Char('0'));
             continue;
         }
         if (!hl) {
@@ -424,7 +424,7 @@ void Lith::handleHotlist(const WeeChatProtocol::HData& hda) {
             addHotlist(hlPtr, hl);
         }
         for (auto [key, value] : i.objects.asKeyValueRange()) {
-            if (key == "buffer") {
+            if (key == QStringLiteral("buffer")) {
                 continue;
             }
             hl->setProperty(qPrintable(key), value);
@@ -516,7 +516,7 @@ void Lith::_buffer_title_changed(const WeeChatProtocol::HData& hda) {
         if (!buf) {
             continue;
         }
-        buf->titleSet(qvariant_cast<FormattedString>(i.objects["title"]));
+        buf->titleSet(qvariant_cast<FormattedString>(i.objects[QStringLiteral("title")]));
     }
 }
 
@@ -528,7 +528,7 @@ void Lith::_buffer_localvar_added(const WeeChatProtocol::HData& hda) {
         if (!buf) {
             continue;
         }
-        auto strm = i.objects["local_variables"].value<StringMap>();
+        auto strm = i.objects[QStringLiteral("local_variables")].value<StringMap>();
         buf->local_variablesSet(strm);
     }
 }
@@ -562,7 +562,7 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
         // line_data
         auto linePtr = i.pointers.last();
         // path doesn't contain the buffer, we need to retrieve it like this
-        auto bufPtr = qvariant_cast<weechat_pointer_t>(i.objects["buffer"]);
+        auto bufPtr = qvariant_cast<weechat_pointer_t>(i.objects[QStringLiteral("buffer")]);
         auto* buffer = getBuffer(bufPtr);
         if (!buffer) {
             qWarning() << "Line missing a parent:";
@@ -575,14 +575,15 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
         auto* line = new BufferLine(buffer);
         line->ptrSet(linePtr);
         for (auto [key, value] : i.objects.asKeyValueRange()) {
-            if (key == "buffer") {
+            if (key == QStringLiteral("buffer")) {
                 continue;
             }
             line->setProperty(qPrintable(key), value);
         }
         m_logger->log(Logger::Event {
-            Logger::LineAdded, buffer->nameGet(), "Received a line",
-            QString("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet())});
+            Logger::LineAdded, buffer->nameGet().toPlain(), QStringLiteral("Received a line"),
+            QStringLiteral("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet().toPlain())
+        });
         buffer->prependLine(line);
         // Overwrite the duplicate map here in case it already exists, we've hit the
         // limit of WeeChat can return (usually 4096 lines per buffer)
@@ -591,9 +592,9 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
             (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet()))) {
             QString title;
             if (buffer->isChannelGet() || buffer->isServerGet()) {
-                title = tr("New highlight in %1 from %2").arg(buffer->short_nameGet()).arg(line->colorlessNicknameGet());
+                title = tr("New highlight in %1 from %2").arg(buffer->short_nameGet().toPlain()).arg(line->colorlessNicknameGet());
             } else {
-                title = tr("New message from %1").arg(buffer->short_nameGet());
+                title = tr("New message from %1").arg(buffer->short_nameGet().toPlain());
             }
 
 #if defined(__linux) && !defined(__ANDROID_API__)
@@ -656,12 +657,12 @@ void Lith::_nicklist_diff(const WeeChatProtocol::HData& hda) {
         if (!buffer) {
             continue;
         }
-        auto op = qvariant_cast<char>(i.objects["_diff"]);
+        auto op = qvariant_cast<char>(i.objects[QStringLiteral("_diff")]);
         switch (op) {
             case '+': {
                 auto* nick = new Nick(buffer);
                 for (auto [key, value] : i.objects.asKeyValueRange()) {
-                    if (key == "_diff") {
+                    if (key == QStringLiteral("_diff")) {
                         continue;
                     }
                     nick->setProperty(qPrintable(key), value);
@@ -680,7 +681,7 @@ void Lith::_nicklist_diff(const WeeChatProtocol::HData& hda) {
                     break;
                 }
                 for (auto [key, value] : i.objects.asKeyValueRange()) {
-                    if (key == "_diff") {
+                    if (key == QStringLiteral("_diff")) {
                         continue;
                     }
                     nick->setProperty(qPrintable(key), value);
@@ -730,8 +731,8 @@ void Lith::addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLi
     if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr) && !overwrite) {
         qCritical() << "Line with bufPtr" << QString("%1").arg(bufPtr, 16, 16, QChar('0')) << "and linePtr"
                     << QString("%1").arg(linePtr, 16, 16, QChar('0')) << "already exists";
-        qCritical() << "Original: " << m_lineMap[bufPtr][linePtr]->messageGet();
-        qCritical() << "New:" << line->messageGet();
+        qCritical() << "Original: " << m_lineMap[bufPtr][linePtr]->messageGet().toPlain();
+        qCritical() << "New:" << line->messageGet().toPlain();
         return;
     }
     m_lineMap[bufPtr][linePtr] = line;

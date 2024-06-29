@@ -57,7 +57,8 @@ namespace WeeChatProtocol {
         return r;
     }
 
-    template <> String parse(QDataStream& s, bool canContainHtml, bool* ok) {
+    template <> String parse(QDataStream& s, bool* ok) {
+        static QByteArray buf;
         String r {};
         uint32_t len = 0;
         r.clear();
@@ -65,20 +66,16 @@ namespace WeeChatProtocol {
         if (len == static_cast<uint32_t>(-1)) {
             r = String();
         } else if (len == 0) {
-            r = "";
+            r.addChar(QByteArrayLiteral(""));
         } else if (len > 0) {
-            QByteArray buf(len, 0);
+            buf.resize(len);
             s.readRawData(buf.data(), static_cast<int>(len));
-            r = convertColorsToHtml(buf, canContainHtml);
+            r = convertColorsToHtml(buf);
         }
         if (ok) {
             *ok = true;
         }
         return r;
-    }
-
-    template <> String parse(QDataStream& s, bool* ok) {
-        return parse<String>(s, false, ok);
     }
 
     template <> Buffer parse(QDataStream& s, bool* ok) {
@@ -154,7 +151,7 @@ namespace WeeChatProtocol {
         for (quint32 i = 0; i < count; i++) {
             auto key = parse<String>(s);
             auto value = parse<String>(s);
-            r.insert(QString {key}, QString {value});
+            r.insert(key.toPlain(), value.toPlain());
         }
         if (ok) {
             *ok = true;
@@ -224,11 +221,13 @@ namespace WeeChatProtocol {
                     }
                     item.objects[name] = QVariant::fromValue(l);
                 } else if (type == QStringLiteral("str") || type == QStringLiteral("buf")) {
+                    /* TODO this may be useful for optimization
                     bool canContainHTML = false;
                     if (name == QStringLiteral("message") || name == QStringLiteral("title") || name == QStringLiteral("prefix")) {
                         canContainHTML = true;
                     }
-                    String str = parse<String>(s, canContainHTML, &innerOk);
+                    */
+                    String str = parse<String>(s, &innerOk);
                     if (!innerOk) {
                         if (outerOk) {
                             *outerOk = false;
@@ -343,7 +342,7 @@ namespace WeeChatProtocol {
                 }
                 return r;
             }
-            r.append(QString {str});
+            r.emplace_back(str.toPlain());
         }
         if (outerOk) {
             *outerOk = true;
@@ -351,7 +350,7 @@ namespace WeeChatProtocol {
         return r;
     }
 
-    FormattedString convertColorsToHtml(const QByteArray& data, bool canContainHtml) {
+    FormattedString convertColorsToHtml(const QByteArray& data) {
         FormattedString result;
 
         FormattedString::Part::Color foregroundColor;
@@ -366,7 +365,7 @@ namespace WeeChatProtocol {
 
         auto carryOver = [&result, &foregroundColor, &foreground, &backgroundColor, &background, &bold, &reverse, &italic, &underline,
                           &keep]() {
-            auto& part = result.addPart();
+            FormattedString::Part& part = result.addPart();
 
             if (foreground) {
                 part.foreground = foregroundColor;
@@ -597,28 +596,32 @@ namespace WeeChatProtocol {
             }
             carryOver();
         };
-        auto getChar = [](QByteArray::const_iterator& it) -> QString {
+        auto getChar = [](QByteArray::const_iterator& it) -> const QByteArray& {
+            static QByteArray buf;
+            buf.resize(1);
             if (static_cast<unsigned char>(*it) < 0x80) {
-                return QString(*it);
+                buf[0] = *it;
             } else {
-                QByteArray buf;
                 if ((*it & 0b11111000U) == 0b11110000U) {
-                    buf += *it++;
-                    buf += *it++;
-                    buf += *it++;
-                    buf += *it;
+                    buf.resize(4);
+                    buf[0] = *it++;
+                    buf[1] = *it++;
+                    buf[2] = *it++;
+                    buf[3] = *it;
                 } else if ((*it & 0b11110000U) == 0b11100000U) {
-                    buf += *it++;
-                    buf += *it++;
-                    buf += *it;
+                    buf.resize(3);
+                    buf[0] = *it++;
+                    buf[1] = *it++;
+                    buf[2] = *it;
                 } else if ((*it & 0b11100000U) == 0b11000000U) {
-                    buf += *it++;
-                    buf += *it;
+                    buf.resize(2);
+                    buf[0] = *it++;
+                    buf[1] = *it;
                 } else {
-                    return QString(*it);
+                    buf[0] = *it;
                 }
-                return QString(buf);
             }
+            return buf;
         };
         for (const auto* it = data.begin(); it != data.end(); ++it) {
             if (*it == 0x19) {
@@ -680,7 +683,7 @@ namespace WeeChatProtocol {
             } else if (*it == 0x1B) {
                 clearAttr(it);
             } else if (*it) {
-                result += getChar(it);
+                result.addChar(getChar(it));
             }
         }
         endColors();

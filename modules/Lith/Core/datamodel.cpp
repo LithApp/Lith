@@ -127,7 +127,7 @@ QStringList Buffer::getVisibleNicks() {
     for (int i = 0; i < m_nicks->count(); i++) {
         auto* nick = m_nicks->get<Nick>(i);
         if (nick && nick->visibleGet() && nick->levelGet() == 0) {
-            result.append(QString {nick->nameGet()});
+            result.append(nick->nameGet().toPlain());
         }
     }
     return result;
@@ -239,7 +239,9 @@ void Buffer::fetchMoreLines() {
         return;
     }
     if (m_lines->count() >= m_lastRequestedCount) {
-        QMetaObject::invokeMethod(Lith::instance()->weechat(), "fetchLines", Q_ARG(weechat_pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25));
+        QMetaObject::invokeMethod(
+            Lith::instance()->weechat(), "fetchLines", Q_ARG(weechat_pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25)
+        );
         // Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
         m_lastRequestedCount = m_lines->count() + 25;
     }
@@ -333,7 +335,8 @@ QString BufferLine::colorlessNicknameGet() {
 }
 
 QString BufferLine::colorlessTextGet() {
-    auto messageStripped = QTextDocumentFragment::fromHtml(QString {m_message}).toPlainText();
+    // TODO this is probably not doing what it seems to be supposed to
+    auto messageStripped = QTextDocumentFragment::fromHtml(m_message.toPlain()).toPlainText();
     return messageStripped;
 }
 

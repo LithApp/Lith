@@ -334,7 +334,7 @@ void Weechat::fetchLines(weechat_pointer_t ptr, int count) {
     const auto* cLith = lith();
     const auto* buffer = cLith->getBuffer(ptr);
     if (buffer) {
-        lith()->log(Logger::Protocol, buffer->nameGet(), QString("Fetching %1 lines").arg(count));
+        lith()->log(Logger::Protocol, buffer->nameGet().toPlain(), QString("Fetching %1 lines").arg(count));
     } else {
         lith()->log(Logger::Unexpected, "Attempted to fetch lines for buffer with invalid buffer");
     }
@@ -357,13 +357,13 @@ void Weechat::onMessageReceived(QByteArray& data) {
     if (QString(type.data()) == QStringLiteral("hda")) {
         WeeChatProtocol::HData hda = WeeChatProtocol::parse<WeeChatProtocol::HData>(s);
 
-        if (c_initializationMap->contains(id)) {
+        if (c_initializationMap->contains(id.toPlain())) {
             // wtf, why can't I write this as |= ?
-            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap->value(id, UNINITIALIZED));
+            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap->value(id.toPlain(), UNINITIALIZED));
             if (!QMetaObject::invokeMethod(
                     Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
                 )) {
-                lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
+                lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id.toPlain()));
             }
             if (m_initializationStatus & COMPLETE) {
                 m_passwordAttempts = 0;
@@ -388,7 +388,7 @@ void Weechat::onMessageReceived(QByteArray& data) {
         if (!QMetaObject::invokeMethod(
                 Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(const FormattedString&, str)
             )) {
-            lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id));
+            lith()->log(Logger::Unexpected, QString("Possible unhandled message: %1").arg(id.toPlain()));
         }
     } else {
         lith()->log(Logger::Unexpected, QString("Was not able to handle message type: %1").arg(type.data()));
