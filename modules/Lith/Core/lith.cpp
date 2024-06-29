@@ -587,7 +587,7 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
         buffer->prependLine(line);
         // Overwrite the duplicate map here in case it already exists, we've hit the
         // limit of WeeChat can return (usually 4096 lines per buffer)
-        addLine(bufPtr, linePtr, line, true);
+        addLine(bufPtr, linePtr, line);
         if (settingsGet()->enableNotificationsGet() &&
             (line->highlightGet() || (buffer->isPrivateGet() && line->isPrivMsgGet() && !line->isSelfMsgGet()))) {
             QString title;
@@ -722,33 +722,23 @@ void Lith::removeBuffer(weechat_pointer_t ptr) {
 }
 
 Buffer* Lith::getBuffer(weechat_pointer_t ptr) {
-    if (m_bufferMap.contains(ptr)) {
-        return m_bufferMap[ptr];
-    }
-    return nullptr;
+    return m_bufferMap.value(ptr, nullptr);
 }
 
-void Lith::addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLine* line, bool overwrite) {
-    if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr) && !overwrite) {
-        qCritical() << "Line with bufPtr" << QString("%1").arg(bufPtr, 16, 16, QChar('0')) << "and linePtr"
-                    << QString("%1").arg(linePtr, 16, 16, QChar('0')) << "already exists";
-        qCritical() << "Original: " << m_lineMap[bufPtr][linePtr]->messageGet().toPlain();
-        qCritical() << "New:" << line->messageGet().toPlain();
-        return;
-    }
+void Lith::addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLine* line) {
     m_lineMap[bufPtr][linePtr] = line;
 }
 
 BufferLine* Lith::getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr) {
-    if (m_lineMap.contains(bufPtr) && m_lineMap[bufPtr].contains(linePtr)) {
-        return m_lineMap[bufPtr][linePtr];
+    if (m_lineMap.contains(bufPtr)) {
+        return m_lineMap[bufPtr].value(linePtr, nullptr);
     }
     return nullptr;
 }
 
 const BufferLine* Lith::getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr) const {
-    if (m_lineMap.contains(bufPtr) && m_lineMap.value(bufPtr).contains(linePtr)) {
-        return m_lineMap.value(bufPtr).value(linePtr);
+    if (m_lineMap.contains(bufPtr)) {
+        return m_lineMap.value(bufPtr).value(linePtr, nullptr);
     }
     return nullptr;
 }
@@ -767,10 +757,7 @@ HotListItem* Lith::getHotlist(weechat_pointer_t ptr) {
 }
 
 const Buffer* Lith::getBuffer(weechat_pointer_t ptr) const {
-    if (m_bufferMap.contains(ptr)) {
-        return m_bufferMap[ptr];
-    }
-    return nullptr;
+    return m_bufferMap.value(ptr, nullptr);
 }
 
 const HotListItem* Lith::getHotlist(weechat_pointer_t ptr) const {

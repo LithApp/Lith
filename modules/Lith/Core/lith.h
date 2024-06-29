@@ -164,7 +164,7 @@ protected:
     void addBuffer(weechat_pointer_t ptr, Buffer* b);
     void removeBuffer(weechat_pointer_t ptr);
     Buffer* getBuffer(weechat_pointer_t ptr);
-    void addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLine* line, bool overwrite = false);
+    void addLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr, BufferLine* line);
     BufferLine* getLine(weechat_pointer_t bufPtr, weechat_pointer_t linePtr);
     void addHotlist(weechat_pointer_t ptr, HotListItem* hotlist);
     HotListItem* getHotlist(weechat_pointer_t ptr);
