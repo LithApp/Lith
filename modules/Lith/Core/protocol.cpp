@@ -376,7 +376,21 @@ namespace WeeChatProtocol {
             if (bold) {
                 part.bold = true;
             }
-            // if (reverse) TODO
+            if (reverse) {
+                auto oldBackground = part.background;
+                if (part.foreground.index < 0) {
+                    part.background.index = 0;
+                    part.background.extended = false;
+                } else {
+                    part.background = part.foreground;
+                }
+                if (oldBackground.index < 0) {
+                    part.foreground.index = 1;
+                    part.foreground.extended = false;
+                } else {
+                    part.foreground = oldBackground;
+                }
+            }
             if (italic) {
                 part.italic = true;
             }
@@ -400,7 +414,6 @@ namespace WeeChatProtocol {
             }
             if (reverse) {
                 reverse = false;
-                // TODO
             }
             if (italic) {
                 italic = false;

@@ -48,6 +48,31 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
     if (underline) {
         ret.append(QStringLiteral("<u>"));
     }
+    if (background.index >= 0) {
+        ret.append(QStringLiteral("<span style='background: "));
+        if (background.extended) {
+            if (theme.extendedColors().count() > background.index) {
+                auto rgb = theme.extendedColors()[background.index];
+                ret.append(QStringLiteral("#%1%2%3")
+                               .arg(qRed(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qGreen(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qBlue(rgb), 2, 16, QLatin1Char('0')));
+            } else {
+                ret.append(QStringLiteral("pink"));
+            }
+        } else {
+            if (theme.weechatColors().count() > foreground.index) {
+                auto rgb = theme.weechatColors()[background.index];
+                ret.append(QStringLiteral("#%1%2%3")
+                               .arg(qRed(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qGreen(rgb), 2, 16, QLatin1Char('0'))
+                               .arg(qBlue(rgb), 2, 16, QLatin1Char('0')));
+            } else {
+                ret.append(QStringLiteral("pink"));
+            }
+        }
+        ret.append(QStringLiteral("'>"));
+    }
     if (foreground.index >= 0) {
         ret.append(QStringLiteral("<font color=\""));
         if (foreground.extended) {
@@ -125,6 +150,9 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
     }
     if (foreground.index >= 0) {
         ret.append(QStringLiteral("</font>"));
+    }
+    if (background.index >= 0) {
+        ret.append(QStringLiteral("</span>"));
     }
     if (underline) {
         ret.append(QStringLiteral("</u>"));
