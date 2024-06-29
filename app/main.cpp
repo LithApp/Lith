@@ -40,6 +40,19 @@ Q_IMPORT_PLUGIN(QWasmIntegrationPlugin)
 #endif
 // NOLINTEND
 
+namespace {
+    ConstLatin1String c_replayFileOption("replay");
+
+    Q_GLOBAL_STATIC(
+        QList<QCommandLineOption>, c_options,
+        {QCommandLineOption(
+            c_replayFileOption, QStringLiteral("(For debugging) Replay recorded incoming network traffic."), QStringLiteral("path"),
+            QString()
+        )}
+    )
+}  // namespace
+
+
 int main(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName("Lith");
     QCoreApplication::setOrganizationDomain("lith.app");
@@ -60,9 +73,9 @@ int main(int argc, char* argv[]) {
     QCommandLineParser cmdLine;
     cmdLine.setApplicationDescription(
         QStringLiteral("                    ===== WeeChat relay client =====\n"
-                       "Homepage: https://github.com/LithApp/Lith\n"
-                       "There are no options now. Just run the app without any arguments to get the UI.")
+                       "Homepage: https://github.com/LithApp/Lith")
     );
+    cmdLine.addOptions(*c_options);
     cmdLine.addHelpOption();
     cmdLine.addVersionOption();
     cmdLine.process(app);
