@@ -153,7 +153,7 @@ private slots:
                                              "0A"
                                              "31333231393933343536"
                                          )
-                                      << WeeChatProtocol::Time("1321993456");
+                                      << WeeChatProtocol::Time(1321993456);
     }
     void time1() {
         QFETCH(QByteArray, input);

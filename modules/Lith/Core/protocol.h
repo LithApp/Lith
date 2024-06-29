@@ -27,7 +27,7 @@ namespace WeeChatProtocol {
     using String = FormattedString;
     using Buffer = QByteArray;
     using Pointer = weechat_pointer_t;
-    using Time = QString;
+    using Time = qint64;
     using HashTable = StringMap;
     struct LITHCORE_EXPORT HData {
         struct Item {
@@ -52,7 +52,9 @@ namespace WeeChatProtocol {
     template <> LITHCORE_EXPORT String parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Buffer parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Pointer parse(QDataStream& s, bool* ok);
-    template <> LITHCORE_EXPORT Time parse(QDataStream& s, bool* ok);
+    // The compiler thinks Time is the same class as LongInteger so no template specialization here
+    // TODO: get rid of this template, it doesn't make much sense like this
+    LITHCORE_EXPORT Time parseTime(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT HashTable parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT HData parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT ArrayInt parse(QDataStream& s, bool* ok);

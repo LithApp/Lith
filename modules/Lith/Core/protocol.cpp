@@ -110,16 +110,14 @@ namespace WeeChatProtocol {
         return r;
     }
 
-    template <> Time parse(QDataStream& s, bool* ok) {
+    Time parseTime(QDataStream& s, bool* ok) {
+        static QByteArray buf;
         Time r {};
         quint8 length = 0;
         s >> length;
-        QByteArray buf(static_cast<int>(length), 0);
+        buf.resize(static_cast<int>(length), 0);
         s.readRawData(buf.data(), length);
-        r = buf;
-        if (ok) {
-            *ok = true;
-        }
+        r = buf.toLongLong(ok);
         return r;
     }
 
@@ -268,7 +266,7 @@ namespace WeeChatProtocol {
                         }
                         return r;
                     }
-                    item.objects[name] = QVariant::fromValue(QDateTime::fromSecsSinceEpoch(t.toLocal8Bit().toLongLong(nullptr, 10)));
+                    item.objects[name] = QVariant::fromValue(QDateTime::fromSecsSinceEpoch(t));
                 } else if (type == QStringLiteral("ptr")) {
                     Pointer p = parse<Pointer>(s, &innerOk);
                     if (!innerOk) {
