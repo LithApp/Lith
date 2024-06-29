@@ -84,7 +84,7 @@ QString FormatStringSplitter::formattedDataGet() {
 
 void FormatStringSplitter::fromStringList(const QStringList& items) {
     bool first = true;
-    int varIndex = 0;
+    quint32 varIndex = 0;
     for (const auto& i : items) {
         if (first) {
             formatSet(i);
