@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import Lith.Core
+import Lith.Style
 
 Rectangle {
     id: root
@@ -14,11 +15,10 @@ Rectangle {
 
     width: aspectRatio > 1.0 ? height / aspectRatio : Math.min(height / aspectRatio, maximumWidth)
     height: aspectRatio <= 1.0 ? maximumHeightHorizontal : maximumHeightVertical
-    radius: 6
+    radius: 3
     color: "transparent"
-    border.width: 1
+    border.width: 0.5
     border.color: LithPalette.regular.text
-    visible: root.thumbnailUrl.endsWith(".jpg") || root.thumbnailUrl.endsWith(".png")
 
     Image {
         id: thumbnailImage
@@ -26,20 +26,20 @@ Rectangle {
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
         source: root.thumbnailUrl.endsWith(".jpg") || root.thumbnailUrl.endsWith(".png") ? root.thumbnailUrl : ""
-
+        asynchronous: true
+    }
+    Label {
+        id: thumbnailCross
+        text: "❌"
+        visible: thumbnailImage.status === Image.Error || thumbnailImage.status === Image.Null
+        anchors.centerIn: parent
+        color: "red"
         Label {
-            id: thumbnailCross
-            text: "❌"
-            visible: parent.status === Image.Error
-            anchors.centerIn: parent
-            color: "red"
-            Label {
-                anchors {
-                    top: parent.bottom
-                    horizontalCenter: parent.horizontalCenter
-                }
-                text: "Error"
+            anchors {
+                top: parent.bottom
+                horizontalCenter: parent.horizontalCenter
             }
+            text: "Error"
         }
     }
 
