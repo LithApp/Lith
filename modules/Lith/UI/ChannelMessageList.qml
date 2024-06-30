@@ -53,9 +53,6 @@ ListView {
         id: scrollBar
     }
 
-    reuseItems: true
-    cacheBuffer: Math.max(1000, listView.height * 2)
-
     orientation: Qt.Vertical
     verticalLayoutDirection: ListView.BottomToTop
     spacing: Lith.settings.messageSpacing
