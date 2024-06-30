@@ -107,9 +107,8 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
     }
 
     QString finalText;
-    const auto urlThreshold = Lith::settingsGet()->shortenLongUrlsThresholdGet();
-    const auto urlShortenEnabled = Lith::settingsGet()->shortenLongUrlsGet();
-    if (urlThreshold > 0 && hyperlink && n > urlThreshold && urlShortenEnabled) {
+    const auto urlThreshold = trim;
+    if (urlThreshold > 0 && hyperlink && n > urlThreshold) {
         auto url = QUrl(text(fullText, -1).toString());
         auto scheme = url.scheme();
         auto host = url.host();
@@ -123,7 +122,7 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
         } else {
             // We'll show always show the host and the scheme.
             const auto hostPrefix = scheme + QStringLiteral("://") + host + QStringLiteral("/");
-            constexpr auto ellipsis = QLatin1String("\u2026");
+            const auto ellipsis = QStringLiteral("\u2026");
 
             // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
             // ellipsis...
@@ -143,7 +142,7 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
             }
         }
     } else {
-        finalText = text(fullText, trim).toString();
+        finalText = text(fullText, -1).toString();
     }
     ret.append(finalText.toHtmlEscaped());
 
@@ -212,6 +211,7 @@ FormattedString::Part& FormattedString::addPart(QStringView s) {
     auto& newPart = addPart();
     newPart.pos = m_fullText.size();
     newPart.n = s.size();
+    m_fullText += s;
     return newPart;
 }
 
@@ -321,15 +321,17 @@ void FormattedString::prune() {
                 int previousEnd = 0;
                 while (reIt.hasNext()) {
                     auto reMatch = reIt.next();
-                    Part prefix {previousEnd, reMatch.capturedStart() - previousEnd};
-                    Part url = Part {reMatch.capturedStart(), reMatch.capturedLength()};
+                    Part prefix {it->pos + previousEnd, reMatch.capturedStart() - previousEnd};
+                    Part url = Part {it->pos + reMatch.capturedStart(), reMatch.capturedLength()};
                     url.hyperlink = true;
-                    segments.emplace_back(std::move(prefix));
+                    if (prefix.n > 0) {
+                        segments.emplace_back(std::move(prefix));
+                    }
                     segments.emplace_back(std::move(url));
                     previousEnd = static_cast<int>(reMatch.capturedEnd());
                 }
                 if (previousEnd < it->n) {
-                    Part suffix = Part {previousEnd, it->n - previousEnd};
+                    Part suffix = Part {it->pos + previousEnd, it->n - previousEnd};
                     segments.emplace_back(std::move(suffix));
                 }
                 it = m_parts.erase(it);

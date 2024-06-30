@@ -18,6 +18,8 @@
 
 #include "protocol.h"
 
+#include <QTextDocument>
+
 class ProtocolTest : public QObject {
     Q_OBJECT
 private slots:
@@ -98,6 +100,21 @@ private slots:
         auto result = WeeChatProtocol::parse<WeeChatProtocol::String>(ds, &ok);
         QVERIFY(ok);
         QCOMPARE(result, output);
+    }
+    void string_broken_url_result() {
+        // Taken from a bug introduced in this version, link rendering was broken in HTML versions of messages while plaintext remained ok
+        FormattedString str(QStringLiteral("https://github.com/LithApp/Lith/releases/tag/v1.7.15"));
+        str.prune();
+
+        auto htmlNotClipped = str.lastPart().toHtml(str.toPlain(), *lightTheme, 100);
+        QTextDocument docNotClipped;
+        docNotClipped.setHtml(htmlNotClipped);
+        QCOMPARE(docNotClipped.toPlainText(), QStringLiteral("https://github.com/LithApp/Lith/releases/tag/v1.7.15"));
+
+        auto htmlClipped = str.lastPart().toHtml(str.toPlain(), *lightTheme, 40);
+        QTextDocument docClipped;
+        docClipped.setHtml(htmlClipped);
+        QCOMPARE(docClipped.toPlainText(), QStringLiteral("https://github.com/…releases/tag/v1.7.15"));
     }
 private slots:
     void buffer1_data() {
