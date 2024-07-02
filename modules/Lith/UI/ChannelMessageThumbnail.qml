@@ -25,7 +25,7 @@ Rectangle {
         z: -1
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
-        source: root.thumbnailUrl.endsWith(".jpg") || root.thumbnailUrl.endsWith(".png") ? root.thumbnailUrl : ""
+        source: root.thumbnailUrl
         asynchronous: true
     }
     Label {

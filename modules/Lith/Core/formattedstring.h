@@ -29,6 +29,7 @@ class LITHCORE_EXPORT FormattedString {
     QML_NAMED_ELEMENT(formattedString)
     Q_PROPERTY(int length READ length CONSTANT)
     Q_PROPERTY(QStringList urls READ urls CONSTANT)
+    Q_PROPERTY(QStringList urlsWithPreviews READ urlsWithPreviews CONSTANT)
 public:
     struct Part {
         struct Color {
@@ -59,6 +60,7 @@ public:
         Color foreground {-1, false};
         Color background {-1, false};
         bool hyperlink {false};
+        bool containsImage {false};
         bool bold {false};
         bool underline {false};
         bool italic {false};
@@ -109,6 +111,7 @@ public:
     int length() const;
 
     QStringList urls() const;
+    QStringList urlsWithPreviews() const;
 
 private:
     QList<Part> m_parts {};

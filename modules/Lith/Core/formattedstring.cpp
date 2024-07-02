@@ -324,6 +324,13 @@ void FormattedString::prune() {
                     Part prefix {it->pos + previousEnd, reMatch.capturedStart() - previousEnd};
                     Part url = Part {it->pos + reMatch.capturedStart(), reMatch.capturedLength()};
                     url.hyperlink = true;
+
+                    auto parsedUrl = QUrl(url.text(m_fullText, -1).toString());
+                    auto file = parsedUrl.fileName();
+                    if (file.endsWith(QStringLiteral(".jpg")) || file.endsWith(QStringLiteral(".jpeg")) ||
+                        file.endsWith(QStringLiteral(".png"))) {
+                        url.containsImage = true;
+                    }
                     if (prefix.n > 0) {
                         segments.emplace_back(std::move(prefix));
                     }
@@ -378,6 +385,16 @@ QStringList FormattedString::urls() const {
     for (const auto& i : m_parts) {
         if (i.hyperlink) {
             ret.append(i.text(m_fullText, -1).toString());
+        }
+    }
+    return ret;
+}
+
+QStringList FormattedString::urlsWithPreviews() const {
+    QStringList ret;
+    for (auto& url : m_parts) {
+        if (url.hyperlink && url.containsImage) {
+            ret.append(url.text(m_fullText, -1).toString());
         }
     }
     return ret;

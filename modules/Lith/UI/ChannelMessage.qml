@@ -100,7 +100,7 @@ Item {
 
     ListView {
         id: previewListView
-        visible: Lith.settings.showImageThumbnails && messageModel.message.urls.length > 0
+        visible: Lith.settings.showImageThumbnails && messageModel.message.urlsWithPreviews.length > 0
 
         y: (headerLabel.visible ? headerLabel.height : 0) + Math.max(dateAndPrefixLabel.height, messageText.height)
         height: 192
@@ -110,7 +110,7 @@ Item {
         spacing: 12
 
         reuseItems: true
-        model: messageModel.message.urls
+        model: messageModel.message.urlsWithPreviews
         delegate: ChannelMessageThumbnail {
             width: previewListView.height
             height: previewListView.height
