@@ -22,7 +22,7 @@ import QtQuick.Controls
 import Lith.Core
 import Lith.Style
 
-Item {
+Rectangle {
     id: root
     z: index
     property int index
@@ -30,7 +30,8 @@ Item {
 
     height: (Lith.settings.terminalLikeChat ? Math.max(dateAndPrefixLabel.height, messageText.height) : messageBubble.height) + (headerLabel.visible ? headerLabel.height : 0) + (previewListView.visible ? previewListView.height : 0)
 
-    opacity: messageModel.searchCompare(Lith.search.term) ? 1.0 : 0.3
+    opacity: messageModel.searchCompare(Lith.search.term) ? 1.0 : 0.33
+    color: messageModel.highlight ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.base, 0.33) : isHighlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window,  0.16) : "transparent"
 
     property alias header: headerLabel.text
     readonly property bool isHighlighted: Lith.search.highlightedLine && messageModel && Lith.search.highlightedLine === messageModel
