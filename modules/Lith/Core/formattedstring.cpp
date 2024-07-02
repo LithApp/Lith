@@ -142,7 +142,7 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
             }
         }
     } else {
-        finalText = text(fullText, -1).toString();
+        finalText = text(fullText, trim).toString();
     }
     ret.append(finalText.toHtmlEscaped());
 
