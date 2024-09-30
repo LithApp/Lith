@@ -212,7 +212,7 @@ ScrollView {
             Fields.String {
                 id: websocketsEndpointInput
                 enabled: typeof Lith.settings.useWebsockets === "undefined" || useWebsocketsCheckbox.checked
-                text: Lith.settings.websocketsEndpoint === "undefined" ? "" : Lith.settings.websocketsEndpoint
+                text: Lith.settings.websocketsEndpoint
 
                 summary: qsTr("Websockets endpoint")
             }
