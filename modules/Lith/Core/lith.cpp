@@ -107,6 +107,17 @@ void Lith::selectedBufferIndexSet(int index) {
     }
 }
 
+int Lith::mappedSelectedBufferIndex() const {
+    if (m_selectedBufferIndex < 0) {
+        return -1;
+    }
+    auto mapped = m_proxyBufferList->mapFromSource(m_buffers->index(m_selectedBufferIndex, 0));
+    if (mapped.isValid()) {
+        return mapped.row();
+    }
+    return -1;
+}
+
 NickListFilter* Lith::selectedBufferNicks() {
     return m_selectedBufferNicks;
 }

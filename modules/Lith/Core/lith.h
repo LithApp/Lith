@@ -67,6 +67,7 @@ private:
     Q_PROPERTY(QmlObjectList* unfilteredBuffers READ unfilteredBuffers CONSTANT)
     Q_PROPERTY(Buffer* selectedBuffer READ selectedBuffer WRITE selectedBufferSet NOTIFY selectedBufferChanged)
     Q_PROPERTY(int selectedBufferIndex READ selectedBufferIndex WRITE selectedBufferIndexSet NOTIFY selectedBufferChanged)
+    Q_PROPERTY(int mappedSelectedBufferIndex READ mappedSelectedBufferIndex NOTIFY selectedBufferChanged)
     Q_PROPERTY(NickListFilter* selectedBufferNicks READ selectedBufferNicks CONSTANT)
     Q_PROPERTY(QAbstractItemModel* logger READ logger CONSTANT)
     Q_PROPERTY(Search* search READ search CONSTANT)
@@ -116,6 +117,8 @@ public:
     void selectedBufferSet(Buffer* b);
     int selectedBufferIndex() const;
     void selectedBufferIndexSet(int index);
+    // Maps index between the source model and the reordered one when selecting and highlighting
+    int mappedSelectedBufferIndex() const;
     NickListFilter* selectedBufferNicks();
     Q_INVOKABLE void switchToBufferNumber(int number);
 

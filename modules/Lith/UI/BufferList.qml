@@ -87,7 +87,7 @@ Item {
             onTextChanged: {
                 Lith.buffers.filterWord = text
                 if (text === "")
-                    bufferList.currentIndex = Lith.selectedBufferIndex
+                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
             }
 
             Keys.onPressed: (event) => {
@@ -106,12 +106,12 @@ Item {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     Lith.selectedBuffer = bufferList.currentItem.buffer
                     filterField.text = ""
-                    bufferList.currentIndex = Lith.selectedBufferIndex
+                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
                     root.close()
                 }
                 if (event.key === Qt.Key_Escape) {
                     filterField.text = ""
-                    bufferList.currentIndex = Lith.selectedBufferIndex
+                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
                 }
             }
         }
@@ -146,13 +146,13 @@ Item {
             anchors.fill: parent
 
             model: Lith.buffers
-            currentIndex: Lith.selectedBufferIndex
+            currentIndex: Lith.mappedSelectedBufferIndex
             highlightMoveDuration: root.position > 0.0 ? 120 : 0
 
             Connections {
                 target: Lith
                 function onSelectedBufferIndexChanged() {
-                    bufferList.currentIndex = Lith.selectedBufferIndex
+                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
                 }
             }
 
@@ -168,7 +168,7 @@ Item {
                 width: root.delegateWidth
 
                 checked: Lith.selectedBuffer == buffer
-                highlighted: bufferList.currentIndex === index
+                highlighted: bufferList.currentItem ? bufferList.currentItem.index == index : false
 
                 required property var modelData
                 required property int index
