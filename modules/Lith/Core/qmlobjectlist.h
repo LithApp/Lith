@@ -19,8 +19,15 @@ public:
         mData.clear();
     }
 
-    template <typename T> inline static QmlObjectList* create(QObject* parent = Q_NULLPTR, bool deleteChildren = true) {
-        return new QmlObjectList(&T::staticMetaObject, parent, deleteChildren);
+    enum RoleMode {
+        None = 0x0,
+        ModelData = 0x1,
+        Identity = 0x2,
+    };
+
+    template <typename T>
+    inline static QmlObjectList* create(QObject* parent = Q_NULLPTR, RoleMode roleMode = ModelData, bool deleteChildren = true) {
+        return new QmlObjectList(&T::staticMetaObject, parent, roleMode, deleteChildren);
     }
 
     void prepend(QObject* object);
@@ -98,10 +105,11 @@ signals:
     void countChanged();
 
 private:
-    explicit QmlObjectList(const QMetaObject* m, QObject* parent = Q_NULLPTR, bool deleteChildren = true);
+    explicit QmlObjectList(const QMetaObject* m, QObject* parent = Q_NULLPTR, RoleMode roleMode = ModelData, bool deleteChildren = true);
 
     const QMetaObject* mMetaObject;
     std::list<QObjectPointer> mData;
+    RoleMode mRoleMode = ModelData;
     bool mDeleteChildren = true;
 };
 

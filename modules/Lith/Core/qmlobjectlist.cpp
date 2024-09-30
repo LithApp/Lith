@@ -118,13 +118,31 @@ QVariant QmlObjectList::data(const QModelIndex& index, int role) const {
         );
         return QVariant();
     }
-    return QVariant::fromValue(data.data());
+    if ((role == Qt::UserRole || role == Qt::DisplayRole) && mRoleMode & ModelData) {
+        return QVariant::fromValue(data.data());
+    } else if (mRoleMode & Identity) {
+        if (mRoleMode & ModelData) {
+            role--;
+        }
+        return QVariant::fromValue(mMetaObject->property(role - Qt::UserRole).read(data.data()));
+    }
+    return {};
 }
 
 QHash<int, QByteArray> QmlObjectList::roleNames() const {
-    return {
-        {Qt::UserRole, "modelData"}
+    QHash<int, QByteArray> result;
+    int currentIndex = Qt::UserRole;
+    if (mRoleMode & ModelData) {
+        result.insert(currentIndex, "modelData");
+        currentIndex++;
+    }
+    if (mRoleMode & Identity) {
+        for (int i = 0; i < mMetaObject->propertyCount(); i++) {
+            result.insert(currentIndex, mMetaObject->property(i).name());
+            currentIndex++;
+        }
     };
+    return result;
 }
 
 int QmlObjectList::rowCount(const QModelIndex& parent) const {
@@ -132,9 +150,10 @@ int QmlObjectList::rowCount(const QModelIndex& parent) const {
     return static_cast<int>(mData.size());
 }
 
-QmlObjectList::QmlObjectList(const QMetaObject* m, QObject* parent, bool deleteChildren)
+QmlObjectList::QmlObjectList(const QMetaObject* m, QObject* parent, RoleMode roleMode, bool deleteChildren)
     : QAbstractListModel(parent)
     , mMetaObject(m)
+    , mRoleMode(roleMode)
     , mDeleteChildren(deleteChildren) {
 }
 

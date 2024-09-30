@@ -196,7 +196,9 @@ Lith::Lith(QObject* parent)
 #endif
     , m_networkProxy(BaseNetworkProxy::create(this))
     , m_weechat(new Weechat(m_networkProxy, this))
-    , m_buffers(QmlObjectList::create<Buffer>(this, false))
+    , m_buffers(QmlObjectList::create<Buffer>(
+          this, static_cast<QmlObjectList::RoleMode>(QmlObjectList::ModelData | QmlObjectList::Identity), false
+      ))
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
     , m_selectedBufferNicks(new NickListFilter(this))
     , m_logger(new Logger(this))

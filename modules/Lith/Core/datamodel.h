@@ -82,6 +82,7 @@ class LITHCORE_EXPORT Buffer : public QObject {
     Q_PROPERTY(int normals READ normalsGet NOTIFY nicksChanged)
     Q_PROPERTY(int voices READ voicesGet NOTIFY nicksChanged)
     Q_PROPERTY(int ops READ opsGet NOTIFY nicksChanged)
+    Q_PROPERTY(QString server READ serverGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isServer READ isServerGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isChannel READ isChannelGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isPrivate READ isPrivateGet NOTIFY local_variablesChanged)
@@ -116,6 +117,7 @@ public:
     int opsGet() const;
 
     QStringList local_variables_stringListGet() const;
+    QString serverGet() const;
     bool isServerGet() const;
     bool isChannelGet() const;
     bool isPrivateGet() const;

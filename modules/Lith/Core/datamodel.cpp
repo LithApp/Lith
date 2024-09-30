@@ -30,8 +30,8 @@
 
 Buffer::Buffer(Lith* parent, weechat_pointer_t pointer)
     : QObject(parent)
-    , m_lines(QmlObjectList::create<BufferLine>(this, false))
-    , m_nicks(QmlObjectList::create<Nick>(this, false))
+    , m_lines(QmlObjectList::create<BufferLine>(this, QmlObjectList::ModelData, false))
+    , m_nicks(QmlObjectList::create<Nick>(this, QmlObjectList::ModelData, false))
     , m_proxyLinesFiltered(new MessageFilterList(this, m_lines))
     , m_ptr(pointer) {
     connect(this, &Buffer::hotMessagesChanged, this, &Buffer::totalUnreadMessagesChanged);
