@@ -237,7 +237,7 @@ QCoro::Task<void> Weechat::onHandshakeAccepted(StringMap data) {
     );
     m_connection->write(
         QStringLiteral("hdata"), QStringLiteral("%1").arg(MessageNames::c_requestFirstLine),
-        QStringLiteral("buffer:gui_buffers(*)/lines/last_line(-1)/data")
+        QStringLiteral("buffer:gui_buffers(*)/own_lines/last_line(-1)/data")
     );
     m_connection->write(
         QStringLiteral("hdata"), QStringLiteral("%1").arg(MessageNames::c_requestHotlist), QStringLiteral("hotlist:gui_hotlist(*)")
@@ -347,7 +347,7 @@ void Weechat::fetchLines(weechat_pointer_t ptr, int count) {
     }
     m_connection->write(
         QStringLiteral("hdata"), QStringLiteral("handleFetchLines;%1").arg(m_messageOrder++),
-        QStringLiteral("buffer:0x%1/lines/last_line(-%2)/data").arg(ptr, 0, 16).arg(count)
+        QStringLiteral("buffer:0x%1/own_lines/last_line(-%2)/data").arg(ptr, 0, 16).arg(count)
     );
     m_timeoutTimer->start(5000);
 }

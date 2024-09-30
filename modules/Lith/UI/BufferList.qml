@@ -192,6 +192,7 @@ Item {
 
                 Rectangle {
                     id: numberIndicator
+                    visible: !buffer.isServer
                     x: bufferDelegate.spacing
                     height: parent.height - 12
                     width: height

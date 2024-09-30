@@ -175,6 +175,10 @@ QStringList Buffer::local_variables_stringListGet() const {
     return ret;
 }
 
+QString Buffer::serverGet() const {
+    return m_local_variables.value(QStringLiteral("server"));
+}
+
 bool Buffer::isServerGet() const {
     return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("server");
 }

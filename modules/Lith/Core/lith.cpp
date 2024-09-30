@@ -790,7 +790,7 @@ bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex& source
     }
 
     auto index = sourceModel()->index(source_row, 0, source_parent);
-    auto v = sourceModel()->data(index);
+    auto v = sourceModel()->data(index, Qt::UserRole);
     auto* b = qvariant_cast<Buffer*>(v);
     if (b) {
         if (filterWordGet().isEmpty()) {
