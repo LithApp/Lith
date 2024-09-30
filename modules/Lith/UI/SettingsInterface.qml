@@ -60,6 +60,8 @@ ScrollView {
         Lith.settings.showBufferListOnStartup = showBufferListOnStartupCheckbox.checked
         Lith.settings.platformBufferControlPosition = platformBufferControlPositionCheckbox.checked
         Lith.settings.bufferListShowsOnlyBuffersWithNewMessages = bufferListShowsOnlyBuffersWithNewMessagesCheckbox.checked
+        Lith.settings.bufferListGroupingByServer = bufferListGroupingByServerCheckbox.checked
+        Lith.settings.bufferListAlphabeticalSorting = bufferListAlphabeticalSortingCheckbox.checked
         Lith.settings.enableNotifications = enableNotificationsCheckbox.checked
     }
     function restore() {
@@ -101,6 +103,8 @@ ScrollView {
         showBufferListOnStartupCheckbox.checked = Lith.settings.showBufferListOnStartup
         platformBufferControlPositionCheckbox.checked = Lith.settings.platformBufferControlPosition
         bufferListShowsOnlyBuffersWithNewMessagesCheckbox.checked = Lith.settings.bufferListShowsOnlyBuffersWithNewMessages
+        bufferListGroupingByServerCheckbox.checked = Lith.settings.bufferListGroupingByServer
+        bufferListAlphabeticalSortingCheckbox.checked = Lith.settings.bufferListAlphabeticalSorting
         enableNotificationsCheckbox.checked = Lith.settings.enableNotifications
     }
 
@@ -364,6 +368,20 @@ ScrollView {
                 details: qsTr("When using the text filter, all buffers will be shown.")
                 checked: Lith.settings.bufferListShowsOnlyBuffersWithNewMessages
             }
+
+            Fields.Boolean {
+                id: bufferListGroupingByServerCheckbox
+                summary: qsTr("Group buffers by server")
+                details: qsTr("Also called Hierarchical buffer view")
+                checked: Lith.settings.bufferListGroupingByServer
+            }
+
+            Fields.Boolean {
+                id: bufferListAlphabeticalSortingCheckbox
+                summary: qsTr("Sort buffers alphabetically")
+                checked: Lith.settings.bufferListAlphabeticalSorting
+            }
+
 
             ////////////////////////// URL HANDLING
             Fields.Header {

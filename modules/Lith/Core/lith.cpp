@@ -296,6 +296,9 @@ void Lith::resetData() {
     m_bufferMap.clear();
     m_lineMap.clear();
     m_hotList.clear();
+
+    connect(Lith::settingsGet(), &Settings::bufferListGroupingByServerChanged, this, [this]() { emit selectedBufferChanged(); });
+    connect(Lith::settingsGet(), &Settings::bufferListAlphabeticalSortingChanged, this, [this]() { emit selectedBufferChanged(); });
 }
 
 void Lith::reconnect() {
@@ -781,11 +784,14 @@ ProxyBufferList::ProxyBufferList(Lith* parent, QAbstractListModel* parentModel)
     : QSortFilterProxyModel(parent) {
     setSourceModel(parentModel);
     setFilterRole(Qt::UserRole);
+    sort(0);
     connect(this, &ProxyBufferList::filterWordChanged, [this] { setFilterFixedString(filterWordGet()); });
     connect(Lith::settingsGet(), &Settings::bufferListShowsOnlyBuffersWithNewMessagesChanged, this, [this]() {
         showOnlyBuffersWithNewMessagesSet(Lith::settingsGet()->bufferListShowsOnlyBuffersWithNewMessagesGet());
         invalidateFilter();
     });
+    connect(Lith::settingsGet(), &Settings::bufferListGroupingByServerChanged, this, [this]() { invalidate(); });
+    connect(Lith::settingsGet(), &Settings::bufferListAlphabeticalSortingChanged, this, [this]() { invalidate(); });
     connect(parent, &Lith::hotlistUpdated, this, [this] {
         if (showOnlyBuffersWithNewMessagesGet()) {
             invalidateFilter();
@@ -810,8 +816,89 @@ bool ProxyBufferList::filterAcceptsRow(int source_row, const QModelIndex& source
             }
             return true;
         } else {
-            return b->nameGet().toLower().contains(filterWordGet().toLower());
+            if (b->isServerGet()) {
+                return b->short_nameGet().toLower().contains(filterWordGet().toLower());
+            } else {
+                return b->nameGet().toLower().contains(filterWordGet().toLower());
+            }
         }
     }
     return false;
+}
+
+bool ProxyBufferList::lessThan(const QModelIndex& source_left, const QModelIndex& source_right) const {
+    // auto index = sourceModel()->index(source_left, 0, QModelIndex());
+    const auto* l = sourceModel()->data(source_left, Qt::UserRole).value<Buffer*>();
+    const auto* r = sourceModel()->data(source_right, Qt::UserRole).value<Buffer*>();
+
+    const QString lName = (l ? l->isRelayGet() ? l->nameGet() : l->short_nameGet() : FormattedString {}).toPlain().toLower();
+    const QString rName = (r ? r->isRelayGet() ? r->nameGet() : r->short_nameGet() : FormattedString {}).toPlain().toLower();
+
+    if (Lith::settingsGet()->instance()->bufferListGroupingByServerGet()) {
+        auto serverResult = QString::localeAwareCompare(l->serverGet(), r->serverGet());
+        if (serverResult < 0) {
+            return true;
+        } else if (serverResult > 0) {
+            return false;
+        }
+
+        if (l->isServerGet() && !r->isServerGet()) {
+            return true;
+        }
+        if (!l->isServerGet() && r->isServerGet()) {
+            return false;
+        }
+
+        if (Lith::settingsGet()->instance()->bufferListAlphabeticalSortingGet()) {
+
+            auto nameResult = QString::localeAwareCompare(lName, rName);
+            if (nameResult < 0) {
+                return true;
+            } else if (nameResult > 0) {
+                return false;
+            }
+
+            auto numberResult = l->numberGet() - r->numberGet();
+            if (numberResult < 0) {
+                return true;
+            } else if (numberResult > 0) {
+                return false;
+            }
+
+        } else {
+            auto numberResult = l->numberGet() - r->numberGet();
+            if (numberResult < 0) {
+                return true;
+            } else if (numberResult > 0) {
+                return false;
+            }
+
+            auto nameResult = QString::localeAwareCompare(lName, rName);
+            if (nameResult < 0) {
+                return true;
+            } else if (nameResult > 0) {
+                return false;
+            }
+        }
+
+        return false;
+    } else if (Lith::settingsGet()->instance()->bufferListAlphabeticalSortingGet()) {
+        auto nameResult = QString::localeAwareCompare(lName, rName);
+        if (nameResult < 0) {
+            return true;
+        } else if (nameResult > 0) {
+            return false;
+        }
+
+        auto numberResult = l->numberGet() - r->numberGet();
+        if (numberResult < 0) {
+            return true;
+        } else if (numberResult > 0) {
+            return false;
+        }
+
+        return false;
+    } else {
+        return source_left.row() < source_right.row();
+    }
 }

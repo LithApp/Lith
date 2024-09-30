@@ -13,8 +13,9 @@ T.ItemDelegate {
                              implicitContentHeight + topPadding + bottomPadding,
                              implicitIndicatorHeight + topPadding + bottomPadding)
 
-    padding: 10
-    spacing: 6
+    verticalPadding: 12
+    horizontalPadding: 12
+    spacing: 9
 
     icon.width: 24
     icon.height: 24
@@ -30,16 +31,24 @@ T.ItemDelegate {
         text: control.text
         font: control.font
         color: control.checked ? LithPalette.regular.highlightedText : LithPalette.regular.text
+        elide: Label.ElideRight
     }
 
     background: Rectangle {
-        implicitWidth: 64
-        implicitHeight: 32
-        border.color: control.highlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5) : "transparent"
-        color: control.checked     ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.7) :
-               control.highlighted ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.4) :
-               control.pressed     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.1) :
+        // border.color: control.highlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5) : "transparent"
+        color: control.pressed     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.1) :
                control.hovered     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.2) :
                                       ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.window, 0.5)
+        Rectangle {
+            anchors.fill: parent
+            anchors.topMargin: 1
+            anchors.bottomMargin: anchors.topMargin
+            anchors.leftMargin: 3
+            anchors.rightMargin: anchors.leftMargin
+            color: control.checked     ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.7) : "transparent"
+            border.color: control.highlighted ? control.checked ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.text, 0.7) : ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.5) : "transparent"
+            border.width: 1.5
+            radius: 4
+        }
     }
 }

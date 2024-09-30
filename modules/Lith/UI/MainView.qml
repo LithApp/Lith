@@ -133,7 +133,7 @@ Item {
             }
 
             onIsClosedChanged: {
-                bufferList.currentIndex = Lith.selectedBufferIndex
+                bufferList.currentIndex = Lith.mappedSelectedBufferIndex
 
                 if (!isClosed) {
                     bufferList.clear()
