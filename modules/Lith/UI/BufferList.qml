@@ -33,6 +33,11 @@ Item {
     readonly property real controlRowHeight: controlRow.height
     readonly property bool controlRowOnBottom: (LithPlatform.mobile && Lith.settings.platformBufferControlPosition) || (!LithPlatform.mobile && !Lith.settings.platformBufferControlPosition)
     property alias currentIndex: bufferList.currentIndex
+
+    function enforceFocus() {
+        filterField.forceActiveFocus()
+    }
+
     function clear() {
         filterField.clear()
         if (LithPlatform.mobile)

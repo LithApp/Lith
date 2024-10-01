@@ -196,7 +196,10 @@ TextField {
 
     Shortcut {
         sequences: Lith.settings.shortcutSearchBuffer
-        onActivated: bufferDrawer.open()
+        onActivated: {
+            bufferDrawer.open()
+            bufferDrawer.enforceFocus()
+        }
     }
     Shortcut {
         sequences: Lith.settings.shortcutNicklist

@@ -140,6 +140,10 @@ Item {
                 }
             }
 
+            function enforceFocus() {
+                bufferList.enforceFocus()
+            }
+
             BufferList {
                 id: bufferList
                 anchors.fill: parent
