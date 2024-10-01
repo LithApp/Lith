@@ -191,6 +191,10 @@ bool Buffer::isPrivateGet() const {
     return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("private");
 }
 
+bool Buffer::isRelayGet() const {
+    return m_local_variables.contains(QStringLiteral("type")) && m_local_variables[QStringLiteral("type")] == QStringLiteral("relay");
+}
+
 int Buffer::totalUnreadMessagesGet() const {
     return hotMessagesGet() + unreadMessagesGet();
 }

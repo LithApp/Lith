@@ -86,6 +86,7 @@ class LITHCORE_EXPORT Buffer : public QObject {
     Q_PROPERTY(bool isServer READ isServerGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isChannel READ isChannelGet NOTIFY local_variablesChanged)
     Q_PROPERTY(bool isPrivate READ isPrivateGet NOTIFY local_variablesChanged)
+    Q_PROPERTY(bool isRelay READ isRelayGet NOTIFY local_variablesChanged)
 
     PROPERTY(QString, lastUserInput, QStringLiteral(""))
 public:
@@ -121,6 +122,7 @@ public:
     bool isServerGet() const;
     bool isChannelGet() const;
     bool isPrivateGet() const;
+    bool isRelayGet() const;
 
     int totalUnreadMessagesGet() const;
 
