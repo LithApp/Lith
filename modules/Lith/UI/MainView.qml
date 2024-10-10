@@ -217,7 +217,7 @@ Item {
             left: parent.left
         }
         width: mainView.leftMargin
-        color: LithPalette.regular.window
+        color: LithPalette.regular.base
     }
 
     Rectangle {
@@ -230,7 +230,7 @@ Item {
             right: parent.right
         }
         width: mainView.rightMargin
-        color: LithPalette.regular.window
+        color: LithPalette.regular.base
     }
 
     Rectangle {
@@ -243,7 +243,7 @@ Item {
             right: parent.right
         }
         height: mainView.topMargin
-        color: LithPalette.regular.window
+        color: LithPalette.regular.base
     }
 
     Rectangle {
@@ -256,7 +256,7 @@ Item {
             right: parent.right
         }
         height: mainView.bottomMargin
-        color: LithPalette.regular.window
+        color: LithPalette.regular.base
     }
 
     // TODO make this a component and fix this
