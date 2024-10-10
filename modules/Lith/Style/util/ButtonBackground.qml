@@ -18,49 +18,32 @@ Rectangle {
 
     readonly property real themeQuotient: WindowHelper.lightTheme ? 0.0 : WindowHelper.useBlack ? 0.5 : 0.5
 
-    border.color: {
-        if (backgroundRect.control?.activeFocus || backgroundRect.activeFocus)
-            return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.highlight, 0.5)
-        ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
-    }
-    border.width: backgroundRect.flat ? 0 : 0.5
+    color: "transparent"
 
-    color: {
-        if (backgroundRect.flat)
-            return LithPalette.regular.window
-        if (!backgroundRect.enabled) {
-            if (backgroundRect.down) {
-                return ColorUtils.darken(LithPalette.disabled.button, 1.1 + backgroundRect.themeQuotient)
-            }
-            else {
-                return LithPalette.disabled.button
+    Rectangle {
+        anchors.fill: parent
+        color: {
+            if (control.pressed)
+                return ColorUtils.mixColors(LithPalette.regular.button, "black", 0.5)
+            if (control.hovered)
+                return ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.button, 0.6)
+            return LithPalette.regular.button
+        }
+        border.color: hovered ? ColorUtils.mixColors(LithPalette.regular.window, "white", 0.9)
+                              : flat ? "transparent"
+                                     : ColorUtils.mixColors(LithPalette.regular.window, LithPalette.regular.text, 0.9)
+        border.width: 0.5
+        radius: parent.radius
+        opacity: control.hovered || !flat ? 1 : 0
+        Behavior on color {
+            ColorAnimation {
+                duration: 100
             }
         }
-        return LithPalette.regular.button
-    }
-    property color startColor: {
-        if (!backgroundRect.enabled)
-            return backgroundRect.color
-        if (backgroundRect.pressed)
-            return ColorUtils.darken(LithPalette.regular.button, 1.4 + backgroundRect.themeQuotient)
-        if (backgroundRect.hovered || !backgroundRect.flat)
-            return ColorUtils.lighten(LithPalette.regular.button, 1.15 + 0.2 * backgroundRect.themeQuotient)
-        return backgroundRect.color
-    }
-    property color endColor: {
-        if (!backgroundRect.enabled)
-            return backgroundRect.color
-        if (backgroundRect.pressed)
-            return ColorUtils.darken(LithPalette.regular.button, 1.2 + backgroundRect.themeQuotient)
-        if (backgroundRect.hovered)
-            return ColorUtils.lighten(LithPalette.regular.button, 1.2 + 0.2 * backgroundRect.themeQuotient)
-        return backgroundRect.color
-    }
-
-    Behavior on startColor { ColorAnimation { duration: 100 } }
-    Behavior on endColor { ColorAnimation { duration: 100 } }
-    gradient: Gradient {
-        GradientStop { position: 0.0; color: backgroundRect.startColor }
-        GradientStop { position: 0.2; color: backgroundRect.endColor }
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 100
+            }
+        }
     }
 }

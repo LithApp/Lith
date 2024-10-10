@@ -17,11 +17,11 @@ T.Button {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    padding: 3
+    padding: 4
     spacing: 6
 
-    icon.width: 32
-    icon.height: 32
+    icon.width: 26
+    icon.height: 26
 
     font.pixelSize: FontSizes.regular
     property alias textHorizontalAlignment: buttonLabel.horizontalAlignment
@@ -41,8 +41,8 @@ T.Button {
             source: control.icon.source
 
             x: control.text.length > 0 ? control.leftPadding : (parent.width - width) / 2
-            height: control.icon.height
-            width: control.icon.width
+            height: Math.min(control.height - 10, control.icon.height)
+            width: Math.min(control.height - 10, control.icon.width)
             anchors.verticalCenter: parent.verticalCenter
             opacity: control.enabled ? 1.0 : 0.5
         }
@@ -57,7 +57,7 @@ T.Button {
             horizontalAlignment: Label.AlignHCenter
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
             elide: Label.ElideRight
-            maximumLineCount: 2
+            maximumLineCount: 4
 
             text: control.text
             font: control.font
@@ -65,12 +65,12 @@ T.Button {
                 if (!control.enabled)
                     return LithPalette.disabled.text
                 if (control.checked || control.highlighted)
-                    return control.LithPalette.regular.brightText
+                    return LithPalette.regular.highlightedText
                 if (control.flat && !control.down) {
                     if (control.visualFocus)
-                        return control.LithPalette.regular.highlight
+                        return LithPalette.regular.highlight
                     else
-                        return control.LithPalette.regular.windowText
+                        return LithPalette.regular.windowText
                 }
                 return LithPalette.regular.buttonText
             }
