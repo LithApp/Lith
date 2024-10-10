@@ -25,10 +25,6 @@ TextField {
     verticalAlignment: TextField.AlignVCenter
     inputMethodHints: Qt.ImhMultiLine
 
-    borderColor: backgroundColor
-    color: LithPalette.regular.text
-
-
     // Second part of a hack to show more lines of text when writing a long message
     topPadding: 0
     bottomPadding: contentHeight > font.pixelSize * 2 ? 6 : 0 // if it's twice the size of the font - add a margin

@@ -7,8 +7,9 @@ import Lith.Core
 
 Rectangle {
     id: root
-    color: ColorUtils.mixColors(LithPalette.regular.window, LithPalette.regular.text, 0.9)
     implicitHeight: layout.implicitHeight + 2 * layout.y
+
+    color: LithPalette.regular.window
 
     property Item additionalButton
     onAdditionalButtonChanged: {
