@@ -16,7 +16,7 @@ FontSizes::FontSizes(QObject* parent)
 }
 
 int FontSizes::tiny() const {
-    return 0.75 * m_settings->baseFontPixelSizeGet();
+    return 0.8 * m_settings->baseFontPixelSizeGet();
 }
 
 int FontSizes::small() const {
