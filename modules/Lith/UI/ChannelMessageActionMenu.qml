@@ -62,13 +62,14 @@ Dialog {
 
         ColumnLayout {
             Layout.fillWidth: true
-            spacing: 16
+            spacing: 12
 
             Button {
                 id: button1
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 1.5 * implicitHeight
+                topPadding: 12
+                bottomPadding: 12
                 Layout.topMargin: 16
                 flat: true
 
@@ -87,7 +88,8 @@ Dialog {
                 id: button2
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 1.5 * implicitHeight
+                topPadding: 12
+                bottomPadding: 12
                 flat: true
 
                 visible: !(nickname == "")
@@ -105,7 +107,8 @@ Dialog {
                 id: button3
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 1.5 * implicitHeight
+                topPadding: 12
+                bottomPadding: 12
                 Layout.bottomMargin: 16
                 flat: true
 
