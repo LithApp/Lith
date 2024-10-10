@@ -92,7 +92,7 @@ Item {
             bottomMargin: Lith.settings.uiMargins
         }
         width: 1
-        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
+        color: LithPalette.regular.window
     }
 
     Rectangle {

@@ -53,7 +53,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         z: -3
-        color: LithPalette.regular.window
+        color: LithPalette.regular.base
     }
 
     Util.ControlPanel {
@@ -139,18 +139,7 @@ Item {
                     bufferList.currentIndex = Lith.mappedSelectedBufferIndex
                 }
             }
-
-    Rectangle {
-        id: separator
-        z: 3
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: root.controlRowOnBottom ? controlRow.top : controlRow.bottom
         }
-
-        height: 1
-        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
     }
 
     Item {
@@ -193,9 +182,8 @@ Item {
 
             section.property: Lith.settings.bufferListGroupingByServer ? "server" : ""
             section.criteria: ViewSection.FullString
-            section.delegate: Rectangle {
+            section.delegate: Item {
                 id: sectionDelegate
-                color: ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.window, 0.5)
                 required property string section
                 readonly property bool showSection: {
                     if (Lith.buffers.filterWord.length <= 0)
@@ -271,6 +259,7 @@ Item {
 
                 verticalPadding: 10
 
+
                 Rectangle {
                     id: numberIndicator
 
@@ -281,46 +270,91 @@ Item {
                     height: parent.height - (bufferDelegate.topPadding + bufferDelegate.bottomPadding) / 2 - 1
                     width: height
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: 0.5
-                    color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? ColorUtils.mixColors(LithPalette.regular.text, bufferDelegate.background.color, 0.05) : bufferDelegate.background.color
-                    radius: 2
+                    enabled: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer
+                    color: firstTenBuffers ? "#0F000000" : "transparent"
+                    radius: height / 5
                     Label {
                         text: buffer && buffer.number > 0 ? buffer.number : ""
-                        font.pixelSize: FontSizes.small
-                        anchors.centerIn: parent
-                        anchors.verticalCenterOffset: 0.5
-                        anchors.horizontalCenterOffset: -0.5
-                        color: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer ? LithPalette.regular.text : LithPalette.disabled.text
+                        font.pixelSize: numberIndicator.firstTenBuffers ? FontSizes.medium : FontSizes.regular
+                        font.bold: true
+                        anchors.fill: parent
+                        horizontalAlignment: Label.AlignHCenter
+                        verticalAlignment: Label.AlignVCenter
+                        color: numberIndicator.firstTenBuffers ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.button, 0.6) :
+                                                                 ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.button, 0.3)
+                        Label {
+                            z: -1
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: 0.15
+                            anchors.verticalCenterOffset: 0.10
+                            text: parent.text
+                            font: parent.font
+                            color: bufferDelegate.checked ? "transparent" : LithPalette.regular.base
+                        }
+                    }
+                }
+
+                RowLayout {
+                    id: hotMessageIndicator
+                    visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
+                    height: parent.height
+                    anchors.verticalCenter: bufferDelegate.verticalCenter
+                    anchors.right: bufferDelegate.right
+                    anchors.rightMargin: bufferDelegate.horizontalPadding + (Lith.settings.bufferListGroupingByServer ? 1 : 0)
+
+                    spacing: 4
+
+                    Label {
+                        id: hotListItemCount
+                        Layout.fillHeight: true
+                        verticalAlignment: Label.AlignVCenter
+                        text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
+                        color: bufferDelegate.checked ? LithPalette.regular.highlightedText : LithPalette.regular.windowText
+                        font.pixelSize: modelData.hotMessages > 0 ? FontSizes.small : FontSizes.tiny
+                    }
+
+                    Rectangle {
+                        Layout.alignment: Qt.AlignVCenter
+                        color: modelData.hotMessages ? palette.highlight : LithPalette.regular.accent
+                        border.color: ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.4)
+                        border.width: 1 //modelData.hotMessages > 0 ? 1 : 0
+                        height: FontSizes.small
+                        width: height
+                        radius: height / 3.5
                     }
                 }
 
                 Rectangle {
-                    id: hotMessageIndicator
-                    visible: modelData.hotMessages > 0 || modelData.unreadMessages > 0
+                    visible: {
+                        if (bufferDelegate.index == 0)
+                            return false
+                        if (buffer.isServer && Lith.settings.bufferListGroupingByServer)
+                            return false
+                        return true
+                    }
+                    anchors.top: parent.top
+                    x: numberIndicator.width + bufferDelegate.horizontalPadding + bufferDelegate.spacing
+                    width: parent.width - x - bufferDelegate.horizontalPadding
+                    height: 1
+                    opacity: 0.1
                     gradient: Gradient {
+                        orientation: Qt.Horizontal
                         GradientStop {
                             position: 0.0
-                            color: modelData.hotMessages ? ColorUtils.darken(LithPalette.regular.highlight, 1.3) : ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.4)
+                            color: ColorUtils.mixColors(LithPalette.regular.buttonText, LithPalette.regular.button, 0.8)
+                        }
+                        GradientStop {
+                            position: 0.4
+                            color: ColorUtils.mixColors(LithPalette.regular.buttonText, LithPalette.regular.button, 0.4)
+                        }
+                        GradientStop {
+                            position: 0.6
+                            color: ColorUtils.mixColors(LithPalette.regular.buttonText, LithPalette.regular.button, 0.4)
                         }
                         GradientStop {
                             position: 1.0
-                            color: "red"
+                            color: ColorUtils.mixColors(LithPalette.regular.buttonText, LithPalette.regular.button, 0.8)
                         }
-                    }
-
-                    border.color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.button, 0.1)
-                    border.width: 1
-                    height: parent.height - 12
-                    width: Math.max(height, hotListItemCount.width + 6)
-                    anchors.verticalCenter: bufferDelegate.verticalCenter
-                    anchors.right: bufferDelegate.right
-                    anchors.rightMargin: bufferDelegate.horizontalPadding + (Lith.settings.bufferListGroupingByServer ? 1 : 0)
-                    radius: 2
-                    Label {
-                        id: hotListItemCount
-                        text: modelData.hotMessages > 0 ? modelData.hotMessages : modelData.unreadMessages
-                        anchors.centerIn: parent
-                        color: modelData.hotMessages > 0 ? LithPalette.regular.highlightedText : LithPalette.regular.windowText
                     }
                 }
             }
