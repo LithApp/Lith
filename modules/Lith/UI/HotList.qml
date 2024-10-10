@@ -8,6 +8,7 @@ import Lith.Style
 ListView {
     id: root
     model: Lith.buffers
+    clip: true
 
     // TODO this should really be calculated from the size of the listview and the items but it isn't
     // I don't really want to deal with this now though

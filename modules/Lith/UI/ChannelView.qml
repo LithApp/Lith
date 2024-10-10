@@ -133,6 +133,10 @@ Item {
             visible: Lith.settings.hotlistEnabled
             Layout.fillWidth: true
             Layout.preferredHeight: visible ? implicitHeight : 0
+            Layout.leftMargin: Lith.settings.uiMargins
+            Layout.rightMargin: Lith.settings.uiMargins
+            Layout.topMargin: Lith.settings.uiMargins / 2
+            Layout.bottomMargin: Lith.settings.uiMargins / 2
         }
 
         SearchBar {
