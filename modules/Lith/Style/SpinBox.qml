@@ -46,7 +46,7 @@ T.SpinBox {
     }
 
     up.indicator: Button {
-        z: 1
+        z: 2
         x: control.mirrored ? 0 : control.width - width
         height: control.height
         implicitWidth: 40
@@ -56,7 +56,7 @@ T.SpinBox {
     }
 
     down.indicator: Button {
-        z: 1
+        z: 2
         x: control.mirrored ? parent.width - width : 0
         height: control.height
         implicitWidth: 40
@@ -68,7 +68,7 @@ T.SpinBox {
     background: InputBackground {
         control: control
         implicitWidth: 140
-        z: 2
+        z: 1
         color: "transparent"
         radius: ControlProperties.buttonRadius
     }

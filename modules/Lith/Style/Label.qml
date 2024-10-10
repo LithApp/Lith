@@ -5,6 +5,6 @@ import Lith.Core
 import Lith.Style
 
 T.Label {
-    color: LithPalette.regular.windowText
+    color: enabled ? LithPalette.regular.windowText : LithPalette.disabled.windowText
     font.pixelSize: FontSizes.regular
 }

@@ -30,25 +30,29 @@ T.ItemDelegate {
         verticalAlignment: Label.AlignVCenter
         text: control.text
         font: control.font
-        color: control.checked ? LithPalette.regular.highlightedText : LithPalette.regular.text
+        color: LithPalette.regular.text
         elide: Label.ElideRight
     }
 
     background: Rectangle {
-        // border.color: control.highlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5) : "transparent"
-        color: control.pressed     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.1) :
-               control.hovered     ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.2) :
-                                      ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.window, 0.5)
-        Rectangle {
-            anchors.fill: parent
-            anchors.topMargin: 1
-            anchors.bottomMargin: anchors.topMargin
-            anchors.leftMargin: 3
-            anchors.rightMargin: anchors.leftMargin
-            color: control.checked     ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.7) : "transparent"
-            border.color: control.highlighted ? control.checked ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.text, 0.7) : ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.window, 0.5) : "transparent"
-            border.width: 1.5
-            radius: 4
+        implicitWidth: 64
+        implicitHeight: 32
+        radius: Math.sqrt(Lith.settings.uiMargins, 0.9)
+        border.color: control.highlighted || control.hovered ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5) :
+                                                               "transparent"
+        Behavior on border.color {
+            ColorAnimation {
+                duration: 60
+            }
+        }
+        color: control.pressed                       ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.base, 0.35) :
+               control.checked                       ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.base, 0.25) :
+                                                       LithPalette.regular.base
+        Behavior on color {
+            ColorAnimation {
+                duration: 100
+                easing.type: Easing.OutExpo
+            }
         }
     }
 }

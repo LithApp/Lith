@@ -16,8 +16,8 @@ Rectangle {
         if (inputBackground.borderColor != Qt.color("transparent"))
             return control.borderColor
         if (inputBackground.control?.activeFocus || inputBackground.activeFocus)
-            return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.highlight, 0.5)
-        return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.text, 0.9)
+            return ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.highlight, 0.5)
+        return ColorUtils.mixColors(LithPalette.regular.button, LithPalette.regular.window, 0.5)
     }
 
     border {
