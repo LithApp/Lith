@@ -22,14 +22,16 @@ import QtQml
 import Lith.Core
 import Lith.Style
 
-Rectangle {
+import "util" as Util
+
+Item {
     id: root
-    implicitHeight: inputBarLayout.implicitHeight + 3
-    color: LithPalette.regular.window
+    implicitHeight: inputBarLayout.implicitHeight + Lith.settings.uiMargins * 2
 
     // TODO
     property alias textInput: channelTextInput
     property bool hasFocus: channelTextInput.activeFocus
+    readonly property real implicitContentHeight: inputBarLayout.height
 
     signal requestSearchBar
 
@@ -39,18 +41,30 @@ Rectangle {
         }
     }
 
+    Util.ControlPanel {
+        anchors.fill: parent
+        anchors.leftMargin: Lith.settings.uiMargins
+        anchors.topMargin: 0
+        anchors.rightMargin: anchors.leftMargin
+        anchors.bottomMargin: Lith.settings.uiMargins
+        radius: Math.pow(Lith.settings.uiMargins, 0.9)
+    }
+
     RowLayout {
         id: inputBarLayout
-        y: 3
-        x: 5
-        width: parent.width - 2 * x
-        height: parent.height - 6
+        height: parent.height - 2 * Lith.settings.uiMargins
 
-        spacing: 3
+        spacing: 3 + Lith.settings.uiMargins / 3
+        anchors.top: parent.top
+        anchors.topMargin: 0.5 * Lith.settings.uiMargins
+        anchors.left: parent.left
+        anchors.leftMargin: 2 * Lith.settings.uiMargins
+        anchors.right: parent.right
+        anchors.rightMargin: 2 * Lith.settings.uiMargins
+
         Button {
             id: searchModeButton
-            Layout.preferredHeight: implicitHeight - 2
-            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/loupe.png"
             focusPolicy: Qt.NoFocus
@@ -64,10 +78,10 @@ Rectangle {
             ToolTip.visible: searchModeButton.hovered
             ToolTip.delay: 800
         }
+
         Button {
             id: autocompleteButton
-            Layout.preferredHeight: implicitHeight - 2
-            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/download-rotated.png"
             focusPolicy: Qt.NoFocus
@@ -85,6 +99,7 @@ Rectangle {
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.minimumHeight: autocompleteButton.implicitHeight
             ChannelTextInput {
                 id: channelTextInput
                 anchors {
@@ -99,8 +114,7 @@ Rectangle {
         Button {
             id: imageButton
             visible: Lith.settings.showGalleryButton
-            Layout.preferredHeight: implicitHeight - 2
-            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: height
             property bool isBusy: Uploader.working
             icon.source: isBusy ? "" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/image-gallery.png"
@@ -123,8 +137,7 @@ Rectangle {
 
         Button {
             id: sendButton
-            Layout.preferredHeight: implicitHeight - 2
-            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: height
             icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/paper-plane.png"
             visible: Lith.settings.showSendButton
@@ -137,15 +150,5 @@ Rectangle {
                 channelTextInput.input()
             }
         }
-    }
-
-    Rectangle {
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-        height: 1
-        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
     }
 }

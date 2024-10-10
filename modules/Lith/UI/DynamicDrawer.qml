@@ -82,12 +82,14 @@ Item {
     }
 
     Rectangle {
+        z: 1
         visible: !drawer.isClosed
         anchors {
             top: parent.top
             right: parent.right
             bottom: parent.bottom
-            rightMargin: -1
+            topMargin: Lith.settings.uiMargins
+            bottomMargin: Lith.settings.uiMargins
         }
         width: 1
         color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)

@@ -86,6 +86,7 @@ class LITHCORE_EXPORT Settings : public QObject {
     SETTING(QString, timestampFormat, QStringLiteral("hh:mm:ss"))
     SETTING(bool, showDateHeaders, true)
     SETTING(int, messageSpacing, 0)
+    SETTING(int, uiMargins, 12)
 
 #if defined(LITH_PLATFORM_DESKTOP)
     SETTING(bool, scrollbarsOverlayContents, false)

@@ -21,11 +21,12 @@ import QtQuick.Controls
 import Lith.Core
 import Lith.Style
 
-Rectangle {
-    id: root
-    color: LithPalette.regular.window
+import "util" as Util
 
-    implicitHeight: totalExpectedHeight
+Item {
+    id: root
+
+    implicitHeight: totalExpectedHeight + Lith.settings.uiMargins * 2
     height: implicitHeight
 
     // There seems to be no way to query the height of a multiline text in QML so we need to do this.
@@ -38,28 +39,30 @@ Rectangle {
     readonly property real totalTextContentsHeight: maximumTitleHeight + maximumNameHeight + totalSpacerHeight
     readonly property real buttonWithMarginsHeight: bufferListButton.implicitHeight + headerLayout.anchors.margins * 2
     readonly property real totalExpectedHeight: Math.max(totalTextContentsHeight, buttonWithMarginsHeight)
+    readonly property real implicitContentHeight: headerLayout.height
 
     DragHandler {
         onActiveChanged: if (active) window.startSystemMove();
         target: null
     }
 
-    Rectangle {
-        anchors {
-            left: parent.left
-            leftMargin: 1
-            right: parent.right
-            bottom: parent.bottom
-        }
-        height: 1
-        color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.5)
+    Util.ControlPanel {
+        anchors.fill: parent
+        anchors.leftMargin: Lith.settings.uiMargins
+        anchors.topMargin: Lith.settings.uiMargins
+        anchors.rightMargin: anchors.leftMargin
+        anchors.bottomMargin: anchors.topMargin / 2
+        radius: Math.pow(Lith.settings.uiMargins, 0.9)
     }
 
     RowLayout {
         id: headerLayout
         anchors {
             fill: parent
-            margins: 3
+            leftMargin: Lith.settings.uiMargins * 2 + 2
+            topMargin: Lith.settings.uiMargins
+            rightMargin: anchors.leftMargin + 1
+            bottomMargin: anchors.topMargin / 2
         }
         Button {
             id: bufferListButton

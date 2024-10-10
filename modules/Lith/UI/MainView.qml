@@ -36,7 +36,7 @@ Item {
                 }
             }
         }
-        return WindowHelper.safeAreaMargins.top + 0.5
+        return WindowHelper.safeAreaMargins.top
     }
     property real bottomMargin:{
         if (LithPlatform.mobile) {
@@ -49,10 +49,10 @@ Item {
                     return 0
             }
         }
-        return WindowHelper.safeAreaMargins.bottom + 0.5
+        return WindowHelper.safeAreaMargins.bottom
     }
-    property real leftMargin: WindowHelper.safeAreaMargins.left + 0.5
-    property real rightMargin: WindowHelper.safeAreaMargins.right + 0.5
+    property real leftMargin: WindowHelper.safeAreaMargins.left
+    property real rightMargin: WindowHelper.safeAreaMargins.right
 
     Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
     Behavior on bottomMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
@@ -147,7 +147,8 @@ Item {
             BufferList {
                 id: bufferList
                 anchors.fill: parent
-                channelHeaderRowHeight: channelView.headerImplicitHeight
+                channelHeaderRowContentHeight: channelView.headerImplicitContentHeight
+                channelInputBarContentHeight: channelView.inputBarImplicitContentHeight
                 onClose: {
                     if (!WindowHelper.landscapeMode)
                         bufferDrawer.hide()

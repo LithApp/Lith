@@ -22,13 +22,16 @@ import QtQuick.Layouts
 import Lith.Core
 import Lith.Style
 
+import "util" as Util
+
 Item {
     id: root
 
     // This will be used when the control row is at the top to make it same height as the channel header
-    required property real channelHeaderRowHeight
+    required property real channelHeaderRowContentHeight
+    required property real channelInputBarContentHeight
 
-    readonly property real delegateWidth: root.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
+    readonly property real delegateWidth: bufferList.width - (Lith.settings.scrollbarsOverlayContents ? 0 : scrollBar.width)
 
     readonly property real controlRowHeight: controlRow.height
     readonly property bool controlRowOnBottom: (LithPlatform.mobile && Lith.settings.platformBufferControlPosition) || (!LithPlatform.mobile && !Lith.settings.platformBufferControlPosition)
@@ -53,12 +56,12 @@ Item {
         color: LithPalette.regular.window
     }
 
-    Rectangle {
-        width: controlRow.width + controlRow.anchors.margins * 2
-        height: controlRow.height
-        y: controlRow.y
-        anchors.margins: -controlRow.margins
-        color: LithPalette.regular.window
+    Util.ControlPanel {
+        x: controlRow.x - Lith.settings.uiMargins - 1
+        y: root.controlRowOnBottom ? parent.height - height - Lith.settings.uiMargins : controlRow.y + (controlRow.height - height) / 2
+        width: controlRow.width + 2 * Lith.settings.uiMargins + 3// + controlRow.anchors.margins * 2
+        height: root.controlRowOnBottom ? root.channelInputBarContentHeight + Lith.settings.uiMargins : 0 + controlRow.height
+        radius: Math.pow(Lith.settings.uiMargins, 0.9)
         z: 1
     }
 
@@ -67,12 +70,13 @@ Item {
         anchors {
             left: parent.left
             right: parent.right
-            margins: 6
+            leftMargin: 2 * Lith.settings.uiMargins + 1
+            rightMargin: anchors.leftMargin + 2
         }
         z: 2
-        y: root.controlRowOnBottom ? parent.height - height : 0
-        height: root.controlRowOnBottom ? implicitHeight : Math.max(channelHeaderRowHeight, implicitHeight)
-        //y: root.controlRowOnBottom ? implicitHeight :
+        y: root.controlRowOnBottom ? parent.height - height - 1.5 * Lith.settings.uiMargins : Lith.settings.uiMargins
+        height: root.controlRowOnBottom ? implicitHeight : Math.max(channelHeaderRowContentHeight, implicitHeight)
+        spacing: Lith.settings.uiMargins / 4 + 1
 
         Button {
             id: settingsButton
@@ -151,9 +155,13 @@ Item {
         anchors {
             left: parent.left
             right: parent.right
+            leftMargin: Lith.settings.uiMargins
+            rightMargin: anchors.leftMargin + 1
+            topMargin: root.controlRowOnBottom ? Lith.settings.uiMargins : Lith.settings.uiMargins
+            bottomMargin: Lith.settings.uiMargins
             top: root.controlRowOnBottom ? parent.top : controlRow.bottom
         }
-        height: parent.height - controlRow.height - 2
+        height: parent.height - controlRow.height - 5 - 3 * Lith.settings.uiMargins
 
         ListView {
             id: bufferList
@@ -162,6 +170,7 @@ Item {
             model: Lith.buffers
             currentIndex: filterField.activeFocus ? Lith.mappedSelectedBufferIndex : -1
             highlightMoveDuration: root.position > 0.0 ? 120 : 0
+            spacing: 0
 
             Connections {
                 target: Lith
@@ -195,7 +204,7 @@ Item {
                 height: {
                     if (showSection)
                         return implicitHeight
-                    return 3
+                    return 16
                 }
                 implicitHeight: sectionLabel.implicitHeight + sectionLabel.anchors.topMargin + sectionLabel.anchors.bottomMargin - 2
 
@@ -216,10 +225,10 @@ Item {
                 Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
                     anchors.leftMargin: 6
                     anchors.rightMargin: 6
-                    anchors.topMargin: 1
+                    anchors.bottomMargin: 0
                     height: 1
                     color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.4)
                 }
@@ -239,7 +248,7 @@ Item {
                 text: buffer ? buffer.short_name.toPlain() === "" ? buffer.name.toPlain() : buffer.short_name.toPlain() : ""
                 textFormat: Text.PlainText
                 font.bold: Lith.settings.bufferListGroupingByServer && buffer.isServer
-                font.pixelSize: buffer.isServer ? Lith.settings.baseFontPixelSize /* * 1.125 */ : Lith.settings.baseFontPixelSize
+                font.pixelSize: buffer && buffer.isServer ? Lith.settings.baseFontPixelSize /* * 1.125 */ : Lith.settings.baseFontPixelSize
 
                 onClicked: {
                     Lith.selectedBuffer = buffer
@@ -252,16 +261,19 @@ Item {
                     }
                 }
 
-                leftPadding: horizontalPadding + (buffer.isServer && Lith.settings.bufferListGroupingByServer ? 0 : numberIndicator.width + spacing + ((Lith.settings.bufferListGroupingByServer && buffer.server.length > 0) ? spacing : 0))
+                leftPadding: horizontalPadding + (buffer.isServer && Lith.settings.bufferListGroupingByServer ? 0 : numberIndicator.width + spacing)
                 rightPadding: horizontalPadding + (hotMessageIndicator.visible ? hotMessageIndicator.width + spacing : 0)
 
                 verticalPadding: 10
 
                 Rectangle {
                     id: numberIndicator
+
+                    readonly property bool firstTenBuffers: buffer && buffer.number > 0 && buffer.number <= 10 && !buffer.isServer
+
                     visible: !buffer.isServer
-                    x: bufferDelegate.horizontalPadding + ((Lith.settings.bufferListGroupingByServer && buffer.server.length > 0) ? horizontalPadding : 0)
-                    height: parent.height - (bufferDelegate.topPadding + bufferDelegate.bottomPadding) / 2
+                    x: bufferDelegate.horizontalPadding
+                    height: parent.height - (bufferDelegate.topPadding + bufferDelegate.bottomPadding) / 2 - 1
                     width: height
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 0.5

@@ -64,6 +64,7 @@ QQC2.ScrollView {
         Lith.settings.bufferListGroupingByServer = bufferListGroupingByServerCheckbox.checked
         Lith.settings.bufferListAlphabeticalSorting = bufferListAlphabeticalSortingCheckbox.checked
         Lith.settings.enableNotifications = enableNotificationsCheckbox.checked
+        Lith.settings.uiMargins = uiMarginsSpinbox.value
     }
     function restore() {
         shortenLongUrlsCheckbox.checked = Lith.settings.shortenLongUrls
@@ -107,6 +108,7 @@ QQC2.ScrollView {
         bufferListGroupingByServerCheckbox.checked = Lith.settings.bufferListGroupingByServer
         bufferListAlphabeticalSortingCheckbox.checked = Lith.settings.bufferListAlphabeticalSorting
         enableNotificationsCheckbox.checked = Lith.settings.enableNotifications
+        uiMarginsSpinbox.value = Lith.settings.uiMargins
     }
 
     FontDialog {
@@ -129,6 +131,7 @@ QQC2.ScrollView {
             anchors.horizontalCenter: parent.horizontalCenter
             width: WindowHelper.landscapeMode ? Math.min(Math.min(420, 1.33 * implicitWidth), parent.width) : parent.width
             spacing: -1
+
 
             ////////////////////////// FONT SETTINGS
             Fields.Header {
@@ -193,6 +196,7 @@ QQC2.ScrollView {
                 }
             }
 
+
             ////////////////////////// MESSAGE SETTINGS
             Fields.Header {
                 text: qsTr("Message settings")
@@ -252,6 +256,14 @@ QQC2.ScrollView {
             ////////////////////////// GENERAL
             Fields.Header {
                 text: qsTr("General")
+            }
+
+            Fields.IntSpinBox {
+                id: uiMarginsSpinbox
+                summary: qsTr("UI panel margins")
+                value: Lith.settings.uiMargins
+                from: 0
+                to: 32
             }
 
             Fields.Boolean {
@@ -405,6 +417,8 @@ QQC2.ScrollView {
                     bottom: 0
                 }
             }
+
+
 
             ////////////////////////// MULTIMEDIA
             Fields.Header {
