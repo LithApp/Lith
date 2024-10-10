@@ -13,6 +13,7 @@ set(LITHSTYLE_QML
     Popup.qml
     RadioButton.qml
     ScrollBar.qml
+    Slider.qml
     SpinBox.qml
     Switch.qml
     TabButton.qml

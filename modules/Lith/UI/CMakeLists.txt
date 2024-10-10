@@ -31,6 +31,7 @@ set(LITH_QML
     SettingsFields/MultiLineString.qml
     SettingsFields/RadioList.qml
     SettingsFields/String.qml
+    SettingsFields/Slider.qml
     SettingsHotlistFormatEditor.qml
     SettingsInterface.qml
     SettingsNetwork.qml
