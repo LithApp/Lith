@@ -93,38 +93,10 @@ Item {
             Layout.fillWidth: true
             placeholderText: qsTr("Filter buffers")
             text: Lith.buffers.filterWord
-            onTextChanged: {
-                Lith.buffers.filterWord = text
-                if (text === "")
-                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
-            }
-
-            Keys.onPressed: (event) => {
-                if (event.key === Qt.Key_Up) {
-                    bufferList.currentIndex--;
-                    if (bufferList.currentIndex < 0)
-                        bufferList.currentIndex = 0
-                    event.accepted = true
-                }
-                if (event.key === Qt.Key_Down) {
-                    bufferList.currentIndex++
-                    if (bufferList.currentIndex >= bufferList.count)
-                        bufferList.currentIndex = bufferList.count - 1
-                    event.accepted = true
-                }
-                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                    Lith.selectedBuffer = bufferList.currentItem.buffer
-                    filterField.text = ""
-                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
-                    root.close()
-                }
-                if (event.key === Qt.Key_Escape) {
-                    filterField.text = ""
-                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
-                }
-            }
-
+            property bool interactedWith: false
             onActiveFocusChanged: {
+                interactedWith = false
+
                 if (activeFocus) {
                     bufferList.currentIndex = Lith.mappedSelectedBufferIndex
                 }
@@ -132,8 +104,41 @@ Item {
                     bufferList.currentIndex = -1
                 }
             }
-        }
-    }
+            onTextChanged: {
+                interactedWith = true
+                Lith.buffers.filterWord = text
+                if (text === "")
+                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
+            }
+
+            Keys.onPressed: (event) => {
+                if (event.key === Qt.Key_Up) {
+                    interactedWith = true
+                    bufferList.currentIndex--;
+                    if (bufferList.currentIndex < 0)
+                        bufferList.currentIndex = 0
+                    event.accepted = true
+                }
+                if (event.key === Qt.Key_Down) {
+                    interactedWith = true
+                    bufferList.currentIndex++
+                    if (bufferList.currentIndex >= bufferList.count)
+                        bufferList.currentIndex = bufferList.count - 1
+                    event.accepted = true
+                }
+                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    interactedWith = true
+                    Lith.selectedBuffer = bufferList.currentItem.buffer
+                    filterField.text = ""
+                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
+                    root.close()
+                }
+                if (event.key === Qt.Key_Escape) {
+                    interactedWith = false
+                    filterField.text = ""
+                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
+                }
+            }
 
     Rectangle {
         id: separator
@@ -240,7 +245,7 @@ Item {
                 height: implicitHeight
 
                 checked: Lith.selectedBuffer == buffer
-                highlighted: bufferList.currentItem ? bufferList.currentItem.index == index : false
+                highlighted: filterField.interactedWith && bufferList.currentIndex === index
 
                 required property var modelData
                 required property int index
