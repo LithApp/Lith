@@ -7,9 +7,9 @@ import Lith.Style
 Rectangle {
     id: root
 
-    readonly property real maximumHeightHorizontal: 100
-    readonly property real maximumHeightVertical: 3 * maximumHeightHorizontal
-    property real maximumWidth: 100
+    property real maximumHeightHorizontal: 200
+    property real maximumHeightVertical: 3 * maximumHeightHorizontal
+    property real maximumWidth: 200
     property string thumbnailUrl
     readonly property real aspectRatio: thumbnailImage.sourceSize.width === 0 ? 1.0 : thumbnailImage.sourceSize.height / thumbnailImage.sourceSize.width
 
@@ -18,7 +18,7 @@ Rectangle {
     radius: 3
     color: "transparent"
     border.width: 0.5
-    border.color: LithPalette.regular.text
+    border.color: LithPalette.regular.button
 
     Image {
         id: thumbnailImage
@@ -27,6 +27,8 @@ Rectangle {
         fillMode: Image.PreserveAspectFit
         source: root.thumbnailUrl
         asynchronous: true
+        antialiasing: true
+        cache: true
     }
     Label {
         id: thumbnailCross

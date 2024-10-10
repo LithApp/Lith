@@ -31,7 +31,7 @@ Rectangle {
     height: (Lith.settings.terminalLikeChat ? Math.max(dateAndPrefixLabel.height, messageText.height) : messageBubble.height) + (headerLabel.visible ? headerLabel.height : 0) + (previewListView.visible ? previewListView.height : 0)
 
     opacity: messageModel.searchCompare(Lith.search.term) ? 1.0 : 0.33
-    color: messageModel.highlight ? ColorUtils.mixColors(LithPalette.regular.highlight, LithPalette.regular.base, 0.33) : isHighlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window,  0.16) : "transparent"
+    color: messageModel.highlight ? LithPalette.regular.highlight : isHighlighted ? ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.16) : "transparent"
 
     property alias header: headerLabel.text
     readonly property bool isHighlighted: Lith.search.highlightedLine && messageModel && Lith.search.highlightedLine === messageModel
@@ -62,12 +62,6 @@ Rectangle {
         font.pixelSize: FontSizes.message
         topPadding: 3
         bottomPadding: 3
-        Rectangle {
-            anchors.fill: parent
-            z: -1
-            height: 1
-            color: ColorUtils.mixColors(LithPalette.regular.text, LithPalette.regular.window, 0.1)
-        }
     }
 
     Label {
@@ -78,8 +72,6 @@ Rectangle {
         text: messageModel.dateAndPrefix
         color: LithPalette.regular.text
         textFormat: Text.RichText
-        lineHeight: messageText.lineHeight
-        lineHeightMode: messageText.lineHeightMode
     }
 
     Label {
@@ -90,10 +82,8 @@ Rectangle {
         text: messageModel.message
         font.pixelSize: FontSizes.message
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-        color: LithPalette.regular.text
+        color: messageModel.highlight ? LithPalette.regular.highlightedText : LithPalette.regular.text
         textFormat: Text.RichText
-        lineHeight: font.pixelSize + 1
-        lineHeightMode: Label.FixedHeight
         onLinkActivated: (link) => {
             linkHandler.show(link, root)
         }
@@ -113,15 +103,16 @@ Rectangle {
         reuseItems: true
         model: messageModel.message.urlsWithPreviews
         delegate: ChannelMessageThumbnail {
-            width: previewListView.height
             height: previewListView.height
+            maximumHeightHorizontal: previewListView.height
+            maximumWidth: messageText.width
             // asynchronous: true
             thumbnailUrl: modelData
         }
         header: Item {
             height: previewListView.height
             visible: previewListView.width > previewListView.count * previewListView.height
-            width: Math.max(0, previewListView.width - previewListView.count * previewListView.height) / 2
+            width: dateAndPrefixLabel.width
         }
     }
 }
