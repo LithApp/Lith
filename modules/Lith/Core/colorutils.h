@@ -34,6 +34,23 @@ public:
     Q_INVOKABLE static QColor lighten(QColor c, float ratio) {
         return darken(c, 1.0f / ratio);
     }
+    Q_INVOKABLE static QColor saturate(QColor c, float ratio) {
+        float h = c.hslHueF();
+        float s = c.hslSaturationF();
+        float l = c.lightnessF();
+        float a = c.alphaF();
+
+        s *= ratio;
+        if (s > 1.0) {
+            s = 1.0;
+        }
+        if (s < 0.0) {
+            s = 0.0;
+        }
+        return QColor::fromHslF(h, s, l, a);
+    }
+    // If used with light mode, this will make things lighter and vice versa.
+    Q_INVOKABLE static QColor daytimeModeAdjust(QColor c, float ratio);
 };
 
 #endif  // COLORUTILS_H
