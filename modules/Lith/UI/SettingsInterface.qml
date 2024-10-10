@@ -30,7 +30,7 @@ QQC2.ScrollView {
 
     function save() {
         Lith.settings.shortenLongUrls = shortenLongUrlsCheckbox.checked
-        Lith.settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.text
+        Lith.settings.shortenLongUrlsThreshold = shortenLongUrlsThreshold.value
         Lith.settings.useLocalInputBar = useLocalInputBarCheckbox.checked
         Lith.settings.showAutocompleteButton = showAutocompleteButtonCheckbox.checked
         Lith.settings.showGalleryButton = showGalleryButtonCheckbox.checked
@@ -68,7 +68,7 @@ QQC2.ScrollView {
     }
     function restore() {
         shortenLongUrlsCheckbox.checked = Lith.settings.shortenLongUrls
-        shortenLongUrlsThreshold.text = Lith.settings.shortenLongUrlsThreshold
+        shortenLongUrlsThreshold.value = Lith.settings.shortenLongUrlsThreshold
         useLocalInputBarCheckbox.checked = Lith.settings.useLocalInputBar
         showAutocompleteButtonCheckbox.checked = Lith.settings.showAutocompleteButton
         showGalleryButtonCheckbox.checked = Lith.settings.showGalleryButton
@@ -401,20 +401,115 @@ QQC2.ScrollView {
                 text: qsTr("URL handling")
             }
 
-            Fields.Boolean {
-                id: shortenLongUrlsCheckbox
-                summary: qsTr("Shortening Enabled")
-                checked: Lith.settings.shortenLongUrls
-            }
+            Fields.Base {
+                id: urlShorteningContainerField
+                summary: qsTr("URL shortening")
+                summaryComponent.leftPadding: shortenLongUrlsCheckbox.width + 6
 
-            Fields.String {
-                id: shortenLongUrlsThreshold
-                summary: qsTr("Length threshold")
-                enabled: shortenLongUrlsCheckbox.checked
-                text: Lith.settings.shortenLongUrlsThreshold
-                inputMethodHints: Qt.ImhPreferNumbers
-                validator: IntValidator {
-                    bottom: 0
+                CheckBox {
+                    id: shortenLongUrlsCheckbox
+                    parent: urlShorteningContainerField.summaryComponent
+                    padding: 0
+                    checked: Lith.settings.shortenLongUrls
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                rowComponent: RowLayout {
+                    Layout.topMargin: 6
+                    Layout.bottomMargin: 6
+                    Layout.fillWidth: true
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Label {
+                            Layout.fillWidth: true
+                            text: qsTr("Threshold")
+                            horizontalAlignment: Label.AlignRight
+                            elide: Label.ElideRight
+                            }
+                        SpinBox {
+                            id: shortenLongUrlsThreshold
+
+                            enabled: shortenLongUrlsCheckbox.checked
+                            value: Lith.settings.shortenLongUrlsThreshold
+                            from: 0
+                            to: 2147483647
+                        }
+                    }
+                }
+
+                columnComponent: ColumnLayout {
+                    Layout.bottomMargin: 6
+                    Layout.topMargin: 0
+                    Layout.fillWidth: true
+
+                    spacing: 0
+
+                    Label {
+                        bottomPadding: 3
+                        Layout.fillWidth: true
+                        text: qsTr("If a URL is longer than this threshold, Lith will hide its <b>query</b>, <b>user info</b> and <b>directory path</b> parts." + "<br>" +
+                                   "<b>URL scheme</b>, <b>host address</b>, <b>host port</b> and <b>file name</b> will not be obscured, even if shortened representation is still longer than set threshold." + "<br>" +
+                                   "Example:")
+                        wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                        font.pixelSize: FontSizes.tiny
+                        color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, 1.0)
+                    }
+
+                    Label {
+                        topPadding: 6
+                        bottomPadding: 6
+                        Layout.fillWidth: true
+                        color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, 1.0)
+                        text: "https://host.com/<b>folder/</b>file<b>?query=data</b>" + "<br>" +
+                              "ftp://<b>user:pass@</b>192.168.0.1:12345/www"
+
+                        wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                        font.pixelSize: FontSizes.tiny
+                        horizontalAlignment: Label.AlignHCenter
+                        Rectangle {
+                            z: -1
+                            color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, 0.05)
+                            anchors.fill: parent
+                            anchors.margins: 3
+                        }
+                    }
+                    Label {
+                        topPadding: 3
+                        bottomPadding: 3
+                        text: qsTr("will be shortened to:")
+                        wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                        font.pixelSize: FontSizes.tiny
+                        color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, 1.0)
+                    }
+                    Label {
+                        topPadding: 6
+                        bottomPadding: 6
+                        Layout.fillWidth: true
+                        color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, 1.0)
+
+                        text: "https://host.com/<b>\u2026/</b>file<b>?\u2026</b>" + "<br>" +
+                              "ftp://<b>\u2026@</b>192.168.0.1:12345/www"
+
+                        wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                        font.pixelSize: FontSizes.tiny
+                        horizontalAlignment: Label.AlignHCenter
+                        Rectangle {
+                            z: -1
+                            color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, 0.05)
+                            anchors.fill: parent
+                            anchors.margins: 3
+                        }
+                    }
+                    Label {
+                        topPadding: 3
+                        bottomPadding: 3
+                        Layout.fillWidth: true
+                        text: qsTr("This setting only affects the visual representation of received links. Interaction will access the original unmodified URL. You can view original contents by long-pressing or right-clicking the message.")
+                        font.pixelSize: FontSizes.tiny
+                        wrapMode: Label.WrapAtWordBoundaryOrAnywhere
+                        color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, 1.0)
+                    }
                 }
             }
 

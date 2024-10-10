@@ -9,6 +9,7 @@ Rectangle {
     id: root
 
     property alias summary: summary.text
+    property alias summaryComponent: summary
     property alias details: details.text
     property Item rowComponent
     property Item columnComponent
@@ -71,11 +72,11 @@ Rectangle {
                     Layout.bottomMargin: visible ? 6 : 0
                     Layout.rightMargin: visible ? 6 : 0
                     elide: Label.ElideRight
-                    font.pixelSize: summary.font.pixelSize * 0.7
+                    font.pixelSize: FontSizes.tiny
                     color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, enabled ? 1.0 : 0.5)
                     visible: text.length > 0
                     wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                    maximumLineCount: 4
+                    maximumLineCount: 6
                 }
             }
         }
