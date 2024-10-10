@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 
 import Lith.Core
@@ -60,9 +60,9 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
 
-                        ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
-                        ToolTip.visible: LithPlatform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
-                        ToolTip.delay: LithPlatform.mobile ? 0 : 800
+                        QQC2.ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
+                        QQC2.ToolTip.visible: LithPlatform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
+                        QQC2.ToolTip.delay: LithPlatform.mobile ? 0 : 800
                     }
                 }
                 Label {

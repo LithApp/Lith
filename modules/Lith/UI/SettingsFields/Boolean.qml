@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import Lith.Style
 
 Base {
     property alias checked: checkBox.checked

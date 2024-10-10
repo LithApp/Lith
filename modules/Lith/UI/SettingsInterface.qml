@@ -15,15 +15,16 @@
 // along with this program; If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
 import "SettingsFields" as Fields
 import Lith.Core
 import Lith.Style
+import Lith.UI
 
-ScrollView {
+QQC2.ScrollView {
     id: root
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
@@ -448,9 +449,9 @@ ScrollView {
                                 anchors.fill: parent
                                 hoverEnabled: true
 
-                                ToolTip.text: insideLithLabel.text
-                                ToolTip.visible: LithPlatform.mobile ? insideLithMouse.containsPress : insideLithMouse.containsMouse
-                                ToolTip.delay: LithPlatform.mobile ? 0 : 800
+                                QQC2.ToolTip.text: insideLithLabel.text
+                                QQC2.ToolTip.visible: LithPlatform.mobile ? insideLithMouse.containsPress : insideLithMouse.containsMouse
+                                QQC2.ToolTip.delay: LithPlatform.mobile ? 0 : 800
                             }
                         }
                     }
@@ -478,9 +479,9 @@ ScrollView {
                                 anchors.fill: parent
                                 hoverEnabled: true
 
-                                ToolTip.text: inBrowserLabel.text
-                                ToolTip.visible: LithPlatform.mobile ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
-                                ToolTip.delay: LithPlatform.mobile ? 0 : 800
+                                QQC2.ToolTip.text: inBrowserLabel.text
+                                QQC2.ToolTip.visible: LithPlatform.mobile ? inBrowserMouse.containsPress : inBrowserMouse.containsMouse
+                                QQC2.ToolTip.delay: LithPlatform.mobile ? 0 : 800
                             }
                         }
                     }

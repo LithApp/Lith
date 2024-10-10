@@ -58,7 +58,7 @@ Rectangle {
             ToolTip.visible: searchModeButton.hovered
             ToolTip.delay: 800
             // Looks meh
-            IconImage {
+            Image {
                 mipmap: true
                 width: parent.width / 3.5
                 height: width

@@ -1,6 +1,6 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
+import Lith.Style
 
 Base {
     id: root
@@ -15,5 +15,6 @@ Base {
         id: spinBox
         Layout.fillWidth: true
         Layout.maximumWidth: root.halfWidth
+        Layout.minimumWidth: spinBox.implicitWidth
     }
 }

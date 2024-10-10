@@ -1,6 +1,8 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls as QQC2
 import QtQuick.Layouts
+
+import Lith.Style
 
 Base {
     id: root
@@ -22,7 +24,7 @@ Base {
         }
     }
 
-    ButtonGroup {
+    QQC2.ButtonGroup {
         id: buttonGroup
         onCheckedButtonChanged: root.currentIndex = checkedButton.index
     }
@@ -45,7 +47,7 @@ Base {
                 }
 
                 RadioButton {
-                    ButtonGroup.group: buttonGroup
+                    QQC2.ButtonGroup.group: buttonGroup
                     checked: false
                     readonly property int index: radioDelegateLayout.index
                     padding: 0

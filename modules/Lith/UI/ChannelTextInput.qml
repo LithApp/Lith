@@ -16,7 +16,6 @@
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 
 import Lith.Core
 import Lith.Style
@@ -34,10 +33,6 @@ TextField {
     topPadding: 0
     bottomPadding: contentHeight > font.pixelSize * 2 ? 6 : 0 // if it's twice the size of the font - add a margin
     wrapMode: TextField.WordWrap
-
-    Connections {
-        target: Qt.inputMethod
-    }
 
     onAccepted: {
         inputField.input()
