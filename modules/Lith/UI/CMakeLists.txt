@@ -39,6 +39,7 @@ set(LITH_QML
     StatusBar.qml
     util/DebugWindow.qml
     util/PaletteSwitch.qml
+    util/ControlPanel.qml
 )
 
 qt_add_library(LithUI)
