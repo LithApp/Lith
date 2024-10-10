@@ -109,37 +109,33 @@ QString FormattedString::Part::toHtml(QStringView fullText, const ColorTheme& th
     QString finalText;
     const auto urlThreshold = trim;
     if (urlThreshold > 0 && hyperlink && n > urlThreshold) {
-        auto url = QUrl(text(fullText, -1).toString());
-        auto scheme = url.scheme();
-        auto host = url.host();
-        auto file = url.fileName();
-        auto query = url.query();
-        auto path = url.path();
-
-        // If we only have a hostname, we'll use it as is.
-        if (path.isEmpty() || path == QStringLiteral("/")) {
-            finalText = text(fullText, trim).toString();
-        } else {
-            // We'll show always show the host and the scheme.
-            const auto hostPrefix = scheme + QStringLiteral("://") + host + QStringLiteral("/");
-            const auto ellipsis = QStringLiteral("\u2026");
-
-            // The threshold is so small that it doesn't even accomodate the hostPrefix. We'll just put the hostPrefix and
-            // ellipsis...
-            if (hostPrefix.length() >= urlThreshold) {
-                finalText = hostPrefix + ellipsis;
-            } else {
-                // This is a "nice" url with just a hostname and then one path fragment. We'll let these slide, because these tend
-                // to look nice even if they're long. Something like https://host.domain/file.extension
-                if (path == QStringLiteral("/") + file && !url.hasQuery()) {
-                    finalText = text(fullText, trim).toString();
-                } else {
-                    // Otherwise it's a weird link with multiple path fragments and queries and stuff. We'll just use the host and 10
-                    // characters of the path.
-                    const auto maxCharsToAppend = urlThreshold - hostPrefix.length();
-                    finalText = hostPrefix + ellipsis + path.right(maxCharsToAppend - 1);
+        QUrl url = QUrl(text(fullText, -1).toString());
+        if (url.isValid()) {
+            // 1) Remove redundant slashes
+            if (url.toString().size() > urlThreshold) {
+                url = url.adjusted(QUrl::StripTrailingSlash | QUrl::NormalizePathSegments);
+            }
+            // 2) Wrap query arguments
+            if (url.hasQuery() && url.toString().size() > urlThreshold) {
+                url.setQuery("\u2026");
+            }
+            // 3) Remove user login info
+            if (url.userInfo().size() > 0 && url.toString().size() > urlThreshold) {
+                url.setUserInfo("\u2026");
+            }
+            // 4) Remove path except for the file
+            if (url.toString().size() > urlThreshold) {
+                auto fileName = url.fileName();
+                auto path = url.path();
+                if (fileName.size() > 0 && path.size() > fileName.size() + 1) {
+                    url.setPath("/\u2026/" + fileName);
                 }
             }
+            finalText = url.toString();
+        } else {
+            // Invalid URL got through the regexp
+            // TODO logging, private data possible
+            finalText = text(fullText, trim).toString();
         }
     } else {
         finalText = text(fullText, trim).toString();
@@ -242,11 +238,19 @@ QString FormattedString::toPlain() const {
     return m_fullText;
 }
 
-QString FormattedString::toHtml(const ColorTheme& theme) const {
+QString FormattedString::toHtml(const ColorTheme& theme, int urlTrim) const {
     QString ret;
     ret.append(QStringLiteral("<span style='white-space: pre-wrap;'>"));
     for (const auto& i : m_parts) {
-        ret.append(i.toHtml(m_fullText, theme));
+        // This is messy, but:
+        // Take the length from the argument as the default.
+        // Negative length means full length but check settings first (used in tests, TODO refactor)
+        int trimLength = i.hyperlink ? urlTrim : -1;
+        // If length is still negative, use the value from settings
+        if (urlTrim <= 0 && i.hyperlink && Settings::instance()->shortenLongUrlsGet()) {
+            trimLength = Settings::instance()->shortenLongUrlsThresholdGet();
+        }
+        ret.append(i.toHtml(m_fullText, theme, trimLength));
     }
     ret.append("</span>");
     return ret;

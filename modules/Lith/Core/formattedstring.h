@@ -85,7 +85,7 @@ public:
     static const ColorTheme& getCurrentTheme();
 
     Q_INVOKABLE QString toPlain() const;
-    Q_INVOKABLE QString toHtml(const ColorTheme& theme = getCurrentTheme()) const;
+    Q_INVOKABLE QString toHtml(const ColorTheme& theme = getCurrentTheme(), int urlTrim = -1) const;
     Q_INVOKABLE QString toTrimmedHtml(int n, const ColorTheme& theme = getCurrentTheme()) const;
 
     bool containsHtml() const;
