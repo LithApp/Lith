@@ -7,10 +7,10 @@ on:
   create:
 
 env:
-    QT_VERSION: '6.7.2'
+    QT_VERSION: '6.8.0'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
-    WASM_QT_VERSION: '6.6.3'
-    EM_VERSION: '3.1.25'
+    WASM_QT_VERSION: '6.8.0'
+    EM_VERSION: '3.1.56'
 
 permissions:
   contents: write
@@ -197,10 +197,10 @@ jobs:
         cache: true
         cache-key-prefix: ${{ github.job }}-qt-${{ env.QT_VERSION }}
     - name: Install Qt
-      uses: jurplel/install-qt-action@v4
+      uses: MartinBriza/install-qt-action@v1
       with:
         version: ${{env.WASM_QT_VERSION}}
-        host: linux
+        host: all_os
         target: desktop
         arch: wasm_singlethread
         modules: ${{env.QT_MODULES}}
@@ -253,6 +253,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
+        arch: win64_msvc2022_64
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
