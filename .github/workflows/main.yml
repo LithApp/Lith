@@ -4,13 +4,15 @@ on:
   push:
     branches:
       - '**'
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "master" ]
   create:
 
 env:
-    QT_VERSION: '6.7.2'
+    QT_VERSION: '6.8.1'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
-    WASM_QT_VERSION: '6.6.3'
-    EM_VERSION: '3.1.25'
+    EM_VERSION: '3.1.56'
 
 permissions:
   contents: write
@@ -27,28 +29,47 @@ jobs:
 
     - name: Import signing keys
       run: |
+        KEYS_INSTALLED=0
+
         security create-keychain -p password build.keychain
         security default-keychain -s ~/Library/Keychains/build.keychain
 
-        base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" > Apple_Distribution_Z52EFCPL6D.p12
-        security import ./Apple_Distribution_Z52EFCPL6D.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" > Apple_Distribution_Z52EFCPL6D.p12
+            security import ./Apple_Distribution_Z52EFCPL6D.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" > Apple_Development_N952V7G2F5.p12
-        security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" > Apple_Development_N952V7G2F5.p12
+            security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" > Ios_Development_N952V7G2F5.p12
-        security import ./Ios_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" > Ios_Development_N952V7G2F5.p12
+            security import ./Ios_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_IOS_DISTRIBUTION_P12 }}" > Ios_Distribution_N952V7G2F5.p12
-        security import ./Ios_Distribution_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_IOS_DISTRIBUTION_P12 }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_IOS_DISTRIBUTION_P12 }}" > Ios_Distribution_N952V7G2F5.p12
+            security import ./Ios_Distribution_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" > Developer_ID_Application_Z52EFCPL6D.p7b
-        security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" > Developer_ID_Application_Z52EFCPL6D.p7b
+            security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
         # Unlock
         security unlock-keychain -p password ~/Library/Keychains/build.keychain
         security set-keychain-settings -lu
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        if [[ ${KEYS_INSTALLED} -eq 1 ]]; then
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        fi
 
     - name: Import provisioning profile
       run: |
@@ -192,20 +213,23 @@ jobs:
     - name: Install Host Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: ${{env.WASM_QT_VERSION}}
+        version: ${{env.QT_VERSION}}
         set-env: false
         cache: true
         cache-key-prefix: ${{ github.job }}-qt-${{ env.QT_VERSION }}
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
+
+    - name: Install Qt (temporary, see https://github.com/miurahr/aqtinstall/pull/846 )
+      uses: Kidev/install-qt-action@v4.2.0
       with:
-        version: ${{env.WASM_QT_VERSION}}
-        host: linux
-        target: desktop
+        version: ${{env.QT_VERSION}}
+        host: all_os
+        target: wasm
         arch: wasm_singlethread
+        set-env: true
         modules: ${{env.QT_MODULES}}
+        aqtsource: 'git+https://github.com/Kidev/aqtinstall.git@wasm'
         cache: true
-        cache-key-prefix: ${{ github.job }}-qt-cross-${{ env.QT_VERSION }}
+        cache-key-prefix: ${{ github.job }}-qt-wasm-${{ env.QT_VERSION }}
 
     - uses: mymindstorm/setup-emsdk@v14
       with:
@@ -213,6 +237,8 @@ jobs:
 
     - name: Build the Emscripten binary
       run: |
+        #hack
+        export QT_ROOT_DIR=${QT_ROOT_DIR}/../wasm_singlethread
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/wasm/build.sh
         mkdir installed
         cp build_wasm/app/*.js build_wasm/app/*.html build_wasm/app/*.wasm build_wasm/app/*.svg installed
@@ -253,6 +279,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
+        arch: win64_msvc2022_64
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
@@ -369,28 +396,47 @@ jobs:
     steps:
     - name: Import signing keys
       run: |
+        KEYS_INSTALLED=0
+
         security create-keychain -p password build.keychain
         security default-keychain -s ~/Library/Keychains/build.keychain
 
-        base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION }}" > Apple_Distribution_Z52EFCPL6D.p7b
-        security import ./Apple_Distribution_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_APPLE_DISTRIBUTIONA }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTIONA }}" > Apple_Distribution_Z52EFCPL6D.p7b
+            security import ./Apple_Distribution_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT }}" > Apple_Development_N952V7G2F5.p7b
-        security import ./Apple_Development_N952V7G2F5.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_APPLE_DEVELOPMENTA }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENTA }}" > Apple_Development_N952V7G2F5.p7b
+            security import ./Apple_Development_N952V7G2F5.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" > Apple_Distribution_Z52EFCPL6D.p12
-        security import ./Apple_Distribution_Z52EFCPL6D.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_APPLE_DISTRIBUTION_P12A }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION_P12A }}" > Apple_Distribution_Z52EFCPL6D.p12
+            security import ./Apple_Distribution_Z52EFCPL6D.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" > Apple_Development_N952V7G2F5.p12
-        security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_APPLE_DEVELOPMENT_P12A }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12A }}" > Apple_Development_N952V7G2F5.p12
+            security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
-        base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" > Developer_ID_Application_Z52EFCPL6D.p7b
-        security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+        if [ ! -z "${{ secrets.CERT_DEVELOPER_ID_APPLICATIONA }}" ]; then
+            base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATIONA }}" > Developer_ID_Application_Z52EFCPL6D.p7b
+            security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
+        fi
 
         # Unlock
         security unlock-keychain -p password ~/Library/Keychains/build.keychain
         security set-keychain-settings -lu
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        if [[ ${KEYS_INSTALLED} -eq 1 ]]; then
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        fi
 
     - uses: actions/checkout@v4
       with:
