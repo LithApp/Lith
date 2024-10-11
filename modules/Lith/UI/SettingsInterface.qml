@@ -189,6 +189,26 @@ QQC2.ScrollView {
                 Layout.alignment: Qt.AlignLeft
                 summary: qsTr("Timestamp format")
                 text: Lith.settings.timestampFormat
+
+                columnComponent: Fields.Base {
+                    isNested: true
+                    enabled: false
+                    summary: qsTr("Preview")
+                    rowComponent: Label {
+                        id: timePreview
+                        Layout.rightMargin: 9
+                        text: new Date().toLocaleString(Qt.locale(), timestampFormatInput.text)
+                        Timer {
+                            id: timeTimer
+                            running: parent.visible
+                            interval: 500
+                            repeat: true
+                            onTriggered: {
+                                timePreview.text = new Date().toLocaleString(Qt.locale(), timestampFormatInput.text)
+                            }
+                        }
+                    }
+                }
             }
 
             Fields.Boolean {
