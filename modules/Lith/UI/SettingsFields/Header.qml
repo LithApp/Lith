@@ -25,7 +25,6 @@ Item {
 
         topPadding: font.pixelSize
         bottomPadding: root.standalone ? font.pixelSize : 0.33 * font.pixelSize
-        font.bold: true
-        font.capitalization: Font.AllUppercase
+        font.pixelSize: FontSizes.large
     }
 }
