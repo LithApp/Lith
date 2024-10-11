@@ -23,10 +23,16 @@ Rectangle {
     Rectangle {
         anchors.fill: parent
         color: {
+            if (control.checked && control.pressed)
+                return ColorUtils.mixColors(LithPalette.regular.button, "black", 0.2)
+            if (control.checked && control.hovered)
+                return ColorUtils.mixColors(LithPalette.regular.button, "black", 0.4)
+            if (control.checked)
+                return ColorUtils.mixColors(LithPalette.regular.button, "black", 0.3)
             if (control.pressed)
                 return ColorUtils.mixColors(LithPalette.regular.button, "black", 0.5)
             if (control.hovered)
-                return ColorUtils.mixColors(LithPalette.regular.base, LithPalette.regular.button, 0.6)
+                return ColorUtils.mixColors(LithPalette.regular.button, "white", 0.9)
             return LithPalette.regular.button
         }
         border.color: hovered ? ColorUtils.mixColors(LithPalette.regular.window, "white", 0.9)
