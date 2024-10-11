@@ -134,7 +134,7 @@ ScrollView {
                 id: selfSignedCertificateCheckbox
                 checked: Lith.settings.allowSelfSignedCertificates
                 summary: qsTr("Allow self-signed certificates")
-                details: checked ? qsTr("Lith will allow self-signed server and chain certificates and mismatching certificate hostnames.") : qsTr("(Less secure, not recommended)")
+                details: checked ? qsTr("Lith will allow self-signed server and chain certificates and mismatching certificate hostnames.") : qsTr("Potentially less secure, not recommended")
             }
             Fields.String {
                 id: passphraseField
@@ -142,48 +142,12 @@ ScrollView {
                 echoMode: TextInput.Password
                 placeholderText: Lith.settings.hasPassphrase && !Lith.settings.useEmptyPassphrase && !useEmptyPassphraseCheckbox.checked ? "********" : useEmptyPassphraseCheckbox.checked ? "You use no passphrase" : "No password was entered yet"
                 rowComponent.enabled: !useEmptyPassphraseCheckbox.checked
-                columnComponent: RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 3
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Label {
-                            id: summary
-                            Layout.topMargin: details.visible ? 6 : 0
-                            Layout.fillWidth: true
-                            elide: Label.ElideRight
-                            color: ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.window, enabled ? 1.0 : 0.5)
-                            text: "Use an empty password"
-
-                            MouseArea {
-                                id: baseMouse
-                                anchors.fill: parent
-                                hoverEnabled: true
-
-                                ToolTip.text: summary.text + (details.text.length > 0 ? "\n" + details.text : "")
-                                ToolTip.visible: LithPlatform.mobile ? baseMouse.containsPress : baseMouse.containsMouse
-                                ToolTip.delay: LithPlatform.mobile ? 0 : 800
-                            }
-                        }
-                        Label {
-                            id: details
-                            Layout.fillWidth: true
-                            Layout.bottomMargin: visible ? 6 : 0
-                            Layout.rightMargin: visible ? 6 : 0
-                            elide: Label.ElideRight
-                            font.pixelSize: summary.font.pixelSize * 0.7
-                            color: ColorUtils.mixColors(LithPalette.disabled.text, LithPalette.regular.window, enabled ? 1.0 : 0.5)
-                            visible: text.length > 0
-                            wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-                            maximumLineCount: 4
-                            text: "Not recommended, low security.\nRequires to be enabled in WeeChat."
-                        }
-                    }
-                    CheckBox {
-                        padding: 0
-                        id: useEmptyPassphraseCheckbox
-                        checked: Lith.settings.useEmptyPassphrase
-                    }
+                columnComponent: Fields.Boolean {
+                    id: useEmptyPassphraseCheckbox
+                    isNested: true
+                    checked: Lith.settings.useEmptyPassphrase
+                    summary: qsTr("No password")
+                    details: qsTr("Less secure, not recommended")
                 }
             }
             Fields.Boolean {
@@ -191,7 +155,7 @@ ScrollView {
                 checked: Lith.settings.handshakeAuth
 
                 summary: qsTr("Use Handshake")
-                details: "(More secure, available since WeeChat 2.9)"
+                details: "More secure, available since WeeChat 2.9"
             }
             Fields.Boolean {
                 id: connectionCompressionCheckbox
@@ -248,7 +212,7 @@ ScrollView {
                 id: enableReplayRecordingCheckbox
                 checked: Lith.settings.enableReplayRecording
                 summary: qsTr("Record network data")
-                details: qsTr("(Developer only, restart required)\nLith will record all data coming from WeeChat for debugging purposes. Personal data such as message contents and encryption negotiation will be logged.")
+                details: qsTr("Developer only, restart required\nLith will record all data coming from WeeChat for debugging purposes. Personal data such as message contents and encryption negotiation will be logged.")
                 columnComponent: ListView {
                     id: recordingsListView
                     Layout.fillWidth: true

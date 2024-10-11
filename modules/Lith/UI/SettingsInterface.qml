@@ -156,43 +156,25 @@ QQC2.ScrollView {
                 to: 32
             }
 
-            Fields.Base {
-                id: messageFontPixelSizeField
+            Fields.IntSpinBox {
+                id: messageFontPixelSizeSpinBox
                 Layout.alignment: Qt.AlignLeft
                 summary: qsTr("Message font size")
+                Binding on value {
+                    value: baseFontPixelSizeSpinBox.value
+                    when: !messageFontPixelSizeSpinBox.enabled
+                }
+                from: baseFontPixelSizeSpinBox.from
+                to: baseFontPixelSizeSpinBox.to
 
-                rowComponent: ColumnLayout {
-                    Layout.topMargin: 6
-                    Layout.bottomMargin: 6
+                rowComponent.enabled: !useBaseFontPixelSizeForMessagesCheckBox.checked
+
+                columnComponent: Fields.Boolean {
+                    id: useBaseFontPixelSizeForMessagesCheckBox
+                    summary: qsTr("Use UI font size for messages")
                     Layout.fillWidth: true
-                    Layout.maximumWidth: messageFontPixelSizeField.halfWidth
-                    spacing: 6
-                    RowLayout {
-                        Layout.fillWidth: true
-                        Label {
-                            Layout.fillWidth: true
-                            text: qsTr("Use UI font size")
-                            horizontalAlignment: Label.AlignRight
-                            elide: Label.ElideRight
-                        }
-                        CheckBox {
-                            id: useBaseFontPixelSizeForMessagesCheckBox
-                            padding: 0
-                            checked: Lith.settings.useBaseFontPixelSizeForMessages
-                        }
-                    }
-                    SpinBox {
-                        id: messageFontPixelSizeSpinBox
-                        Layout.fillWidth: true
-                        enabled: !useBaseFontPixelSizeForMessagesCheckBox.checked
-                        value: Lith.settings.messageFontPixelSize
-                        Binding on value {
-                            value: baseFontPixelSizeSpinBox.value
-                            when: !messageFontPixelSizeSpinBox.enabled
-                        }
-                        from: baseFontPixelSizeSpinBox.from
-                        to: baseFontPixelSizeSpinBox.to
-                    }
+                    checked: Lith.settings.useBaseFontPixelSizeForMessages
+                    isNested: true
                 }
             }
 

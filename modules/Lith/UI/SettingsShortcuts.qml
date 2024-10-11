@@ -49,7 +49,7 @@ ScrollView {
 
             Fields.Boolean {
                 summary: qsTr("Enable readline shortcuts")
-                details: "(^W, ^D, etc.)"
+                details: "^W, ^D, etc."
                 checked: Lith.settings.enableReadlineShortcuts
             }
 
