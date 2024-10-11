@@ -15,10 +15,10 @@ Rectangle {
     property Item columnComponent
     readonly property Item labelComponent: summary
     readonly property real firstRowHeight: row.height
-    readonly property real halfWidth: (root.width / 2) - horizontalPadding - (row.spacing / 2)
+    readonly property real halfWidth: (root.width / 2) - (isNested ? 0 : horizontalPadding) - (row.spacing / 2)
 
-    readonly property real horizontalPadding: 9
-    readonly property real verticalPadding: 3
+    readonly property real horizontalPadding: 12
+    readonly property real verticalPadding: 6
 
     onRowComponentChanged: if (rowComponent) rowComponent.parent = row
     onColumnComponentChanged: if (columnComponent) columnComponent.parent = column
@@ -27,9 +27,18 @@ Rectangle {
     implicitWidth: column.implicitWidth + column.anchors.margins * 2
     implicitHeight: column.implicitHeight + root.verticalPadding * 2
 
-    color: "transparent"
-    border.width: 1
-    border.color: LithPalette.regular.light
+    color: ColorUtils.mixColors(LithPalette.regular.window, LithPalette.regular.base, 0.85)
+    border.width: root.isNested ? 0 : 1
+    border.color: LithPalette.regular.button
+    readonly property int fieldIndex: parent.children.indexOf(this)
+    readonly property Base previousSibling: parent.children[fieldIndex - 1] as Base
+    readonly property Base nextSibling: parent.children[fieldIndex + 1] as Base
+    property bool isNested: (parent as Base) || (parent?.parent as Base) || (parent?.parent?.parent as Base) || (parent?.parent?.parent?.parent as Base)
+
+    topLeftRadius: previousSibling ? 0 : 4
+    topRightRadius: previousSibling ? 0 : 4
+    bottomLeftRadius: nextSibling ? 0 : 4
+    bottomRightRadius: nextSibling ? 0 : 4
 
     ColumnLayout {
         id: column
@@ -37,13 +46,13 @@ Rectangle {
         anchors {
             left: parent.left
             right: parent.right
-            margins: root.horizontalPadding
+            margins: root.isNested ? 0 : root.horizontalPadding
         }
-        y: root.verticalPadding
-        height: parent.height - 2 * root.verticalPadding
+        y: root.isNested ? 0 : root.verticalPadding
+        height: parent.height - 2 * y
         RowLayout {
             id: row
-            Layout.minimumHeight: summary.font.pixelSize + 36
+            Layout.minimumHeight: summary.font.pixelSize + 24 + (root.isNested ? 0 : 12)
             Layout.fillWidth: true
             spacing: 3
             ColumnLayout {
@@ -51,7 +60,7 @@ Rectangle {
                 spacing: 0
                 Label {
                     id: summary
-                    Layout.topMargin: details.visible ? 6 : 0
+                    Layout.topMargin: details.visible && !root.isNested ? 6 : 0
                     Layout.fillWidth: true
                     elide: Label.ElideRight
                     color: ColorUtils.mixColors(LithPalette.regular.windowText, LithPalette.regular.window, enabled ? 1.0 : 0.5)
@@ -69,7 +78,7 @@ Rectangle {
                 Label {
                     id: details
                     Layout.fillWidth: true
-                    Layout.bottomMargin: visible ? 6 : 0
+                    Layout.bottomMargin: visible && !root.isNested ? 6 : 0
                     Layout.rightMargin: visible ? 6 : 0
                     elide: Label.ElideRight
                     font.pixelSize: FontSizes.tiny
