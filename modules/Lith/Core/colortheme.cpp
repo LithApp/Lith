@@ -40,6 +40,7 @@ QPalette ColorTheme::palette() const {
     palette.setBrush(QPalette::Highlight, QColor(0x8F, 0x24, 0x24));
     palette.setBrush(QPalette::HighlightedText, QColor(0xED, 0xED, 0xED));
     palette.setBrush(QPalette::AlternateBase, QColor(0xc7, 0xc3, 0x6d));
+    palette.setBrush(QPalette::Disabled, QPalette::WindowText, mix(text, window, 0.6));
     palette.setBrush(QPalette::Disabled, QPalette::Text, mix(text, window, 0.6));
     palette.setBrush(QPalette::Disabled, QPalette::Button, mix(button, window, 0.45));
     return palette;
