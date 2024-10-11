@@ -71,7 +71,7 @@ jobs:
 
     - name: Set up CPM cache
       id: cache-cpm
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/cpm-cache
         key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
@@ -79,7 +79,7 @@ jobs:
           ${{ runner.os }}-cpm-
 
     - name: Install Host Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         set-env: false
@@ -87,7 +87,7 @@ jobs:
         cache: true
         cache-key-prefix: ${{ github.job }}-qt-host
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         target: ios
@@ -102,7 +102,7 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/ios/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Lith.ipa
         path: build_ios/Lith.ipa
@@ -131,7 +131,7 @@ jobs:
 
     - name: Set up CPM cache
       id: cache-cpm
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/cpm-cache
         key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
@@ -139,26 +139,24 @@ jobs:
           ${{ runner.os }}-cpm-
 
     - name: Install Host Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         host: 'linux'
         version: ${{env.QT_VERSION}}
         set-env: false
-        aqtversion: '==3.1.*'
         modules: ${{env.QT_MODULES}}
         cache: true
-        cache-key-prefix: ${{ github.job }}-qt-host
+        cache-key-prefix: ${{ github.job }}-qt-${{ env.QT_VERSION }}
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         host: 'linux'
         version: ${{env.QT_VERSION}}
         target: android
         arch: android_armv7
-        aqtversion: '==3.1.*'
         modules: ${{env.QT_MODULES}}
         cache: true
-        cache-key-prefix: ${{ github.job }}-qt
+        cache-key-prefix: ${{ github.job }}-qt-cross-${{ env.QT_VERSION }}
 
     - name: Get OpenSSL
       run: |
@@ -174,7 +172,7 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/android/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: android-build-debug.apk
         path: build_android/app/android-build/Lith.apk
@@ -195,7 +193,7 @@ jobs:
 
     - name: Set up CPM cache
       id: cache-cpm
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/cpm-cache
         key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
@@ -203,26 +201,24 @@ jobs:
           ${{ runner.os }}-cpm-
 
     - name: Install Host Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         set-env: false
-        aqtversion: '==3.1.*'
         cache: true
-        cache-key-prefix: ${{ github.job }}-qt-host
+        cache-key-prefix: ${{ github.job }}-qt-${{ env.QT_VERSION }}
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         host: linux
         target: desktop
         arch: wasm_singlethread
         modules: ${{env.QT_MODULES}}
-        aqtversion: '==3.1.*'
         cache: true
-        cache-key-prefix: ${{ github.job }}-qt
+        cache-key-prefix: ${{ github.job }}-qt-cross-${{ env.QT_VERSION }}
 
-    - uses: mymindstorm/setup-emsdk@v11
+    - uses: mymindstorm/setup-emsdk@v14
       with:
         version: ${{env.EM_VERSION}}
 
@@ -239,13 +235,13 @@ jobs:
       uses: actions/configure-pages@v3
     - name: Upload artifact
       if: github.event_name == 'create'
-      uses: actions/upload-pages-artifact@v2
+      uses: actions/upload-pages-artifact@v3
       with:
         path: 'installed/'
     - name: Deploy to GitHub Pages
       id: deployment
       if: github.event_name == 'create'
-      uses: actions/deploy-pages@v2
+      uses: actions/deploy-pages@v4
 
   Windows-MSVC:
     runs-on: windows-2019
@@ -256,7 +252,7 @@ jobs:
 
     - name: Set up CPM cache
       id: cache-cpm
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/cpm-cache
         key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
@@ -264,7 +260,7 @@ jobs:
           ${{ runner.os }}-cpm-
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
@@ -272,7 +268,7 @@ jobs:
         cache-key-prefix: ${{ github.job }}-qt
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v2
     - name: Build the application
       shell: bash
       run: |
@@ -281,7 +277,7 @@ jobs:
         mkdir build_win
         cd build_win
         export CPM_SOURCE_CACHE=~/cpm-cache
-        export CMAKE_PREFIX_PATH="$Qt6_DIR"/lib/cmake
+        export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
         cmake .. -GNinja -DCMAKE_INSTALL_PREFIX=installed -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$VERSION_NAME
         cmake --build . --config Release
         cmake --install . --config Release
@@ -292,11 +288,11 @@ jobs:
         cp build_win/installed/bin/* build_win/composed
         cp -r build_win/installed/lib/modules build_win/composed/
         cd build_win/composed
-        "$Qt6_DIR"/bin/windeployqt.exe Lith.exe LithCore.dll LithStyle.dll LithUI.dll --verbose 2 --release --compiler-runtime --qmldir ../..
+        "$QT_ROOT_DIR"/bin/windeployqt.exe Lith.exe LithCore.dll LithStyle.dll LithUI.dll --verbose 2 --release --compiler-runtime --qmldir ../..
         7z a ../../Lith.zip *
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Lith.zip
         path: Lith.zip
@@ -324,7 +320,7 @@ jobs:
 
     - name: Set up CPM cache
       id: cache-cpm
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/cpm-cache
         key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
@@ -332,7 +328,7 @@ jobs:
           ${{ runner.os }}-cpm-
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
@@ -345,7 +341,7 @@ jobs:
         cd build
         export CPM_SOURCE_CACHE=~/cpm-cache
         export VERSION_NAME=$(./dist/get-version-name.sh)
-        export CMAKE_PREFIX_PATH="$Qt6_DIR"/lib/cmake
+        export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
         cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$VERSION_NAME -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
         make -j5
 
@@ -366,7 +362,7 @@ jobs:
         manifest-path: "dist/linux/flatpak/app.Lith.Lith.json"
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: app.Lith.Lith.flatpak
         path: app.Lith.Lith.flatpak
@@ -413,7 +409,7 @@ jobs:
 
     - name: Set up CPM cache
       id: cache-cpm
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/cpm-cache
         key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
@@ -421,7 +417,7 @@ jobs:
           ${{ runner.os }}-cpm-
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
@@ -438,13 +434,13 @@ jobs:
         # A workaround mentioned here https://github.com/actions/runner-images/issues/7522
         echo killing...; sudo pkill -9 XProtect >/dev/null || true;
         echo waiting...; while pgrep XProtect; do sleep 3; done;
-        "$Qt6_DIR"/bin/macdeployqt build_macos/app/Lith.app -qmldir=modules -appstore-compliant #-codesign=Z52EFCPL6D
+        "$QT_ROOT_DIR"/bin/macdeployqt build_macos/app/Lith.app -qmldir=modules -appstore-compliant #-codesign=Z52EFCPL6D
         # No idea why but macdeployqt deploys debug libs too, just remove them, maybe fix this sometimes
         for i in `find build_macos/app/Lith.app/ -name '*.dSYM'`; do rm -fr "$i"; done
-        "$Qt6_DIR"/bin/macdeployqt build_macos/app/Lith.app -no-plugins -dmg -always-overwrite -appstore-compliant
+        "$QT_ROOT_DIR"/bin/macdeployqt build_macos/app/Lith.app -no-plugins -dmg -always-overwrite -appstore-compliant
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Lith.dmg
         path: build_macos/app/Lith.dmg
