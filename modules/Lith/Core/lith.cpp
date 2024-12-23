@@ -193,7 +193,7 @@ NotificationHandler* Lith::notificationHandler() {
 }
 
 QString Lith::gitVersion() {
-    return QStringLiteral(GIT_STATE);
+    return QStringLiteral(LITH_GIT_STATE);
 }
 
 bool Lith::debugVersion() {
