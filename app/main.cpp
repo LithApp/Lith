@@ -57,16 +57,16 @@ int main(int argc, char* argv[]) {
     QCoreApplication::setOrganizationName("Lith");
     QCoreApplication::setOrganizationDomain("lith.app");
     QCoreApplication::setApplicationName("Lith");
-    if (QStringLiteral(PROJECT_VERSION) == QStringLiteral("0.0.0")) {
-        if (QStringLiteral(GIT_STATE).isEmpty()) {
+    if (QStringLiteral(LITH_PROJECT_VERSION) == QStringLiteral("0.0.0")) {
+        if (QStringLiteral(LITH_GIT_STATE).isEmpty()) {
             QCoreApplication::setApplicationVersion(QStringLiteral(
                 "Unknown version, please report this to https://github.com/LithApp/Lith and mention your platform and where you got this package."
             ));
         } else {
-            QCoreApplication::setApplicationVersion(QStringLiteral(GIT_STATE));
+            QCoreApplication::setApplicationVersion(QStringLiteral(LITH_GIT_STATE));
         }
     } else {
-        QCoreApplication::setApplicationVersion(QStringLiteral(PROJECT_VERSION));
+        QCoreApplication::setApplicationVersion(QStringLiteral(LITH_PROJECT_VERSION));
     }
 
     QApplication app(argc, argv);

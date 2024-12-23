@@ -28,6 +28,6 @@
     <update_contact>m@rtinbriza.cz</update_contact>
     <content_rating type="oars-1.1"/>
     <releases>
-            <release version="${PROJECT_VERSION}" date="${PROJECT_VERSION_RELEASEDATE}"/>
+            <release version="${LITH_PROJECT_VERSION}" date="${LITH_PROJECT_VERSION_RELEASEDATE}"/>
     </releases>
 </component>
