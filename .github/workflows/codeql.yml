@@ -49,10 +49,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Install Make
+    - name: Install Make and dependencies
       run: |
         sudo apt update
-        sudo apt install make libxkbcommon-dev
+        sudo apt install make libxkbcommon-dev libsecret-1-dev
 
     - name: Set up CPM cache
       id: cache-cpm
