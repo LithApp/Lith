@@ -173,7 +173,7 @@ class LITHCORE_EXPORT Settings : public QObject {
     // This is hidden for now
     SETTING(bool, terminalLikeChat, true)
 
-    SETTING(QString, imgurApiKey, QStringLiteral(LITH_IMGUR_API_KEY))
+    SETTING(QString, imgurApiKey, QStringLiteral(IMGUR_API_KEY))
 
     // UNUSED SETTINGS
     // determine what to do about these later
