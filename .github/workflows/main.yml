@@ -29,38 +29,47 @@ jobs:
 
     - name: Import signing keys
       run: |
+        KEYS_INSTALLED=0
+
         security create-keychain -p password build.keychain
         security default-keychain -s ~/Library/Keychains/build.keychain
 
         if [ ! -z "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" ]; then
             base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" > Apple_Distribution_Z52EFCPL6D.p12
             security import ./Apple_Distribution_Z52EFCPL6D.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" ]; then
             base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" > Apple_Development_N952V7G2F5.p12
             security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" ]; then
             base64 -D <<< "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" > Ios_Development_N952V7G2F5.p12
             security import ./Ios_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_IOS_DISTRIBUTION_P12 }}" ]; then
             base64 -D <<< "${{ secrets.CERT_IOS_DISTRIBUTION_P12 }}" > Ios_Distribution_N952V7G2F5.p12
             security import ./Ios_Distribution_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" ]; then
             base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" > Developer_ID_Application_Z52EFCPL6D.p7b
             security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         # Unlock
         security unlock-keychain -p password ~/Library/Keychains/build.keychain
         security set-keychain-settings -lu
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        if [[ ${KEYS_INSTALLED} -eq 1 ]]; then
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        fi
 
     - name: Import provisioning profile
       run: |
@@ -387,38 +396,47 @@ jobs:
     steps:
     - name: Import signing keys
       run: |
+        KEYS_INSTALLED=0
+
         security create-keychain -p password build.keychain
         security default-keychain -s ~/Library/Keychains/build.keychain
 
         if [ ! -z "${{ secrets.CERT_APPLE_DISTRIBUTION }}" ]; then
             base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION }}" > Apple_Distribution_Z52EFCPL6D.p7b
             security import ./Apple_Distribution_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_APPLE_DEVELOPMENT }}" ]; then
             base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT }}" > Apple_Development_N952V7G2F5.p7b
             security import ./Apple_Development_N952V7G2F5.p7b -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" ]; then
             base64 -D <<< "${{ secrets.CERT_APPLE_DISTRIBUTION_P12 }}" > Apple_Distribution_Z52EFCPL6D.p12
             security import ./Apple_Distribution_Z52EFCPL6D.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" ]; then
             base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" > Apple_Development_N952V7G2F5.p12
             security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         if [ ! -z "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" ]; then
             base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" > Developer_ID_Application_Z52EFCPL6D.p7b
             security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
+            KEYS_INSTALLED=1
         fi
 
         # Unlock
         security unlock-keychain -p password ~/Library/Keychains/build.keychain
         security set-keychain-settings -lu
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        if [[ ${KEYS_INSTALLED} -eq 1 ]]; then
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k password ~/Library/Keychains/build.keychain
+        fi
 
     - uses: actions/checkout@v4
       with:
