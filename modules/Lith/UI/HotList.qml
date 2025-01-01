@@ -26,7 +26,7 @@ ListView {
         id: delegateBody
 
         onClicked: {
-            Lith.selectedBufferIndex = index
+            Lith.selectedBuffer = modelData
         }
 
         required property var modelData
