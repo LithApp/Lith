@@ -31,6 +31,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
         Qt6::QWasmIntegrationPlugin
     )
 endif()
+qt_add_ios_ffmpeg_libraries(Lith)
 
 target_link_libraries(Lith PRIVATE
     LithAssets
