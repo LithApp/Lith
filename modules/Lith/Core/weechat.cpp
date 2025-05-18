@@ -357,11 +357,11 @@ void Weechat::onMessageReceived(QByteArray& data) {
 
     WeeChatProtocol::PlainString id = WeeChatProtocol::parse<WeeChatProtocol::PlainString>(s);
 
-    std::array<char, 4> type {};
-    type.fill(0);
-    s.readRawData(type.data(), 3);
+    std::array<char, 3> typeData = {0, 0, 0};
+    s.readRawData(typeData.data(), 3);
+    QByteArrayView type(typeData.data(), 3);
 
-    if (QLatin1String(type.data()) == QStringLiteral("hda")) {
+    if (type == QByteArrayLiteral("hda")) {
         WeeChatProtocol::HData hda = WeeChatProtocol::parse<WeeChatProtocol::HData>(s);
 
         if (c_initializationMap->contains(id)) {
@@ -385,11 +385,11 @@ void Weechat::onMessageReceived(QByteArray& data) {
                 lith()->log(Logger::Unexpected, QStringLiteral("Possible unhandled message: %1").arg(name));
             }
         }
-    } else if (QLatin1String(type.data()) == QStringLiteral("htb")) {
+    } else if (type == QByteArrayLiteral("htb")) {
         WeeChatProtocol::HashTable htb = WeeChatProtocol::parse<WeeChatProtocol::HashTable>(s);
 
         onHandshakeAccepted(htb);
-    } else if (QLatin1String(type.data()) == QStringLiteral("str")) {
+    } else if (type == QByteArrayLiteral("str")) {
         WeeChatProtocol::String str = WeeChatProtocol::parse<WeeChatProtocol::String>(s);
 
         if (!QMetaObject::invokeMethod(

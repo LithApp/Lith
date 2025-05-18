@@ -143,20 +143,20 @@ namespace WeeChatProtocol {
 
     template <> HashTable parse(QDataStream& s, bool* ok) {
         HashTable r {};
-        std::array<char, 4> keyType {};
-        keyType.fill(0);
-        std::array<char, 4> valueType {};
-        valueType.fill(0);
-        s.readRawData(keyType.data(), 3);
-        if (strcmp(keyType.data(), "str") != 0) {
+        std::array<char, 3> keyTypeData {0, 0, 0};
+        s.readRawData(keyTypeData.data(), 3);
+        QByteArrayView keyType(keyTypeData.data(), 3);
+        if (keyType != QByteArrayLiteral("str")) {
             qWarning() << "Hashtable currently supports only string keys";
             if (ok) {
                 *ok = false;
             }
             return r;
         }
-        s.readRawData(valueType.data(), 3);
-        if (strcmp(valueType.data(), "str") != 0) {
+        std::array<char, 3> valueTypeData {0, 0, 0};
+        s.readRawData(valueTypeData.data(), 3);
+        QByteArrayView valueType(valueTypeData.data(), 3);
+        if (valueType != QByteArrayLiteral("str")) {
             qWarning() << "Hashtable currently supports only string values";
             if (ok) {
                 *ok = false;
@@ -254,10 +254,10 @@ namespace WeeChatProtocol {
                     }
                     item.objects[name] = QVariant::fromValue(str);
                 } else if (type == QStringLiteral("arr")) {
-                    std::array<char, 4> fieldType {};
-                    fieldType.fill(0);
-                    s.readRawData(fieldType.data(), 3);
-                    if (strcmp(fieldType.data(), "int") == 0) {
+                    std::array<char, 3> fieldTypeData {0, 0, 0};
+                    s.readRawData(fieldTypeData.data(), 3);
+                    QByteArrayView fieldType(fieldTypeData.data(), 3);
+                    if (fieldType == QByteArrayLiteral("int")) {
                         ArrayInt a = parse<ArrayInt>(s, &innerOk);
                         if (!innerOk) {
                             if (outerOk) {
