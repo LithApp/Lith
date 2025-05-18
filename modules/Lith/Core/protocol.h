@@ -24,6 +24,10 @@ namespace WeeChatProtocol {
     using Char = char;
     using Integer = qint32;
     using LongInteger = qint64;
+    // The difference betweehn plain and regular string is that plain is not user-facing,
+    // so it never needs to be HTML-formatted (with colors, etc.).
+    // This vastly improves performance when parsing HData keys.
+    using PlainString = QString;
     using String = FormattedString;
     using Buffer = QByteArray;
     using Pointer = weechat_pointer_t;
@@ -49,6 +53,7 @@ namespace WeeChatProtocol {
     template <> LITHCORE_EXPORT Char parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Integer parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT LongInteger parse(QDataStream& s, bool* ok);
+    template <> LITHCORE_EXPORT PlainString parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT String parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Buffer parse(QDataStream& s, bool* ok);
     template <> LITHCORE_EXPORT Pointer parse(QDataStream& s, bool* ok);

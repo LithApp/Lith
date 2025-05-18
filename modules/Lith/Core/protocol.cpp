@@ -24,6 +24,10 @@
 #include <QStringLiteral>
 #include <cstring>
 
+namespace {
+    Q_GLOBAL_STATIC(QByteArray, parserBuffer)
+}
+
 namespace WeeChatProtocol {
     template <> Char parse(QDataStream& s, bool* ok) {
         Char r {};
@@ -57,20 +61,37 @@ namespace WeeChatProtocol {
         return r;
     }
 
+    template <> PlainString parse(QDataStream& s, bool* ok) {
+        PlainString r {};
+        uint32_t len = 0;
+        s >> len;
+        if (len == static_cast<uint32_t>(-1)) {
+            r = PlainString {};
+        } else if (len == 0) {
+            r = PlainString {QLatin1String("")};
+        } else if (len > 0) {
+            parserBuffer->resize(len);
+            s.readRawData(parserBuffer->data(), static_cast<int>(len));
+            r = QString::fromUtf8(*parserBuffer);
+        }
+        if (ok) {
+            *ok = true;
+        }
+        return r;
+    }
+
     template <> String parse(QDataStream& s, bool* ok) {
-        static QByteArray buf;
         String r {};
         uint32_t len = 0;
-        r.clear();
         s >> len;
         if (len == static_cast<uint32_t>(-1)) {
             r = String();
         } else if (len == 0) {
             r.addChar(QByteArrayLiteral(""));
         } else if (len > 0) {
-            buf.resize(len);
-            s.readRawData(buf.data(), static_cast<int>(len));
-            r = convertColorsToHtml(buf);
+            parserBuffer->resize(len);
+            s.readRawData(parserBuffer->data(), static_cast<int>(len));
+            r = convertColorsToHtml(*parserBuffer);
         }
         if (ok) {
             *ok = true;
@@ -111,13 +132,12 @@ namespace WeeChatProtocol {
     }
 
     Time parseTime(QDataStream& s, bool* ok) {
-        static QByteArray buf;
         Time r {};
         quint8 length = 0;
         s >> length;
-        buf.resize(static_cast<int>(length), 0);
-        s.readRawData(buf.data(), length);
-        r = buf.toLongLong(ok);
+        parserBuffer->resize(static_cast<int>(length), 0);
+        s.readRawData(parserBuffer->data(), length);
+        r = parserBuffer->toLongLong(ok);
         return r;
     }
 
@@ -147,9 +167,9 @@ namespace WeeChatProtocol {
         s >> count;
         r.clear();
         for (quint32 i = 0; i < count; i++) {
-            auto key = parse<String>(s);
+            auto key = parse<PlainString>(s);
             auto value = parse<String>(s);
-            r.insert(key.toPlain(), value.toPlain());
+            r.insert(key, value.toPlain());
         }
         if (ok) {
             *ok = true;
@@ -160,14 +180,14 @@ namespace WeeChatProtocol {
     template <> HData parse(QDataStream& s, bool* outerOk) {
         HData r {};
         bool innerOk = false;
-        String hpath = parse<String>(s, &innerOk);
+        PlainString hpath = parse<PlainString>(s, &innerOk);
         if (!innerOk) {
             if (outerOk) {
                 *outerOk = false;
             }
             return r;
         }
-        String keys = parse<String>(s, &innerOk);
+        PlainString keys = parse<PlainString>(s, &innerOk);
         if (!innerOk) {
             if (outerOk) {
                 *outerOk = false;
