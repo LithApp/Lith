@@ -266,7 +266,7 @@ namespace WeeChatProtocol {
                             return r;
                         }
                         item.objects[name] = QVariant::fromValue(a);
-                    } else if (strcmp(fieldType.data(), "str") == 0) {
+                    } else if (fieldType == QByteArrayLiteral("str")) {
                         ArrayStr a = parse<ArrayStr>(s, &innerOk);
                         if (!innerOk) {
                             if (outerOk) {
