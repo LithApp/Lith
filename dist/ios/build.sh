@@ -1,8 +1,9 @@
 #!/bin/bash
 
+set -e
 set -x
 
-mkdir build_ios
+mkdir -p build_ios
 cd build_ios
 
 export QT_HOST_PATH="${QT_ROOT_DIR}/../macos"
