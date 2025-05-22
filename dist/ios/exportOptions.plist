@@ -8,5 +8,14 @@
     <string>Z52EFCPL6D</string>
     <key>teamName</key>
     <string>Martin Briza</string>
+    <key>signingStyle</key>
+    <string>manual</string>
+    <key>signingCertificate</key>
+    <string>Apple Distribution: Martin Briza</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>cz.rtinbriza.ma.Lith</key>
+        <string>Lith_Testflight</string>
+    </dict>
 </dict>
 </plist>
