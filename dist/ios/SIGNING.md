@@ -1,4 +1,13 @@
-This is annoying but I'm still not sure what exact steps need to be taken to refresh iOS signing certificates. A few notes:
+This is annoying but I'm still not sure what exact steps need to be taken to refresh iOS signing certificates. 
+
+2025 UPDATE:
+
+Provisioning files are now listed in exportOptions.plist along with the name of the certificate. I added more XCODE target attributes to Lith in CMake. All in all, this SHOULD be enough to only use a single provisioning file and a single certificate (Apple Distribution, the other ones are for Mac or private use only). 
+
+#--------------------------------------
+These are notes from before 2025, probably too complicated 
+
+A few notes:
 
 What I think worked:
 - Generating the "Apple Development" certificate

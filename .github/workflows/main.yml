@@ -40,24 +40,6 @@ jobs:
             KEYS_INSTALLED=1
         fi
 
-        if [ ! -z "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" ]; then
-            base64 -D <<< "${{ secrets.CERT_APPLE_DEVELOPMENT_P12 }}" > Apple_Development_N952V7G2F5.p12
-            security import ./Apple_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
-            KEYS_INSTALLED=1
-        fi
-
-        if [ ! -z "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" ]; then
-            base64 -D <<< "${{ secrets.CERT_IOS_DEVELOPMENT_P12 }}" > Ios_Development_N952V7G2F5.p12
-            security import ./Ios_Development_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
-            KEYS_INSTALLED=1
-        fi
-
-        if [ ! -z "${{ secrets.CERT_IOS_DISTRIBUTION_P12 }}" ]; then
-            base64 -D <<< "${{ secrets.CERT_IOS_DISTRIBUTION_P12 }}" > Ios_Distribution_N952V7G2F5.p12
-            security import ./Ios_Distribution_N952V7G2F5.p12 -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
-            KEYS_INSTALLED=1
-        fi
-
         if [ ! -z "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" ]; then
             base64 -D <<< "${{ secrets.CERT_DEVELOPER_ID_APPLICATION }}" > Developer_ID_Application_Z52EFCPL6D.p7b
             security import ./Developer_ID_Application_Z52EFCPL6D.p7b -k ~/Library/Keychains/build.keychain -P heslo -T /usr/bin/codesign
@@ -75,9 +57,6 @@ jobs:
       run: |
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         base64 -D <<< "${{ secrets.IOS_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Testflight.mobileprovision
-        base64 -D <<< "${{ secrets.DEVELOPMENT_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/Lith_Development.mobileprovision
-        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE }}" > ~/Library/MobileDevice/Provisioning\ Profiles/8f9594ed-b443-47f3-aee7-92d9c9f9c201.mobileprovision
-        base64 -D <<< "${{ secrets.MANUAL_PROVISIONING_PROFILE_2 }}" > ~/Library/MobileDevice/Provisioning\ Profiles/df72e7d3-dd26-4b79-a7fb-9f5bdfae6878.mobileprovision
 
     - name: Set up CPM cache
       id: cache-cpm
