@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 mkdir build_macos
 cd build_macos
 export CMAKE_PREFIX_PATH=$QT_ROOT_DIR/lib/cmake
