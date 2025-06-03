@@ -75,7 +75,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         set-env: false
-        modules: ${{env.QT_MODULES}} qtquick3d
+        modules: ${{env.QT_MODULES}}
         cache: true
         cache-key-prefix: ${{ github.job }}-qt-host
     - name: Install Qt
@@ -83,7 +83,7 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
         target: ios
-        modules: ${{env.QT_MODULES}} qtquick3d
+        modules: ${{env.QT_MODULES}}
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
