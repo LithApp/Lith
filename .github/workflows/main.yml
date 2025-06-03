@@ -10,9 +10,9 @@ on:
   create:
 
 env:
-    QT_VERSION: '6.8.1'
+    QT_VERSION: '6.9.1'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
-    EM_VERSION: '3.1.56'
+    EM_VERSION: '3.1.70'
 
 permissions:
   contents: write
@@ -200,8 +200,8 @@ jobs:
         cache: true
         cache-key-prefix: ${{ github.job }}-qt-${{ env.QT_VERSION }}
 
-    - name: Install Qt (temporary, see https://github.com/miurahr/aqtinstall/pull/846 )
-      uses: Kidev/install-qt-action@v4.2.0
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         host: all_os
@@ -209,7 +209,6 @@ jobs:
         arch: wasm_singlethread
         set-env: true
         modules: ${{env.QT_MODULES}}
-        aqtsource: 'git+https://github.com/Kidev/aqtinstall.git@wasm'
         cache: true
         cache-key-prefix: ${{ github.job }}-qt-wasm-${{ env.QT_VERSION }}
 
