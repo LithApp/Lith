@@ -271,7 +271,7 @@ jobs:
       shell: bash
       run: |
         VERSION_NAME="$(./dist/get-version-name.sh)"
-        eval "$(./dist/win/make-vs2019-env.bat)"
+        eval "$(./dist/win/make-vs2022-env.bat)"
         mkdir build_win
         cd build_win
         export CPM_SOURCE_CACHE=~/cpm-cache
