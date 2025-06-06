@@ -51,6 +51,10 @@ qt_add_qml_module(LithUI
 )
 qt_import_qml_plugins(LithUI)
 
+set_target_properties(LithUI PROPERTIES
+    QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
+)
+
 target_link_libraries(LithUI PRIVATE
     LithCore
     LithAssets

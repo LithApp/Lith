@@ -15,6 +15,7 @@ qt_add_executable(Lith
     ${LITH_SOURCES}
 )
 set_target_properties(Lith PROPERTIES
+    QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
     QT_QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/modules"
     QT_QML_ROOT_PATH "${CMAKE_SOURCE_DIR}"
     QT_ANDROID_EXTRA_LIBS "${ANDROID_OPENSSL_PATH}/${ANDROID_ABI}/libssl_3.so;${ANDROID_OPENSSL_PATH}/${ANDROID_ABI}/libcrypto_3.so"

@@ -39,6 +39,10 @@ qt_add_qml_module(LithStyle
 )
 qt_import_qml_plugins(LithStyle)
 
+set_target_properties(LithStyle PROPERTIES
+    QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
+)
+
 target_link_libraries(LithStyle PRIVATE
     LithCore
     QCoro6::Coro

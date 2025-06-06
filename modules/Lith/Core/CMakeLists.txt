@@ -66,6 +66,10 @@ qt_add_qml_module(LithCore
 )
 qt_import_qml_plugins(LithCore)
 
+set_target_properties(LithCore PROPERTIES
+    QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
+)
+
 generate_export_header(LithCore)
 
 target_link_libraries(LithCore PRIVATE
