@@ -10,9 +10,9 @@ on:
   create:
 
 env:
-    QT_VERSION: '6.9.1'
+    QT_VERSION: '6.8.3'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
-    EM_VERSION: '3.1.70'
+    EM_VERSION: '3.1.56'
 
 permissions:
   contents: write
