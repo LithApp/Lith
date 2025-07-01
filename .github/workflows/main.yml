@@ -18,13 +18,13 @@ permissions:
 
 jobs:
   iOS:
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
 
-    - name: Select Xcode versionAdd commentMore actions
+    - name: Select Xcode version
       run: sudo xcode-select -s '/Applications/Xcode_16.2.app/Contents/Developer'
 
     - name: Import signing keys
