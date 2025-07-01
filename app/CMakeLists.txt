@@ -106,6 +106,9 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set_target_properties(Lith PROPERTIES
         QT_IOS_LAUNCH_SCREEN "${CMAKE_SOURCE_DIR}/assets/Launch.storyboard"
         XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_SOURCE_DIR}/dist/ios/notifications.entitlements"
+        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER cz.rtinbriza.ma.Lith
+        XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Apple Distribution"
+        XCODE_ATTRIBUTE_PROVISIONING_PROFILE_SPECIFIER Lith_Testflight
     )
 
     target_link_libraries(Lith PRIVATE
