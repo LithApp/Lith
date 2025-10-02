@@ -16,27 +16,17 @@ Item {
     implicitWidth: LithPlatform.mobile ? 480 : 1024
     implicitHeight: 800
 
-    Component.onCompleted: {
-        WindowHelper.updateSafeAreaMargins(window)
-    }
-    onWidthChanged: {
-        WindowHelper.updateSafeAreaMargins(window);
-    }
-    onHeightChanged: {
-        WindowHelper.updateSafeAreaMargins(window)
-    }
-
     property real topMargin: {
         if (LithPlatform.mobile) {
             if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
                 let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
                 let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
                 if (focusItemBottomBoundary > keyboardTopBoundary) {
-                    return Qt.inputMethod.keyboardRectangle.height + WindowHelper.safeAreaMargins.top
+                    return Qt.inputMethod.keyboardRectangle.height + parent.SafeArea.margins.top
                 }
             }
         }
-        return WindowHelper.safeAreaMargins.top
+        return parent.SafeArea.margins.top
     }
     property real bottomMargin:{
         if (LithPlatform.mobile) {
@@ -49,10 +39,10 @@ Item {
                     return 0
             }
         }
-        return WindowHelper.safeAreaMargins.bottom
+        return parent.SafeArea.margins.bottom
     }
-    property real leftMargin: WindowHelper.safeAreaMargins.left
-    property real rightMargin: WindowHelper.safeAreaMargins.right
+    property real leftMargin: parent.SafeArea.margins.left
+    property real rightMargin: parent.SafeArea.margins.right
 
     Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
     Behavior on bottomMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }

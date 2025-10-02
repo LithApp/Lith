@@ -31,7 +31,10 @@ ApplicationWindow {
     height: 800
     title: "Lith"
 
-    flags: LithPlatform.ios ? Qt.Window | Qt.MaximizeUsingFullscreenGeometryHint : Qt.Window
+    flags: LithPlatform.ios ? (Qt.Window | Qt.FramelessWindowHint | Qt.ExpandedClientAreaHint | Qt.NoTitleBarBackgroundHint) : Qt.Window
 
-    MainView { }
+    background: MainView {
+        id: mainViewItem
+        anchors.fill: parent
+    }
 }

@@ -12,7 +12,6 @@
 
 WindowHelper::WindowHelper()
     : QObject()
-    , m_safeAreaMargins(new SafeAreaMargins(this))
     , m_changeSchemeTimer(new QTimer(this)) {
     connect(this, &WindowHelper::darkThemeChanged, this, &WindowHelper::themeChanged);
     connect(this, &WindowHelper::useBlackChanged, this, &WindowHelper::themeChanged);
@@ -86,26 +85,6 @@ QString WindowHelper::currentThemeName() const {
     return m_darkTheme ? QStringLiteral("dark") : QStringLiteral("light");
 }
 
-SafeAreaMargins* WindowHelper::safeAreaMargins() {
-    return m_safeAreaMargins;
-}
-
-void WindowHelper::updateSafeAreaMargins(QQuickWindow* window) {
-    if (!window) {
-        return;
-    }
-    if (LithPlatform::instance()->isDesktop()) {
-        bool isLandscape = window->width() > window->height();
-        landscapeModeSet(isLandscape);
-    }
-    auto* platformWindow = static_cast<QPlatformWindow*>(window->handle());
-    if (!platformWindow) {
-        return;
-    }
-    QMargins margins = platformWindow->safeAreaMargins();
-    m_safeAreaMargins->setMargins(margins);
-}
-
 void WindowHelper::detectSystemDarkStyle() {
 #if WIN32
     QSettings registry("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
@@ -122,18 +101,4 @@ void WindowHelper::detectSystemDarkStyle() {
                                    ((textColor.blue() * textColor.blue()) * 0.114)
                                ) > 128;
 #endif
-}
-
-SafeAreaMargins::SafeAreaMargins(QObject* parent)
-    : QObject(parent) {
-}
-
-void SafeAreaMargins::setMargins(QMarginsF margins) {
-    if (LITH_IS_DEBUG_BUILD && margins.isNull()) {
-        return;
-    }
-    leftSet(margins.left());
-    rightSet(margins.right());
-    topSet(margins.top());
-    bottomSet(margins.bottom());
 }
