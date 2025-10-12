@@ -85,7 +85,7 @@ Drawer {
             text: Lith.selectedBuffer ? Lith.selectedBuffer.title : ""
             textFormat: Label.RichText
             color: LithPalette.regular.windowText
-            onLinkActivated: {
+            function onLinkActivated(link: url) {
                 linkHandler.show(link, this)
             }
             MouseArea {
