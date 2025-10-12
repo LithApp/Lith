@@ -1,4 +1,5 @@
 #include "colortheme.h"
+#include "colorutils.h"
 
 QString ColorTheme::getIcon(const QString& name) {
     switch (m_group) {

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QColor>
+#include <QRandomGenerator>
+
 
 class ColorUtils : public QObject {
     Q_OBJECT
@@ -58,6 +60,33 @@ public:
     }
     // If used with light mode, this will make things lighter and vice versa.
     Q_INVOKABLE static QColor daytimeModeAdjust(QColor c, float ratio);
+
+
+    Q_INVOKABLE static QColor brighten(QColor input, float factor = 0.0F) {
+        // TODO this is probably not too useful
+        factor = std::clamp(factor, -1.0F, 1.0F);
+        HSLA hsla(input);
+        float lightnessRange = qMin(hsla.l, (1.0F - hsla.l));
+        hsla.l += factor * lightnessRange;
+        return hsla.toColor();
+    }
+
+    Q_INVOKABLE static QColor setLightness(QColor input, float newL) {
+        HSLA hsla(input);
+        hsla.l = std::clamp(newL, 0.0F, 1.0F);
+        return hsla.toColor();
+    }
+
+    Q_INVOKABLE static QColor setSaturation(QColor input, float newS) {
+        HSLA hsla(input);
+        hsla.s = std::clamp(newS, 0.0F, 1.0F);
+        return hsla.toColor();
+    }
+
+    Q_INVOKABLE static QColor random() {
+        auto* gen = QRandomGenerator::system();
+        return QColor::fromRgb(gen->bounded(256), gen->bounded(256), gen->bounded(256));
+    }
 };
 
 #endif  // COLORUTILS_H
