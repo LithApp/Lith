@@ -18,10 +18,6 @@ class FontSizes : public QObject {
     Q_PROPERTY(int message READ message NOTIFY messageChanged)
 public:
     explicit FontSizes(QObject* parent = nullptr);
-    static FontSizes* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
-        Q_UNUSED(jsEngine)
-        return new FontSizes(qmlEngine);
-    }
 
     int tiny() const;
     int small() const;
@@ -51,7 +47,7 @@ public:
         return new ControlProperties(qmlEngine);
     }
 
-    qreal buttonRadius() const {
+    static qreal buttonRadius() {
         return 4.0;
     }
 

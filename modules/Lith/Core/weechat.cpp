@@ -227,7 +227,7 @@ QCoro::Task<void> Weechat::onHandshakeAccepted(StringMap data) {
         hashString = QStringLiteral("password_hash=%1:%2:%3").arg(algo).arg(salt.toHex()).arg(hash.toHex());
     }
 
-    m_initializationStatus = (Initialization) (m_initializationStatus | HANDSHAKE);
+    m_initializationStatus = static_cast<Initialization>(m_initializationStatus | HANDSHAKE);
     m_passwordAttempts++;
 
     m_connection->write(QStringLiteral("init"), QString(), hashString);
@@ -256,7 +256,7 @@ void Weechat::requestHotlist() {
 
 void Weechat::onConnected() {
     m_reconnectTimer->stop();
-    m_initializationStatus = (Initialization) (m_initializationStatus | CONNECTION_OPENED);
+    m_initializationStatus = static_cast<Initialization>(m_initializationStatus | CONNECTION_OPENED);
 
     lith()->log(Logger::Protocol, QStringLiteral("Connected to WeeChat, starting handshake"));
 
@@ -366,7 +366,7 @@ void Weechat::onMessageReceived(QByteArray& data) {
 
         if (c_initializationMap->contains(id)) {
             // wtf, why can't I write this as |= ?
-            m_initializationStatus = (Initialization) (m_initializationStatus | c_initializationMap->value(id, UNINITIALIZED));
+            m_initializationStatus = static_cast<Initialization>(m_initializationStatus | c_initializationMap->value(id, UNINITIALIZED));
             if (!QMetaObject::invokeMethod(
                     Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
                 )) {
@@ -378,7 +378,7 @@ void Weechat::onMessageReceived(QByteArray& data) {
             }
         } else {
             auto parts = id.split(QStringLiteral(";"));
-            auto name = parts.first();
+            const auto& name = parts.first();
             if (!QMetaObject::invokeMethod(
                     Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
                 )) {

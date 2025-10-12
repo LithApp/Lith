@@ -4,7 +4,8 @@
 #include "../Core/lith.h"
 
 FontSizes::FontSizes(QObject* parent)
-    : m_settings(Lith::settingsGet()) {
+    : QObject(parent)
+    , m_settings(Lith::settingsGet()) {
     connect(m_settings, &Settings::baseFontPixelSizeChanged, this, &FontSizes::fontSizesChanged);
     connect(m_settings, &Settings::useBaseFontPixelSizeForMessagesChanged, this, &FontSizes::messageChanged);
     connect(m_settings, &Settings::messageFontPixelSizeChanged, this, &FontSizes::messageChanged);
@@ -47,7 +48,6 @@ int FontSizes::message() const {
     }
 }
 
-ControlProperties::ControlProperties(QObject *parent)
-{
-
+ControlProperties::ControlProperties(QObject* parent)
+    : QObject(parent) {
 }

@@ -42,8 +42,7 @@ public:
             : pos(pos)
             , n(n) {
         }
-        Part() {
-        }
+        Part() = default;
         Part(Part&& o) = default;
         Part(const Part& o) = default;
         ~Part() = default;

@@ -11,43 +11,50 @@ class ColorUtils : public QObject {
     QML_SINGLETON
 public:
     explicit ColorUtils(QObject* parent = nullptr);
-    static ColorUtils* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
-        Q_UNUSED(jsEngine)
-        return new ColorUtils(qmlEngine);
-    }
+
+    struct HSLA {
+        HSLA() = default;
+        HSLA(float h, float s, float l, float a = 1.0)
+            : h(h)
+            , s(s)
+            , l(l)
+            , a(a) {
+        }
+        explicit HSLA(QColor c) {
+            c.getHslF(&h, &s, &l, &a);
+        }
+        QColor toColor() const {
+            return QColor::fromHslF(h, s, l, a);
+        }
+        float h = 0.0F;
+        float s = 0.0F;
+        float l = 0.0F;
+        float a = 0.0F;
+    };
+
 
     Q_INVOKABLE static QColor mixColors(QColor a, QColor b, float ratio) {
         return QColor::fromRgbF(
-            a.redF() * ratio + b.redF() * (1.0f - ratio), a.greenF() * ratio + b.greenF() * (1.0f - ratio),
-            a.blueF() * ratio + b.blueF() * (1.0f - ratio), a.alphaF() * ratio + b.alphaF() * (1.0f - ratio)
+            (a.redF() * ratio) + (b.redF() * (1.0F - ratio)), (a.greenF() * ratio) + (b.greenF() * (1.0F - ratio)),
+            (a.blueF() * ratio) + (b.blueF() * (1.0F - ratio)), (a.alphaF() * ratio) + (b.alphaF() * (1.0F - ratio))
         );
     }
     Q_INVOKABLE static QColor setAlpha(QColor c, float alpha) {
-        QColor modified = c;
-        modified.setAlphaF(alpha);
-        return modified;
+        c.setAlphaF(alpha);
+        return c;
     }
     Q_INVOKABLE static QColor darken(QColor c, float ratio) {
-        qreal newLightness = qMax(0.0f, qMin(1.0f, c.lightnessF() / ratio));
-        return QColor::fromHslF(c.hslHueF(), c.hslSaturationF(), newLightness);
+        HSLA hsla(c);
+        hsla.l = std::clamp(hsla.l / ratio, 0.0F, 1.0F);
+        return hsla.toColor();
     }
     Q_INVOKABLE static QColor lighten(QColor c, float ratio) {
-        return darken(c, 1.0f / ratio);
+        return darken(c, 1.0F / ratio);
     }
     Q_INVOKABLE static QColor saturate(QColor c, float ratio) {
-        float h = c.hslHueF();
-        float s = c.hslSaturationF();
-        float l = c.lightnessF();
-        float a = c.alphaF();
-
-        s *= ratio;
-        if (s > 1.0) {
-            s = 1.0;
-        }
-        if (s < 0.0) {
-            s = 0.0;
-        }
-        return QColor::fromHslF(h, s, l, a);
+        HSLA hsla(c);
+        hsla.s = std::clamp(hsla.s * ratio, 0.0F, 1.0F);
+        return hsla.toColor();
     }
     // If used with light mode, this will make things lighter and vice versa.
     Q_INVOKABLE static QColor daytimeModeAdjust(QColor c, float ratio);

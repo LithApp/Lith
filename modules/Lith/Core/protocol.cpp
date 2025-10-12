@@ -68,7 +68,7 @@ namespace WeeChatProtocol {
         if (len == static_cast<uint32_t>(-1)) {
             r = PlainString {};
         } else if (len == 0) {
-            r = PlainString {QLatin1String("")};
+            r = PlainString {QString("")};
         } else if (len > 0) {
             parserBuffer->resize(len);
             s.readRawData(parserBuffer->data(), static_cast<int>(len));
@@ -218,8 +218,8 @@ namespace WeeChatProtocol {
             }
             for (int j = 0; j < r.keys.count(); j++) {
                 auto keys = r.keys.at(j).split(QStringLiteral(":"));
-                auto name = keys.first();
-                auto type = keys.last();
+                const auto& name = keys.first();
+                const auto& type = keys.last();
                 if (type == QStringLiteral("int")) {
                     Integer i = parse<Integer>(s, &innerOk);
                     if (!innerOk) {

@@ -15,12 +15,7 @@ QColor ColorTheme::dim(const QColor& color) {
 }
 
 QPalette ColorTheme::palette() const {
-    auto mix = [](const QColor& a, const QColor& b, float ratio = 0.5) {
-        return QColor::fromRgbF(
-            a.redF() * ratio + b.redF() * (1.0F - ratio), a.greenF() * ratio + b.greenF() * (1.0F - ratio),
-            a.blueF() * ratio + b.blueF() * (1.0F - ratio), a.alphaF() * ratio + b.alphaF() * (1.0F - ratio)
-        );
-    };
+    auto mix = &ColorUtils::mixColors;
 
     // TODO very likely needs a bit of tweaking to differentiate button, window and base
     QColor windowText {m_weechatColors[0]};
@@ -31,7 +26,7 @@ QPalette ColorTheme::palette() const {
     QColor button = mix(windowText, window, 0.20);
     QColor light = mix(windowText, button, 0.4);
     QColor dark = mix(window, windowText, 0.4);
-    QColor mid = mix(light, dark);
+    QColor mid = mix(light, dark, 0.5);
     QColor text = windowText;
     QColor bright_text = text;
     QPalette palette {windowText, button, light, dark, mid, text, bright_text, base, window};
