@@ -93,6 +93,21 @@ QString WindowHelper::currentThemeName() const {
     return m_darkTheme ? QStringLiteral("dark") : QStringLiteral("light");
 }
 
+void WindowHelper::connectToWindow(QQuickWindow* window) {
+    if (m_window == window) {
+        return;
+    }
+    if (m_window) {
+        disconnect(m_window, nullptr, this, nullptr);
+    }
+    m_window = window;
+    if (m_window) {
+        connect(window, &QQuickWindow::widthChanged, this, &WindowHelper::handleWindowChange);
+        connect(window, &QQuickWindow::heightChanged, this, &WindowHelper::handleWindowChange);
+    }
+    handleWindowChange();
+}
+
 void WindowHelper::detectSystemDarkStyle() {
 #if WIN32
     QSettings registry("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", QSettings::NativeFormat);
