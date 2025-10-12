@@ -7,3 +7,5 @@ build_android
 build_ios
 build_macos
 .DS_Store
+.qmlls.ini
+
