@@ -6,8 +6,6 @@
 #include <QPalette>
 #include <QtMath>
 
-#include <QtGui/qpa/qplatformwindow.h>
-
 #include <cmath>
 
 WindowHelper::WindowHelper()
@@ -59,6 +57,16 @@ void WindowHelper::changeScheme() {
     }
 
     qApp->setPalette(currentTheme().palette());
+}
+
+void WindowHelper::handleWindowChange() {
+    if (!m_window) {
+        return;
+    }
+    if (LithPlatform::instance()->isDesktop()) {
+        bool isLandscape = m_window->width() > m_window->height();
+        landscapeModeSet(isLandscape);
+    }
 }
 
 const ColorTheme& WindowHelper::currentTheme() const {

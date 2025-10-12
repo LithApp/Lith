@@ -16,6 +16,10 @@ Item {
     implicitWidth: LithPlatform.mobile ? 480 : 1024
     implicitHeight: 800
 
+    Component.onCompleted: {
+        WindowHelper.connectToWindow(Window.window)
+    }
+
     property real topMargin: {
         if (LithPlatform.mobile) {
             if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {

@@ -21,6 +21,8 @@ class LITHCORE_EXPORT WindowHelper : public QObject {
 public:
     static WindowHelper* instance();
     static WindowHelper* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine) {
+        Q_UNUSED(qmlEngine);
+        Q_UNUSED(jsEngine);
         return instance();
     }
 
@@ -31,10 +33,14 @@ public:
     const ColorTheme& inverseTheme() const;
     QString currentThemeName() const;
 
+public slots:
+    void connectToWindow(QQuickWindow* window);
+
 private slots:
     void init();
     void prepareToChangeScheme();
     void changeScheme();
+    void handleWindowChange();
 
 signals:
     void themeChanged();
@@ -43,6 +49,7 @@ private:
     explicit WindowHelper();
     void detectSystemDarkStyle();
 
+    QPointer<QQuickWindow> m_window = nullptr;
     QTimer* m_changeSchemeTimer = nullptr;
     bool m_systemPrefersDarkStyle = false;
 };

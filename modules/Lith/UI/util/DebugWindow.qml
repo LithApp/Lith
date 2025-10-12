@@ -26,20 +26,6 @@ Window {
                 text: "Switch theme"
             }
             TextField {
-                placeholderText: "Set all margins to"
-                implicitWidth: 192
-                validator: IntValidator {
-
-                }
-                onAccepted: {
-                    WindowHelper.safeAreaMargins.left = text
-                    WindowHelper.safeAreaMargins.right = text
-                    WindowHelper.safeAreaMargins.top = text
-                    WindowHelper.safeAreaMargins.bottom = text
-                    text = ""
-                }
-            }
-            TextField {
                 placeholderText: "Set error string"
                 implicitWidth: 192
                 onAccepted: {
@@ -51,29 +37,6 @@ Window {
                 text: "Cover out of bounds areas"
                 checked: mainView.safeAreaBoundaryCovers
                 onCheckedChanged: mainView.safeAreaBoundaryCovers = checked
-            }
-        }
-        RowLayout {
-            Layout.fillWidth: true
-            Label {
-                text: "Safe Area:"
-            }
-            GridLayout {
-                Layout.fillWidth: true
-                columns: 4
-                Repeater {
-                    model: ["left", "right", "top", "bottom"]
-                    Label {
-                        text: modelData
-                    }
-                }
-                Repeater {
-                    model: ["left", "right", "top", "bottom"]
-                    SpinBox {
-                        value: WindowHelper.safeAreaMargins[modelData]
-                        onValueChanged: WindowHelper.safeAreaMargins[modelData] = value
-                    }
-                }
             }
         }
     }
