@@ -41,7 +41,6 @@ target_link_libraries(Lith PRIVATE
     LithStyle
     QCoro6::Coro
     Qt::Gui
-    Qt::GuiPrivate
     Qt::Multimedia
     Qt::Qml
     Qt::Quick

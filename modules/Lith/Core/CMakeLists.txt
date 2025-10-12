@@ -77,7 +77,6 @@ target_link_libraries(LithCore PRIVATE
     QCoro6::Coro
     QCoro6::Core
     Qt::Gui
-    Qt::GuiPrivate
     Qt::Multimedia
     Qt::Qml
     Qt::Quick

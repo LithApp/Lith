@@ -5,6 +5,8 @@ import QtQuick.Templates as T
 import Lith.Core
 import Lith.Style
 
+import "util"
+
 T.TabButton {
     id: control
 

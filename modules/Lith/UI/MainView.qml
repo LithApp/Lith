@@ -1,9 +1,9 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 
 import Lith.Core
-import Lith.Style
+import Lith.Style as LithStyle
 
 import "util"
 
@@ -79,7 +79,7 @@ Item {
 
     Rectangle {
         id: mainViewContents
-        color: LithPalette.regular.window
+        color: LithStyle.LithPalette.regular.window
         anchors {
             fill: parent
             leftMargin: mainView.leftMargin
@@ -211,7 +211,7 @@ Item {
             left: parent.left
         }
         width: mainView.leftMargin
-        color: LithPalette.regular.base
+        color: LithStyle.LithPalette.regular.base
     }
 
     Rectangle {
@@ -224,7 +224,7 @@ Item {
             right: parent.right
         }
         width: mainView.rightMargin
-        color: LithPalette.regular.base
+        color: LithStyle.LithPalette.regular.base
     }
 
     Rectangle {
@@ -237,7 +237,7 @@ Item {
             right: parent.right
         }
         height: mainView.topMargin
-        color: LithPalette.regular.base
+        color: LithStyle.LithPalette.regular.base
     }
 
     Rectangle {
@@ -250,11 +250,11 @@ Item {
             right: parent.right
         }
         height: mainView.bottomMargin
-        color: LithPalette.regular.base
+        color: LithStyle.LithPalette.regular.base
     }
 
     // TODO make this a component and fix this
-    Dialog {
+    LithStyle.Dialog {
         id: linkHandler
         z: 99999999
         width: channelView.width
@@ -315,7 +315,7 @@ Item {
             x: 6
             width: channelView.width - 12
             spacing: 9
-            Label {
+            LithStyle.Label {
                 id: linkText
                 Layout.fillWidth: true
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -323,7 +323,7 @@ Item {
                 textFormat: Text.RichText
                 text: "<a href=\""+linkHandler.currentLink+"\">"+linkHandler.currentLink+"</a>"
             }
-            Button {
+            LithStyle.Button {
                 focusPolicy: Qt.NoFocus
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
@@ -333,7 +333,7 @@ Item {
                     linkHandler.visible = false
                 }
             }
-            Button {
+            LithStyle.Button {
                 focusPolicy: Qt.NoFocus
                 Layout.preferredHeight: 36
                 Layout.preferredWidth: height
@@ -343,7 +343,7 @@ Item {
                 }
                 icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/resize.png"
             }
-            Button {
+            LithStyle.Button {
                 visible: linkHandler.containsImage || linkHandler.containsVideo
                 focusPolicy: Qt.NoFocus
                 icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/image.png"

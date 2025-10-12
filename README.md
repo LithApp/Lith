@@ -61,7 +61,7 @@ Lith currently supports the following platforms:
 
 ## Build instructions
 
-Lith is written using C++ and the Qt framework with QML. The only supported version is Qt 6.5 and newer. Other
+Lith is written using C++ and the Qt framework with QML. The only supported version is Qt 6.9 and newer. Other
 dependencies are listed below.
 
 When building for all supported platforms, only the following steps should be necessary if CMake is setup correctly:
