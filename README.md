@@ -10,14 +10,14 @@ mobile and desktop platforms are supported to some degree.
 ## Getting Started
 
 Lith is a utility application for [WeeChat](https://weechat.org) (not to be confused with WeChat), a terminal chat
-application mostly focused on the IRC protocol. It is a only a graphical relay for messages that are actually received
-and sent by WeeChat. That means you need to prepare a WeeChat instance on on your computer or server (or have a
+application mostly focused on the IRC protocol. It is only a graphical relay for messages that are actually received
+and sent by WeeChat. That means you need to prepare a WeeChat instance on your computer or server (or have a
 provider do that for you) to be actually able to use Lith in any meaningful way.
 
 For setup on the WeeChat side, please consult the following sources:
  - [WeeChat official user documentation](https://weechat.org/files/doc/stable/weechat_user.en.html#relay_plugin)
 
-On desktop systems, you can run WeeChat on the same device as Lith but the main focus of this project is to handle
+On desktop systems, you can run WeeChat on the same device as Lith, but the main focus of this project is to handle
 remote connections, especially on mobile platforms and iOS in particular. The remote WeeChat server needs to be
 directly over the internet either through a TCP socket or WebSockets.
 
