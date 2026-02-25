@@ -86,7 +86,15 @@ public:
         return at(count() - 1);
     }
 
-    template <typename T> inline T* get(int i) {
+    template <typename T> inline QList<T*> toList() const {
+        QList<T*> result;
+        result.reserve(mData.size());
+        for (int i = 0; i < mData.size(); i++) {
+            result.append(get<T>(i));
+        }
+        return result;
+    }
+    template <typename T> inline T* get(int i) const {
         return qobject_cast<T*>(std::next(mData.begin(), i)->data());
     }
     template <typename T> inline T* getLast() {
