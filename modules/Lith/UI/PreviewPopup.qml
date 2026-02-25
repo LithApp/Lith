@@ -54,7 +54,7 @@ Dialog {
         delegateVideo.source = url
         delegateVideo.infinite = Lith.settings.loopVideosByDefault
         delegateVideo.playedOnce = false
-        audio.volume = Lith.settings.muteVideosByDefault ? 0.0 : 1.0
+        audio.muted = Lith.settings.muteVideosByDefault
         videoWrapper.visible = true
         imageWrapper.visible = false
         root.open()
@@ -195,7 +195,7 @@ Dialog {
                 Layout.preferredWidth: 40
 
                 opacity: delegateVideo.hasAudio ? 0.6 : 0.0
-                source: audio.volume > 0.0 ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/volume.png" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/mute.png"
+                source: audio.muted ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/mute.png" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/volume.png"
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -206,10 +206,7 @@ Dialog {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (audio.volume > 0.0)
-                                audio.volume = 0.0
-                            else
-                                audio.volume = 1.0
+                            audio.muted = !audio.muted
                         }
                     }
                 }
