@@ -24,7 +24,6 @@ import Lith.Style
 ListView {
     id: listView
 
-
     // ugh, this is an ugly hack to fix the button under the Drawer drag area
     // Qt doesn't seem to care about this https://bugreports.qt.io/browse/QTBUG-59141
     // note the whole widget is rotated by 180 degress so it has to be subtracted from the height
@@ -119,7 +118,6 @@ ListView {
             margins: height / 2
         }
         width: height
-        flat: false
         icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/down-arrow.png"
         opacity: listView.atYEnd ? 0.0 : 0.5
         visible: opacity > 0.0

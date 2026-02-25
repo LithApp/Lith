@@ -20,7 +20,7 @@ QPalette ColorTheme::palette() const {
 
     // TODO very likely needs a bit of tweaking to differentiate button, window and base
     QColor windowText {m_weechatColors[0]};
-    QColor base = (windowText == Qt::white) ? Qt::black : Qt::white;
+    QColor base = {m_weechatColors[1]};
     QColor window = (base == Qt::white)                         ? QColor(0xbf, 0xbd, 0xbb)
                     : (QColor(m_weechatColors[1]) == Qt::black) ? QColor(0x0A, 0x07, 0x0A)
                                                                 : m_weechatColors[1];

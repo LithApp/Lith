@@ -7,28 +7,16 @@ import Lith.Core
 
 Item {
     id: root
-    clip: false
 
+    property real radius: 0
     property real topLeftRadius: radius
     property real topRightRadius: radius
     property real bottomLeftRadius: radius
     property real bottomRightRadius: radius
 
-    property var relativePos: mapToItem(null, 0, 0, width, height)
-    property real radius: 0
-    property color color
-
-    onXChanged: {
-        root.relativePos = mapToItem(null, 0, 0, width, height)
-    }
-    onWidthChanged: {
-        root.relativePos = mapToItem(null, 0, 0, width, height)
-    }
+    property var relativePos: Qt.point(0, 0)
     Component.onCompleted: {
-        root.relativePos = mapToItem(null, 0, 0, width, height)
-    }
-    onVisibleChanged: {
-        root.relativePos = mapToItem(null, 0, 0, width, height)
+        relativePos = Qt.binding(() => mapToItem(Window.contentItem, root.x, root.y, root.width, root.height))
     }
 
     Shape {
