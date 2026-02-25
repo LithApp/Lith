@@ -143,8 +143,8 @@ Item {
                 anchors.fill: parent
                 channelHeaderRowContentHeight: channelView.headerImplicitContentHeight
                 channelInputBarContentHeight: channelView.inputBarImplicitContentHeight
-                onClose: {
-                    if (!WindowHelper.landscapeMode)
+                onLeave: (close) => {
+                    if (!WindowHelper.landscapeMode || close)
                         bufferDrawer.hide()
                     if (channelView.textInput.visible)
                         channelView.textInput.forceActiveFocus()

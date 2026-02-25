@@ -48,7 +48,7 @@ Item {
         else
             filterField.forceActiveFocus()
     }
-    signal close
+    signal leave(close: bool)
 
     Rectangle {
         anchors.fill: parent
@@ -111,6 +111,21 @@ Item {
                     bufferList.currentIndex = Lith.mappedSelectedBufferIndex
             }
 
+            Shortcut {
+                enabled: filterField.focus
+                sequence: Lith.settings.shortcutSearchBuffer
+                onActivated: {
+                    filterField.interactedWith = false
+                    filterField.text = ""
+                    root.leave(false)
+                }
+                onActivatedAmbiguously: {
+                    filterField.interactedWith = false
+                    filterField.text = ""
+                    root.leave(false)
+                }
+            }
+
             Keys.onPressed: (event) => {
                 if (event.key === Qt.Key_Up) {
                     interactedWith = true
@@ -119,24 +134,34 @@ Item {
                         bufferList.currentIndex = 0
                     event.accepted = true
                 }
-                if (event.key === Qt.Key_Down) {
+                else if (event.key === Qt.Key_Down) {
                     interactedWith = true
                     bufferList.currentIndex++
                     if (bufferList.currentIndex >= bufferList.count)
                         bufferList.currentIndex = bufferList.count - 1
                     event.accepted = true
                 }
-                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     interactedWith = true
                     Lith.selectedBuffer = bufferList.currentItem.buffer
                     filterField.text = ""
                     bufferList.currentIndex = Lith.mappedSelectedBufferIndex
-                    root.close()
+                    root.leave(false)
+                    event.accepted = true
                 }
-                if (event.key === Qt.Key_Escape) {
-                    interactedWith = false
-                    filterField.text = ""
-                    bufferList.currentIndex = Lith.mappedSelectedBufferIndex
+                else if (event.key === Qt.Key_Escape) {
+                    if (!interactedWith && !filterField.text) {
+                        root.leave(true)
+                    }
+                    else {
+                        interactedWith = false
+                        filterField.text = ""
+                        bufferList.currentIndex = Lith.mappedSelectedBufferIndex
+                    }
+                    event.accepted = true
+                }
+                else {
+                    event.accepted = false
                 }
             }
         }
