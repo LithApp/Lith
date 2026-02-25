@@ -24,6 +24,13 @@ T.SpinBox {
 
     font.pixelSize: FontSizes.regular
 
+    function increase() {
+        control.value += control.stepSize
+    }
+    function decrease() {
+        control.value -= control.stepSize
+    }
+
     validator: IntValidator {
         locale: control.locale.name
         bottom: Math.min(control.from, control.to)
