@@ -48,5 +48,6 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: linkHandler.show(root.thumbnailUrl, root)
+        cursorShape: Qt.PointingHandCursor
     }
 }
