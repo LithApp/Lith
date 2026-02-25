@@ -236,18 +236,19 @@ bool Buffer::rawInput(const QByteArray& data) const {
     return success;
 }
 
-void Buffer::fetchMoreLines() {
+int Buffer::fetchMoreLines(int count) {
     m_afterInitialFetch = true;
     if (!m_ptr) {
-        return;
+        return 0;
     }
     if (m_lines->count() >= m_lastRequestedCount) {
         QMetaObject::invokeMethod(
-            Lith::instance()->weechat(), "fetchLines", Q_ARG(weechat_pointer_t, m_ptr), Q_ARG(int, m_lines->count() + 25)
+            Lith::instance()->weechat(), "fetchLines", Q_ARG(weechat_pointer_t, m_ptr), Q_ARG(int, m_lines->count() + count)
         );
-        // Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + 25);
-        m_lastRequestedCount = m_lines->count() + 25;
+        // Lith::instance()->weechat()->fetchLines(m_ptr, m_lines->count() + count);
+        m_lastRequestedCount = m_lines->count() + count;
     }
+    return count;
 }
 
 void Buffer::clearHotlist() {

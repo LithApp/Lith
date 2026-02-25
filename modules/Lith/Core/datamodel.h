@@ -135,7 +135,7 @@ signals:
 public slots:
     bool userInput(const QString& data);
     bool rawInput(const QByteArray& data) const;
-    void fetchMoreLines();
+    int fetchMoreLines(int count = 25);
     void clearHotlist();
 
 private:
