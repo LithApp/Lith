@@ -6,7 +6,7 @@ import Lith.Style
 Item {
     id: drawer
     default property alias contents: contentArea.children
-    readonly property bool isClosed: position === 0.0
+    readonly property bool drawerIsClosed: position === 0.0
     width: visible ? WindowHelper.landscapeMode ? dragHandle.x + (dragHandle.width / 2) : 0.66 * mainViewContents.width : 0
     property real dragOutHandleTopMargin: 0
     property real dragOutHandleBottomMargin: 0
@@ -35,7 +35,7 @@ Item {
     }
 
     function toggle() {
-        if (isClosed)
+        if (drawerIsClosed)
             open()
         else
             hide()
@@ -83,7 +83,7 @@ Item {
 
     Rectangle {
         z: 1
-        visible: !drawer.isClosed
+        visible: !drawer.drawerIsClosed
         anchors {
             top: parent.top
             right: parent.right
@@ -118,7 +118,7 @@ Item {
 
     Rectangle {
         id: dragHandle
-        visible: WindowHelper.landscapeMode && !drawer.isClosed
+        visible: WindowHelper.landscapeMode && !drawer.drawerIsClosed
         z: 1
         x: 320
         width: 11

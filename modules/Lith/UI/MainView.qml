@@ -91,9 +91,9 @@ Item {
         ChannelView {
             id: channelView
             enabled: {
-                if (!nickDrawer.isClosed)
+                if (!nickDrawer.drawerIsClosed)
                     return false
-                if (!window.WindowHelper.landscapeMode && !bufferDrawer.isClosed)
+                if (!window.WindowHelper.landscapeMode && !bufferDrawer.drawerIsClosed)
                     return false
                 return true
             }
@@ -126,10 +126,10 @@ Item {
                     lastState = DynamicDrawer.State.Closed
             }
 
-            onIsClosedChanged: {
+            onDrawerIsClosedChanged: {
                 bufferList.currentIndex = Lith.mappedSelectedBufferIndex
 
-                if (!isClosed) {
+                if (!drawerIsClosed) {
                     bufferList.clear()
                 }
             }
@@ -157,10 +157,9 @@ Item {
         NickList {
             id: nickDrawer
             edge: Qt.RightEdge
-            property bool isClosed: position === 0.0
             dragMargin: rightPadding + 64
-            //y: isClosed ? mainView.y + channelView.messageArea.y : mainView.y
-            //height: isClosed ? channelView.scrollToBottomButtonPosition : parent.height
+            //y: drawerIsClosed ? mainView.y + channelView.messageArea.y : mainView.y
+            //height: drawerIsClosed ? channelView.scrollToBottomButtonPosition : parent.height
             width: Math.min(0.66 * parent.width, 400)
             topPadding: mainView.topMargin
             bottomPadding: mainView.bottomMargin

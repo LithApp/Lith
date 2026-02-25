@@ -26,7 +26,7 @@ Drawer {
 
     signal requestSearchBar
 
-    readonly property bool isClosed: position < 1
+    readonly property bool drawerIsClosed: position < 1
 
     onVisibleChanged: {
         if (visible) {
@@ -205,7 +205,7 @@ Drawer {
         }
     }
     Rectangle {
-        visible: !root.isClosed
+        visible: !root.drawerIsClosed
         anchors {
             top: parent.top
             left: parent.left
