@@ -207,9 +207,11 @@ Lith::Lith(QObject* parent)
 #endif
     , m_networkProxy(BaseNetworkProxy::create(this))
     , m_weechat(new Weechat(m_networkProxy, this))
-    , m_buffers(QmlObjectList::create<Buffer>(
-          this, static_cast<QmlObjectList::RoleMode>(QmlObjectList::ModelData | QmlObjectList::Identity), false
-      ))
+    , m_buffers(
+          QmlObjectList::create<Buffer>(
+              this, static_cast<QmlObjectList::RoleMode>(QmlObjectList::ModelData | QmlObjectList::Identity), false
+          )
+      )
     , m_proxyBufferList(new ProxyBufferList(this, m_buffers))
     , m_selectedBufferNicks(new NickListFilter(this))
     , m_logger(new Logger(this))
@@ -596,10 +598,12 @@ void Lith::_buffer_line_added(const WeeChatProtocol::HData& hda) {
             }
             line->setProperty(qPrintable(key), value);
         }
-        m_logger->log(Logger::Event {
-            Logger::LineAdded, buffer->nameGet().toPlain(), QStringLiteral("Received a line"),
-            QStringLiteral("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet().toPlain())
-        });
+        m_logger->log(
+            Logger::Event {
+                Logger::LineAdded, buffer->nameGet().toPlain(), QStringLiteral("Received a line"),
+                QStringLiteral("Nick: %1, Line: %2").arg(line->nickGet()).arg(line->messageGet().toPlain())
+            }
+        );
         buffer->prependLine(line);
         // Overwrite the duplicate map here in case it already exists, we've hit the
         // limit of WeeChat can return (usually 4096 lines per buffer)

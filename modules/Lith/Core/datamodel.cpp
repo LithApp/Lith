@@ -259,8 +259,8 @@ void Buffer::clearHotlist() {
 
 BufferLine::BufferLine(Buffer* parent)
     : QObject(parent) {
-    // connections to changed signals are required because FormattedString isn't directly connected to signals that can directly modify it
-    // having it here results in fewer connections and that means lower cpu load when the signals are fired
+    // connections to changed signals are required because FormattedString isn't directly connected to signals that can directly modify
+    // it having it here results in fewer connections and that means lower cpu load when the signals are fired
     connect(Lith::settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::messageChanged);
     connect(Lith::settingsGet(), &Settings::shortenLongUrlsChanged, this, &BufferLine::messageChanged);
     connect(Lith::settingsGet(), &Settings::shortenLongUrlsThresholdChanged, this, &BufferLine::dateAndPrefixChanged);
