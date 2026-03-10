@@ -32,6 +32,8 @@
   // The path is broken with qtkeychain installed through CPM, try both variants to deal with that
   #if __has_include(<keychain.h>)
     #include <keychain.h>
+  #elif __has_include(<qtkeychain/keychain.h>)
+    #include <qtkeychain/keychain.h>
   #else
     #include <qt6keychain/keychain.h>
   #endif
