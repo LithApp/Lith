@@ -162,7 +162,7 @@ CPMAddPackage(
     FIND_PACKAGE_ARGUMENTS "COMPONENTS ${LITH_QCORO_DEPENDENCY_MODULES} REQUIRED"
 )
 
-qt_standard_project_setup(REQUIRES 6.9)
+qt_standard_project_setup(REQUIRES 6.10)
 qt_policy(SET QTP0004 NEW)
 get_target_property(QT_MOC_EXECUTABLE Qt::moc IMPORTED_LOCATION)
 get_filename_component(QT_BINARY_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
