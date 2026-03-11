@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+set(QT_QML_GENERATE_AOTSTATS OFF)
+
 include(CMakeDependentOption)
 include(FeatureSummary)
 include(GenerateExportHeader)
@@ -164,6 +166,7 @@ CPMAddPackage(
 
 qt_standard_project_setup(REQUIRES 6.10)
 qt_policy(SET QTP0004 NEW)
+qt_policy(SET QTP0005 NEW)
 get_target_property(QT_MOC_EXECUTABLE Qt::moc IMPORTED_LOCATION)
 get_filename_component(QT_BINARY_PREFIX ${QT_MOC_EXECUTABLE} DIRECTORY)
 get_filename_component(QT_INSTALL_PREFIX ${QT_BINARY_PREFIX} DIRECTORY)
@@ -185,12 +188,10 @@ set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/modules" CACHE STRING "")
 #set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LITH_INSTALL_LIBDIR}")
 
 add_subdirectory(assets)
+add_subdirectory(modules/Lith/Core)
 add_subdirectory(modules/Lith/Style)
 add_subdirectory(modules/Lith/UI)
-add_subdirectory(modules/Lith/Core)
 add_subdirectory(app)
-
-add_dependencies(Lith LithStyleplugin LithUIplugin LithCoreplugin)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     configure_file(${CMAKE_SOURCE_DIR}/dist/linux/app.lith.Lith.appdata.xml.in ${CMAKE_BINARY_DIR}/dist/linux/app.lith.Lith.appdata.xml)
