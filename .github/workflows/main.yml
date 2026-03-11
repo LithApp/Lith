@@ -218,10 +218,13 @@ jobs:
         #hack
         export QT_ROOT_DIR=${QT_ROOT_DIR}/../wasm_multithread
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/wasm/build.sh
+        # inject CORS handling into the main page
+        sed s'/\(<\/title>\)/\0\n<script src="enable-threads.js"><\/script>/' -i'' build_wasm/app/Lith.html
         mkdir installed
         cp build_wasm/app/*.js build_wasm/app/*.html build_wasm/app/*.wasm build_wasm/app/*.svg installed
         cp installed/Lith.html installed/index.html
         cp assets/icons/icon.ico installed/favicon.ico
+        cp dist/wasm/enable-threads.js installed/enable-threads.js
 
     - name: Setup Pages
       if: github.event_name == 'create'
