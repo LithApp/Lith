@@ -37,7 +37,6 @@ qt_add_qml_module(LithStyle
     VERSION 1.0
     QML_FILES ${LITHSTYLE_QML}
 )
-qt_import_qml_plugins(LithStyle)
 
 set_target_properties(LithStyle PROPERTIES
     QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"

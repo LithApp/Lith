@@ -49,7 +49,6 @@ qt_add_qml_module(LithUI
     QML_FILES ${LITH_QML}
     IMPORTS QtMultimedia
 )
-qt_import_qml_plugins(LithUI)
 
 set_target_properties(LithUI PROPERTIES
     QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
