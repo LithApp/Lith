@@ -26,7 +26,12 @@ ListView {
         id: delegateBody
 
         onClicked: {
-            Lith.selectedBuffer = modelData
+            if (Lith.selectedBuffer === modelData && Lith.selectedBuffer) {
+                Lith.selectedBuffer.clearHotlist()
+            }
+            else {
+                Lith.selectedBuffer = modelData
+            }
         }
 
         required property var modelData
