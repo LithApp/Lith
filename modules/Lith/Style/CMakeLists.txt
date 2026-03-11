@@ -29,15 +29,14 @@ set(LITHSTYLE_SOURCES
     constants.cpp constants.h
 )
 
-qt_add_library(LithStyle
-    ${LITHSTYLE_SOURCES}
-)
 qt_add_qml_module(LithStyle
     URI Lith.Style
     VERSION 1.0
+    DISCARD_QML_CONTENTS
+    SOURCES ${LITHSTYLE_SOURCES}
     QML_FILES ${LITHSTYLE_QML}
+    IMPORTS Lith.Core
 )
-qt_import_qml_plugins(LithStyle)
 
 set_target_properties(LithStyle PROPERTIES
     QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
@@ -47,8 +46,9 @@ target_link_libraries(LithStyle PRIVATE
     LithCore
     QCoro6::Coro
     QCoro6::Core
-    Qt6::Gui
-    Qt6::Quick
+    Qt::Gui
+    Qt::Quick
+    Qt::Qml
     Qt::QuickControls2
     Qt::QuickLayouts
     Qt::QuickDialogs2

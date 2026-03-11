@@ -42,14 +42,13 @@ set(LITH_QML
     util/ControlPanel.qml
 )
 
-qt_add_library(LithUI)
 qt_add_qml_module(LithUI
     URI Lith.UI
     VERSION 1.0
+    DISCARD_QML_CONTENTS
     QML_FILES ${LITH_QML}
     IMPORTS QtMultimedia
 )
-qt_import_qml_plugins(LithUI)
 
 set_target_properties(LithUI PROPERTIES
     QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
@@ -57,6 +56,7 @@ set_target_properties(LithUI PROPERTIES
 
 target_link_libraries(LithUI PRIVATE
     LithCore
+    LithStyle
     LithAssets
     Qt::Qml
     Qt::Quick
@@ -66,6 +66,10 @@ target_link_libraries(LithUI PRIVATE
     Qt::QuickDialogs2
     Qt::QuickTemplates2
 )
+get_target_property(LITH_UI_PLUGIN_TARGET_TYPE LithUI TYPE)
+if (LITH_UI_PLUGIN_TARGET_TYPE STREQUAL STATIC_LIBRARY)
+     qt_import_qml_plugins(LithUI)
+endif()
 
 install(TARGETS LithUI
     LIBRARY DESTINATION ${LITH_INSTALL_LIBDIR}

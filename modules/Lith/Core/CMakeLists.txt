@@ -56,15 +56,13 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     )
 endif()
 
-qt_add_library(LithCore
-    ${LITH_CORE_SOURCES}
-)
 qt_add_qml_module(LithCore
     URI Lith.Core
     VERSION 1.0
+    DISCARD_QML_CONTENTS
+    SOURCES ${LITH_CORE_SOURCES}
     QML_FILES
 )
-qt_import_qml_plugins(LithCore)
 
 set_target_properties(LithCore PROPERTIES
     QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"

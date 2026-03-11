@@ -11,7 +11,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 qt_add_executable(Lith
-    MACOSX_BUNDLE MANUAL_FINALIZATION
+    MANUAL_FINALIZATION
+    MACOSX_BUNDLE
     ${LITH_SOURCES}
 )
 set_target_properties(Lith PROPERTIES
@@ -24,7 +25,6 @@ qt_add_qml_module(Lith
     URI App # Seems to have to to be like this in this case, otherwise there are build directory name clashes when linking the binary
     QML_FILES main.qml
 )
-qt_import_qml_plugins(Lith)
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
@@ -37,8 +37,8 @@ qt_add_ios_ffmpeg_libraries(Lith)
 target_link_libraries(Lith PRIVATE
     LithAssets
     LithCore
-    LithUI
     LithStyle
+    LithUI
     QCoro6::Coro
     Qt::Gui
     Qt::Multimedia
@@ -65,8 +65,8 @@ get_target_property(PLUGIN_TARGET_TYPE LithCore TYPE)
 if (PLUGIN_TARGET_TYPE STREQUAL STATIC_LIBRARY)
     target_link_libraries(Lith PRIVATE
         LithCoreplugin
-        LithUIplugin
         LithStyleplugin
+        LithUIplugin
     )
 endif()
 
