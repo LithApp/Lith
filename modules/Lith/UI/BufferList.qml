@@ -270,12 +270,12 @@ Item {
 
                 onClicked: {
                     Lith.selectedBuffer = buffer
-                    root.close()
+                    root.leave(false)
                 }
                 onPressAndHold: {
                     if (Lith.selectedBuffer === buffer) {
                         Lith.selectedBuffer = null
-                        root.close()
+                        root.leave(false)
                     }
                 }
 
