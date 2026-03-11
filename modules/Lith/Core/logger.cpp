@@ -98,10 +98,22 @@ const QList<QPair<QDateTime, Logger::Event> >& Logger::events() const {
 
 FilteredLogger::FilteredLogger(QObject* parent)
     : QSortFilterProxyModel(parent) {
-    connect(this, &FilteredLogger::contextFilterChanged, this, [this]() { invalidateRowsFilter(); });
-    connect(this, &FilteredLogger::showLineAddedChanged, this, [this]() { invalidateRowsFilter(); });
-    connect(this, &FilteredLogger::showProtocolChanged, this, [this]() { invalidateRowsFilter(); });
-    connect(this, &FilteredLogger::showDetailsChanged, this, [this]() { invalidateColumnsFilter(); });
+    connect(this, &FilteredLogger::contextFilterChanged, this, [this]() {
+        beginFilterChange();
+        endFilterChange(QSortFilterProxyModel::Direction::Rows);
+    });
+    connect(this, &FilteredLogger::showLineAddedChanged, this, [this]() {
+        beginFilterChange();
+        endFilterChange(QSortFilterProxyModel::Direction::Rows);
+    });
+    connect(this, &FilteredLogger::showProtocolChanged, this, [this]() {
+        beginFilterChange();
+        endFilterChange(QSortFilterProxyModel::Direction::Rows);
+    });
+    connect(this, &FilteredLogger::showDetailsChanged, this, [this]() {
+        beginFilterChange();
+        endFilterChange(QSortFilterProxyModel::Direction::Columns);
+    });
 }
 
 void FilteredLogger::setSourceModel(QAbstractItemModel* model) {

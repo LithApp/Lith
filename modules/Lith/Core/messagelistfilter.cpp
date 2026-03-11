@@ -22,7 +22,10 @@ MessageFilterList::MessageFilterList(QObject* parent, QAbstractListModel* parent
     : QSortFilterProxyModel(parent) {
     setSourceModel(parentModel);
     setFilterRole(Qt::UserRole);
-    connect(Lith::settingsGet(), &Settings::showJoinPartQuitMessagesChanged, this, [this] { invalidateFilter(); });
+    connect(Lith::settingsGet(), &Settings::showJoinPartQuitMessagesChanged, this, [this] {
+        beginFilterChange();
+        endFilterChange(QSortFilterProxyModel::Direction::Both);
+    });
 }
 bool MessageFilterList::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const {
     if (!sourceModel()) {

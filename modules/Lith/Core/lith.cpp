@@ -792,13 +792,15 @@ ProxyBufferList::ProxyBufferList(Lith* parent, QAbstractListModel* parentModel)
     connect(this, &ProxyBufferList::filterWordChanged, [this] { setFilterFixedString(filterWordGet()); });
     connect(Lith::settingsGet(), &Settings::bufferListShowsOnlyBuffersWithNewMessagesChanged, this, [this]() {
         showOnlyBuffersWithNewMessagesSet(Lith::settingsGet()->bufferListShowsOnlyBuffersWithNewMessagesGet());
-        invalidateFilter();
+        beginFilterChange();
+        endFilterChange(QSortFilterProxyModel::Direction::Both);
     });
     connect(Lith::settingsGet(), &Settings::bufferListGroupingByServerChanged, this, [this]() { invalidate(); });
     connect(Lith::settingsGet(), &Settings::bufferListAlphabeticalSortingChanged, this, [this]() { invalidate(); });
     connect(parent, &Lith::hotlistUpdated, this, [this] {
         if (showOnlyBuffersWithNewMessagesGet()) {
-            invalidateFilter();
+            beginFilterChange();
+            endFilterChange(QSortFilterProxyModel::Direction::Both);
         }
     });
     showOnlyBuffersWithNewMessagesSet(Lith::settingsGet()->bufferListShowsOnlyBuffersWithNewMessagesGet());
