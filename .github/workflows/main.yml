@@ -10,7 +10,7 @@ on:
   create:
 
 env:
-    QT_VERSION: '6.10.2'
+    QT_VERSION: '6.11.0'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
     EM_VERSION: '4.0.7'
 
