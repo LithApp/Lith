@@ -181,11 +181,8 @@ Item {
             anchors.centerIn: parent
 
             function loadOrOpen() {
-                console.warn("HYR")
                 if (settingsDialogLoader.source === Qt.url("")) {
-                    console.warn("DER")
-                    const hu = setSource("SettingsDialog.qml", { "visible": true })
-                    console.warn(hu)
+                    setSource("SettingsDialog.qml", { "visible": true })
                 }
                 else {
                     settingsDialogLoader.item.visible = true
