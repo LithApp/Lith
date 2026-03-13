@@ -212,7 +212,7 @@ if (LITH_FEATURE_QHOT)
 
     add_executable(Lith-qhot EXCLUDE_FROM_ALL)
     add_dependencies(Lith Lith-qhot)
-    add_dependencies(Lith-qhot qhot)
+    add_dependencies(Lith-qhot qhot LithCore LithStyle LithUI)
     if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(qhot_FULL_BINARY_PATH "${CMAKE_BINARY_DIR}/${qhot_NAME}.exe")
         set_target_properties(Lith-qhot PROPERTIES
