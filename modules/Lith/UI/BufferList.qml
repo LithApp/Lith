@@ -83,7 +83,9 @@ Item {
             Layout.preferredWidth: height
             flat: true
             icon.source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/cogwheel.png"
-            onClicked: settingsDialog.visible = true
+            onClicked: {
+                settingsDialogLoader.loadOrOpen()
+            }
             ToolTip.text: "Open settings"
             ToolTip.visible: settingsButton.hovered
             ToolTip.delay: 800

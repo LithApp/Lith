@@ -36,9 +36,10 @@ T.Button {
         }
         implicitWidth: (control.icon.source.length > 0 ? control.icon.width + control.spacing + control.leftPadding + control.rightPadding : 0) + buttonLabel.implicitWidth
 
-        IconImage {
+        Image {
             id: buttonIcon
             source: control.icon.source
+            asynchronous: true
 
             x: control.text.length > 0 ? control.leftPadding : (parent.width - width) / 2
             height: Math.min(control.height - 10, control.icon.height)

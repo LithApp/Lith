@@ -40,7 +40,41 @@ Dialog {
         opacity: 0.5
     }
 
+
+    readonly property string currentExtension: Lith.getLinkFileExtension(currentUrl)
+    readonly property bool containsImage: currentExtension.endsWith("png") ||
+                                 currentExtension.endsWith("jpg") ||
+                                 currentExtension.endsWith("jpeg")||
+                                 currentExtension.endsWith("webp")||
+                                 currentExtension.endsWith("bmp") ||
+                                 currentExtension.endsWith("svg")
+    readonly property bool containsVideo: currentExtension.endsWith("avi") ||
+                                 currentExtension.endsWith("mov") ||
+                                 currentExtension.endsWith("mp4") ||
+                                 currentExtension.endsWith("webm") ||
+                                 currentExtension.endsWith("gif")
+
     property string currentUrl
+    onCurrentUrlChanged: {
+        if (currentUrl) {
+            if (containsImage) {
+                showImage(currentUrl)
+            }
+            if (containsVideo) {
+                showVideo(currentUrl)
+            }
+        }
+    }
+    Component.onCompleted: {
+        if (currentUrl) {
+            if (containsImage) {
+                showImage(currentUrl)
+            }
+            if (containsVideo) {
+                showVideo(currentUrl)
+            }
+        }
+    }
 
     function showImage(url) {
         currentUrl = url
@@ -196,6 +230,8 @@ Dialog {
 
                 opacity: delegateVideo.hasAudio ? 0.6 : 0.0
                 source: audio.muted ? "qrc:/navigation/"+WindowHelper.currentThemeName+"/mute.png" : "qrc:/navigation/"+WindowHelper.currentThemeName+"/volume.png"
+                asynchronous: true
+
                 Rectangle {
                     z: -1
                     anchors.centerIn: parent
@@ -354,6 +390,7 @@ Dialog {
                 width: 32
                 height: 32
                 source: "qrc:/navigation/"+WindowHelper.currentThemeName+"/dizzy.png"
+                asynchronous: true
             }
             Label {
                 Layout.alignment: Qt.AlignHCenter

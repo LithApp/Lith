@@ -174,26 +174,51 @@ Item {
             id: nickListActionMenu
         }
 
-        SettingsDialog {
-            id: settingsDialog
-            width: parent.width
-            height: parent.height
-            anchors.centerIn: parent
-        }
-
-        PreviewPopup {
-            id: previewPopup
+        Loader {
+            id: settingsDialogLoader
             width: parent.width
             height: parent.height
             anchors.centerIn: parent
 
-            onVisibleChanged: {
-                if (visible) {
-                    Qt.inputMethod.hide()
+            function loadOrOpen() {
+                console.warn("HYR")
+                if (settingsDialogLoader.source === Qt.url("")) {
+                    console.warn("DER")
+                    const hu = setSource("SettingsDialog.qml", { "visible": true })
+                    console.warn(hu)
                 }
                 else {
-                    channelView.textInput.forceActiveFocus()
-                    Qt.inputMethod.hide()
+                    settingsDialogLoader.item.visible = true
+                }
+            }
+        }
+
+        Loader {
+            id: previewPopupLoader
+
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: parent
+
+            asynchronous: true
+
+            function showUrl(url) {
+                if (previewPopupLoader.source === Qt.url("")) {
+                    setSource("PreviewPopup.qml", {"currentUrl": url})
+                }
+            }
+
+            Connections {
+                target: previewPopupLoader.item
+
+                function onVisibleChanged() {
+                    if (previewPopupLoader.item.visible) {
+                        Qt.inputMethod.hide()
+                    }
+                    else {
+                        channelView.textInput.forceActiveFocus()
+                        Qt.inputMethod.hide()
+                    }
                 }
             }
         }
@@ -301,9 +326,9 @@ Item {
 
         function openCurrentLink(openPreview) {
             if (linkHandler.containsImage && openPreview)
-                previewPopup.showImage(linkHandler.currentLink)
+                previewPopupLoader.showUrl(linkHandler.currentLink)
             else if (linkHandler.containsVideo && openPreview)
-                previewPopup.showVideo(linkHandler.currentLink)
+                previewPopupLoader.showUrl(linkHandler.currentLink)
             else
                 Qt.openUrlExternally(linkHandler.currentLink)
         }

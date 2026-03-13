@@ -23,9 +23,12 @@ import Lith.Style
 
 Dialog {
     id: root
+    visible: true
     modal: false
     borderless: true
     closePolicy: Popup.CloseOnEscape
+    implicitWidth: parent.width
+    implicitHeight: parent.height
 
     SettingsDialogContents {
         id: contents

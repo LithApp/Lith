@@ -33,7 +33,7 @@ Item {
     // The "+ 1" is a bit of a hack but it works this way so...
     // All this makes the buffer header always fit the name of the buffer and two lines of title text
     // (even if there isn't any - so it doesn't change size when switching)
-    readonly property real maximumTitleHeight: titleTextMetrics.height * 2 + 1
+    readonly property real maximumTitleHeight: titleLabel.height / titleLabel.lineCount * 2 + 1
     readonly property real maximumNameHeight: nameFontMetrics.height
     readonly property real totalSpacerHeight: topSpacer.implicitHeight + middleSpacer.implicitHeight + bottomSpacer.implicitHeight
     readonly property real totalTextContentsHeight: maximumTitleHeight + maximumNameHeight + totalSpacerHeight
@@ -136,11 +136,6 @@ Item {
                     anchors.fill: parent
                     acceptedButtons: Qt.NoButton
                     cursorShape: parent.hoveredLink.length > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
-                }
-                TextMetrics {
-                    id: titleTextMetrics
-                    font: titleLabel.font
-                    text: "Ay🐱"
                 }
             }
             Item {
