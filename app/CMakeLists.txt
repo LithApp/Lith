@@ -77,6 +77,7 @@ set_target_properties(Lith PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE_GUI_IDENTIFIER cz.rtinbriza.ma.Lith
     MACOSX_BUNDLE_BUNDLE_NAME Lith
+    MACOSX_BUNDLE_ICON_FILE AppIcon.icns
     MACOSX_BUNDLE_BUNDLE_VERSION ${LITH_PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${LITH_PROJECT_VERSION}
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/dist/ios/Info.plist.in"
@@ -98,6 +99,10 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set_target_properties(Lith PROPERTIES
         XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_SOURCE_DIR}/dist/macos/sandbox.entitlements"
     )
+    target_sources(Lith PRIVATE "${CMAKE_SOURCE_DIR}/assets/AppIcon.icns")
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../assets/AppIcon.icns"
+    PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
