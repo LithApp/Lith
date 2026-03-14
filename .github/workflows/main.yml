@@ -554,10 +554,17 @@ jobs:
         # A workaround mentioned here https://github.com/actions/runner-images/issues/7522
         echo killing...; sudo pkill -9 XProtect >/dev/null || true;
         echo waiting...; while pgrep XProtect; do sleep 3; done;
-        "$QT_ROOT_DIR"/bin/macdeployqt build_macos/app/Lith.app -qmldir=modules -appstore-compliant -codesign=Z52EFCPL6D
+        "$QT_ROOT_DIR"/bin/macdeployqt build_macos/app/Lith.app -hardened-runtime -qmldir=modules -appstore-compliant -codesign="Developer ID Application: Martin Briza (Z52EFCPL6D)"
         # No idea why but macdeployqt deploys debug libs too, just remove them, maybe fix this sometimes
         for i in `find build_macos/app/Lith.app/ -name '*.dSYM'`; do rm -fr "$i"; done
-        "$QT_ROOT_DIR"/bin/macdeployqt build_macos/app/Lith.app -no-plugins -dmg -always-overwrite -appstore-compliant
+        "$QT_ROOT_DIR"/bin/macdeployqt build_macos/app/Lith.app -hardened-runtime -no-plugins -dmg -always-overwrite -appstore-compliant -codesign="Developer ID Application: Martin Briza (Z52EFCPL6D)"
+        codesign --force --sign "Developer ID Application: Martin Briza (Z52EFCPL6D)" build_macos/app/Lith.dmg
+
+        # Notarize and staple the DMG
+        if [ ! -z "${{ secrets.APPLEID_NAME }}" ]; then
+            xcrun notarytool submit build_macos/app/Lith.dmg --apple-id "${{ secrets.APPLEID_NAME }}" --password "${{ secrets.APPLEID_PASSWORD }}" --team-id=Z52EFCPL6D --wait
+            xcrun stapler staple build_macos/app/Lith.dmg
+        fi
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
       uses: actions/upload-artifact@v4
@@ -571,4 +578,3 @@ jobs:
         if [[ "$VERSION_NAME" != "" ]]; then
             ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="v${VERSION_NAME}" filename="build_macos/app/Lith.dmg" renameto="Lith-macOS-${VERSION_NAME}.dmg"
         fi
-
