@@ -203,6 +203,9 @@ Item {
                 if (previewPopupLoader.source === Qt.url("")) {
                     setSource("PreviewPopup.qml", {"currentUrl": url})
                 }
+                else if (previewPopupLoader.item) {
+                    previewPopupLoader.item.currentUrl = url
+                }
             }
 
             Connections {

@@ -40,37 +40,31 @@ Dialog {
         opacity: 0.5
     }
 
-
-    readonly property string currentExtension: Lith.getLinkFileExtension(currentUrl)
-    readonly property bool containsImage: currentExtension.endsWith("png") ||
-                                 currentExtension.endsWith("jpg") ||
-                                 currentExtension.endsWith("jpeg")||
-                                 currentExtension.endsWith("webp")||
-                                 currentExtension.endsWith("bmp") ||
-                                 currentExtension.endsWith("svg")
-    readonly property bool containsVideo: currentExtension.endsWith("avi") ||
-                                 currentExtension.endsWith("mov") ||
-                                 currentExtension.endsWith("mp4") ||
-                                 currentExtension.endsWith("webm") ||
-                                 currentExtension.endsWith("gif")
+    function containsImage(url) {
+        const currentExtension = Lith.getLinkFileExtension(currentUrl)
+        return  currentExtension.endsWith("png") ||
+                currentExtension.endsWith("jpg") ||
+                currentExtension.endsWith("jpeg")||
+                currentExtension.endsWith("webp")||
+                currentExtension.endsWith("bmp") ||
+                currentExtension.endsWith("svg")
+    }
+    function containsVideo(url) {
+        const currentExtension = Lith.getLinkFileExtension(currentUrl)
+        return currentExtension.endsWith("avi") ||
+                currentExtension.endsWith("mov") ||
+                currentExtension.endsWith("mp4") ||
+                currentExtension.endsWith("webm") ||
+                currentExtension.endsWith("gif")
+    }
 
     property string currentUrl
     onCurrentUrlChanged: {
         if (currentUrl) {
-            if (containsImage) {
+            if (containsImage(currentUrl)) {
                 showImage(currentUrl)
             }
-            if (containsVideo) {
-                showVideo(currentUrl)
-            }
-        }
-    }
-    Component.onCompleted: {
-        if (currentUrl) {
-            if (containsImage) {
-                showImage(currentUrl)
-            }
-            if (containsVideo) {
+            else if (containsVideo(currentUrl)) {
                 showVideo(currentUrl)
             }
         }
