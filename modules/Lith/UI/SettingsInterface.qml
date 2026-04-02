@@ -46,6 +46,7 @@ QQC2.ScrollView {
         Lith.settings.showDateHeaders = showDateHeadersCheckbox.checked
         Lith.settings.muteVideosByDefault = muteVideosByDefaultCheckbox.checked
         Lith.settings.loopVideosByDefault = loopVideosByDefaultCheckbox.checked
+        Lith.settings.enableRotationInPreview = enableRotationInPreviewCheckbox.checked
         Lith.settings.showImageThumbnails = showImageThumbnailsCheckbox.checked
         Lith.settings.openLinksDirectly = openLinksDirectlyCheckbox.checked
         Lith.settings.openLinksDirectlyInBrowser = openLinksDirectlyInBrowserSwitch.checked
@@ -84,6 +85,7 @@ QQC2.ScrollView {
         showDateHeadersCheckbox.checked = Lith.settings.showDateHeaders
         muteVideosByDefaultCheckbox.checked = Lith.settings.muteVideosByDefault
         loopVideosByDefaultCheckbox.checked = Lith.settings.loopVideosByDefault
+        enableRotationInPreviewCheckbox.checked = Lith.settings.enableRotationInPreview
         showImageThumbnailsCheckbox.checked = Lith.settings.showImageThumbnails
         openLinksDirectlyCheckbox.checked = Lith.settings.openLinksDirectly
         openLinksDirectlyInBrowserSwitch.checked = Lith.settings.openLinksDirectlyInBrowser
@@ -602,6 +604,12 @@ QQC2.ScrollView {
             Fields.Boolean {
                 id: loopVideosByDefaultCheckbox
                 summary: qsTr("Loop videos by default")
+                checked: Lith.settings.showSendButton
+            }
+
+            Fields.Boolean {
+                id: enableRotationInPreviewCheckbox
+                summary: qsTr("Enable rotation in preview")
                 checked: Lith.settings.showSendButton
             }
 
