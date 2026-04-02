@@ -106,6 +106,7 @@ class LITHCORE_EXPORT Settings : public QObject {
 
     SETTING(bool, muteVideosByDefault, true)
     SETTING(bool, loopVideosByDefault, true)
+    SETTING(bool, enableRotationInPreview, false)
 
     SETTING(bool, showImageThumbnails, false)
     SETTING(bool, openLinksDirectly, false)
