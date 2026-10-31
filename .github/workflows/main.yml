@@ -217,6 +217,7 @@ jobs:
         cache-key-prefix: ${{ github.job }}-qt-${{ env.QT_VERSION }}
 
     - name: Install Qt
+      id: install-qt-wasm
       uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
@@ -234,8 +235,7 @@ jobs:
 
     - name: Build the Emscripten binary
       run: |
-        #hack
-        export QT_ROOT_DIR=${QT_ROOT_DIR}/../wasm_multithread
+        export QT_ROOT_DIR="${{ steps.install-qt-wasm.outputs.qt-root-dir }}"
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/wasm/build.sh
         # inject CORS handling into the main page
         sed s'/\(<\/title>\)/\0\n<script src="enable-threads.js"><\/script>/' -i'' build_wasm/app/Lith.html
