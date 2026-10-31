@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "replayproxy.h"
 #include "sockethelper.h"
+#include "protocol.h"
 #include "lithcore_export.h"
 
 #include <QSslSocket>
@@ -86,6 +87,8 @@ private slots:
     void onDisconnected();
     void onDataReceived(const QByteArray& data);
     void onError(const QString& message);
+
+    void onHDataReceived(const QString& id, const WeeChatProtocol::HData& hda);
 
 private:
     Initialization m_initializationStatus {UNINITIALIZED};

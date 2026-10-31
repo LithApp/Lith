@@ -362,29 +362,7 @@ void Weechat::onMessageReceived(QByteArray& data) {
     QByteArrayView type(typeData.data(), 3);
 
     if (type == QByteArrayLiteral("hda")) {
-        WeeChatProtocol::HData hda = WeeChatProtocol::parse<WeeChatProtocol::HData>(s);
-
-        if (c_initializationMap->contains(id)) {
-            // wtf, why can't I write this as |= ?
-            m_initializationStatus = static_cast<Initialization>(m_initializationStatus | c_initializationMap->value(id, UNINITIALIZED));
-            if (!QMetaObject::invokeMethod(
-                    Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
-                )) {
-                lith()->log(Logger::Unexpected, QStringLiteral("Possible unhandled message: %1").arg(id));
-            }
-            if (m_initializationStatus & COMPLETE) {
-                m_passwordAttempts = 0;
-                m_reconnectTimer->setInterval(100);
-            }
-        } else {
-            auto parts = id.split(QStringLiteral(";"));
-            const auto& name = parts.first();
-            if (!QMetaObject::invokeMethod(
-                    Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda)
-                )) {
-                lith()->log(Logger::Unexpected, QStringLiteral("Possible unhandled message: %1").arg(name));
-            }
-        }
+        onHDataReceived(id, WeeChatProtocol::parse<WeeChatProtocol::HData>(s));
     } else if (type == QByteArrayLiteral("htb")) {
         WeeChatProtocol::HashTable htb = WeeChatProtocol::parse<WeeChatProtocol::HashTable>(s);
 
@@ -429,5 +407,25 @@ void Weechat::onPingTimeout() {
         }
     } else {
         // restart();
+    }
+}
+
+void Weechat::onHDataReceived(const QString& id, const WeeChatProtocol::HData& hda) {
+    if (c_initializationMap->contains(id)) {
+        // wtf, why can't I write this as |= ?
+        m_initializationStatus = static_cast<Initialization>(m_initializationStatus | c_initializationMap->value(id, UNINITIALIZED));
+        if (!QMetaObject::invokeMethod(Lith::instance(), id.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
+            lith()->log(Logger::Unexpected, QStringLiteral("Possible unhandled message: %1").arg(id));
+        }
+        if (m_initializationStatus & COMPLETE) {
+            m_passwordAttempts = 0;
+            m_reconnectTimer->setInterval(100);
+        }
+    } else {
+        auto parts = id.split(QStringLiteral(";"));
+        const auto& name = parts.first();
+        if (!QMetaObject::invokeMethod(Lith::instance(), name.toStdString().c_str(), Qt::QueuedConnection, Q_ARG(WeeChatProtocol::HData, hda))) {
+            lith()->log(Logger::Unexpected, QStringLiteral("Possible unhandled message: %1").arg(name));
+        }
     }
 }
