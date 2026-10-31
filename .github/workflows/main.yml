@@ -460,37 +460,6 @@ jobs:
         cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$VERSION_NAME -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
         make -j5
 
-
-
-  Flatpak:
-    runs-on: ubuntu-latest
-    if: false
-    container:
-      image: docker.io/bilelmoussaoui/flatpak-github-actions
-      options: --privileged
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
-    - uses: bilelmoussaoui/flatpak-github-actions@v2
-      with:
-        bundle: "app.Lith.Lith.flatpak"
-        manifest-path: "dist/linux/flatpak/app.Lith.Lith.json"
-    - name: Upload artifacts to GitHub
-      if: github.event_name != 'create'
-      uses: actions/upload-artifact@v4
-      with:
-        name: app.Lith.Lith.flatpak
-        path: app.Lith.Lith.flatpak
-    - name: Upload to GitHub
-      if: github.event_name == 'create'
-      run: |
-        VERSION_NAME=$(./dist/get-version-name.sh)
-        if [[ "$VERSION_NAME" != "" ]]; then
-            ./dist/upload-github-release-asset.sh github_api_token=${{ secrets.GITHUB_TOKEN }} tag="v${VERSION_NAME}" filename="app.Lith.Lith.flatpak" renameto="Lith-linux-${VERSION_NAME}.flatpak"
-        fi
-
-
   macOS:
     runs-on: macos-26
     steps:
