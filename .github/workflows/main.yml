@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - '**'
+    tags:
+      - 'v*'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "master" ]
-  create:
 
 env:
     QT_VERSION: '6.12.0'
@@ -92,20 +93,20 @@ jobs:
         export CPM_SOURCE_CACHE=~/cpm-cache
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/ios/build.sh
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'create'
+      if: github.ref_type != 'tag'
       uses: actions/upload-artifact@v4
       with:
         name: Lith.ipa
         path: build_ios/Lith.ipa
     - name: Upload to GitHub
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       run: |
         export VERSION_NAME=$(./dist/get-version-name.sh)
         if [[ "$VERSION_NAME" != "" ]]; then
             ./dist/upload-github-release-asset.sh github_api_token="${{ secrets.GITHUB_TOKEN }}" tag="v${VERSION_NAME}" filename="build_ios/Lith.ipa" renameto="Lith-iOS-${VERSION_NAME}.ipa"
         fi
     - name: Upload to Testflight
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       run: |
         export VERSION_NAME=$(./dist/get-version-name.sh)
         if [[ "$VERSION_NAME" != "" ]]; then
@@ -179,13 +180,13 @@ jobs:
         export ANDROID_NDK_ROOT="${ANDROID_NDK}"
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/android/build.sh
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'create'
+      if: github.ref_type != 'tag'
       uses: actions/upload-artifact@v4
       with:
         name: android-build-debug.apk
         path: build_android/app/android-build/Lith.apk
     - name: Upload to GitHub
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       run: |
         VERSION_NAME=$(./dist/get-version-name.sh)
         if [[ "$VERSION_NAME" != "" ]]; then
@@ -246,16 +247,16 @@ jobs:
         cp dist/wasm/enable-threads.js installed/enable-threads.js
 
     - name: Setup Pages
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       uses: actions/configure-pages@v6
     - name: Upload artifact
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       uses: actions/upload-pages-artifact@v5
       with:
         path: 'installed/'
     - name: Deploy to GitHub Pages
       id: deployment
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       uses: actions/deploy-pages@v5
 
   Windows-MSVC:
@@ -304,14 +305,14 @@ jobs:
         "$QT_ROOT_DIR"/bin/windeployqt.exe Lith.exe LithCore.dll LithStyle.dll LithUI.dll --verbose 2 --release --compiler-runtime --qmldir ../..
         7z a ../../Lith.zip *
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'create'
+      if: github.ref_type != 'tag'
       uses: actions/upload-artifact@v4
       with:
         name: Lith.zip
         path: Lith.zip
     - name: Upload to GitHub
       shell: bash
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       run: |
         VERSION_NAME=$(./dist/get-version-name.sh)
         if [[ "$VERSION_NAME" != "" ]]; then
@@ -366,14 +367,14 @@ jobs:
         "$QT_ROOT_DIR"/bin/windeployqt.exe Lith.exe LithCore.dll LithStyle.dll LithUI.dll --verbose 2 --release --compiler-runtime --qmldir ../..
         7z a ../../Lith-ARM.zip *
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'create'
+      if: github.ref_type != 'tag'
       uses: actions/upload-artifact@v4
       with:
         name: Lith-ARM.zip
         path: Lith-ARM.zip
     - name: Upload to GitHub
       shell: bash
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       run: |
         VERSION_NAME=$(./dist/get-version-name.sh)
         if [[ "$VERSION_NAME" != "" ]]; then
@@ -547,13 +548,13 @@ jobs:
             xcrun stapler staple build_macos/app/Lith.dmg
         fi
     - name: Upload artifacts to GitHub
-      if: github.event_name != 'create'
+      if: github.ref_type != 'tag'
       uses: actions/upload-artifact@v4
       with:
         name: Lith.dmg
         path: build_macos/app/Lith.dmg
     - name: Upload to GitHub
-      if: github.event_name == 'create'
+      if: github.ref_type == 'tag'
       run: |
         VERSION_NAME=$(./dist/get-version-name.sh)
         if [[ "$VERSION_NAME" != "" ]]; then
