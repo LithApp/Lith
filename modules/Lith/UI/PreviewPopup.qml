@@ -359,6 +359,7 @@ Dialog {
         }
         PinchHandler {
             target: delegateImage
+            rotationAxis.enabled: Lith.settings.enableRotationInPreview
         }
         TapHandler {
             target: delegateImage
