@@ -16,3 +16,9 @@ target_include_directories(FormattedStringTest PRIVATE ${CMAKE_CURRENT_BINARY_DI
 
 add_test(NAME RelayWireTest COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/relay/relay_test.sh)
 set_tests_properties(RelayWireTest PROPERTIES SKIP_RETURN_CODE 77 LABELS integration)
+
+add_executable(RelayIntegrationTest RelayIntegrationTest.cpp)
+add_test(RelayIntegrationTest RelayIntegrationTest)
+set_tests_properties(RelayIntegrationTest PROPERTIES LABELS integration ENVIRONMENT QT_QPA_PLATFORM=offscreen)
+target_link_libraries(RelayIntegrationTest PRIVATE Qt6::Gui Qt6::Network Qt6::Qml Qt6::Test QCoro6::Coro QCoro6::Core LithCore)
+target_include_directories(RelayIntegrationTest PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
