@@ -20,6 +20,11 @@
 #include "common.h"
 #include "lithcore_export.h"
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QDateTime>
+
 namespace WeeChatProtocol {
     using Char = char;
     using Integer = qint32;
@@ -66,6 +71,26 @@ namespace WeeChatProtocol {
     template <> LITHCORE_EXPORT ArrayStr parse(QDataStream& s, bool* ok);
 
     LITHCORE_EXPORT FormattedString convertColorsToHtml(const QByteArray& data);
+
+    // Converts WeeChat Relay API (JSON) data into the same HData the binary protocol produces
+    namespace Api {
+        // Expects colors=weechat strings, which carry the same color codes as the binary protocol
+        LITHCORE_EXPORT FormattedString stringFromJson(const QString& s);
+        LITHCORE_EXPORT QDateTime dateFromJson(const QString& s);
+
+        LITHCORE_EXPORT HData bufferHData(const QJsonObject& buffer);
+        LITHCORE_EXPORT HData bufferHData(const QJsonArray& buffers);
+
+        // withBufferKey: path is just the line and the buffer is in objects, like in _buffer_line_added
+        LITHCORE_EXPORT HData lineHData(weechat_pointer_t bufferPtr, const QJsonObject& line, bool withBufferKey);
+        LITHCORE_EXPORT HData lineHData(weechat_pointer_t bufferPtr, const QJsonArray& lines, bool withBufferKey);
+
+        LITHCORE_EXPORT HData nickHData(weechat_pointer_t bufferPtr, const QJsonObject& nicklistRoot);
+        // op is the binary protocol's _diff value: '+', '^' or '-'
+        LITHCORE_EXPORT HData nickDiffHData(weechat_pointer_t bufferPtr, const QJsonObject& nickOrGroup, bool isGroup, char op);
+
+        LITHCORE_EXPORT HData hotlistHData(const QJsonArray& hotlist);
+    }  // namespace Api
 };  // namespace WeeChatProtocol
 
 Q_DECLARE_METATYPE(WeeChatProtocol::HData);

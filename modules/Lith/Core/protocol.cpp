@@ -20,9 +20,11 @@
 #include <QDataStream>
 #include <QApplication>
 #include <QDateTime>
+#include <QTimeZone>
 #include <QAbstractEventDispatcher>
 #include <QStringLiteral>
 #include <cstring>
+#include <functional>
 
 namespace {
     Q_GLOBAL_STATIC(QByteArray, parserBuffer)
@@ -754,5 +756,183 @@ namespace WeeChatProtocol {
         }
         return ret;
     }
+
+    namespace Api {
+        FormattedString stringFromJson(const QString& s) {
+            if (s.isEmpty()) {
+                return {};
+            }
+            return convertColorsToHtml(s.toUtf8());
+        }
+
+        QDateTime dateFromJson(const QString& s) {
+            // Dates come with up to microsecond precision, QDateTime only parses milliseconds
+            QString trimmed = s;
+            auto dot = trimmed.indexOf(QLatin1Char('.'));
+            if (dot >= 0) {
+                auto end = dot + 1;
+                int digits = 0;
+                while (end < trimmed.size() && trimmed.at(end).isDigit() && digits < 3) {
+                    ++end;
+                    ++digits;
+                }
+                trimmed = trimmed.left(end) + QStringLiteral("Z");
+            }
+            auto dt = QDateTime::fromString(trimmed, Qt::ISODateWithMs);
+            dt.setTimeZone(QTimeZone::UTC);
+            return dt.toLocalTime();
+        }
+
+        namespace {
+            StringMap stringMapFromJson(const QJsonObject& obj) {
+                StringMap r;
+                for (auto it = obj.constBegin(); it != obj.constEnd(); ++it) {
+                    r[it.key()] = it.value().toString();
+                }
+                return r;
+            }
+
+            QStringList stringListFromJson(const QJsonArray& arr) {
+                QStringList r;
+                r.reserve(arr.size());
+                for (const auto& v : arr) {
+                    r.append(v.toString());
+                }
+                return r;
+            }
+
+            weechat_pointer_t ptrFromJson(const QJsonValue& v) {
+                return static_cast<weechat_pointer_t>(v.toInteger());
+            }
+
+            HData::Item bufferItem(const QJsonObject& buffer) {
+                HData::Item item;
+                auto localVariables = stringMapFromJson(buffer.value(QStringLiteral("local_variables")).toObject());
+                // The API "name" is the full name ("irc.libera.#chan"), the binary protocol's is the local one ("libera.#chan")
+                auto name = localVariables.value(QStringLiteral("name"), buffer.value(QStringLiteral("name")).toString());
+                item.pointers = {ptrFromJson(buffer.value(QStringLiteral("id")))};
+                item.objects[QStringLiteral("number")] = buffer.value(QStringLiteral("number")).toInt();
+                item.objects[QStringLiteral("name")] = QVariant::fromValue(stringFromJson(name));
+                item.objects[QStringLiteral("short_name")] =
+                    QVariant::fromValue(stringFromJson(buffer.value(QStringLiteral("short_name")).toString()));
+                item.objects[QStringLiteral("title")] =
+                    QVariant::fromValue(stringFromJson(buffer.value(QStringLiteral("title")).toString()));
+                item.objects[QStringLiteral("hidden")] = buffer.value(QStringLiteral("hidden")).toBool();
+                item.objects[QStringLiteral("local_variables")] = QVariant::fromValue(localVariables);
+                return item;
+            }
+
+            HData::Item lineItem(weechat_pointer_t bufferPtr, const QJsonObject& line, bool withBufferKey) {
+                HData::Item item;
+                auto linePtr = ptrFromJson(line.value(QStringLiteral("id")));
+                if (withBufferKey) {
+                    item.pointers = {linePtr};
+                    item.objects[QStringLiteral("buffer")] = QVariant::fromValue(bufferPtr);
+                } else {
+                    item.pointers = {bufferPtr, linePtr};
+                }
+                item.objects[QStringLiteral("date")] = QVariant::fromValue(dateFromJson(line.value(QStringLiteral("date")).toString()));
+                item.objects[QStringLiteral("displayed")] = line.value(QStringLiteral("displayed")).toBool();
+                item.objects[QStringLiteral("highlight")] = line.value(QStringLiteral("highlight")).toBool();
+                item.objects[QStringLiteral("prefix")] =
+                    QVariant::fromValue(stringFromJson(line.value(QStringLiteral("prefix")).toString()));
+                item.objects[QStringLiteral("message")] =
+                    QVariant::fromValue(stringFromJson(line.value(QStringLiteral("message")).toString()));
+                item.objects[QStringLiteral("tags_array")] = stringListFromJson(line.value(QStringLiteral("tags")).toArray());
+                return item;
+            }
+
+            HData::Item nickOrGroupItem(weechat_pointer_t bufferPtr, const QJsonObject& obj, bool isGroup, int level) {
+                HData::Item item;
+                item.pointers = {bufferPtr, ptrFromJson(obj.value(QStringLiteral("id")))};
+                item.objects[QStringLiteral("group")] = QVariant::fromValue<char>(isGroup ? 1 : 0);
+                item.objects[QStringLiteral("visible")] =
+                    QVariant::fromValue<char>(obj.value(QStringLiteral("visible")).toBool() ? 1 : 0);
+                item.objects[QStringLiteral("level")] = level;
+                item.objects[QStringLiteral("name")] = QVariant::fromValue(stringFromJson(obj.value(QStringLiteral("name")).toString()));
+                item.objects[QStringLiteral("color")] = QVariant::fromValue(stringFromJson(obj.value(QStringLiteral("color")).toString()));
+                item.objects[QStringLiteral("prefix")] =
+                    QVariant::fromValue(stringFromJson(obj.value(QStringLiteral("prefix")).toString()));
+                item.objects[QStringLiteral("prefix_color")] =
+                    QVariant::fromValue(stringFromJson(obj.value(QStringLiteral("prefix_color")).toString()));
+                return item;
+            }
+        }  // namespace
+
+        HData bufferHData(const QJsonObject& buffer) {
+            HData r;
+            r.data.append(bufferItem(buffer));
+            return r;
+        }
+
+        HData bufferHData(const QJsonArray& buffers) {
+            HData r;
+            for (const auto& v : buffers) {
+                r.data.append(bufferItem(v.toObject()));
+            }
+            return r;
+        }
+
+        HData lineHData(weechat_pointer_t bufferPtr, const QJsonObject& line, bool withBufferKey) {
+            HData r;
+            r.data.append(lineItem(bufferPtr, line, withBufferKey));
+            return r;
+        }
+
+        HData lineHData(weechat_pointer_t bufferPtr, const QJsonArray& lines, bool withBufferKey) {
+            HData r;
+            // The API sends lines oldest first, the binary protocol's last_line(-N) newest first
+            for (auto i = lines.size() - 1; i >= 0; i--) {
+                r.data.append(lineItem(bufferPtr, lines.at(i).toObject(), withBufferKey));
+            }
+            return r;
+        }
+
+        HData nickHData(weechat_pointer_t bufferPtr, const QJsonObject& nicklistRoot) {
+            HData r;
+            std::function<void(const QJsonObject&, int)> walk = [&](const QJsonObject& group, int level) {
+                const auto groups = group.value(QStringLiteral("groups")).toArray();
+                for (const auto& gv : groups) {
+                    auto g = gv.toObject();
+                    r.data.append(nickOrGroupItem(bufferPtr, g, true, level));
+                    walk(g, level + 1);
+                }
+                const auto nicks = group.value(QStringLiteral("nicks")).toArray();
+                for (const auto& nv : nicks) {
+                    // Nicks are always level 0 in the binary protocol, only groups carry their depth
+                    r.data.append(nickOrGroupItem(bufferPtr, nv.toObject(), false, 0));
+                }
+            };
+            walk(nicklistRoot, 1);
+            return r;
+        }
+
+        HData nickDiffHData(weechat_pointer_t bufferPtr, const QJsonObject& nickOrGroup, bool isGroup, char op) {
+            HData r;
+            auto item = nickOrGroupItem(bufferPtr, nickOrGroup, isGroup, isGroup ? 1 : 0);
+            item.objects[QStringLiteral("_diff")] = QVariant::fromValue<char>(op);
+            r.data.append(item);
+            return r;
+        }
+
+        HData hotlistHData(const QJsonArray& hotlist) {
+            HData r;
+            for (const auto& hv : hotlist) {
+                auto h = hv.toObject();
+                HData::Item item;
+                auto bufPtr = ptrFromJson(h.value(QStringLiteral("buffer_id")));
+                // Hotlist entries have no id in the API, there's at most one per buffer
+                item.pointers = {bufPtr};
+                item.objects[QStringLiteral("buffer")] = QVariant::fromValue(bufPtr);
+                QList<int> counts;
+                for (const auto& c : h.value(QStringLiteral("count")).toArray()) {
+                    counts.append(c.toInt());
+                }
+                item.objects[QStringLiteral("count")] = QVariant::fromValue(counts);
+                r.data.append(item);
+            }
+            return r;
+        }
+    }  // namespace Api
 
 }  // namespace WeeChatProtocol
