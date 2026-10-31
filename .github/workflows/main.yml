@@ -274,12 +274,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-cpm-
 
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        # py7zr's compiled dependencies don't have Windows wheels for Python 3.15 yet
+        python-version: '3.14'
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
         version: ${{env.QT_VERSION}}
         modules: ${{env.QT_MODULES}}
         arch: win64_msvc2022_64
+        setup-python: false
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
@@ -334,6 +340,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-cpm-
 
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        # py7zr's compiled dependencies don't have Windows wheels for Python 3.15 yet
+        python-version: '3.14'
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -342,6 +353,7 @@ jobs:
         host: windows_arm64
         target: desktop
         arch: win64_msvc2022_arm64
+        setup-python: false
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
