@@ -45,7 +45,7 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     set(ANDROID_OPENSSL_PATH "${ANDROID_SDK_ROOT}/android_openssl/ssl_3" CACHE STRING "Path to the folder with https://github.com/KDAB/android_openssl.git")
     # The subprojects building the other ABIs with QT_ANDROID_BUILD_ALL_ABIS don't inherit the cache
-    set(QT_ANDROID_MULTI_ABI_FORWARD_VARS "ANDROID_OPENSSL_PATH;IMGUR_API_KEY;LITH_VERSION;LITH_VERSION_RELEASEDATE")
+    list(APPEND QT_ANDROID_MULTI_ABI_FORWARD_VARS ANDROID_OPENSSL_PATH IMGUR_API_KEY LITH_VERSION LITH_VERSION_RELEASEDATE LITH_FEATURE_KEYCHAIN LITH_FORCE_DOWNLOAD_DEPENDENCIES LITH_FORCE_LOCAL_PACKAGES_ONLY)
 endif()
 
 set(LITH_VERSION "0.0.0" CACHE STRING "This is where we start working with the version string as passed from the build script")
