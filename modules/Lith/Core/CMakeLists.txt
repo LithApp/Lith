@@ -16,6 +16,8 @@ set(LITH_CORE_SOURCES
     protocol.h
     qmlobjectlist.cpp
     qmlobjectlist.h
+    relayapiclient.cpp
+    relayapiclient.h
     replayproxy.cpp
     replayproxy.h
     search.cpp
@@ -76,6 +78,7 @@ target_link_libraries(LithCore PRIVATE
     QCoro6::Core
     Qt::Gui
     Qt::Multimedia
+    Qt::Network
     Qt::Qml
     Qt::Quick
     Qt::WebSockets
