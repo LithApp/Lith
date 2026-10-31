@@ -1,0 +1,24 @@
+---
+# clang-analyzer-cplusplus.NewDeleteLeaks reports QObjects owned by their parent as leaks
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  -bugprone-exception-escape,
+  clang-analyzer-*,
+  -clang-analyzer-cplusplus.NewDeleteLeaks,
+  cppcoreguidelines-slicing,
+  cppcoreguidelines-virtual-class-destructor,
+  misc-redundant-expression,
+  misc-unused-using-decls,
+  modernize-use-nullptr,
+  modernize-use-override,
+  performance-*,
+  -performance-enum-size,
+  readability-misleading-indentation,
+  readability-redundant-smartptr-get
+WarningsAsErrors: ''
+HeaderFilterRegex: '/(app|modules)/'
+FormatStyle: file
+...
