@@ -43,6 +43,7 @@ namespace {
 Weechat::Weechat(BaseNetworkProxy* networkProxy, Lith* lith)
     : QObject(nullptr)
     , m_connection(new SocketHelper(this))
+    , m_relayApi(new RelayApiClient(this))
     , m_networkProxy(networkProxy)
     , m_lith(lith) {
     connect(m_connection, &SocketHelper::dataReceived, m_networkProxy, &BaseNetworkProxy::onDataReceived, Qt::QueuedConnection);
@@ -54,6 +55,13 @@ Weechat::Weechat(BaseNetworkProxy* networkProxy, Lith* lith)
         connect(m_connection, &SocketHelper::connected, this, &Weechat::onConnected, Qt::QueuedConnection);
         connect(m_connection, &SocketHelper::disconnected, this, &Weechat::onDisconnected, Qt::QueuedConnection);
         connect(m_connection, &SocketHelper::errorOccurred, this, &Weechat::onError, Qt::QueuedConnection);
+
+        connect(m_relayApi, &RelayApiClient::connected, this, &Weechat::onConnected);
+        connect(m_relayApi, &RelayApiClient::disconnected, this, &Weechat::onDisconnected);
+        connect(m_relayApi, &RelayApiClient::errorOccurred, this, &Weechat::onError);
+        connect(m_relayApi, &RelayApiClient::authenticationFailed, this, &Weechat::onAuthenticationFailed);
+        connect(m_relayApi, &RelayApiClient::hdataReceived, this, &Weechat::onHDataReceived);
+        connect(m_relayApi, &RelayApiClient::logMessage, this, [this](const QString& message) { this->lith()->log(Logger::Network, message); });
 
         connect(lith, &Lith::pongReceived, this, &Weechat::onPongReceived, Qt::QueuedConnection);
         connect(m_pingTimer, &QTimer::timeout, this, &Weechat::onPingTimeout, Qt::QueuedConnection);
@@ -150,20 +158,29 @@ void Weechat::restart() {
     }
     m_initializationStatus = UNINITIALIZED;
 
+    m_useRelayApi = Lith::settingsGet()->useRelayApiGet();
 #ifndef __EMSCRIPTEN__
-    auto transport = Lith::settingsGet()->useWebsocketsGet()
+    auto transport = m_useRelayApi ? QStringLiteral("HTTP + websocket")
+                     : Lith::settingsGet()->useWebsocketsGet()
                          ? QStringLiteral("websocket, endpoint \"%1\"").arg(Lith::settingsGet()->websocketsEndpointGet())
                          : QStringLiteral("TCP");
 #else
-    auto transport = QStringLiteral("websocket, endpoint \"%1\"").arg(Lith::settingsGet()->websocketsEndpointGet());
+    auto transport = m_useRelayApi ? QStringLiteral("HTTP + websocket")
+                                   : QStringLiteral("websocket, endpoint \"%1\"").arg(Lith::settingsGet()->websocketsEndpointGet());
 #endif
     lith()->log(
         Logger::Network, QStringLiteral("Connecting to %1:%2, protocol: %3, transport: %4, SSL: %5")
                              .arg(Lith::settingsGet()->hostGet())
                              .arg(Lith::settingsGet()->portGet())
-                             .arg(QStringLiteral("weechat (binary)"), transport)
+                             .arg(m_useRelayApi ? QStringLiteral("relay API") : QStringLiteral("weechat (binary)"), transport)
                              .arg(Lith::settingsGet()->encryptedGet() ? QStringLiteral("on") : QStringLiteral("off"))
     );
+    if (m_useRelayApi) {
+        m_connection->reset();
+        connectToRelayApi();
+        return;
+    }
+    m_relayApi->reset();
 
     auto host = Lith::settingsGet()->hostGet();
     auto port = Lith::settingsGet()->portGet();
@@ -185,6 +202,7 @@ void Weechat::onConnectionSettingsChanged() {
     m_passwordAttempts = 0;
 
     bool hasPassphrase = Lith::settingsGet()->hasPassphraseGet();
+    bool useApi = Lith::settingsGet()->useRelayApiGet();
 #ifndef __EMSCRIPTEN__
     bool usesWebsockets = Lith::settingsGet()->useWebsocketsGet();
 #else
@@ -194,8 +212,9 @@ void Weechat::onConnectionSettingsChanged() {
     bool hasWSEndpoint = !Lith::settingsGet()->websocketsEndpointGet().isEmpty();
 
     lith()->log(Logger::Network, QStringLiteral("Connection settings have changed, will reset the socket"));
-    if (hasHost && hasPassphrase && (!usesWebsockets || hasWSEndpoint)) {
+    if (hasHost && hasPassphrase && (useApi || !usesWebsockets || hasWSEndpoint)) {
         m_connection->reset();
+        m_relayApi->reset();
         if (!m_restarting) {
             QTimer::singleShot(50, this, &Weechat::start);
         }
@@ -208,11 +227,12 @@ void Weechat::onConnectionSettingsChanged() {
         if (!hasPassphrase) {
             missing.append(QStringLiteral("password"));
         }
-        if (usesWebsockets && !hasWSEndpoint) {
+        if (!useApi && usesWebsockets && !hasWSEndpoint) {
             missing.append(QStringLiteral("websocket endpoint"));
         }
         lith()->log(Logger::Network, QStringLiteral("Not connecting, missing: %1").arg(missing.join(QStringLiteral(", "))));
         m_connection->reset();
+        m_relayApi->reset();
         m_reconnectTimer->stop();
     }
 }
@@ -274,6 +294,10 @@ QCoro::Task<void> Weechat::onHandshakeAccepted(StringMap data) {
 }
 
 void Weechat::requestHotlist() {
+    if (m_useRelayApi) {
+        m_relayApi->requestHotlist();
+        return;
+    }
     if (m_connection->isConnected()) {
         m_connection->write(
             QStringLiteral("hdata"), QStringLiteral("handleHotlist;%1").arg(m_messageOrder++), QStringLiteral("hotlist:gui_hotlist(*)")
@@ -291,6 +315,14 @@ void Weechat::onConnected() {
     lith()->networkErrorStringSet(QString());
 
     lith()->statusSet(Lith::CONNECTED);
+    m_hotlistTimer->start();
+
+    if (m_useRelayApi) {
+        // The Relay API client is only connected once it has authenticated and requested the initial data
+        m_initializationStatus = static_cast<Initialization>(m_initializationStatus | HANDSHAKE);
+        return;
+    }
+
     QString hashAlgos;
     for (const auto& i : supportedHashAlgos) {
         if (!hashAlgos.isEmpty()) {
@@ -311,8 +343,6 @@ void Weechat::onConnected() {
         data[QStringLiteral("password_hash_algo")] = QStringLiteral("plain");
         onHandshakeAccepted(data);
     }
-
-    m_hotlistTimer->start();
 }
 
 void Weechat::onDisconnected() {
@@ -358,6 +388,9 @@ void Weechat::onError(const QString& message) {
 }
 
 bool Weechat::input(weechat_pointer_t ptr, const QByteArray& data) {
+    if (m_useRelayApi) {
+        return m_relayApi->input(ptr, QString::fromUtf8(data));
+    }
     // server doesn't reply to input commands directly so no message order here
     return m_connection->write(
         QByteArrayLiteral("input"), QByteArray(),
@@ -373,10 +406,14 @@ void Weechat::fetchLines(weechat_pointer_t ptr, int count) {
     } else {
         lith()->log(Logger::Unexpected, QStringLiteral("Attempted to fetch lines for buffer with invalid buffer"));
     }
-    m_connection->write(
-        QStringLiteral("hdata"), QStringLiteral("handleFetchLines;%1").arg(m_messageOrder++),
-        QStringLiteral("buffer:0x%1/own_lines/last_line(-%2)/data").arg(ptr, 0, 16).arg(count)
-    );
+    if (m_useRelayApi) {
+        m_relayApi->fetchLines(ptr, count);
+    } else {
+        m_connection->write(
+            QStringLiteral("hdata"), QStringLiteral("handleFetchLines;%1").arg(m_messageOrder++),
+            QStringLiteral("buffer:0x%1/own_lines/last_line(-%2)/data").arg(ptr, 0, 16).arg(count)
+        );
+    }
     m_timeoutTimer->start(5000);
 }
 
@@ -424,6 +461,12 @@ void Weechat::onTimeout() {
 
 void Weechat::onPingTimeout() {
     static qint64 previousPing = 0;
+    if (m_useRelayApi) {
+        if (m_initializationStatus == COMPLETE) {
+            m_relayApi->ping();
+        }
+        return;
+    }
     if (m_initializationStatus == COMPLETE) {
         if (previousPing < m_lastReceivedPong - 1) {
             lith()->log(Logger::Unexpected, QStringLiteral("Server didn't respond to ping in time, index: %1").arg(previousPing));
@@ -436,6 +479,29 @@ void Weechat::onPingTimeout() {
     } else {
         // restart();
     }
+}
+
+QCoro::Task<void> Weechat::connectToRelayApi() {
+    auto host = Lith::settingsGet()->hostGet();
+    if (host.isEmpty()) {
+        lith()->log(Logger::Network, QStringLiteral("Relay API: no hostname set"));
+        co_return;
+    }
+    lith()->log(Logger::Network, QStringLiteral("Relay API: reading the password from settings/keychain"));
+    auto pass = co_await Lith::settingsGet()->passphraseGet();
+    if (!pass.has_value() || pass->isNull()) {
+        lith()->log(Logger::Network, QStringLiteral("Relay API: can't authenticate, no password could be read"));
+        co_return;
+    }
+    // The connection settings may have changed while waiting for the passphrase
+    if (!m_useRelayApi || m_relayApi->isConnected()) {
+        lith()->log(Logger::Network, QStringLiteral("Relay API: connection settings changed while reading the password"));
+        co_return;
+    }
+    m_relayApi->connectToHost(
+        host, Lith::settingsGet()->portGet(), Lith::settingsGet()->encryptedGet(), Lith::settingsGet()->allowSelfSignedCertificatesGet(),
+        pass.value()
+    );
 }
 
 void Weechat::onHDataReceived(const QString& id, const WeeChatProtocol::HData& hda) {
@@ -457,3 +523,13 @@ void Weechat::onHDataReceived(const QString& id, const WeeChatProtocol::HData& h
         }
     }
 }
+
+void Weechat::onAuthenticationFailed(const QString& message) {
+    // Unlike the binary protocol, the Relay API reports why authentication failed, so retrying won't help
+    lith()->log(Logger::Network, QStringLiteral("Relay API: authentication failed: %1").arg(message));
+    m_reconnectTimer->stop();
+    m_initializationStatus = UNINITIALIZED;
+    lith()->statusSet(Lith::ERROR);
+    lith()->errorStringSet(tr("Authentication failed with remote host (%1). Please check your login credentials").arg(message));
+}
+

@@ -21,7 +21,7 @@
 #include "settings.h"
 #include "replayproxy.h"
 #include "sockethelper.h"
-#include "protocol.h"
+#include "relayapiclient.h"
 #include "lithcore_export.h"
 
 #include <QSslSocket>
@@ -88,12 +88,17 @@ private slots:
     void onDataReceived(const QByteArray& data);
     void onError(const QString& message);
 
+    QCoro::Task<void> connectToRelayApi();
     void onHDataReceived(const QString& id, const WeeChatProtocol::HData& hda);
+    void onAuthenticationFailed(const QString& message);
 
 private:
     Initialization m_initializationStatus {UNINITIALIZED};
 
     SocketHelper* m_connection {nullptr};
+    RelayApiClient* m_relayApi {nullptr};
+    // Decided on (re)connection, the setting may change before the current connection is torn down
+    bool m_useRelayApi {false};
     BaseNetworkProxy* m_networkProxy {nullptr};
     bool m_restarting {false};
 
