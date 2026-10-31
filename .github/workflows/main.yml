@@ -566,9 +566,6 @@ jobs:
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} ./dist/macos/build.sh
     - name: Generate .dmg
       run: |
-        # A workaround mentioned here https://github.com/actions/runner-images/issues/7522
-        echo killing...; sudo pkill -9 XProtect >/dev/null || true;
-        echo waiting...; while pgrep XProtect; do sleep 3; done;
         "$QT_ROOT_DIR"/bin/macdeployqt build_macos/app/Lith.app -hardened-runtime -qmldir=modules -appstore-compliant -codesign="Developer ID Application: Martin Briza (Z52EFCPL6D)"
         # No idea why but macdeployqt deploys debug libs too, just remove them, maybe fix this sometimes
         for i in `find build_macos/app/Lith.app/ -name '*.dSYM'`; do rm -fr "$i"; done
