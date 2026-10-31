@@ -2,7 +2,8 @@
 
 set OLDPATH=%PATH%
 
-call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" arm64 > NUL:
+for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.ARM64 -property installationPath`) do set VS_PATH=%%i
+call "%VS_PATH%\VC\Auxiliary\Build\vcvarsall.bat" arm64 > NUL:
 
 echo export INCLUDE='%INCLUDE%'
 echo export LIB='%LIB%'
