@@ -105,8 +105,10 @@ AUTH=(-u "plain:$PASSWORD")
 
 r="$(http "${AUTH[@]}" "$API/buffers?colors=weechat")"
 expect_contains "api/http buffers lists core buffer" "$(body_of "$r")" '"name":"core.weechat"'
-CORE_ID="$(body_of "$r" | grep -o '"id":[0-9]*,"name":"core.weechat"' | grep -o '[0-9]\+' | head -1)"
-if [[ -n "$CORE_ID" ]]; then pass "api/http buffer id is numeric"; else fail "api/http buffer id is numeric"; fi
+# WeeChat serializes ids as doubles, so some come in exponent notation, e.g. 1.79345440458135e+15
+CORE_ID="$(body_of "$r" | grep -o '"id":[^,]*,"name":"core.weechat"' | head -1 | sed 's/^"id":\([^,]*\),.*/\1/')"
+CORE_ID="$(printf '%.0f' "$CORE_ID" 2>/dev/null)"
+if [[ "$CORE_ID" =~ ^[0-9]+$ ]]; then pass "api/http buffer id is numeric"; else fail "api/http buffer id is numeric"; fi
 
 r="$(http "${AUTH[@]}" -X POST -d '{"buffer_name": "core.weechat", "command": "/print lith-http-marker"}' "$API/input")"
 expect_contains "api/http input" "$(status_of "$r")" "204"
