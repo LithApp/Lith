@@ -286,6 +286,8 @@ jobs:
         modules: ${{env.QT_MODULES}}
         arch: win64_msvc2022_64
         setup-python: false
+        # Qt 6.11+ for Windows x64 needs aqtinstall newer than the latest release (3.3.0)
+        aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@076e1659807d0b362a3ed684d54c2e9c775eb9c7'
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
