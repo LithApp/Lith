@@ -13,6 +13,8 @@ env:
     QT_VERSION: '6.12.0'
     QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
     EM_VERSION: '5.0.5'
+    # Has to match the NDK the Qt for Android binaries are built with
+    ANDROID_NDK_VERSION: '27.2.12479018'
 
 permissions:
   contents: write
@@ -150,14 +152,17 @@ jobs:
     - name: Get OpenSSL
       run: |
         git clone https://github.com/KDAB/android_openssl.git --depth=1
+    - name: Install the Android NDK
+      run: |
+        yes | "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" --install "ndk;${ANDROID_NDK_VERSION}" > /dev/null
     - name: Build the Android binary
       run: |
         export ANDROID_SDK=${ANDROID_SDK_ROOT}
         export CPM_SOURCE_CACHE=~/cpm-cache
         export ANDROID_OPENSSL_PATH="$PWD/android_openssl/ssl_3"
-        export ANDROID_NDK="${ANDROID_NDK_LATEST_HOME}"
-        export ANDROID_NDK_HOME="${ANDROID_NDK_LATEST_HOME}"
-        export ANDROID_NDK_ROOT="${ANDROID_NDK_LATEST_HOME}"
+        export ANDROID_NDK="${ANDROID_SDK_ROOT}/ndk/${ANDROID_NDK_VERSION}"
+        export ANDROID_NDK_HOME="${ANDROID_NDK}"
+        export ANDROID_NDK_ROOT="${ANDROID_NDK}"
         IMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} bash ./dist/android/build.sh
     - name: Upload artifacts to GitHub
       if: github.event_name != 'create'
