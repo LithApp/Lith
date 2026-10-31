@@ -155,6 +155,11 @@ jobs:
     - name: Install the Android NDK
       run: |
         yes | "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" --install "ndk;${ANDROID_NDK_VERSION}" > /dev/null
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '21'
     - name: Build the Android binary
       run: |
         export ANDROID_SDK=${ANDROID_SDK_ROOT}
