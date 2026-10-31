@@ -149,6 +149,22 @@ void Weechat::restart() {
         m_reconnectTimer->stop();
     }
     m_initializationStatus = UNINITIALIZED;
+
+#ifndef __EMSCRIPTEN__
+    auto transport = Lith::settingsGet()->useWebsocketsGet()
+                         ? QStringLiteral("websocket, endpoint \"%1\"").arg(Lith::settingsGet()->websocketsEndpointGet())
+                         : QStringLiteral("TCP");
+#else
+    auto transport = QStringLiteral("websocket, endpoint \"%1\"").arg(Lith::settingsGet()->websocketsEndpointGet());
+#endif
+    lith()->log(
+        Logger::Network, QStringLiteral("Connecting to %1:%2, protocol: %3, transport: %4, SSL: %5")
+                             .arg(Lith::settingsGet()->hostGet())
+                             .arg(Lith::settingsGet()->portGet())
+                             .arg(QStringLiteral("weechat (binary)"), transport)
+                             .arg(Lith::settingsGet()->encryptedGet() ? QStringLiteral("on") : QStringLiteral("off"))
+    );
+
     auto host = Lith::settingsGet()->hostGet();
     auto port = Lith::settingsGet()->portGet();
     auto ssl = Lith::settingsGet()->encryptedGet();
@@ -185,6 +201,17 @@ void Weechat::onConnectionSettingsChanged() {
         }
         m_restarting = true;
     } else {
+        QStringList missing;
+        if (!hasHost) {
+            missing.append(QStringLiteral("hostname"));
+        }
+        if (!hasPassphrase) {
+            missing.append(QStringLiteral("password"));
+        }
+        if (usesWebsockets && !hasWSEndpoint) {
+            missing.append(QStringLiteral("websocket endpoint"));
+        }
+        lith()->log(Logger::Network, QStringLiteral("Not connecting, missing: %1").arg(missing.join(QStringLiteral(", "))));
         m_connection->reset();
         m_reconnectTimer->stop();
     }
@@ -311,7 +338,7 @@ void Weechat::onDisconnected() {
         }
     }
 
-    lith()->log(Logger::Protocol, QStringLiteral("WeeChat connection lost, will reconnect in %1ms").arg(m_reconnectTimer->interval() * 2));
+    lith()->log(Logger::Network, QStringLiteral("WeeChat connection lost, will reconnect in %1ms").arg(m_reconnectTimer->interval() * 2));
 
     if (m_reconnectTimer->interval() < 15000) {
         m_reconnectTimer->setInterval(m_reconnectTimer->interval() * 2);
@@ -325,6 +352,7 @@ void Weechat::onDataReceived(const QByteArray& data) {
 }
 
 void Weechat::onError(const QString& message) {
+    lith()->log(Logger::Network, QStringLiteral("Connection failed: %1").arg(message));
     lith()->statusSet(Lith::ERROR);
     lith()->networkErrorStringSet(QStringLiteral("Connection failed: %1").arg(message));
 }
