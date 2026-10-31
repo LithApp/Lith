@@ -138,6 +138,16 @@ jobs:
         modules: ${{env.QT_MODULES}}
         cache: true
         cache-key-prefix: ${{ github.job }}-qt-${{ env.QT_VERSION }}
+    - name: Install Qt for arm64-v8a
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{env.QT_VERSION}}
+        target: android
+        arch: android_arm64_v8a
+        set-env: false
+        modules: ${{env.QT_MODULES}}
+        cache: true
+        cache-key-prefix: ${{ github.job }}-qt-cross-arm64-${{ env.QT_VERSION }}
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
