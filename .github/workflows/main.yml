@@ -282,8 +282,6 @@ jobs:
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
     - name: Build the application
       shell: bash
       run: |
@@ -346,8 +344,6 @@ jobs:
         cache: true
         cache-key-prefix: ${{ github.job }}-qt
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v2
     - name: Build the application
       shell: bash
       run: |
