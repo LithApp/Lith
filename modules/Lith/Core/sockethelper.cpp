@@ -33,7 +33,22 @@ Lith* SocketHelper::lith() {
     return nullptr;
 }
 
+bool SocketHelper::isCurrentSocket(const QObject* socket) const {
+    if (!socket) {
+        return false;
+    }
+#ifndef __EMSCRIPTEN__
+    if (socket == m_tcpSocket) {
+        return true;
+    }
+#endif  // __EMSCRIPTEN__
+    return socket == m_webSocket;
+}
+
 void SocketHelper::onError(QAbstractSocket::SocketError e) {
+    if (!isCurrentSocket(sender())) {
+        return;
+    }
     QMetaEnum me = QMetaEnum::fromType<QAbstractSocket::SocketError>();
     lith()->log(Logger::Network, QStringLiteral("Socket error: %1").arg(QLatin1String(me.valueToKey(e))));
 #ifndef __EMSCRIPTEN__
@@ -47,11 +62,17 @@ void SocketHelper::onError(QAbstractSocket::SocketError e) {
 }
 
 void SocketHelper::onDisconnected() {
+    if (!isCurrentSocket(sender())) {
+        return;
+    }
     lith()->log(Logger::Network, QStringLiteral("Socket disconnected"));
     emit disconnected();
 }
 
 void SocketHelper::onConnected() {
+    if (!isCurrentSocket(sender())) {
+        return;
+    }
     lith()->log(Logger::Network, QStringLiteral("Socket connected"));
     emit connected();
 }
@@ -157,19 +178,27 @@ qint64 SocketHelper::write(const QByteArray& command, const QByteArray& id, cons
 }
 
 void SocketHelper::reset() {
+    // Signals are disconnected first so a dying socket can't report its disconnection as the current one's
     if (m_webSocket) {
+        m_webSocket->disconnect(this);
         m_webSocket->deleteLater();
         m_webSocket = nullptr;
     }
 #ifndef __EMSCRIPTEN__
     if (m_tcpSocket) {
+        m_tcpSocket->disconnect(this);
         m_tcpSocket->deleteLater();
         m_tcpSocket = nullptr;
     }
+    m_fetchBuffer.clear();
+    m_bytesRemaining = 0;
 #endif  // __EMSCRIPTEN__
 }
 
 void SocketHelper::onBinaryMessageReceived(const QByteArray& data) {
+    if (!isCurrentSocket(sender())) {
+        return;
+    }
     if (data.size() > 5) {
         auto header = data.left(5);
         if (header.size() != 5) {
@@ -233,6 +262,9 @@ void SocketHelper::onReadyRead() {
 
     if (!m_tcpSocket) {
         // this shouldn't really happen, yet it seems it probably does
+        return;
+    }
+    if (!isCurrentSocket(sender())) {
         return;
     }
 

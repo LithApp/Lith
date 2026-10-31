@@ -54,6 +54,8 @@ private slots:
     void onBinaryMessageReceived(const QByteArray& data);
 
 private:
+    bool isCurrentSocket(const QObject* socket) const;
+
     QTimer* m_timeoutTimer {new QTimer(this)};
 
     QWebSocket* m_webSocket {nullptr};
