@@ -1,0 +1,87 @@
+name: Static analysis
+
+on:
+  pull_request:
+    branches: [ "master" ]
+
+env:
+    QT_VERSION: '6.12.0'
+    QT_MODULES: 'qtmultimedia qtwebsockets qtimageformats'
+    # clazy is built against this LLVM version in the runner's Ubuntu release
+    LLVM_VERSION: '21'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  clang-tidy-clazy:
+    name: clang-tidy and clazy on changed code
+    runs-on: ubuntu-26.04
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Find the base commit
+      id: base
+      env:
+        PR_BASE: ${{ github.event.pull_request.base.sha }}
+        PUSH_BEFORE: ${{ github.event.before }}
+        DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      run: |
+        if [[ -n "$PR_BASE" ]]; then
+            BASE="$PR_BASE"
+        elif [[ -n "$PUSH_BEFORE" && ! "$PUSH_BEFORE" =~ ^0+$ ]] && git cat-file -e "$PUSH_BEFORE^{commit}" 2>/dev/null; then
+            BASE="$PUSH_BEFORE"
+        else
+            # New branches and force pushes are compared to where they forked off
+            BASE="$(git merge-base HEAD "origin/$DEFAULT_BRANCH")"
+        fi
+        echo "Comparing to $BASE"
+        echo "sha=$BASE" >> "$GITHUB_OUTPUT"
+        if git diff --quiet "$BASE" -- '*.cpp' '*.cc' '*.cxx' '*.mm' '*.h' '*.hpp'; then
+            echo "No C++ changes, nothing to analyze"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Install dependencies
+      if: steps.base.outputs.skip != 'true'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-${LLVM_VERSION} clang-tidy-${LLVM_VERSION} clazy ninja-build libxkbcommon-dev libsecret-1-dev
+
+    - name: Set up CPM cache
+      if: steps.base.outputs.skip != 'true'
+      uses: actions/cache@v4
+      with:
+        path: ~/cpm-cache
+        key: ${{ runner.os }}-cpm-${{ hashFiles('CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-cpm-
+
+    - name: Install Qt
+      if: steps.base.outputs.skip != 'true'
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{env.QT_VERSION}}
+        modules: ${{env.QT_MODULES}}
+        cache: true
+        cache-key-prefix: ${{ github.job }}-qt
+
+    # The analysis needs the compilation database and the sources generated during the build
+    - name: Build with Clang
+      if: steps.base.outputs.skip != 'true'
+      run: |
+        export CPM_SOURCE_CACHE=~/cpm-cache
+        export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
+        cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=clang-${LLVM_VERSION} -DCMAKE_CXX_COMPILER=clang++-${LLVM_VERSION} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLITH_BUILD_TESTS=ON -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
+        cmake --build build
+
+    - name: Run clang-tidy and clazy
+      if: steps.base.outputs.skip != 'true'
+      run: |
+        ./dist/ci/static-analysis.py --build-dir build --base "${{ steps.base.outputs.sha }}" --clang-tidy clang-tidy-${LLVM_VERSION} --clazy clazy-standalone
