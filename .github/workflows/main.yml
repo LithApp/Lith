@@ -291,7 +291,7 @@ jobs:
         cd build_win
         export CPM_SOURCE_CACHE=~/cpm-cache
         export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
-        "/c/Program Files/CMake/bin/cmake.exe" .. -GNinja -DCMAKE_INSTALL_PREFIX=installed -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$VERSION_NAME
+        "/c/Program Files/CMake/bin/cmake.exe" .. -GNinja -DCMAKE_INSTALL_PREFIX=installed -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DLITH_VERSION=$VERSION_NAME
         "/c/Program Files/CMake/bin/cmake.exe" --build . --config Release
         "/c/Program Files/CMake/bin/cmake.exe" --install . --config Release
     - name: Windeployqt + zip
@@ -353,7 +353,7 @@ jobs:
         cd build_win
         export CPM_SOURCE_CACHE=~/cpm-cache
         export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
-        "/c/Program Files/CMake/bin/cmake.exe" .. -GNinja -DCMAKE_INSTALL_PREFIX=installed -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$VERSION_NAME
+        "/c/Program Files/CMake/bin/cmake.exe" .. -GNinja -DCMAKE_INSTALL_PREFIX=installed -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DLITH_VERSION=$VERSION_NAME
         "/c/Program Files/CMake/bin/cmake.exe" --build . --config Release
         "/c/Program Files/CMake/bin/cmake.exe" --install . --config Release
     - name: Windeployqt + zip
@@ -416,7 +416,7 @@ jobs:
         cd build
         export CPM_SOURCE_CACHE=~/cpm-cache
         export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$VERSION_NAME -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DLITH_VERSION=$VERSION_NAME -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
         make -j5
 
   Linux-ARM:
@@ -457,7 +457,7 @@ jobs:
         cd build
         export CPM_SOURCE_CACHE=~/cpm-cache
         export CMAKE_PREFIX_PATH="$QT_ROOT_DIR"/lib/cmake
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DVERSION=$VERSION_NAME -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DIMGUR_API_KEY=${{ secrets.IMGUR_API_KEY }} -DLITH_VERSION=$VERSION_NAME -DLITH_FORCE_DOWNLOAD_DEPENDENCIES=ON
         make -j5
 
   macOS:
