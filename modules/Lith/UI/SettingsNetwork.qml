@@ -50,6 +50,8 @@ ScrollView {
             if (Lith.settings.websocketsEndpoint !== websocketsEndpointInput.text)
                 return true
         }
+        if (Lith.settings.useRelayApi !== useRelayApiCheckbox.checked)
+            return true
         return false
     }
 
@@ -59,7 +61,8 @@ ScrollView {
             hostField.text, portField.text, encryptedCheckbox.checked, selfSignedCertificateCheckbox.checked,
             passphraseField.text, useEmptyPassphraseCheckbox.checked, handshakeAuthCheckbox.checked, connectionCompressionCheckbox.checked,
             (typeof Lith.settings.useWebsockets !== "undefined" ? useWebsocketsCheckbox.checked : false),
-            (typeof Lith.settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : "")
+            (typeof Lith.settings.websocketsEndpoint !== "undefined" ? websocketsEndpointInput.text : ""),
+            useRelayApiCheckbox.checked
         )
         Lith.settings.showInternalData = showInternalDataCheckbox.checked
         Lith.settings.enableLogging = enableLoggingCheckbox.checked
@@ -81,6 +84,7 @@ ScrollView {
         if (typeof Lith.settings.websocketsEndpoint !== "undefined") {
             websocketsEndpointInput.text = Lith.settings.websocketsEndpoint
         }
+        useRelayApiCheckbox.checked = Lith.settings.useRelayApi
         showInternalDataCheckbox.checked = Lith.settings.showInternalData
         enableLoggingCheckbox.checked = Lith.settings.enableLogging
         enableReplayRecordingCheckbox.checked = Lith.settings.enableReplayRecording
@@ -179,6 +183,13 @@ ScrollView {
                 text: Lith.settings.websocketsEndpoint
 
                 summary: qsTr("Websockets endpoint")
+            }
+            Fields.Boolean {
+                id: useRelayApiCheckbox
+                checked: Lith.settings.useRelayApi
+
+                summary: qsTr("Use the WeeChat Relay API")
+                details: qsTr("Uses the newer JSON-based relay API (WeeChat >= 4.3) instead of the binary weechat relay protocol. Always connects over WebSockets to the /api endpoint.")
             }
 
             ////////////////////////// STORAGE

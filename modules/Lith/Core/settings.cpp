@@ -95,7 +95,7 @@ QCoro::Task<void> Settings::migrate() {
 
 void Settings::saveNetworkSettings(
     QString host, int port, bool encrypted, bool allowSelfSignedCertificates, QString passphrase, bool useEmptyPassphrase,
-    bool handshakeAuth, bool connectionCompression, bool useWebsockets, QString websocketsEndpoint
+    bool handshakeAuth, bool connectionCompression, bool useWebsockets, QString websocketsEndpoint, bool useRelayApi
 ) {
     bool changed = false;
 
@@ -132,6 +132,9 @@ void Settings::saveNetworkSettings(
     }
 #endif
     if (websocketsEndpointSet(websocketsEndpoint)) {
+        changed = true;
+    }
+    if (useRelayApiSet(useRelayApi)) {
         changed = true;
     }
 

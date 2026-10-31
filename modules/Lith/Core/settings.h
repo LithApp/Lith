@@ -135,6 +135,9 @@ class LITHCORE_EXPORT Settings : public QObject {
 #endif  // __EMSCRIPTEN__
     SETTING_NOSETTER(QString, websocketsEndpoint, QStringLiteral("weechat"))
     bool websocketsEndpointSet(QString newWebsocketsEndpoint, bool force = false);
+    // Uses the JSON WeeChat Relay API (weechat_relay_api.en.html) instead of the binary
+    // "weechat" relay protocol. Always connects over websockets, to the fixed "/api" endpoint.
+    SETTING(bool, useRelayApi, false)
 
     SETTING(bool, enableReadlineShortcuts, true)
     SETTING(QStringList, shortcutSearchBuffer, {QStringLiteral("Alt+G")})
@@ -187,7 +190,7 @@ public:
 public slots:
     void saveNetworkSettings(
         QString host, int port, bool encrypted, bool allowSelfSignedCertificates, QString passphrase, bool useEmptyPassphrase,
-        bool handshakeAuth, bool connectionCompression, bool useWebsockets, QString websocketsEndpoint
+        bool handshakeAuth, bool connectionCompression, bool useWebsockets, QString websocketsEndpoint, bool useRelayApi
     );
 
 signals:
