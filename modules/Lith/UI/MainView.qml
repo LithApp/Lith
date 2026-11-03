@@ -10,38 +10,26 @@ import "util"
 Item {
     id: mainView
 
-    //implicitWidth: LithPlatform.mobile ? 480 : 1024
-    //implicitHeight: 800
+    implicitWidth: LithPlatform.mobile ? 480 : 1024
+    implicitHeight: 800
 
     Component.onCompleted: {
-        //WindowHelper.connectToWindow(Window.window)
+        WindowHelper.connectToWindow(Window.window)
     }
 
-    property real topMargin: {
-        if (LithPlatform.mobile) {
-            if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
-                let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
-                let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
-                if (focusItemBottomBoundary > keyboardTopBoundary) {
-                    return Qt.inputMethod.keyboardRectangle.height + parent.SafeArea.margins.top
-                }
-            }
-        }
-        return parent.SafeArea.margins.top
-    }
-    property real bottomMargin:{
-        if (LithPlatform.mobile) {
-            let keyboardTopBoundary = Window.height - Qt.inputMethod.keyboardRectangle.height
-            let focusItemBottomBoundary = Window.activeFocusItem.mapToGlobal(0, Window.activeFocusItem.height).y
-            if (Qt.inputMethod && Qt.inputMethod.keyboardRectangle && Qt.inputMethod.visible) {
-                if (focusItemBottomBoundary <= keyboardTopBoundary)
-                    return Qt.inputMethod.keyboardRectangle.height
-                else
-                    return 0
-            }
-        }
-        return parent.SafeArea.margins.bottom
+    property real keyboardOverlap: {
+        if (!LithPlatform.mobile || !Qt.inputMethod.visible)
+            return 0
 
+        let keyboard = Qt.inputMethod.keyboardRectangle
+        let keyboardTop = keyboard.y - parent.SafeArea.margins.top
+        if (keyboard.height <= 0 || keyboardTop >= height)
+            return 0
+
+        if (keyboard.y + keyboard.height < Window.height - 1)
+            return 0
+
+        return Math.max(0, Math.min(height, height - keyboardTop))
     }
     Item {
         z: 1
@@ -68,6 +56,7 @@ Item {
         anchors {
             fill: parent
             topMargin: errorMessageWrapper.errorMessageOffset
+            bottomMargin: mainView.keyboardOverlap
         }
 
         ChannelView {

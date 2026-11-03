@@ -26,6 +26,9 @@ qt_add_qml_module(Lith
     QML_FILES main.qml
 )
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+    set_property(TARGET Lith PROPERTY
+        QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/dist/android"
+    )
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     target_link_libraries(Lith PRIVATE
