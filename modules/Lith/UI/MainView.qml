@@ -10,14 +10,11 @@ import "util"
 Item {
     id: mainView
 
-    width: parent.width
-    height: parent.height
-
-    implicitWidth: LithPlatform.mobile ? 480 : 1024
-    implicitHeight: 800
+    //implicitWidth: LithPlatform.mobile ? 480 : 1024
+    //implicitHeight: 800
 
     Component.onCompleted: {
-        WindowHelper.connectToWindow(Window.window)
+        //WindowHelper.connectToWindow(Window.window)
     }
 
     property real topMargin: {
@@ -44,20 +41,8 @@ Item {
             }
         }
         return parent.SafeArea.margins.bottom
+
     }
-    property real leftMargin: parent.SafeArea.margins.left
-    property real rightMargin: parent.SafeArea.margins.right
-
-    Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-    Behavior on bottomMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-    Behavior on leftMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-    Behavior on rightMargin { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-
-    readonly property real contentAreaWidth: mainView.width - leftMargin - rightMargin
-    readonly property real contentAreaHeight: mainView.height - topMargin - topMargin
-
-    property bool safeAreaBoundaryCovers: true
-
     Item {
         z: 1
         id: errorMessageWrapper
@@ -65,7 +50,7 @@ Item {
             left: mainViewContents.left
             right: mainViewContents.right
             top: parent.top
-            topMargin: mainView.topMargin + errorMessage.y
+            topMargin: errorMessage.y
         }
         readonly property real errorMessageOffset: errorMessage.height + errorMessage.y
         ErrorMessage {
@@ -82,10 +67,7 @@ Item {
         color: LithStyle.LithPalette.regular.window
         anchors {
             fill: parent
-            leftMargin: mainView.leftMargin
-            rightMargin: mainView.rightMargin
-            bottomMargin: mainView.bottomMargin
-            topMargin: mainView.topMargin + errorMessageWrapper.errorMessageOffset
+            topMargin: errorMessageWrapper.errorMessageOffset
         }
 
         ChannelView {
@@ -161,9 +143,6 @@ Item {
             //y: drawerIsClosed ? mainView.y + channelView.messageArea.y : mainView.y
             //height: drawerIsClosed ? channelView.scrollToBottomButtonPosition : parent.height
             width: Math.min(0.66 * parent.width, 400)
-            topPadding: mainView.topMargin
-            bottomPadding: mainView.bottomMargin
-            rightPadding: mainView.rightMargin
             height: parent.height
             onRequestSearchBar: {
                 channelView.showSearchBar()
@@ -222,59 +201,6 @@ Item {
                 }
             }
         }
-    }
-
-    // These rectangles are painted over the safe areas to hide stuff that's not clipped
-    Rectangle {
-        id: safeAreaCoverLeft
-        visible: mainView.safeAreaBoundaryCovers
-        z: 9999
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-            left: parent.left
-        }
-        width: mainView.leftMargin
-        color: LithStyle.LithPalette.regular.base
-    }
-
-    Rectangle {
-        id: safeAreaCoverRight
-        visible: mainView.safeAreaBoundaryCovers
-        z: 9999
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-            right: parent.right
-        }
-        width: mainView.rightMargin
-        color: LithStyle.LithPalette.regular.base
-    }
-
-    Rectangle {
-        id: safeAreaCoverTop
-        visible: mainView.safeAreaBoundaryCovers
-        z: 9999
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-        height: mainView.topMargin
-        color: LithStyle.LithPalette.regular.base
-    }
-
-    Rectangle {
-        id: safeAreaCoverBottom
-        visible: mainView.safeAreaBoundaryCovers
-        z: 9999
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
-        height: mainView.bottomMargin
-        color: LithStyle.LithPalette.regular.base
     }
 
     // TODO make this a component and fix this
